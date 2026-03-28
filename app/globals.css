@@ -183,3 +183,23 @@ body.light-mode .nav-scrolled {
 @media (min-width:769px) {
   .hide-desktop { display: none !important; }
 }
+
+/* ── CONTACT FORM LIGHT MODE ─── */
+body.light-mode input::placeholder,
+body.light-mode textarea::placeholder {
+  color: #999 !important;
+}
+body.light-mode select option {
+  background: #ffffff;
+  color: #111111;
+}
+body.light-mode input,
+body.light-mode textarea,
+body.light-mode select {
+  color-scheme: light;
+}
+
+/* ── HERO IMAGE CAROUSEL ── */
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr !important; }
+}

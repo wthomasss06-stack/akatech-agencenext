@@ -59,7 +59,7 @@ export default function Footer() {
           <div>
             <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>Navigation</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
-              {[['Accueil', '/'], ['À propos', '/about'], ['Projets', '/projects'], ['Tarifs', '/pricing'], ['Blog', '/blog'], ['Contact', '/contact']].map(([label, href]) => (
+              {[['Accueil', '/'], ['À propos', '/about'], ['Réalisations', '/projects'], ['Tarifs', '/pricing'], ['Blog', '/blog'], ['Contact', '/contact']].map(([label, href]) => (
                 <Link key={label} href={href} style={lk}
                   onMouseEnter={e => e.currentTarget.style.color = T.green}
                   onMouseLeave={e => e.currentTarget.style.color = T.textMuted}>
@@ -107,7 +107,7 @@ export default function Footer() {
             <a href="/" style={{ color: T.greenSub, transition: 'color .2s' }}
               onMouseEnter={e => e.currentTarget.style.color = T.green}
               onMouseLeave={e => e.currentTarget.style.color = T.greenSub}>AKATech</a>
-            {' '}· Agence Digitale · Abidjan · Fait avec ❤️ en Côte d'Ivoire
+            {' '}· Agence Digitale · Abidjan ·
           </p>
         </div>
       </div>

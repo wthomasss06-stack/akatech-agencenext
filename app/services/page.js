@@ -19,10 +19,10 @@ const PROCESS_STEPS = [
 const TECH_STACK = [
   { cat: 'Frontend', items: ['React', 'Next.js', 'Framer Motion', 'Tailwind CSS'] },
   { cat: 'Backend', items: ['Django', 'Python', 'Node.js', 'Express'] },
-  { cat: 'Base de données', items: ['MySQL', 'Redis', ] },
+  { cat: 'Base de données', items: ['PostgreSQL', 'MySQL', 'Redis', 'MongoDB'] },
   { cat: 'Déploiement', items: ['Vercel', 'AWS', 'Nginx', 'Docker'] },
-  { cat: 'Paiements', items: ['MTN MoMo', 'Orange Money', 'Wave', ] },
-  { cat: 'Outils', items: ['Git', 'VS Code',] },
+  { cat: 'Paiements', items: ['MTN MoMo', 'Orange Money', 'Wave', 'Stripe'] },
+  { cat: 'Outils', items: ['Git', 'VS Code', 'Figma', 'Postman'] },
 ]
 
 function HeroServices() {

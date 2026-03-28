@@ -17,29 +17,10 @@ const VALUES = [
 ]
 
 const TIMELINE = [
-  { 
-    year: '2022', 
-    title: 'Le premier pas', 
-    desc: "Tout commence avec un premier projet freelance : la création d’un site vitrine pour un commerçant à Abidjan. Une simple mission qui marque le début d’une aventure entrepreneuriale dans le développement web." 
-  },
-
-  { 
-    year: '2023', 
-    title: 'Création de solutions', 
-    desc: "Développement de TechFlow, une application SaaS de gestion de projets destinée aux PME. La plateforme attire rapidement plus de 100 utilisateurs et confirme la capacité à concevoir des solutions utiles et performantes." 
-  },
-
-  { 
-    year: '2026', 
-    title: 'Naissance de AKATech', 
-    desc: "Transformation de l’activité freelance en une agence digitale structurée : AKATech. Mise en place de services professionnels pour accompagner entreprises et entrepreneurs dans leur transformation digitale." 
-  },
-
-  { 
-    year: 'Aujourd’hui', 
-    title: 'Une agence en pleine croissance', 
-    desc: "Plus de 10 projets réalisés avec succès et des clients satisfaits. AKATech continue d’innover, de créer des solutions digitales modernes et d’accompagner les entreprises vers le futur." 
-  },
+  { year: '2022', title: 'Les débuts', desc: "Premier projet freelance livré : un site vitrine pour un commerçant abidjanais. Le début d'une aventure." },
+  { year: '2023', title: 'Première app SaaS', desc: "Développement de TechFlow, une application de gestion de projets pour PME. 100+ utilisateurs dès le lancement." },
+  { year: '2024', title: 'AKATech Agence', desc: "Transformation en agence officielle. Lancement de services structurés et premiers clients récurrents." },
+  { year: '2025', title: "Aujourd'hui", desc: "+10 projets livrés, 100% de clients satisfaits. L'agence continue de grandir et d'innover." },
 ]
 
 function HeroAbout() {

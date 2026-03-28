@@ -2,7 +2,8 @@ import './globals.css'
 import { ThemeProvider } from '@/lib/theme'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
-import { MicroCursor, BackToTop, FloatingWA } from '@/components/ui/index'
+import { BackToTop, FloatingWA } from '@/components/ui/index'
+import Loader from '@/components/ui/Loader'
 
 export const metadata = {
   title: 'AKATech — Agence Web Abidjan | Sites, E-Commerce, SaaS',
@@ -20,7 +21,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          <MicroCursor />
+          <Loader />
           <Navbar />
           <main>{children}</main>
           <Footer />

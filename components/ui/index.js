@@ -201,12 +201,12 @@ export function SectionCTA({ message, cta, href = 'https://wa.me/2250142507750',
 
   if (variant === 'strong') return (
     <motion.section ref={ref} initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-      style={{ padding: '5rem 5%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.08),transparent 65%)', pointerEvents: 'none' }} />
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
+      style={{ padding: '5rem 5%', background: 'linear-gradient(135deg,#0a1a0e,#041008)', position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.10),transparent 65%)', pointerEvents: 'none' }} />
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ position: 'relative', zIndex: 1, maxWidth: 680, margin: '0 auto' }}>
         <motion.h2 initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
-          style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.5rem', lineHeight: 1.2 }}>
+          style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.03em', marginBottom: '1.5rem', lineHeight: 1.2 }}>
           {message}
         </motion.h2>
         <motion.a href={href} target="_blank" rel="noreferrer" className="btn-raised"

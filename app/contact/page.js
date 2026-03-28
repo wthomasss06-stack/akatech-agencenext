@@ -57,11 +57,13 @@ function ContactGrid() {
 
   const inputStyle = {
     width: '100%', padding: '.85rem 1rem', borderRadius: 10,
-    background: T.light ? '#f5f5f5' : 'rgba(34,200,100,.04)',
-    border: `1px solid ${T.border}`, color: T.textMain,
+    background: T.light ? '#ffffff' : 'rgba(34,200,100,.04)',
+    border: `1px solid ${T.light ? 'rgba(0,0,0,.15)' : T.border}`,
+    color: T.light ? '#111111' : 'rgba(255,255,255,.85)',
     fontFamily: "'Syne',sans-serif", fontSize: '.88rem',
     outline: 'none', transition: 'border-color .2s, box-shadow .2s',
     boxSizing: 'border-box',
+    colorScheme: T.light ? 'light' : 'dark',
   }
 
   const handleSubmit = async () => {
