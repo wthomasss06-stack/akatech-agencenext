@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { Clock, ArrowRight, Tag, Search, BookOpen, TrendingUp, Globe, ShoppingCart, Code, Zap } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, MarqueeStrip, SectionCTA } from '@/components/ui/index'
+import { SectionEye, MarqueeStrip, SectionCTA, LaserBeam } from '@/components/ui/index'
 import { BLOG_POSTS } from '@/lib/data'
 
 const CATEGORIES = ['Tous', 'Stratégie Digitale', 'E-Commerce', 'Développement Web', 'SEO']
@@ -17,6 +17,8 @@ function HeroBlog() {
     <section style={{ padding: '9rem 5% 5rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.07),transparent 65%)', pointerEvents: 'none' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .3 }} />
+      <LaserBeam position="right" intensity="strong" />
+      <LaserBeam position="left"  intensity="subtle" style={{ animationDelay: '1.6s', height: '40%', top: '15%' }} />
       <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <SectionEye label="// Blog & Ressources" center />

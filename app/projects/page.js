@@ -9,7 +9,7 @@ import {
 } from 'framer-motion'
 import { ArrowRight, Code, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, LazyImg, SectionCTA } from '@/components/ui/index'
+import { SectionEye, LazyImg, SectionCTA, LaserBeam } from '@/components/ui/index'
 import { PROJECTS } from '@/lib/data'
 
 /* ────────────────────────────────────────────────
@@ -21,6 +21,8 @@ function HeroRealisations() {
     <section style={{ padding: '9rem 5% 5rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '-15%', left: '-5%', width: 500, height: 500, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.06),transparent 65%)' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
+      <LaserBeam position="left"   intensity="medium" />
+      <LaserBeam position="center" intensity="subtle" style={{ height: '50%', top: '10%' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Nos Réalisations" center />

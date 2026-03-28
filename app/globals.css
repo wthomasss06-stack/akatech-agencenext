@@ -203,3 +203,139 @@ body.light-mode select {
 @media (max-width: 768px) {
   .hero-grid { grid-template-columns: 1fr !important; }
 }
+
+/* ── LASER BEAM ANIMATIONS ── */
+@keyframes laserPulse {
+  0%, 100% { opacity: var(--laser-op, .8); filter: brightness(1); }
+  30%       { opacity: 1;                  filter: brightness(1.35); }
+  60%       { opacity: var(--laser-op, .8); filter: brightness(.9); }
+}
+
+@keyframes laserSpark {
+  0%, 100% { transform: translateX(-50%) scale(1);   opacity: .9; }
+  30%       { transform: translateX(-50%) scale(1.8); opacity: 1;  }
+  60%       { transform: translateX(-50%) scale(.7);  opacity: .5; }
+}
+
+/* ── GLASSMORPHISM PRICING GRID ── */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+/* ── TRUSTED BY GRID ── */
+.trusted-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.4rem;
+}
+
+/* ── CHANNELS GRID ── */
+.channels-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* ── FORM GRID ── */
+.form-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — TABLET (≤ 900px)
+══════════════════════════════════════ */
+@media (max-width: 900px) {
+  .pricing-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .trusted-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .channels-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 640px)
+══════════════════════════════════════ */
+@media (max-width: 640px) {
+
+  /* NAV */
+  nav .nav-links { display: none; }
+
+  /* HERO padding */
+  section[style*="9rem 5%"] {
+    padding-top: 7rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  /* Grids → single column */
+  .pricing-grid,
+  .trusted-grid,
+  .channels-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Form 2-col → 1-col */
+  .form-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* Hero text */
+  h1 {
+    font-size: clamp(2rem, 8vw, 2.8rem) !important;
+    letter-spacing: -.03em !important;
+  }
+
+  /* Section padding */
+  section { padding-left: 5% !important; padding-right: 5% !important; }
+
+  /* Urgency bar */
+  section [style*="justify-content: space-between"] {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  /* Timeline center line hidden on mobile */
+  .timeline-line { display: none; }
+
+  /* About grid */
+  .hero-grid { grid-template-columns: 1fr !important; }
+
+  /* Cards in about values section */
+  [style*="repeat(auto-fit,minmax(240px"] {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Big background "Pricing" text — smaller on mobile */
+  [aria-hidden][style*="Pricing"] {
+    font-size: 18vw !important;
+    top: -10px !important;
+  }
+
+  /* Marquee strip padding */
+  .marquee-strip { padding: .8rem 0; }
+
+  /* Buttons full width on mobile */
+  .btn-cta-wrap { width: 100%; }
+
+  /* Toggle group in card2 */
+  .toggle-group { float: none; margin-top: .5rem; }
+
+  /* Mockup hide on small screens */
+  .mockup-wrapper { display: none; }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — SMALL MOBILE (≤ 400px)
+══════════════════════════════════════ */
+@media (max-width: 400px) {
+  h1 { font-size: 1.8rem !important; }
+  .btn-raised, .btn-ghost { padding: .75rem 1.2rem !important; font-size: .82rem !important; }
+}
