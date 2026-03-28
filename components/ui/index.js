@@ -3,6 +3,68 @@ import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { useTheme } from '@/lib/theme'
 
+// ── LASER BEAM ───────────────────────────────────────────────
+// position: 'left' | 'center' | 'right'  (défaut 'right')
+// intensity: 'subtle' | 'medium' | 'strong' (défaut 'medium')
+export function LaserBeam({ position = 'right', intensity = 'medium', style = {} }) {
+  const posMap = {
+    left:   { left: '18%',  right: 'auto' },
+    center: { left: '50%',  right: 'auto', transform: 'translateX(-50%)' },
+    right:  { right: '22%', left:  'auto' },
+  }
+  const opacityMap = { subtle: .55, medium: .8, strong: 1 }
+  const glowMap    = { subtle: 80,  medium: 130, strong: 200 }
+
+  return (
+    <div aria-hidden style={{
+      position: 'absolute',
+      top: '-40px',
+      ...posMap[position],
+      width: 2,
+      height: '65%',
+      zIndex: 2,
+      pointerEvents: 'none',
+      opacity: opacityMap[intensity],
+      animation: 'laserPulse 3.2s ease-in-out infinite',
+      ...style,
+    }}>
+      {/* beam core */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(to bottom, transparent 0%, #22c864 20%, #aaffd4 45%, #22c864 70%, transparent 100%)',
+        borderRadius: 2,
+        filter: 'blur(0.4px)',
+      }} />
+      {/* outer glow */}
+      <div style={{
+        position: 'absolute',
+        top: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: glowMap[intensity],
+        height: '100%',
+        background: 'linear-gradient(to bottom, transparent, rgba(34,200,100,.22) 30%, rgba(34,200,100,.22) 65%, transparent)',
+        filter: 'blur(28px)',
+        borderRadius: '50%',
+      }} />
+      {/* tip spark */}
+      <div style={{
+        position: 'absolute',
+        top: '18%',
+        left: '50%',
+        transform: 'translateX(-50%)',
+        width: 6,
+        height: 6,
+        borderRadius: '50%',
+        background: '#aaffd4',
+        boxShadow: '0 0 12px 4px rgba(34,200,100,.7), 0 0 28px 10px rgba(34,200,100,.3)',
+        animation: 'laserSpark 3.2s ease-in-out infinite',
+      }} />
+    </div>
+  )
+}
+
 // ── SECTION EYE ──────────────────────────────────────────────
 export function SectionEye({ label, center }) {
   return (
