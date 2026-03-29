@@ -52,7 +52,6 @@ function PricingTabs() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
-  const [yearly, setYearly] = useState(false)
   const d = PRICING[tab]
 
   return (
@@ -88,26 +87,6 @@ function PricingTabs() {
               {v.label}
             </button>
           ))}
-        </motion.div>
-
-        {/* Yearly toggle */}
-        <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.8rem', marginBottom: '3rem' }}>
-          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: yearly ? T.textMuted : T.green, letterSpacing: '.06em' }}>Mensuel</span>
-          <div onClick={() => setYearly(y => !y)} style={{
-            width: 44, height: 24, borderRadius: 12, cursor: 'pointer', position: 'relative',
-            background: yearly ? '#22c864' : 'rgba(255,255,255,.1)',
-            border: '1px solid rgba(34,200,100,.3)', transition: 'background .3s',
-          }}>
-            <div style={{
-              position: 'absolute', top: 3, left: yearly ? 23 : 3,
-              width: 16, height: 16, borderRadius: '50%', background: '#fff',
-              transition: 'left .3s', boxShadow: '0 1px 4px rgba(0,0,0,.3)',
-            }} />
-          </div>
-          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: yearly ? T.green : T.textMuted, letterSpacing: '.06em' }}>
-            Annuel <span style={{ color: '#22c864', background: 'rgba(34,200,100,.12)', padding: '1px 7px', borderRadius: 99, marginLeft: 4 }}>-20%</span>
-          </span>
         </motion.div>
 
         {/* Glass Cards */}
@@ -213,17 +192,49 @@ function PricingTabs() {
   )
 }
 
-/* ── ILS NOUS FONT CONFIANCE ── */
+/* ── ILS NOUS FONT CONFIANCE — carrousel infini ── */
 function TrustedBy() {
   const T = useTheme()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
 
+  // On duplique les témoignages pour boucler sans coupure
+  const items = [...TESTIMONIALS, ...TESTIMONIALS]
+
   return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
+    <section ref={ref} style={{ padding: '7rem 0', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
+      <style>{`
+        @keyframes scroll-left {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .carousel-track {
+          display: flex;
+          gap: 1.2rem;
+          width: max-content;
+          animation: scroll-left 32s linear infinite;
+        }
+        .carousel-track:hover { animation-play-state: paused; }
+        .carousel-wrap {
+          overflow: hidden;
+          -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+          mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+        }
+        .tcard {
+          flex-shrink: 0;
+          width: 320px;
+          border-radius: 20px;
+          overflow: hidden;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          padding: 1.8rem;
+          position: relative;
+        }
+      `}</style>
+
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 400, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.05),transparent 65%)', pointerEvents: 'none' }} />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3.5rem', paddingLeft: '5%', paddingRight: '5%' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <SectionEye label="// Ils nous font confiance" center />
           <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.5rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
@@ -233,20 +244,17 @@ function TrustedBy() {
             Des entrepreneurs ivoiriens qui ont transformé leur présence digitale avec AKATech.
           </p>
         </motion.div>
+      </div>
 
-        <div className="trusted-grid">
-          {TESTIMONIALS.map((t, i) => (
-            <motion.div key={t.name}
-              initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .12 }}
-              whileHover={{ y: -6 }}
+      {/* Carrousel */}
+      <div className="carousel-wrap">
+        <div className="carousel-track">
+          {items.map((t, i) => (
+            <div key={i} className="tcard"
               style={{
-                borderRadius: 20, overflow: 'hidden',
                 background: T.light ? 'rgba(255,255,255,.8)' : 'rgba(255,255,255,.04)',
-                backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
                 border: `1px solid ${T.light ? 'rgba(0,0,0,.08)' : 'rgba(255,255,255,.08)'}`,
                 boxShadow: T.light ? '0 4px 24px rgba(0,0,0,.07)' : '0 8px 32px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06)',
-                padding: '1.8rem',
-                position: 'relative',
               }}>
               {/* Glass shine */}
               <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent)', pointerEvents: 'none' }} />
@@ -269,18 +277,11 @@ function TrustedBy() {
               {/* Author */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '.85rem' }}>
                 <div style={{ width: 48, height: 48, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(34,200,100,.3)', flexShrink: 0, position: 'relative' }}>
-                  <img
-                    src={t.img}
-                    alt={t.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  <img src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     onError={e => {
                       e.target.style.display = 'none'
                       e.target.parentNode.style.background = 'linear-gradient(135deg,rgba(34,200,100,.2),rgba(34,200,100,.05))'
-                      e.target.parentNode.style.display = 'flex'
-                      e.target.parentNode.style.alignItems = 'center'
-                      e.target.parentNode.style.justifyContent = 'center'
-                    }}
-                  />
+                    }} />
                 </div>
                 <div>
                   <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
@@ -290,7 +291,7 @@ function TrustedBy() {
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted }}>{t.project}</div>
                 </div>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
