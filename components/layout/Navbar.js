@@ -102,7 +102,7 @@ export default function Navbar() {
 
   const navBg = scrolled
     ? (T.light ? 'rgba(255,255,255,.97)' : 'rgba(3,8,6,.96)')
-    : (T.light ? 'rgba(255,255,255,.82)' : 'rgba(3,8,6,.5)')
+    : 'transparent'
 
   return (
     <>
@@ -116,8 +116,8 @@ export default function Navbar() {
           height: scrolled ? 58 : 70,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           background: navBg,
-          backdropFilter: 'blur(20px)',
-          WebkitBackdropFilter: 'blur(20px)',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          WebkitBackdropFilter: scrolled ? 'blur(20px)' : 'none',
           borderBottom: `1px solid ${scrolled
             ? (T.light ? 'rgba(0,0,0,.08)' : 'rgba(34,200,100,.14)')
             : 'transparent'}`,
