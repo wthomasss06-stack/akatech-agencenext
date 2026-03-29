@@ -154,24 +154,24 @@ function Hero() {
           {/* Stat card 1 */}
           <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
             className="sku-card"
-            style={{ padding: '.85rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem', backdropFilter: 'blur(12px)', background: 'rgba(11,26,16,.85)' }}>
+            style={{ padding: '.85rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem', backdropFilter: 'blur(12px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.85)' }}>
             <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(34,200,100,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <TrendingUp size={18} style={{ color: '#22c864' }} />
             </div>
             <div>
               <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '.95rem', fontWeight: 900, color: '#22c864' }}>+10</div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
             </div>
           </motion.div>
 
           {/* Stat card 2 */}
           <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
             className="sku-card"
-            style={{ padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(12px)', background: 'rgba(11,26,16,.85)' }}>
+            style={{ padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(12px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.85)' }}>
             <div style={{ display: 'flex' }}>
               {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#22c864' }} fill="#22c864" />)}
             </div>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: 'rgba(255,255,255,.85)' }}>100% satisfaits</span>
+            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
           </motion.div>
 
           {/* Slide progress dots */}
