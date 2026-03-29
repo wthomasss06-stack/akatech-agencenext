@@ -4,7 +4,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, LazyImg, MarqueeStrip, SectionCTA } from '@/components/ui/index'
+import { SectionEye, LazyImg, MarqueeStrip, SectionCTA, LaserBeam } from '@/components/ui/index'
 import { SERVICES } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench }
@@ -19,10 +19,8 @@ const PROCESS_STEPS = [
 const TECH_STACK = [
   { cat: 'Frontend', items: ['React', 'Next.js', 'Framer Motion', 'Tailwind CSS'] },
   { cat: 'Backend', items: ['Django', 'Python', 'Node.js', 'Express'] },
-  { cat: 'Base de données', items: ['PostgreSQL', 'MySQL', 'Redis', 'MongoDB'] },
-  { cat: 'Déploiement', items: ['Vercel', 'AWS', 'Nginx', 'Docker'] },
-  { cat: 'Paiements', items: ['MTN MoMo', 'Orange Money', 'Wave', 'Stripe'] },
-  { cat: 'Outils', items: ['Git', 'VS Code', 'Figma', 'Postman'] },
+  { cat: 'Base de données', items: ['MySQL', 'Redis'] },
+  { cat: 'Outils', items: ['Git', 'VS Code','Vercel'] },
 ]
 
 function HeroServices() {
@@ -31,6 +29,8 @@ function HeroServices() {
     <section style={{ padding: '9rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '-15%', right: '-10%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.07),transparent 65%)', pointerEvents: 'none' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
+      <LaserBeam position="right" intensity="medium" />
+      <LaserBeam position="left"  intensity="subtle" style={{ height: '45%', top: '5%' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Nos Services" center />
