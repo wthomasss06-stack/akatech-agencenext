@@ -86,19 +86,28 @@ function ServicesList() {
           })}
         </div>
 
+        <style>{`
+          .svc-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
+          @media (max-width: 768px) {
+            .svc-detail-grid { display: flex; flex-direction: column; gap: 1.5rem; }
+            .svc-detail-img  { order: 1; width: 100%; height: 260px !important; }
+            .svc-detail-body { order: 2; width: 100%; }
+          }
+        `}</style>
+
         {/* Service Detail */}
         <AnimatePresence mode="wait">
           <motion.div key={active}
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: .35 }}
-            style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2.5rem', alignItems: 'center' }}>
+            className="svc-detail-grid">
             {/* Image */}
-            <div style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 40px rgba(0,0,0,.3)', height: 380 }}>
+            <div className="svc-detail-img" style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 40px rgba(0,0,0,.3)', height: 380 }}>
               <LazyImg src={svc.img} alt={svc.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon size={48} style={{ color: 'rgba(34,200,100,.3)' }} /></div>} />
             </div>
 
             {/* Content */}
-            <div>
+            <div className="svc-detail-body">
               <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1.2rem' }}>
                 <div style={{ width: 54, height: 54, borderRadius: 14, background: 'rgba(34,200,100,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon size={24} style={{ color: T.green }} />
