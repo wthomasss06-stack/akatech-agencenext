@@ -27,41 +27,60 @@ function HeroAbout() {
   const T = useTheme()
   return (
     <section style={{ padding: '9rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <style>{`
+        .hero-about-grid {
+          max-width: 1200px;
+          margin: 0 auto;
+          position: relative;
+          z-index: 1;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          grid-template-rows: auto auto;
+          gap: 4rem;
+          align-items: start;
+        }
+        .hero-title-block  { grid-column: 1; grid-row: 1; }
+        .hero-text-block   { grid-column: 1; grid-row: 2; }
+        .hero-photos-block { grid-column: 2; grid-row: 1 / 3; align-self: center; }
+
+        @media (max-width: 768px) {
+          .hero-about-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+          }
+          .hero-title-block  { order: 1; }
+          .hero-photos-block { order: 2; }
+          .hero-text-block   { order: 3; }
+          .hero-photo-grid   {
+            grid-template-rows: 220px 160px !important;
+          }
+        }
+      `}</style>
+
       <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.07),transparent 65%)', pointerEvents: 'none' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
       <LaserBeam position="right" intensity="medium" />
       <LaserBeam position="left"  intensity="subtle" style={{ height: '45%', top: '5%' }} />
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
-        {/* Left */}
-        <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
+      <div className="hero-about-grid">
+
+        {/* ① Titre — affiché en 1er partout, en 1er sur mobile */}
+        <motion.div className="hero-title-block"
+          initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <SectionEye label="// Qui sommes-nous" />
           <h1 style={{ fontSize: 'clamp(2.2rem,4.5vw,3.5rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
             Votre croissance digitale,<br />
             <span className="text-gradient">c'est notre mission.</span>
           </h1>
           <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: .8, delay: .3 }}
-            style={{ height: 2, background: 'linear-gradient(90deg,#22c864,rgba(34,200,100,.1))', borderRadius: 2, marginBottom: '1.5rem', transformOrigin: 'left' }} />
-          <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.85, marginBottom: '.9rem' }}>
-            <strong style={{ color: T.textMain }}>AKATech</strong> accompagne les entrepreneurs et PME en Côte d'Ivoire qui veulent une présence digitale sérieuse — pour gagner en crédibilité, attirer des clients et automatiser leur activité.
-          </p>
-          <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.85, marginBottom: '2rem' }}>
-            Je suis <strong style={{ color: T.textMain }}>M'Bollo Aka Elvis</strong>, développeur full-stack basé à Abidjan. Avec 3 ans d'expérience et +10 projets livrés, je conçois des solutions web qui répondent aux réalités du marché africain.
-          </p>
-
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised">
-              Me contacter <MessageCircle size={16} />
-            </a>
-            <a href="https://akafolio160502.vercel.app/" target="_blank" rel="noreferrer" className="btn-ghost">
-              Mon portfolio <ExternalLink size={14} />
-            </a>
-          </div>
+            style={{ height: 2, background: 'linear-gradient(90deg,#22c864,rgba(34,200,100,.1))', borderRadius: 2, transformOrigin: 'left' }} />
         </motion.div>
 
-        {/* Right — photo grid */}
-        <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, delay: .2 }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '280px 200px', gap: '1rem' }}>
+        {/* ② Photos — en colonne droite sur desktop, entre titre et texte sur mobile */}
+        <motion.div className="hero-photos-block"
+          initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, delay: .2 }}>
+          <div className="hero-photo-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '280px 200px', gap: '1rem' }}>
             <motion.div whileHover={{ scale: 1.02 }} style={{ gridRow: '1 / 3', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(34,200,100,.2)', boxShadow: '8px 8px 32px rgba(0,0,0,.3)' }}>
               <LazyImg src="/images/about-1.jpg" alt="AKATech Team" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Users size={32} style={{ color: 'rgba(34,200,100,.3)' }} /></div>} />
@@ -81,6 +100,26 @@ function HeroAbout() {
             </motion.div>
           </div>
         </motion.div>
+
+        {/* ③ Texte + boutons — en 2e ligne col 1 sur desktop, en 3e sur mobile */}
+        <motion.div className="hero-text-block"
+          initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, delay: .15, ease: [.22,1,.36,1] }}>
+          <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.85, marginBottom: '.9rem', marginTop: '1.5rem' }}>
+            <strong style={{ color: T.textMain }}>AKATech</strong> accompagne les entrepreneurs et PME en Côte d'Ivoire qui veulent une présence digitale sérieuse — pour gagner en crédibilité, attirer des clients et automatiser leur activité.
+          </p>
+          <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.85, marginBottom: '2rem' }}>
+            Je suis <strong style={{ color: T.textMain }}>M'Bollo Aka Elvis</strong>, développeur full-stack basé à Abidjan. Avec 3 ans d'expérience et +10 projets livrés, je conçois des solutions web qui répondent aux réalités du marché africain.
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised">
+              Me contacter <MessageCircle size={16} />
+            </a>
+            <a href="https://akafolio160502.vercel.app/" target="_blank" rel="noreferrer" className="btn-ghost">
+              Mon portfolio <ExternalLink size={14} />
+            </a>
+          </div>
+        </motion.div>
+
       </div>
     </section>
   )
