@@ -9,7 +9,7 @@ import {
   MessageCircle, Target, Code, Rocket, Timer, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA } from '@/components/ui/index'
+import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA, GreenUnderline } from '@/components/ui/index'
 import { SERVICES, PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench }
@@ -113,15 +113,14 @@ function Hero() {
               {/* Tag */}
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c864', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: '#22c864', letterSpacing: '.1em' }}>{slide.tag}</span>
+                <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>{slide.tag}</span>
               </div>
 
               <h1 style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
                 {slide.title}
               </h1>
-              <h1 style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '1.6rem' }}
-                className="text-gradient">
-                {slide.accent}
+              <h1 style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Dancing Script',cursive", color: '#22c864', letterSpacing: '-.02em', lineHeight: 1.08, marginBottom: '1.6rem' }}>
+                <GreenUnderline>{slide.accent}</GreenUnderline>
               </h1>
               <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.75, marginBottom: '2.8rem', maxWidth: 520 }}>
                 {slide.sub}
@@ -142,7 +141,7 @@ function Hero() {
           {/* Trust badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
             {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map(b => (
-              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: '#66ffaa', letterSpacing: '.06em', backdropFilter: 'blur(6px)' }}>
+              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Dancing Script',cursive", fontWeight: 700, fontSize: '1rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
                 {b}
               </span>
             ))}
@@ -159,8 +158,8 @@ function Hero() {
               <TrendingUp size={18} style={{ color: '#22c864' }} />
             </div>
             <div>
-              <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '.95rem', fontWeight: 900, color: '#22c864' }}>+10</div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
+              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: '#22c864' }}>+10</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
             </div>
           </motion.div>
 
@@ -190,10 +189,10 @@ function Hero() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(34,200,100,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(34,200,100,.12)', backdropFilter: 'blur(12px)' }}>
           {STATS.map(({ val, suffix, label }) => (
             <div key={label} style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center' }}>
-              <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '1.8rem', fontWeight: 900, color: '#22c864', lineHeight: 1 }}>
+              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: '#22c864', lineHeight: 1 }}>
                 <AnimatedCounter target={val} suffix={suffix} />
               </div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
             </div>
           ))}
         </div>
@@ -218,7 +217,7 @@ function ServicesPreview() {
           <SectionEye label="// Nos Services" center />
           <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
             Des solutions qui travaillent pour vous,<br />
-            <span className="text-gradient">même quand vous dormez</span>
+            <GreenUnderline><span className="text-gradient">même quand vous dormez</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -237,14 +236,14 @@ function ServicesPreview() {
                     <Icon size={22} style={{ color: T.green }} />
                   </div>
                   <div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: T.greenSub, letterSpacing: '.1em', marginBottom: '.2rem' }}>{n}</div>
+                    <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.2rem' }}>{n}</div>
                     <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif" }}>{title}</h3>
                   </div>
                 </div>
                 <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.2rem' }}>{desc}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.9rem', borderTop: `1px solid ${T.border}` }}>
-                  <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '.78rem', fontWeight: 700, color: T.green }}>{price}</span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                  <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green }}>{price}</span>
+                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
                     <Timer size={11} style={{ color: T.green }} />{del}
                   </span>
                 </div>
@@ -281,7 +280,7 @@ function WhyUs() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <SectionEye label="// Built on Trust" center />
           <h2 style={{ fontSize: 'clamp(1.9rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            Pourquoi les entrepreneurs{' '}<span className="text-gradient">choisissent AKATech.</span>
+            Pourquoi les entrepreneurs{' '}<GreenUnderline><span className="text-gradient">choisissent AKATech.</span></GreenUnderline>
           </h2>
         </motion.div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(240px,1fr))', gap: '1rem' }}>
@@ -290,7 +289,7 @@ function WhyUs() {
               initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .08 }}
               whileHover={{ y: -4 }}
               style={{ padding: '1.8rem' }}>
-              <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '1.8rem', fontWeight: 900, color: T.green, opacity: .3, lineHeight: 1, marginBottom: '.8rem' }}>{n}</div>
+              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green, opacity: .3, lineHeight: 1, marginBottom: '.8rem' }}>{n}</div>
               <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.4rem' }}>{title}</h3>
               <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
             </motion.div>
@@ -360,7 +359,7 @@ function ProjectsCarousel() {
           <div>
             <SectionEye label="// Réalisations" />
             <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-              Nos dernières <span className="text-gradient">réalisations livrées</span>
+              Nos dernières <GreenUnderline><span className="text-gradient">réalisations livrées</span></GreenUnderline>
             </h2>
           </div>
           <Link href="/projects" className="btn-ghost" style={{ padding: '.65rem 1.4rem', fontSize: '.82rem' }}>
@@ -396,20 +395,20 @@ function ProjectsCarousel() {
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(6,14,9,.95) 0%,rgba(6,14,9,.3) 50%,transparent)' }} />
 
                       {/* Type badge */}
-                      <div style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.56rem', color: '#22c864', letterSpacing: '.08em' }}>
+                      <div style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>
                         {project.type}
                       </div>
 
                       {/* Live badge */}
                       {project.live && (
-                        <div style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(34,200,100,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
+                        <div style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(34,200,100,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
                           <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                           LIVE
                         </div>
                       )}
 
                       {/* Result */}
-                      <div style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.62rem', color: '#22c864' }}>
+                      <div style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Dancing Script',cursive", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
                         {project.result}
                       </div>
                     </div>
@@ -421,7 +420,7 @@ function ProjectsCarousel() {
                         {project.url && (
                           <a href={project.url} target="_blank" rel="noreferrer"
                             onClick={e => e.stopPropagation()}
-                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(34,200,100,.06)', transition: 'all .2s' }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(34,200,100,.06)', transition: 'all .2s' }}
                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,200,100,.18)'; e.currentTarget.style.borderColor = '#22c864' }}
                             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(34,200,100,.06)'; e.currentTarget.style.borderColor = T.border }}>
                             <ExternalLink size={9} /> Voir
@@ -431,7 +430,7 @@ function ProjectsCarousel() {
                       <p style={{ fontSize: '.75rem', color: T.textSub, lineHeight: 1.55, marginBottom: '.9rem' }}>{project.desc.slice(0, 90)}…</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem' }}>
                         {project.tech.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', color: T.green }}>{t}</span>
+                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green }}>{t}</span>
                         ))}
                       </div>
                     </div>
@@ -474,7 +473,7 @@ function Testimonials() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <SectionEye label="// Témoignages" center />
           <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            Ce que disent nos <span className="text-gradient">clients</span>
+            Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -490,13 +489,13 @@ function Testimonials() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(34,200,100,.35)' }}>
                 <LazyImg src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(34,200,100,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c864', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>{t.name[0]}</div>} />
+                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(34,200,100,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c864', fontFamily: "'Dancing Script',cursive", fontWeight: 700 }}>{t.name[0]}</div>} />
               </div>
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
-                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
+                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>{t.role}</div>
               </div>
-              <span style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.12)', border: '1px solid rgba(34,200,100,.25)', color: '#22c864', fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', fontWeight: 700 }}>{t.result}</span>
+              <span style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.12)', border: '1px solid rgba(34,200,100,.25)', color: '#22c864', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700 }}>{t.result}</span>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -537,7 +536,7 @@ function Process() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <SectionEye label="// Notre Processus" center />
           <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            De l'idée à la <span className="text-gradient">mise en ligne</span>
+            De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -552,7 +551,7 @@ function Process() {
                 <div style={{ width: 52, height: 52, borderRadius: 14, background: activeStep === i ? 'rgba(34,200,100,.2)' : 'rgba(34,200,100,.08)', border: `1px solid ${activeStep === i ? 'rgba(34,200,100,.4)' : T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .3s' }}>
                   <Icon size={22} style={{ color: T.green }} />
                 </div>
-                <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '1.4rem', fontWeight: 900, color: T.green, opacity: .3 }}>{n}</span>
+                <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green, opacity: .3 }}>{n}</span>
               </div>
               <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.5rem' }}>{title}</h3>
               <p style={{ fontSize: '.82rem', color: T.textSub, lineHeight: 1.65 }}>{desc}</p>

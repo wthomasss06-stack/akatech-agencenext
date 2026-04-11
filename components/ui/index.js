@@ -245,8 +245,8 @@ export function MarqueeStrip() {
     <div style={{ overflow: 'hidden', padding: '1.2rem 0', background: T.bgAlt, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
       <div style={{ display: 'flex', animation: 'marquee 28s linear infinite', width: 'max-content', gap: '2rem' }}>
         {[...items, ...items].map((item, i) => (
-          <span key={i} style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', color: T.textMuted, letterSpacing: '.1em', textTransform: 'uppercase', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
-            <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.green, display: 'inline-block' }} />
+          <span key={i} style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.textMuted, letterSpacing: '.02em', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+            <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.green, display: 'inline-block', flexShrink: 0 }} />
             {item}
           </span>
         ))}
@@ -290,3 +290,115 @@ export function SectionCTA({ message, cta, href = 'https://wa.me/2250142507750',
     </motion.section>
   )
 }
+
+// ── GREEN UNDERLINE — trait animé SVG vert ───────────────────
+// Soulignement animé vert ondulé qui se dessine de gauche à droite
+// puis pulse en boucle. S'adapte à la largeur du texte.
+// Usage : <GreenUnderline>Votre texte vert</GreenUnderline>
+export function GreenUnderline({ children, style = {}, color = '#22c864' }) {
+  const uid = useRef(`gu${Math.random().toString(36).slice(2,6)}`).current
+  const totalLen = 220 // longueur approximative du path
+
+  return (
+    <span style={{ position: 'relative', display: 'inline-block', paddingBottom: '10px', ...style }}>
+      {children}
+      <svg
+        aria-hidden
+        style={{
+          position: 'absolute',
+          bottom: '0px',
+          left: '-2px',
+          right: '-2px',
+          width: 'calc(100% + 4px)',
+          height: '10px',
+          overflow: 'visible',
+          pointerEvents: 'none',
+        }}
+        viewBox="0 0 200 10"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          {/* Glow vert doux */}
+          <filter id={`gf-${uid}`} x="-10%" y="-100%" width="120%" height="400%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="1.2" result="b" />
+            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+
+        {/* Trait fantôme fixe — base discrète */}
+        <path
+          d="M1,6 C30,2 70,9 100,5 C130,1 170,8 199,5"
+          fill="none"
+          stroke={color}
+          strokeWidth="1.5"
+          strokeOpacity="0.15"
+          strokeLinecap="round"
+        />
+
+        {/* Trait principal animé — se dessine puis pulse */}
+        <path
+          d="M1,6 C30,2 70,9 100,5 C130,1 170,8 199,5"
+          fill="none"
+          stroke={color}
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          filter={`url(#gf-${uid})`}
+          strokeDasharray={`${totalLen} ${totalLen}`}
+          strokeDashoffset={totalLen}
+        >
+          {/* Phase 1 : dessin du trait (0 → 1.2s) */}
+          <animate
+            attributeName="stroke-dashoffset"
+            values={`${totalLen};0;0;0`}
+            dur="3.5s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0;0.35;0.65;1"
+            keySplines="0.4 0 0.2 1;0 0 1 1;0 0 1 1"
+          />
+          {/* Phase 2 : pulse opacité */}
+          <animate
+            attributeName="strokeOpacity"
+            values="0;1;0.8;1;0.6;1;0"
+            dur="3.5s"
+            repeatCount="indefinite"
+            keyTimes="0;0.35;0.5;0.6;0.75;0.85;1"
+          />
+        </path>
+
+        {/* Point lumineux qui court sur le trait */}
+        <circle r="2.5" fill={color} opacity="0" filter={`url(#gf-${uid})`}>
+          <animateMotion
+            dur="3.5s"
+            repeatCount="indefinite"
+            keyPoints="0;1;1;1"
+            keyTimes="0;0.35;0.65;1"
+            calcMode="spline"
+            keySplines="0.4 0 0.2 1;0 0 1 1;0 0 1 1"
+          >
+            <mpath href={`#stroke-path-${uid}`} />
+          </animateMotion>
+          <animate
+            attributeName="opacity"
+            values="0;0.9;0.9;0"
+            dur="3.5s"
+            repeatCount="indefinite"
+            keyTimes="0;0.05;0.32;0.38"
+          />
+        </circle>
+
+        {/* Path dupliqué pour animateMotion mpath */}
+        <path
+          id={`stroke-path-${uid}`}
+          d="M1,6 C30,2 70,9 100,5 C130,1 170,8 199,5"
+          fill="none"
+          stroke="none"
+        />
+      </svg>
+    </span>
+  )
+}
+
+// Alias rétrocompatible
+export const TrainUnderline = GreenUnderline

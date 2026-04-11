@@ -1,0 +1,31 @@
+{
+  "name": "AKATech — Agence Web Abidjan",
+  "short_name": "AKATech",
+  "description": "Solutions digitales sur-mesure pour entrepreneurs en Côte d'Ivoire",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#060e09",
+  "theme_color": "#22c864",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["business", "productivity"],
+  "lang": "fr",
+  "scope": "/"
+}

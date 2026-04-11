@@ -61,7 +61,7 @@ export default function Footer() {
 
           {/* Services */}
           <div>
-            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>Services</div>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>Services</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
               {[['Site Vitrine', '/services'], ['E-Commerce', '/services'], ['Application SaaS', '/services'], ['API & Backend', '/services'], ['Portfolio', '/services'], ['Maintenance', '/services']].map(([label, href]) => (
                 <Link key={label} href={href} style={lk}
@@ -75,7 +75,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div>
-            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>Navigation</div>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>Navigation</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
               {[['Accueil', '/'], ['À propos', '/about'], ['Réalisations', '/projects'], ['Tarifs', '/pricing'], ['Blog', '/blog'], ['Contact', '/contact']].map(([label, href]) => (
                 <Link key={label} href={href} style={lk}
@@ -95,7 +95,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>Contact</div>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>Contact</div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
               {[
                 { icon: Phone, label: '+225 01 42 50 77 50', href: 'tel:+2250142507750' },

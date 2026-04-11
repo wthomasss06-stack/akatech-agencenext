@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&family=Orbitron:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&family=Orbitron:wght@700;900&display=swap');
 
 :root {
   --g1: #22c864;
@@ -126,22 +126,41 @@ body.light-mode .sku-card:hover {
 .s-eye {
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .65rem;
-  letter-spacing: .14em;
+  gap: .55rem;
+  font-family: 'Dancing Script', 'Scripte', cursive;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .02em;
   color: var(--g1);
-  text-transform: uppercase;
+  text-transform: none;
   margin-bottom: .8rem;
+  line-height: 1.1;
 }
-.s-eye::before { content: ''; width: 22px; height: 1.5px; background: var(--g1); display: inline-block; }
+.s-eye::before,
+.s-eye::after {
+  content: '';
+  flex-shrink: 0;
+  width: 26px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--g1));
+  display: inline-block;
+  border-radius: 2px;
+}
+.s-eye::after {
+  background: linear-gradient(90deg, var(--g1), transparent);
+}
 
-/* Text gradient */
+/* Text gradient — Scripte style (couleur solide, compatible cursive) */
 .text-gradient {
-  background: linear-gradient(135deg,#22c864,#66ffaa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  font-family: 'Dancing Script', 'Scripte', cursive;
+  font-weight: 700;
+  color: var(--g1);
+  letter-spacing: -.01em;
+}
+
+/* Mode light */
+body.light-mode .text-gradient {
+  color: #16a34a;
 }
 
 /* Grid background */
@@ -339,3 +358,83 @@ body.light-mode select {
   h1 { font-size: 1.8rem !important; }
   .btn-raised, .btn-ghost { padding: .75rem 1.2rem !important; font-size: .82rem !important; }
 }
+
+/* ══════════════════════════════════════
+   SCRIPTE — Police élégante / cursive
+══════════════════════════════════════ */
+/* Alias Scripte → Dancing Script (même style) */
+@font-face {
+  font-family: 'Scripte';
+  src: local('Dancing Script');
+  font-weight: 700;
+}
+
+/* Titres Scripte héro + sections */
+h1[style*="Scripte"],
+h2[style*="Scripte"],
+h3[style*="Scripte"],
+span[style*="Scripte"],
+p[style*="Scripte"] {
+  font-family: 'Dancing Script', 'Scripte', cursive !important;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+/* Classe utilitaire .scripte — appliquer sur n'importe quel élément */
+.scripte {
+  font-family: 'Dancing Script', 'Scripte', cursive !important;
+  font-weight: 700;
+  letter-spacing: -.01em;
+}
+
+/* Couleur verte en Scripte */
+.scripte-green {
+  font-family: 'Dancing Script', 'Scripte', cursive !important;
+  font-weight: 700;
+  color: var(--g1);
+  letter-spacing: -.01em;
+}
+
+/* Gradient vert en Scripte */
+.scripte-gradient {
+  font-family: 'Dancing Script', 'Scripte', cursive !important;
+  font-weight: 700;
+  background: linear-gradient(135deg, #22c864, #66ffaa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -.01em;
+}
+
+/* Tout span/em coloré en vert dans un heading → Scripte automatiquement */
+h1 span[style*="color: #22c864"],
+h1 span[style*="color:#22c864"],
+h2 span[style*="color: #22c864"],
+h2 span[style*="color:#22c864"],
+h3 span[style*="color: #22c864"],
+h3 span[style*="color:#22c864"],
+h1 span[style*="color: var(--g1)"],
+h2 span[style*="color: var(--g1)"],
+h3 span[style*="color: var(--g1)"] {
+  font-family: 'Dancing Script', 'Scripte', cursive !important;
+  font-weight: 700;
+}
+
+/* GreenUnderline inner span → Scripte quand dans un titre */
+h1 .gu-text, h2 .gu-text, h3 .gu-text {
+  font-family: 'Dancing Script', 'Scripte', cursive !important;
+}
+
+/* ══════════════════════════════════════
+   TRAIN UNDERLINE — animation SVG vert
+══════════════════════════════════════ */
+/* Espacement bas pour laisser la place au train */
+.train-host {
+  padding-bottom: 14px;
+}
+
+/* Ensure animateMotion works on g elements */
+svg[style*="bottom: -10px"] g {
+  will-change: transform;
+}
+

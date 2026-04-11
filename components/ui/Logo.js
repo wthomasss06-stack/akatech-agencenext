@@ -71,7 +71,7 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
           AKATech
         </div>
         {showTag && (
-          <div style={{ fontFamily:"'JetBrains Mono',monospace", fontSize:size*.145, color:tagColor, letterSpacing:'.1em', textTransform:'uppercase', marginTop:3, animation:'akaFadeSlide .6s .15s ease both', transition:'color .35s' }}>
+          <div style={{ fontFamily:"'Syne',sans-serif", fontSize:size*.145, color:tagColor, letterSpacing:'.1em', textTransform:'uppercase', marginTop:3, animation:'akaFadeSlide .6s .15s ease both', transition:'color .35s' }}>
             Agence · Abidjan
           </div>
         )}

@@ -4,7 +4,7 @@ import { motion, useInView, useScroll, useTransform } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Users, Monitor, Code, Check, Award, Heart, Globe, Zap, Star, Target, Rocket, MessageCircle, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
 import { STATS, TESTIMONIALS } from '@/lib/data'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
@@ -29,6 +29,8 @@ function HeroAbout() {
     <section style={{ padding: '9rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '-10%', right: '-5%', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(34,200,100,.07),transparent 65%)', pointerEvents: 'none' }} />
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
+      <LaserBeam position="right" intensity="medium" />
+      <LaserBeam position="left"  intensity="subtle" style={{ height: '45%', top: '5%' }} />
 
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center' }}>
         {/* Left */}
@@ -95,7 +97,7 @@ function StatsSection() {
           <motion.div key={label} className="sku-card"
             initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .1 }}
             style={{ padding: '2rem', textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green, lineHeight: 1 }}>
+            <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.4rem', fontWeight: 700, color: T.green, lineHeight: 1 }}>
               <AnimatedCounter target={val} suffix={suffix} />
             </div>
             <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.5rem' }}>{label}</div>
@@ -201,7 +203,7 @@ function TimelineSection() {
               <div style={{ position: 'absolute', left: '50%', top: '1.2rem', transform: 'translateX(-50%)', width: 14, height: 14, borderRadius: '50%', background: '#22c864', border: '3px solid rgba(34,200,100,.3)', boxShadow: '0 0 16px rgba(34,200,100,.4)', zIndex: 1 }} />
 
               <div className="sku-card" style={{ width: '44%', padding: '1.5rem' }}>
-                <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>
+                <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.4rem', fontWeight: 700, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>
                 <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.4rem' }}>{title}</h3>
                 <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
               </div>
