@@ -3,22 +3,23 @@ import { useEffect } from 'react'
 
 export default function RegisterSW() {
   useEffect(() => {
-    // En dev Next.js, le SW n'est pas servi — on ignore silencieusement
-    // En prod (next build + export statique), le SW sera dans /out/sw.js
     if (typeof window === 'undefined') return
     if (!('serviceWorker' in navigator)) return
 
-    // Délai court pour laisser la page se stabiliser
+    // ⚠️ Ne jamais enregistrer le SW en développement local
+    if (process.env.NODE_ENV !== 'production') {
+      // Désinscrire tout SW existant pour éviter le chargement infini
+      navigator.serviceWorker.getRegistrations().then(regs => {
+        regs.forEach(reg => reg.unregister())
+      })
+      return
+    }
+
     const t = setTimeout(() => {
       navigator.serviceWorker
         .register('/sw.js', { scope: '/' })
-        .then((reg) => {
-          if (process.env.NODE_ENV === 'development') return
-          console.log('[AKATech PWA] SW actif:', reg.scope)
-        })
-        .catch(() => {
-          // Silencieux en dev — normal que le SW ne soit pas dispo
-        })
+        .then(reg => console.log('[AKATech PWA] SW actif:', reg.scope))
+        .catch(() => {})
     }, 1000)
 
     return () => clearTimeout(t)

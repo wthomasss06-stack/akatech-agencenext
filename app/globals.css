@@ -351,6 +351,16 @@ body.light-mode select {
 
   /* Mockup hide on small screens */
   .mockup-wrapper { display: none; }
+
+  /* ── TOUS les pills / badges flottants cachés sur mobile ── */
+  .trust-badges,
+  .no-pill-mobile { display: none !important; }
+
+  /* Stats bar — 2 colonnes sur mobile */
+  .stats-bar-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  /* Hero content grid — 1 colonne sur mobile */
+  .hero-content-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
 }
 
 /* ══════════════════════════════════════

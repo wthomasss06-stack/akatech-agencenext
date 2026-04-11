@@ -34,14 +34,7 @@ function HeroContact() {
   const T = useTheme()
   return (
     <section style={{ padding: 'clamp(6rem,12vw,9rem) 5% clamp(3rem,6vw,5rem)', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
-      <AuroraHero
-        labels={[
-          { text: 'Réponse < 2h',        x: 4,  y: 20, delay: 0 },
-          { text: 'WhatsApp · Email',     x: 66, y: 12, delay: 0.3 },
-          { text: 'Devis sous 24h',       x: 68, y: 74, delay: 0.6 },
-          { text: '+225 01 42 50 77 50',  x: 2,  y: 72, delay: 0.9 },
-        ]}
-      />
+      <AuroraHero labels={[]} />
       <div style={{ maxWidth: 1000, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
           <SectionEye label="// Contactez-nous" center />
@@ -51,19 +44,6 @@ function HeroContact() {
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
             Devis gratuit en moins de 24h. Pas d'engagement, pas de jargon technique — juste une conversation pour comprendre votre besoin.
           </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '.6rem', flexWrap: 'wrap' }}>
-            {[
-              { icon: Zap, label: 'Réponse en < 2h' },
-              { icon: Clock, label: 'Devis sous 24h' },
-              { icon: Shield, label: 'Sans engagement' },
-            ].map(({ icon: Icon, label }, i) => (
-              <motion.div key={label} initial={{ opacity: 0, scale: .8 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .3 + i * .1 }}
-                style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.4rem .85rem', borderRadius: 100, background: 'rgba(34,200,100,.06)', border: `1px solid ${T.border}` }}>
-                <Icon size={13} style={{ color: '#22c864' }} />
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.78rem', fontWeight: 600, color: T.textSub }}>{label}</span>
-              </motion.div>
-            ))}
-          </div>
         </motion.div>
       </div>
     </section>

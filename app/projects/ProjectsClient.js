@@ -22,14 +22,7 @@ function HeroRealisations() {
   const T = useTheme()
   return (
     <section style={{ padding: '9rem 5% 5rem', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
-      <AuroraHero
-        labels={[
-          { text: '+12 Projets livrés', x: 4,  y: 18, delay: 0 },
-          { text: '100% Satisfaits',    x: 70, y: 10, delay: 0.3 },
-          { text: 'React · Django',     x: 72, y: 72, delay: 0.6 },
-          { text: 'Abidjan · CI',       x: 3,  y: 72, delay: 0.9 },
-        ]}
-      />
+      <AuroraHero labels={[]} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Nos Réalisations" center />
@@ -43,14 +36,6 @@ function HeroRealisations() {
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
             Sites vitrines, e-commerces, SaaS, portfolios… Chaque réalisation est une histoire de transformation digitale réussie.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem', justifyContent: 'center' }}>
-            {[{ label: '+10', sub: 'Réalisations' }, { label: '100%', sub: 'Satisfaits' }, { label: '3+', sub: 'Années' }, { label: '48h', sub: 'Support max' }].map(({ label, sub }) => (
-              <div key={sub} style={{ padding: '.5rem 1.2rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.2)', display: 'flex', gap: '.4rem', alignItems: 'center' }}>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#22c864', fontSize: '1.3rem' }}>{label}</span>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, letterSpacing: '.06em' }}>{sub}</span>
-              </div>
-            ))}
-          </div>
         </motion.div>
       </div>
     </section>
@@ -145,7 +130,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
               <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(3,8,6,.95) 0%,rgba(3,8,6,.2) 50%,transparent)' }} />
 
               {/* Badges */}
-              <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+              <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
                 <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
                   {project.type}
                 </div>
@@ -158,7 +143,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
               </div>
 
               {/* Résultat */}
-              <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
+              <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
                 {project.result}
               </div>
             </div>

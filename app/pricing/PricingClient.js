@@ -23,14 +23,7 @@ function HeroPricing() {
   const T = useTheme()
   return (
     <section style={{ padding: '9rem 5% 5rem', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
-      <AuroraHero
-        labels={[
-          { text: 'Mobile Money',       x: 4,  y: 22, delay: 0 },
-          { text: 'Devis gratuit',       x: 68, y: 12, delay: 0.3 },
-          { text: 'Livraison 5–21j',     x: 70, y: 74, delay: 0.6 },
-          { text: 'Sans engagement',     x: 3,  y: 70, delay: 0.9 },
-        ]}
-      />
+      <AuroraHero labels={[]} />
       <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Tarifs" center />

@@ -217,6 +217,7 @@ export default function OrbHeroBg({ labels, orbColor = '#22c864' }) {
       {labels && labels.map(({ text, x, y, delay = 0 }, i) => (
         <motion.div
           key={text}
+          className="no-pill-mobile"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: [0, -5, 0] }}
           transition={{

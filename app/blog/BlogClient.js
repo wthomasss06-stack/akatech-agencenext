@@ -18,14 +18,7 @@ function HeroBlog() {
   const T = useTheme()
   return (
     <section style={{ padding: '9rem 5% 5rem', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
-      <AuroraHero
-        labels={[
-          { text: 'Stratégie Digitale', x: 3,  y: 20, delay: 0 },
-          { text: 'SEO · E-Commerce',   x: 66, y: 10, delay: 0.3 },
-          { text: 'Dev Web · Growth',   x: 68, y: 74, delay: 0.6 },
-          { text: 'Côte d\'Ivoire',     x: 4,  y: 72, delay: 0.9 },
-        ]}
-      />
+      <AuroraHero labels={[]} />
       <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <SectionEye label="// Blog & Ressources" center />
@@ -58,7 +51,7 @@ function FeaturedPost() {
           <div style={{ position: 'relative', minHeight: 280 }}>
             <img src={post.img} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(3,8,6,.3),transparent)' }} />
-            <div style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.35)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
+            <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.35)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
               ⭐ Article vedette
             </div>
           </div>

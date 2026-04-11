@@ -30,14 +30,7 @@ function HeroServices() {
   const T = useTheme()
   return (
     <section style={{ padding: '9rem 5% 6rem', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
-      <AuroraHero
-        labels={[
-          { text: '6 Services',       x: 4,  y: 20, delay: 0   },
-          { text: 'Livraison 5–21j',   x: 67, y: 11, delay: 0.3 },
-          { text: 'Mobile Money',      x: 69, y: 74, delay: 0.6 },
-          { text: 'Devis gratuit 24h', x: 3,  y: 72, delay: 0.9 },
-        ]}
-      />
+      <AuroraHero labels={[]} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Nos Services" center />

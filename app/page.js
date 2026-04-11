@@ -99,7 +99,7 @@ function Hero() {
       />
 
       {/* ── Main content ── */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', width: '100%' }}>
+      <div className="hero-content-grid" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', width: '100%' }}>
 
         {/* Left text */}
         <div style={{ maxWidth: 680 }}>
@@ -111,7 +111,7 @@ function Hero() {
               transition={{ duration: .55, ease: [.22,1,.36,1] }}>
 
               {/* Tag */}
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
+              <div className="no-pill-mobile" style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c864', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                 <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>{slide.tag}</span>
               </div>
@@ -139,9 +139,9 @@ function Hero() {
           </div>
 
           {/* Trust badges */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
+          <div className="trust-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
             {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map(b => (
-              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
+              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
                 {b}
               </span>
             ))}
@@ -186,7 +186,7 @@ function Hero() {
       {/* Stats bar */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .8 }}
         style={{ maxWidth: 1200, margin: '4rem auto 0', padding: '0 5%', width: '100%', position: 'relative', zIndex: 2 }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(34,200,100,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(34,200,100,.12)', backdropFilter: 'blur(12px)' }}>
+        <div className="stats-bar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(34,200,100,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(34,200,100,.12)', backdropFilter: 'blur(12px)' }}>
           {STATS.map(({ val, suffix, label }) => (
             <div key={label} style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center' }}>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#22c864', lineHeight: 1 }}>
@@ -308,7 +308,10 @@ function ProjectsCarousel() {
   const [center, setCenter] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
   const autoRef = useRef(null)
-  const CARDS = PROJECTS.slice(0, 6)
+  const CARDS = [
+    ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
+    ...PROJECTS.filter(p => p.id !== 12 && p.id !== 11).slice(0, 4),
+  ]
   const N = CARDS.length
 
   const advance = useCallback(() => setCenter(c => (c + 1) % N), [N])
@@ -395,20 +398,20 @@ function ProjectsCarousel() {
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(6,14,9,.95) 0%,rgba(6,14,9,.3) 50%,transparent)' }} />
 
                       {/* Type badge */}
-                      <div style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
+                      <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
                         {project.type}
                       </div>
 
                       {/* Live badge */}
                       {project.live && (
-                        <div style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(34,200,100,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
+                        <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(34,200,100,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
                           <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                           LIVE
                         </div>
                       )}
 
                       {/* Result */}
-                      <div style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
+                      <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
                         {project.result}
                       </div>
                     </div>
@@ -495,7 +498,7 @@ function Testimonials() {
                 <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
                 <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>{t.role}</div>
               </div>
-              <span style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.12)', border: '1px solid rgba(34,200,100,.25)', color: '#22c864', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
+              <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.12)', border: '1px solid rgba(34,200,100,.25)', color: '#22c864', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
             </div>
           </motion.div>
         </AnimatePresence>

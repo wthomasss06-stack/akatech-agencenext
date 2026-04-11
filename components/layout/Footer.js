@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Mail, MapPin, Phone, ChevronRight, ExternalLink, Globe } from 'lucide-react'
+import { Mail, MapPin, Phone, ChevronRight, ExternalLink, Globe, Monitor, Smartphone, Apple } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useTheme } from '@/lib/theme'
 
@@ -90,6 +90,34 @@ export default function Footer() {
                 onMouseLeave={e => e.currentTarget.style.color = T.greenSub}>
                 <ExternalLink size={10} style={{ flexShrink: 0 }} />Portfolio complet
               </a>
+            </div>
+          </div>
+
+          {/* App Install */}
+          <div>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>Installer l'app</div>
+            <p style={{ fontSize: '.75rem', color: T.textMuted, lineHeight: 1.65, marginBottom: '1rem' }}>
+              Accédez à AKATech directement depuis votre appareil — rapide, fluide, sans navigateur.
+            </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem' }}>
+              {[
+                { icon: Monitor, label: 'Installer sur PC', href: '/install', hint: 'Windows · macOS · Linux' },
+                { icon: Smartphone, label: 'Télécharger Android', href: '/install', hint: 'APK · Chrome Mobile' },
+                { icon: Apple, label: 'Télécharger iOS', href: '/install', hint: 'iPhone · iPad · Safari' },
+              ].map(({ icon: Icon, label, href, hint }) => (
+                <Link key={label} href={href}
+                  style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.55rem .8rem', borderRadius: 10, background: T.light ? 'rgba(0,0,0,.04)' : 'rgba(34,200,100,.04)', border: `1px solid ${T.border}`, textDecoration: 'none', transition: 'all .22s' }}
+                  onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(34,200,100,.35)'; e.currentTarget.style.background = 'rgba(34,200,100,.08)' }}
+                  onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.background = T.light ? 'rgba(0,0,0,.04)' : 'rgba(34,200,100,.04)' }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 8, background: 'rgba(34,200,100,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <Icon size={14} style={{ color: T.green }} />
+                  </div>
+                  <div>
+                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.72rem', fontWeight: 700, color: T.textMain, lineHeight: 1.2 }}>{label}</div>
+                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', color: T.textMuted, letterSpacing: '.04em' }}>{hint}</div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
 

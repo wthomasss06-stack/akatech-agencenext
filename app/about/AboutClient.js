@@ -61,14 +61,7 @@ function HeroAbout() {
         }
       `}</style>
 
-      <AuroraHero
-        labels={[
-          { text: '3+ Années exp.', x: 5,  y: 20, delay: 0 },
-          { text: 'React · Next.js', x: 68, y: 12, delay: 0.3 },
-          { text: '100% Satisfaits', x: 72, y: 75, delay: 0.6 },
-          { text: 'Abidjan · CI',    x: 3,  y: 70, delay: 0.9 },
-        ]}
-      />
+      <AuroraHero labels={[]} />
 
       <div className="hero-about-grid">
 
@@ -80,8 +73,7 @@ function HeroAbout() {
             Votre croissance digitale,<br />
             <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
           </h1>
-          <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: .8, delay: .3 }}
-            style={{ height: 2, background: 'linear-gradient(90deg,#22c864,rgba(34,200,100,.1))', borderRadius: 2, transformOrigin: 'left' }} />
+
         </motion.div>
 
         {/* ② Photos — en colonne droite sur desktop, entre titre et texte sur mobile */}
@@ -99,11 +91,6 @@ function HeroAbout() {
             <motion.div whileHover={{ scale: 1.03 }} style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(34,200,100,.15)', boxShadow: '6px 6px 24px rgba(0,0,0,.2)', position: 'relative' }}>
               <LazyImg src="/images/about-3.jpg" alt="Développement" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Code size={28} style={{ color: 'rgba(34,200,100,.3)' }} /></div>} />
-              <motion.div initial={{ opacity: 0, scale: .6 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: .8, type: 'spring', stiffness: 280 }}
-                style={{ position: 'absolute', top: -14, right: -10, width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(145deg,#27d570,#1aa355)', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', boxShadow: '4px 4px 16px rgba(0,0,0,.4)' }}>
-                <span style={{ fontFamily: "'Orbitron',sans-serif", fontSize: '.9rem', fontWeight: 900, color: '#fff', lineHeight: 1 }}>3+</span>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.4rem', color: 'rgba(255,255,255,.8)', letterSpacing: '.06em', textTransform: 'uppercase' }}>Années</span>
-              </motion.div>
             </motion.div>
           </div>
         </motion.div>
@@ -138,7 +125,8 @@ function StatsSection() {
   const inView = useInView(ref, { once: true })
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '1rem' }}>
+      <style>{`@media(max-width:640px){.stats-grid{grid-template-columns:1fr 1fr !important;gap:.75rem !important}.stats-grid>div{padding:1.4rem 1rem !important}}`}</style>
+      <div className="stats-grid" style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '1rem' }}>
         {STATS.map(({ val, suffix, label }, i) => (
           <motion.div key={label} className="sku-card"
             initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .1 }}

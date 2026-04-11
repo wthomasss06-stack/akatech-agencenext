@@ -199,7 +199,7 @@ export default function AuroraHero({ labels = [], overlay = 0.55 }) {
           rgba(3,8,6,${overlay * 0.9}) 100%)`,
       }} />
 
-      {/* ── Badges flottants contextuels ── */}
+      {/* ── Badges flottants contextuels — masqués sur mobile ── */}
       {labels.map(({ text, x, y, delay = 0 }, i) => (
         <motion.div
           key={text}
@@ -221,6 +221,7 @@ export default function AuroraHero({ labels = [], overlay = 0.55 }) {
             boxShadow: '0 0 16px rgba(34,200,100,.12)',
             pointerEvents: 'none',
           }}
+          className="aurora-pill"
         >
           <span style={{
             width: 6, height: 6, borderRadius: '50%',
@@ -247,6 +248,9 @@ export default function AuroraHero({ labels = [], overlay = 0.55 }) {
         @keyframes aurora-scan {
           0%   { top: -2%; }
           100% { top: 104%; }
+        }
+        @media (max-width: 768px) {
+          .aurora-pill { display: none !important; }
         }
       `}</style>
     </div>

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   Menu, X, Moon, Sun,
-  Home, User, Layers, FolderOpen, Tag, BookOpen, Mail,
+  Home, User, Layers, FolderOpen, Tag, BookOpen, Mail, Download,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -18,6 +18,7 @@ const NAV_LINKS = [
   { label: 'Tarifs',        href: '/pricing',      Icon: Tag        },
   { label: 'Blog',          href: '/blog',         Icon: BookOpen   },
   { label: 'Contact',       href: '/contact',      Icon: Mail       },
+  { label: 'Installer',     href: '/install',      Icon: Download   },
 ]
 
 /* ─── AnimLink : icône seule → label glisse au hover/actif ─── */
