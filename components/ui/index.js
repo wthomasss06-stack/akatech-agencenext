@@ -245,7 +245,7 @@ export function MarqueeStrip() {
     <div style={{ overflow: 'hidden', padding: '1.2rem 0', background: T.bgAlt, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
       <div style={{ display: 'flex', animation: 'marquee 28s linear infinite', width: 'max-content', gap: '2rem' }}>
         {[...items, ...items].map((item, i) => (
-          <span key={i} style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.textMuted, letterSpacing: '.02em', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+          <span key={i} style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.textMuted, letterSpacing: '.02em', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
             <span style={{ width: 5, height: 5, borderRadius: '50%', background: T.green, display: 'inline-block', flexShrink: 0 }} />
             {item}
           </span>

@@ -163,7 +163,7 @@ function ChannelIcon({ Icon, color, T }) {
 function ChannelInfo({ label, val, desc, T }) {
   return (
     <div style={{ minWidth: 0 }}>
-      <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '.2rem' }}>{label}</div>
+      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '.2rem' }}>{label}</div>
       <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.82rem', fontWeight: 600, color: T.textMain, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{val}</div>
       <div style={{ fontSize: '.7rem', color: T.textMuted }}>{desc}</div>
     </div>

@@ -46,7 +46,7 @@ function HeroRealisations() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem', justifyContent: 'center' }}>
             {[{ label: '+10', sub: 'Réalisations' }, { label: '100%', sub: 'Satisfaits' }, { label: '3+', sub: 'Années' }, { label: '48h', sub: 'Support max' }].map(({ label, sub }) => (
               <div key={sub} style={{ padding: '.5rem 1.2rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.2)', display: 'flex', gap: '.4rem', alignItems: 'center' }}>
-                <span style={{ fontFamily: "'Dancing Script',cursive", fontWeight: 700, color: '#22c864', fontSize: '1.3rem' }}>{label}</span>
+                <span style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: '#22c864', fontSize: '1.3rem' }}>{label}</span>
                 <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, letterSpacing: '.06em' }}>{sub}</span>
               </div>
             ))}
@@ -146,7 +146,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 
               {/* Badges */}
               <div style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>
+                <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
                   {project.type}
                 </div>
                 {project.live && (
@@ -158,7 +158,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
               </div>
 
               {/* Résultat */}
-              <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Dancing Script',cursive", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
+              <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
                 {project.result}
               </div>
             </div>
@@ -171,7 +171,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                 </h3>
                 {project.url ? (
                   <a href={project.url} target="_blank" rel="noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(34,200,100,.3)', background: 'rgba(34,200,100,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(34,200,100,.3)', background: 'rgba(34,200,100,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,200,100,.2)'; e.currentTarget.style.borderColor = '#22c864' }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'rgba(34,200,100,.08)'; e.currentTarget.style.borderColor = 'rgba(34,200,100,.3)' }}>
                     <ExternalLink size={11} /> Voir le site
@@ -187,7 +187,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.4rem' }}>
                 {project.tech.map(t => (
-                  <span key={t} style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>
+                  <span key={t} style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
                     {t}
                   </span>
                 ))}
@@ -224,7 +224,7 @@ function StackedRealisations() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}
         >
           <div>
-            <p style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864', marginBottom: '.4rem' }}>
+            <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864', marginBottom: '.4rem' }}>
               // SCROLL POUR PARCOURIR
             </p>
             <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
@@ -232,7 +232,7 @@ function StackedRealisations() {
             </h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.5rem 1rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: '1px solid rgba(34,200,100,.2)' }}>
-            <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>
+            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
               ↓ Scroll pour découvrir
             </span>
           </div>

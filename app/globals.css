@@ -126,28 +126,30 @@ body.light-mode .sku-card:hover {
 .s-eye {
   display: inline-flex;
   align-items: center;
-  gap: .55rem;
-  font-family: 'Dancing Script', 'Scripte', cursive;
-  font-size: 1.05rem;
+  gap: .5rem;
+  font-family: 'Syne', sans-serif;
+  font-size: .65rem;
   font-weight: 700;
-  letter-spacing: .02em;
+  letter-spacing: .12em;
   color: var(--g1);
-  text-transform: none;
+  text-transform: uppercase;
   margin-bottom: .8rem;
-  line-height: 1.1;
 }
-.s-eye::before,
-.s-eye::after {
+.s-eye::before {
   content: '';
-  flex-shrink: 0;
-  width: 26px;
+  width: 22px;
   height: 1.5px;
-  background: linear-gradient(90deg, transparent, var(--g1));
+  background: var(--g1);
   display: inline-block;
   border-radius: 2px;
 }
 .s-eye::after {
-  background: linear-gradient(90deg, var(--g1), transparent);
+  content: '';
+  width: 22px;
+  height: 1.5px;
+  background: var(--g1);
+  display: inline-block;
+  border-radius: 2px;
 }
 
 /* Text gradient — Scripte style (couleur solide, compatible cursive) */
@@ -360,69 +362,13 @@ body.light-mode select {
 }
 
 /* ══════════════════════════════════════
-   SCRIPTE — Police élégante / cursive
+   SCRIPTE — uniquement pour les mots accentués dans h1/h2
+   Usage : <span className="text-gradient">mot vert</span>
 ══════════════════════════════════════ */
-/* Alias Scripte → Dancing Script (même style) */
 @font-face {
   font-family: 'Scripte';
   src: local('Dancing Script');
   font-weight: 700;
-}
-
-/* Titres Scripte héro + sections */
-h1[style*="Scripte"],
-h2[style*="Scripte"],
-h3[style*="Scripte"],
-span[style*="Scripte"],
-p[style*="Scripte"] {
-  font-family: 'Dancing Script', 'Scripte', cursive !important;
-  font-weight: 700;
-  letter-spacing: -.01em;
-}
-
-/* Classe utilitaire .scripte — appliquer sur n'importe quel élément */
-.scripte {
-  font-family: 'Dancing Script', 'Scripte', cursive !important;
-  font-weight: 700;
-  letter-spacing: -.01em;
-}
-
-/* Couleur verte en Scripte */
-.scripte-green {
-  font-family: 'Dancing Script', 'Scripte', cursive !important;
-  font-weight: 700;
-  color: var(--g1);
-  letter-spacing: -.01em;
-}
-
-/* Gradient vert en Scripte */
-.scripte-gradient {
-  font-family: 'Dancing Script', 'Scripte', cursive !important;
-  font-weight: 700;
-  background: linear-gradient(135deg, #22c864, #66ffaa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -.01em;
-}
-
-/* Tout span/em coloré en vert dans un heading → Scripte automatiquement */
-h1 span[style*="color: #22c864"],
-h1 span[style*="color:#22c864"],
-h2 span[style*="color: #22c864"],
-h2 span[style*="color:#22c864"],
-h3 span[style*="color: #22c864"],
-h3 span[style*="color:#22c864"],
-h1 span[style*="color: var(--g1)"],
-h2 span[style*="color: var(--g1)"],
-h3 span[style*="color: var(--g1)"] {
-  font-family: 'Dancing Script', 'Scripte', cursive !important;
-  font-weight: 700;
-}
-
-/* GreenUnderline inner span → Scripte quand dans un titre */
-h1 .gu-text, h2 .gu-text, h3 .gu-text {
-  font-family: 'Dancing Script', 'Scripte', cursive !important;
 }
 
 /* ══════════════════════════════════════

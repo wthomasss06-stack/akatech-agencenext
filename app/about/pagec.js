@@ -97,7 +97,7 @@ function StatsSection() {
           <motion.div key={label} className="sku-card"
             initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .1 }}
             style={{ padding: '2rem', textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.4rem', fontWeight: 700, color: T.green, lineHeight: 1 }}>
+            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '1rem', fontWeight: 800, color: T.green, lineHeight: 1 }}>
               <AnimatedCounter target={val} suffix={suffix} />
             </div>
             <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.5rem' }}>{label}</div>
@@ -126,7 +126,7 @@ function SkillsSection() {
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
             {SKILLS.map((s, i) => (
               <motion.span key={s} initial={{ opacity: 0, y: 8 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 + i * .04 }}
-                style={{ padding: '.35rem .85rem', background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, borderRadius: 100, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.06em' }}>
+                style={{ padding: '.35rem .85rem', background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, borderRadius: 100, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                 {s}
               </motion.span>
             ))}
@@ -203,7 +203,7 @@ function TimelineSection() {
               <div style={{ position: 'absolute', left: '50%', top: '1.2rem', transform: 'translateX(-50%)', width: 14, height: 14, borderRadius: '50%', background: '#22c864', border: '3px solid rgba(34,200,100,.3)', boxShadow: '0 0 16px rgba(34,200,100,.4)', zIndex: 1 }} />
 
               <div className="sku-card" style={{ width: '44%', padding: '1.5rem' }}>
-                <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.4rem', fontWeight: 700, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '1rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>
                 <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.4rem' }}>{title}</h3>
                 <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
               </div>

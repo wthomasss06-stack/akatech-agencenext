@@ -65,7 +65,7 @@ export default function BlogArticleClient({ slug }) {
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
-              <span style={{ padding: '.25rem .85rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(34,200,100,.08)', border: `1px solid ${T.border}`, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+              <span style={{ padding: '.25rem .85rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(34,200,100,.08)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
                 <Tag size={10} />{post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
@@ -127,12 +127,12 @@ export default function BlogArticleClient({ slug }) {
           <motion.div
             initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .5 }}
             style={{ marginTop: '3rem', padding: '1.5rem', borderRadius: 14, background: T.light ? 'rgba(22,163,74,.04)' : 'rgba(34,200,100,.04)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
-            <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(34,200,100,.15)', border: `2px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: "'Dancing Script',cursive", fontWeight: 800, color: T.green, fontSize: '1.1rem' }}>
+            <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(34,200,100,.15)', border: `2px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: "'Syne',sans-serif", fontWeight: 800, color: T.green, fontSize: '1.1rem' }}>
               E
             </div>
             <div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: T.textMain, fontSize: '.9rem' }}>M'Bollo Aka Elvis</div>
-              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.greenSub, letterSpacing: '.06em' }}>Fondateur · AKATech · Développeur Full-Stack</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.06em' }}>Fondateur · AKATech · Développeur Full-Stack</div>
             </div>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
               className="btn-raised"
@@ -162,7 +162,7 @@ export default function BlogArticleClient({ slug }) {
                       onMouseLeave={e => e.target.style.transform = 'scale(1)'} />
                   </div>
                   <div style={{ padding: '1.3rem' }}>
-                    <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: '.3rem', marginBottom: '.7rem' }}>
+                    <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: '.3rem', marginBottom: '.7rem' }}>
                       <Clock size={10} />{p.readTime}
                     </span>
                     <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.92rem', color: T.textMain, lineHeight: 1.4, marginBottom: '.9rem' }}>{p.title}</h3>

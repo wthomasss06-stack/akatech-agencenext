@@ -120,7 +120,7 @@ function ServicesList() {
                   <Icon size={24} style={{ color: T.green }} />
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.greenSub, letterSpacing: '.1em' }}>{svc.n}</div>
+                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em' }}>{svc.n}</div>
                   <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'Syne',sans-serif" }}>{svc.title}</h3>
                 </div>
               </div>
@@ -137,7 +137,7 @@ function ServicesList() {
 
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 1.2rem', borderRadius: 12, background: T.light ? 'rgba(22,163,74,.05)' : 'rgba(34,200,100,.06)', border: `1px solid ${T.border}`, marginBottom: '1.5rem' }}>
                 <div>
-                  <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green }}>{svc.price}</div>
+                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{svc.price}</div>
                   <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: 4 }}>
                     <Timer size={10} style={{ color: T.green }} />Délai : {svc.del}
                   </div>
@@ -172,13 +172,13 @@ function AllServices() {
                 <div style={{ width: 50, height: 50, borderRadius: 12, background: 'rgba(34,200,100,.1)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
                   <Icon size={22} style={{ color: T.green }} />
                 </div>
-                <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.3rem' }}>{n}</div>
+                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.3rem' }}>{n}</div>
                 <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.5rem' }}>{title}</h3>
                 <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.2rem' }}>{desc}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.9rem', borderTop: `1px solid ${T.border}` }}>
-                  <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green }}>{price}</span>
+                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{price}</span>
                   <a href={`https://wa.me/2250142507750?text=Bonjour, je suis intéressé par ${title}`} target="_blank" rel="noreferrer"
-                    style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, transition: 'gap .2s' }}
+                    style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, transition: 'gap .2s' }}
                     onMouseEnter={e => e.currentTarget.style.gap = '8px'}
                     onMouseLeave={e => e.currentTarget.style.gap = '4px'}>
                     Devis <ArrowRight size={12} />
@@ -211,7 +211,7 @@ function TechSection() {
             <motion.div key={cat} className="sku-card"
               initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .08 }}
               style={{ padding: '1.4rem' }}>
-              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '1rem', borderBottom: `1px solid ${T.border}`, paddingBottom: '.6rem' }}>{cat}</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '1rem', borderBottom: `1px solid ${T.border}`, paddingBottom: '.6rem' }}>{cat}</div>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
                 {items.map(item => (
                   <span key={item} style={{ fontSize: '.82rem', color: T.textSub, display: 'flex', alignItems: 'center', gap: '.4rem' }}>

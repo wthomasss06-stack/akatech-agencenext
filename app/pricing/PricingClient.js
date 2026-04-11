@@ -43,7 +43,7 @@ function HeroPricing() {
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.6rem', padding: '.5rem 1.2rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.2)' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#22c864', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-            <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.06em' }}>
+            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
               Paiement Mobile Money accepté
             </span>
           </div>
@@ -142,7 +142,7 @@ function PricingTabs() {
                       borderRadius: '20px 20px 0 0', pointerEvents: 'none',
                     }} />
 
-                    <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: plan.popular ? '#22c864' : T.textMuted, textTransform: 'uppercase', marginBottom: '.6rem' }}>{plan.badge}</div>
+                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: plan.popular ? '#22c864' : T.textMuted, textTransform: 'uppercase', marginBottom: '.6rem' }}>{plan.badge}</div>
                     <div style={{ fontFamily: "'Orbitron',sans-serif", fontSize: 'clamp(1.4rem,2.5vw,1.7rem)', fontWeight: 900, color: T.textMain, marginBottom: '.2rem', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{plan.price}</div>
                     <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.62rem', color: T.textMuted, marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: 4 }}>
                       <Timer size={11} style={{ color: T.green }} />{plan.del}
@@ -278,7 +278,7 @@ function TrustedBy() {
 
               {/* Result badge */}
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.28rem .85rem', borderRadius: 99, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.4rem' }}>
-                <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864', fontWeight: 700 }}>{t.result}</span>
+                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864', fontWeight: 700 }}>{t.result}</span>
               </div>
 
               {/* Author */}

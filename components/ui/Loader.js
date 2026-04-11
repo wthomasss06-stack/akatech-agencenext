@@ -146,7 +146,7 @@ export default function Loader() {
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 transition={{ delay: .6 }}
-                style={{ fontFamily: "'Dancing Script',cursive", fontWeight: 700, fontSize: '1rem', color: 'rgba(34,200,100,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
+                style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: 'rgba(34,200,100,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
               >
                 Agence Digitale · Abidjan
               </motion.div>
@@ -180,7 +180,7 @@ export default function Loader() {
                 <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', color: 'rgba(255,255,255,.3)', letterSpacing: '.08em' }}>
                   {phase === 1 ? '// Prêt ✓' : '// Chargement...'}
                 </span>
-                <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.4rem', fontWeight: 700, color: '#22c864', letterSpacing: '.05em' }}>
+                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '1rem', fontWeight: 800, color: '#22c864', letterSpacing: '.05em' }}>
                   {progress}%
                 </span>
               </div>

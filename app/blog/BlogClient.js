@@ -58,14 +58,14 @@ function FeaturedPost() {
           <div style={{ position: 'relative', minHeight: 280 }}>
             <img src={post.img} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(3,8,6,.3),transparent)' }} />
-            <div style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.35)', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>
+            <div style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.35)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
               ⭐ Article vedette
             </div>
           </div>
           {/* Content */}
           <div style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1rem' }}>
-              <span style={{ padding: '.25rem .8rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(34,200,100,.08)', border: `1px solid ${T.border}`, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.06em' }}>
+              <span style={{ padding: '.25rem .8rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(34,200,100,.08)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                 {post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
@@ -150,7 +150,7 @@ function BlogGrid() {
                   {/* Content */}
                   <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', marginBottom: '.9rem' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, letterSpacing: '.06em' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                         <CatIcon size={10} />{post.category}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.7rem', color: T.textMuted }}>
@@ -164,7 +164,7 @@ function BlogGrid() {
                       {post.excerpt.length > 120 ? post.excerpt.slice(0, 120) + '…' : post.excerpt}
                     </p>
                     <Link href={`/blog/${post.slug}`}
-                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                       onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                       onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
                       Lire l'article <ArrowRight size={13} />
@@ -204,7 +204,7 @@ function Newsletter() {
           </p>
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(34,200,100,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'Dancing Script',cursive", fontWeight: 700 }}>
+              style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(34,200,100,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
               ✅ Merci ! Vous êtes abonné.
             </motion.div>
           ) : (

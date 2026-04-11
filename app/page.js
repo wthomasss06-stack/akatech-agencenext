@@ -113,7 +113,7 @@ function Hero() {
               {/* Tag */}
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c864', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>{slide.tag}</span>
+                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>{slide.tag}</span>
               </div>
 
               <h1 style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
@@ -141,7 +141,7 @@ function Hero() {
           {/* Trust badges */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
             {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map(b => (
-              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Dancing Script',cursive", fontWeight: 700, fontSize: '1rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
+              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
                 {b}
               </span>
             ))}
@@ -158,7 +158,7 @@ function Hero() {
               <TrendingUp size={18} style={{ color: '#22c864' }} />
             </div>
             <div>
-              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: '#22c864' }}>+10</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#22c864' }}>+10</div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
             </div>
           </motion.div>
@@ -189,7 +189,7 @@ function Hero() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(34,200,100,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(34,200,100,.12)', backdropFilter: 'blur(12px)' }}>
           {STATS.map(({ val, suffix, label }) => (
             <div key={label} style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center' }}>
-              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: '#22c864', lineHeight: 1 }}>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#22c864', lineHeight: 1 }}>
                 <AnimatedCounter target={val} suffix={suffix} />
               </div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
@@ -236,13 +236,13 @@ function ServicesPreview() {
                     <Icon size={22} style={{ color: T.green }} />
                   </div>
                   <div>
-                    <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.2rem' }}>{n}</div>
+                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.2rem' }}>{n}</div>
                     <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif" }}>{title}</h3>
                   </div>
                 </div>
                 <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.2rem' }}>{desc}</p>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.9rem', borderTop: `1px solid ${T.border}` }}>
-                  <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green }}>{price}</span>
+                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{price}</span>
                   <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
                     <Timer size={11} style={{ color: T.green }} />{del}
                   </span>
@@ -289,7 +289,7 @@ function WhyUs() {
               initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .08 }}
               whileHover={{ y: -4 }}
               style={{ padding: '1.8rem' }}>
-              <div style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green, opacity: .3, lineHeight: 1, marginBottom: '.8rem' }}>{n}</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green, opacity: .3, lineHeight: 1, marginBottom: '.8rem' }}>{n}</div>
               <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.4rem' }}>{title}</h3>
               <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
             </motion.div>
@@ -395,7 +395,7 @@ function ProjectsCarousel() {
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(6,14,9,.95) 0%,rgba(6,14,9,.3) 50%,transparent)' }} />
 
                       {/* Type badge */}
-                      <div style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: '#22c864' }}>
+                      <div style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(34,200,100,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>
                         {project.type}
                       </div>
 
@@ -408,7 +408,7 @@ function ProjectsCarousel() {
                       )}
 
                       {/* Result */}
-                      <div style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Dancing Script',cursive", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
+                      <div style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(34,200,100,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#22c864' }}>
                         {project.result}
                       </div>
                     </div>
@@ -420,7 +420,7 @@ function ProjectsCarousel() {
                         {project.url && (
                           <a href={project.url} target="_blank" rel="noreferrer"
                             onClick={e => e.stopPropagation()}
-                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(34,200,100,.06)', transition: 'all .2s' }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(34,200,100,.06)', transition: 'all .2s' }}
                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(34,200,100,.18)'; e.currentTarget.style.borderColor = '#22c864' }}
                             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(34,200,100,.06)'; e.currentTarget.style.borderColor = T.border }}>
                             <ExternalLink size={9} /> Voir
@@ -430,7 +430,7 @@ function ProjectsCarousel() {
                       <p style={{ fontSize: '.75rem', color: T.textSub, lineHeight: 1.55, marginBottom: '.9rem' }}>{project.desc.slice(0, 90)}…</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem' }}>
                         {project.tech.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700, color: T.green }}>{t}</span>
+                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(34,200,100,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green }}>{t}</span>
                         ))}
                       </div>
                     </div>
@@ -489,13 +489,13 @@ function Testimonials() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(34,200,100,.35)' }}>
                 <LazyImg src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(34,200,100,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c864', fontFamily: "'Dancing Script',cursive", fontWeight: 700 }}>{t.name[0]}</div>} />
+                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(34,200,100,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#22c864', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>{t.name[0]}</div>} />
               </div>
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
                 <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>{t.role}</div>
               </div>
-              <span style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.12)', border: '1px solid rgba(34,200,100,.25)', color: '#22c864', fontFamily: "'Dancing Script',cursive", fontSize: '1rem', fontWeight: 700 }}>{t.result}</span>
+              <span style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.12)', border: '1px solid rgba(34,200,100,.25)', color: '#22c864', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -551,7 +551,7 @@ function Process() {
                 <div style={{ width: 52, height: 52, borderRadius: 14, background: activeStep === i ? 'rgba(34,200,100,.2)' : 'rgba(34,200,100,.08)', border: `1px solid ${activeStep === i ? 'rgba(34,200,100,.4)' : T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all .3s' }}>
                   <Icon size={22} style={{ color: T.green }} />
                 </div>
-                <span style={{ fontFamily: "'Dancing Script',cursive", fontSize: '1.3rem', fontWeight: 700, color: T.green, opacity: .3 }}>{n}</span>
+                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green, opacity: .3 }}>{n}</span>
               </div>
               <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.5rem' }}>{title}</h3>
               <p style={{ fontSize: '.82rem', color: T.textSub, lineHeight: 1.65 }}>{desc}</p>
