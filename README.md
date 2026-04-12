@@ -162,8 +162,8 @@ npm run build
 
 ## 👨‍💻 Auteur
 
-Développé par **Aka W. Thomas** — Développeur Full-Stack (React / Next.js / Flask / Django)
+Développé par **MBOLLO AKA NOE ELVIS** — Développeur Full-Stack (React / Next.js / Flask / Django)
 
 ---
 
-*© 2025 AKATech. Tous droits réservés.*
+*© 2026 AKATech. Tous droits réservés.*
