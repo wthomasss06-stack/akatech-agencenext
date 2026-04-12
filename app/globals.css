@@ -283,6 +283,16 @@ body.light-mode select {
 }
 
 /* ══════════════════════════════════════
+   HERO — hauteur uniforme (desktop)
+══════════════════════════════════════ */
+section[style*="9rem 5%"][style*="#060e09"] {
+  min-height: 420px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ══════════════════════════════════════
    RESPONSIVE — MOBILE (≤ 640px)
 ══════════════════════════════════════ */
 @media (max-width: 640px) {
@@ -290,12 +300,12 @@ body.light-mode select {
   /* NAV */
   nav .nav-links { display: none; }
 
-  /* HERO padding */
+  /* HERO padding + reset min-height */
   section[style*="9rem 5%"] {
     padding-top: 7rem !important;
     padding-bottom: 3rem !important;
+    min-height: unset !important;
   }
-
   /* Grids → single column */
   .pricing-grid,
   .trusted-grid,

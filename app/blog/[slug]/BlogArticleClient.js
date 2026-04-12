@@ -53,7 +53,7 @@ export default function BlogArticleClient({ slug }) {
   return (
     <div style={{ paddingTop: 72 }}>
       {/* Header */}
-      <section style={{ padding: '4rem 5% 3rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <section style={{ padding: '5rem 5% 4rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
         <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
         <div style={{ maxWidth: 780, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>

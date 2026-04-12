@@ -22,7 +22,7 @@ const FAQ_ITEMS = [
 function HeroPricing() {
   const T = useTheme()
   return (
-    <section style={{ padding: '9rem 5% 5rem', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: '9rem 5% 6rem', minHeight: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
       <AuroraHero labels={[]} />
       <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>

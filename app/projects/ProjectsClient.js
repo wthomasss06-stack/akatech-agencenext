@@ -21,7 +21,7 @@ import { PROJECTS } from '@/lib/data'
 function HeroRealisations() {
   const T = useTheme()
   return (
-    <section style={{ padding: '9rem 5% 5rem', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
+    <section style={{ padding: '9rem 5% 6rem', minHeight: '70vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', background: '#060e09', position: 'relative', overflow: 'hidden' }}>
       <AuroraHero labels={[]} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
@@ -101,7 +101,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
           }}
         >
           {/* Numéro de réalisation */}
-          <div style={{
+          <div className="no-pill-mobile" style={{
             position: 'absolute', top: '1.2rem', left: '1.2rem',
             fontFamily: "'Orbitron',sans-serif", fontWeight: 900,
             fontSize: '.65rem', color: 'rgba(34,200,100,.55)',

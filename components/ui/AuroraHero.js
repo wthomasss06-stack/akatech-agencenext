@@ -89,11 +89,11 @@ export default function AuroraHero({ labels = [], overlay = 0.55 }) {
         f = f*f*f + 0.6*f*f + 0.5*f;
 
         /* ── Palette AKATech :
-              noir profond → vert foncé → émeraude → teal → blanc ── */
-        vec3 col = mix(vec3(0.01, 0.03, 0.02), vec3(0.04, 0.22, 0.10), clamp(f*1.6, 0.0, 1.0));
-        col = mix(col, vec3(0.13, 0.78, 0.39), clamp(f*f*2.2, 0.0, 1.0));
-        col = mix(col, vec3(0.0,  0.88, 0.60), clamp(pow(f, 3.5)*3.0, 0.0, 1.0));
-        col = mix(col, vec3(0.88, 1.0,  0.94), clamp(pow(f, 5.0)*2.5, 0.0, 1.0));
+              noir profond → vert très sombre → vert forêt → émeraude sombre ── */
+        vec3 col = mix(vec3(0.005, 0.015, 0.008), vec3(0.02, 0.12, 0.05), clamp(f*1.6, 0.0, 1.0));
+        col = mix(col, vec3(0.04, 0.28, 0.12), clamp(f*f*2.2, 0.0, 1.0));
+        col = mix(col, vec3(0.06, 0.42, 0.20), clamp(pow(f, 3.5)*3.0, 0.0, 1.0));
+        col = mix(col, vec3(0.10, 0.58, 0.28), clamp(pow(f, 5.0)*2.5, 0.0, 1.0));
 
         /* vignette */
         float vig = 1.0 - smoothstep(0.5, 1.4, length(uv - 0.5) * 1.8);
@@ -102,8 +102,8 @@ export default function AuroraHero({ labels = [], overlay = 0.55 }) {
         /* bottom darkness */
         col *= mix(0.12, 1.0, smoothstep(0.0, 0.45, uv.y));
 
-        /* mouse glow — vert émeraude */
-        col += vec3(0.05, 0.55, 0.22) * exp(-md * 3.0) * 0.55;
+        /* mouse glow — vert sombre */
+        col += vec3(0.02, 0.22, 0.08) * exp(-md * 3.0) * 0.45;
 
         gl_FragColor = vec4(col, 1.0);
       }
