@@ -46,11 +46,96 @@ const HERO_SLIDES = [
   },
 ]
 
+
+// ── TILT 3D CARD — parallaxe souris native ──────────────────
+function TiltCard({ children, style = {}, className = '', intensity = 14, perspective = 900 }) {
+  const ref = useRef(null)
+  const glowRef = useRef(null)
+  const rafRef = useRef(null)
+
+  const applyTilt = useCallback((mx, my) => {
+    const el = ref.current; if (!el) return
+    const rect = el.getBoundingClientRect()
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    const rx = ((my - cy) / (rect.height / 2)) * -intensity
+    const ry = ((mx - cx) / (rect.width / 2)) * intensity
+    const px = ((mx - rect.left) / rect.width) * 100
+    const py = ((my - rect.top) / rect.height) * 100
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(() => {
+      el.style.transform = `perspective(${perspective}px) rotateX(${rx}deg) rotateY(${ry}deg) scale3d(1.04,1.04,1.04)`
+      el.style.transition = 'transform .07s linear'
+      if (glowRef.current) {
+        glowRef.current.style.background = `radial-gradient(260px circle at ${px}% ${py}%, rgba(34,200,100,.13) 0%, transparent 65%)`
+        glowRef.current.style.opacity = '1'
+      }
+    })
+  }, [intensity, perspective])
+
+  const resetTilt = useCallback(() => {
+    const el = ref.current; if (!el) return
+    cancelAnimationFrame(rafRef.current)
+    el.style.transition = 'transform .45s cubic-bezier(.25,.46,.45,.94)'
+    el.style.transform = `perspective(${perspective}px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)`
+    if (glowRef.current) glowRef.current.style.opacity = '0'
+  }, [perspective])
+
+  useEffect(() => {
+    const el = ref.current; if (!el) return
+    const onTouchMove = e => {
+      if (!e.touches?.[0]) return
+      applyTilt(e.touches[0].clientX, e.touches[0].clientY)
+    }
+    const onTouchEnd = () => resetTilt()
+    el.addEventListener('touchmove', onTouchMove, { passive: true })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+    return () => {
+      el.removeEventListener('touchmove', onTouchMove)
+      el.removeEventListener('touchend', onTouchEnd)
+    }
+  }, [applyTilt, resetTilt])
+
+  return (
+    <div
+      ref={ref}
+      className={className}
+      style={{ ...style, willChange: 'transform', transformStyle: 'preserve-3d', position: 'relative' }}
+      onMouseMove={e => applyTilt(e.clientX, e.clientY)}
+      onMouseLeave={resetTilt}
+    >
+      <div ref={glowRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0, transition: 'opacity .12s', borderRadius: 18 }} />
+      <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>{children}</div>
+    </div>
+  )
+}
+
 function Hero() {
   const T = useTheme()
   const [idx, setIdx] = useState(0)
   const [imgIdx, setImgIdx] = useState(0)
   const timerRef = useRef(null)
+  const sectionRef = useRef(null)
+
+  // ── Mouse parallax springs ──
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+  const springX = useSpring(mouseX, { stiffness: 55, damping: 22 })
+  const springY = useSpring(mouseY, { stiffness: 55, damping: 22 })
+
+  const handleMouseMove = useCallback((e) => {
+    const rect = sectionRef.current?.getBoundingClientRect()
+    if (!rect) return
+    const cx = rect.left + rect.width / 2
+    const cy = rect.top + rect.height / 2
+    mouseX.set(((e.clientX - cx) / rect.width) * 32)
+    mouseY.set(((e.clientY - cy) / rect.height) * 22)
+  }, [mouseX, mouseY])
+
+  const handleMouseLeave = useCallback(() => {
+    mouseX.set(0)
+    mouseY.set(0)
+  }, [mouseX, mouseY])
 
   const next = useCallback(() => {
     setIdx(i => (i + 1) % HERO_SLIDES.length)
@@ -65,17 +150,22 @@ function Hero() {
   const slide = HERO_SLIDES[idx]
 
   return (
-    <section style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden', background: '#030806', paddingTop: 100 }}>
+    <section
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', position: 'relative', overflow: 'hidden', background: '#030806', paddingTop: 100 }}
+    >
 
-      {/* ── Full-bleed image carousel background ── */}
+      {/* ── Full-bleed image carousel background avec parallaxe souris ── */}
       <div style={{ position: 'absolute', inset: 0, zIndex: 0 }}>
         <AnimatePresence mode="sync">
           <motion.div key={imgIdx}
-            initial={{ opacity: 0, scale: 1.04 }}
+            initial={{ opacity: 0, scale: 1.06 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.1, ease: [.4,0,.2,1] }}
-            style={{ position: 'absolute', inset: 0 }}>
+            transition={{ duration: 1.2, ease: [.4,0,.2,1] }}
+            style={{ position: 'absolute', inset: '-5%', x: springX, y: springY }}>
             <img
               src={HERO_SLIDES[imgIdx].img}
               alt=""
@@ -88,8 +178,24 @@ function Hero() {
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.9) 0%, transparent 60%)' }} />
       </div>
 
-      {/* Grid pattern overlay */}
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18, zIndex: 1, pointerEvents: 'none' }} />
+      {/* ── Orbe vert animé qui respire ── */}
+      <motion.div
+        style={{ position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none' }}
+        animate={{
+          background: [
+            'radial-gradient(700px circle at 25% 38%, rgba(34,200,100,.048) 0%, transparent 62%)',
+            'radial-gradient(700px circle at 72% 58%, rgba(34,200,100,.068) 0%, transparent 62%)',
+            'radial-gradient(700px circle at 25% 38%, rgba(34,200,100,.048) 0%, transparent 62%)',
+          ]
+        }}
+        transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+      />
+
+      {/* Grid pattern avec parallaxe ── */}
+      <motion.div
+        className="grid-bg"
+        style={{ position: 'absolute', inset: 0, opacity: .18, zIndex: 1, pointerEvents: 'none', x: springX, y: springY }}
+      />
 
       {/* Scan line */}
       <motion.div
@@ -98,102 +204,157 @@ function Hero() {
         style={{ position: 'absolute', left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(34,200,100,.35),transparent)', pointerEvents: 'none', zIndex: 1 }}
       />
 
+      {/* ── Particules flottantes ── */}
+      {[
+        { left: '12%', top: '22%', s: 4, op: .24, dur: 3.8, dy: 0 },
+        { left: '28%', top: '65%', s: 3, op: .14, dur: 5.1, dy: 1.2 },
+        { left: '55%', top: '28%', s: 4, op: .28, dur: 4.4, dy: 0.6 },
+        { left: '70%', top: '72%', s: 3, op: .11, dur: 6.2, dy: 1.8 },
+        { left: '83%', top: '18%', s: 4, op: .20, dur: 3.2, dy: 0.3 },
+        { left: '92%', top: '52%', s: 3, op: .16, dur: 4.9, dy: 2.1 },
+      ].map((p, i) => (
+        <motion.div
+          key={i}
+          style={{ position: 'absolute', width: p.s, height: p.s, borderRadius: '50%', background: '#22c864', left: p.left, top: p.top, opacity: p.op, zIndex: 1, pointerEvents: 'none' }}
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: p.dur, repeat: Infinity, ease: 'easeInOut', delay: p.dy }}
+        />
+      ))}
+
       {/* ── Main content ── */}
       <div className="hero-content-grid" style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', position: 'relative', zIndex: 2, display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', width: '100%' }}>
 
-        {/* Left text */}
+        {/* Left text — parallaxe doux */}
         <div style={{ maxWidth: 680 }}>
           <AnimatePresence mode="wait">
             <motion.div key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
-              transition={{ duration: .55, ease: [.22,1,.36,1] }}>
+              initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
+              animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, y: -14, filter: 'blur(2px)' }}
+              transition={{ duration: .6, ease: [.22,1,.36,1] }}>
 
               {/* Tag */}
-              <div className="no-pill-mobile" style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
+              <motion.div
+                className="no-pill-mobile"
+                initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .1 }}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(34,200,100,.1)', border: '1px solid rgba(34,200,100,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
                 <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#22c864', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                 <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#22c864' }}>{slide.tag}</span>
-              </div>
+              </motion.div>
 
-              <h1 style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
+                style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
                 {slide.title}
-              </h1>
-              <h1 style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Dancing Script',cursive", color: '#22c864', letterSpacing: '-.02em', lineHeight: 1.08, marginBottom: '1.6rem' }}>
+              </motion.h1>
+              <motion.h1
+                initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .22 }}
+                style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Dancing Script',cursive", color: '#22c864', letterSpacing: '-.02em', lineHeight: 1.08, marginBottom: '1.6rem' }}>
                 <GreenUnderline>{slide.accent}</GreenUnderline>
-              </h1>
-              <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.75, marginBottom: '2.8rem', maxWidth: 520 }}>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .3 }}
+                style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.75, marginBottom: '2.8rem', maxWidth: 520 }}>
                 {slide.sub}
-              </p>
+              </motion.p>
             </motion.div>
           </AnimatePresence>
 
           {/* CTAs */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '3rem' }}>
+          <motion.div
+            initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
+            style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '3rem' }}>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
               Démarrer mon projet <ArrowRight size={16} />
             </a>
             <Link href="/projects" className="btn-ghost" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
               Voir les réalisations
             </Link>
-          </div>
+          </motion.div>
 
           {/* Trust badges */}
-          <div className="trust-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
-            {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map(b => (
-              <span key={b} style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .6 }}
+            className="trust-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
+            {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map((b, bi) => (
+              <motion.span key={b}
+                initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
+                style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(34,200,100,.08)', border: '1px solid rgba(34,200,100,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: '#66ffaa', backdropFilter: 'blur(6px)' }}>
                 {b}
-              </span>
+              </motion.span>
             ))}
-          </div>
+          </motion.div>
         </div>
 
-        {/* Right — floating stat cards + slide indicators */}
+        {/* Right — stat cards 3D tilt + slide indicators */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-end' }} className="hide-mobile">
-          {/* Stat card 1 */}
-          <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-            className="sku-card"
-            style={{ padding: '.85rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem', backdropFilter: 'blur(12px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.85)' }}>
-            <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(34,200,100,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <TrendingUp size={18} style={{ color: '#22c864' }} />
-            </div>
-            <div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#22c864' }}>+10</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
-            </div>
-          </motion.div>
 
-          {/* Stat card 2 */}
-          <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-            className="sku-card"
-            style={{ padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(12px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.85)' }}>
-            <div style={{ display: 'flex' }}>
-              {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#22c864' }} fill="#22c864" />)}
-            </div>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
-          </motion.div>
+          {/* Stat card 1 — tilt 3D + flottement */}
+          <TiltCard intensity={13} perspective={800} style={{ borderRadius: 18 }}>
+            <motion.div
+              initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .6, delay: .35 }}
+            >
+              <motion.div
+                animate={{ y: [0, -8, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="sku-card"
+                style={{ padding: '.85rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem', backdropFilter: 'blur(14px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.88)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 30%,rgba(34,200,100,.07) 50%,transparent 70%)', backgroundSize: '200% 100%', animation: 'shimmer 3.2s ease-in-out infinite', pointerEvents: 'none' }} />
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(34,200,100,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <TrendingUp size={18} style={{ color: '#22c864' }} />
+                </div>
+                <div>
+                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#22c864' }}>+10</div>
+                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </TiltCard>
+
+          {/* Stat card 2 — tilt 3D + flottement décalé */}
+          <TiltCard intensity={10} perspective={800} style={{ borderRadius: 18 }}>
+            <motion.div
+              initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .6, delay: .48 }}
+            >
+              <motion.div
+                animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+                className="sku-card"
+                style={{ padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(14px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.88)', position: 'relative', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 30%,rgba(34,200,100,.07) 50%,transparent 70%)', backgroundSize: '200% 100%', animation: 'shimmer 4s ease-in-out infinite .9s', pointerEvents: 'none' }} />
+                <div style={{ display: 'flex' }}>
+                  {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#22c864' }} fill="#22c864" />)}
+                </div>
+                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
+              </motion.div>
+            </motion.div>
+          </TiltCard>
 
           {/* Slide progress dots */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem', paddingTop: '.5rem' }}>
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .7 }}
+            style={{ display: 'flex', flexDirection: 'column', gap: '.4rem', paddingTop: '.5rem' }}>
             {HERO_SLIDES.map((_, i) => (
               <button key={i} onClick={() => { setIdx(i); setImgIdx(i); clearInterval(timerRef.current); timerRef.current = setInterval(next, 5000) }}
                 style={{ width: 4, height: i === idx ? 28 : 8, borderRadius: 2, background: i === idx ? '#22c864' : 'rgba(34,200,100,.25)', border: 'none', cursor: 'pointer', transition: 'all .35s', display: 'block' }} />
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
 
       {/* Stats bar */}
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .8 }}
+      <motion.div
+        initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .8, duration: .6 }}
         style={{ maxWidth: 1200, margin: '4rem auto 0', padding: '0 5%', width: '100%', position: 'relative', zIndex: 2 }}>
         <div className="stats-bar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(34,200,100,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(34,200,100,.12)', backdropFilter: 'blur(12px)' }}>
-          {STATS.map(({ val, suffix, label }) => (
-            <div key={label} style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center' }}>
+          {STATS.map(({ val, suffix, label }, si) => (
+            <motion.div key={label}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .9 + si * .08 }}
+              whileHover={{ background: 'rgba(34,200,100,.07)', transition: { duration: .2 } }}
+              style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center', cursor: 'default' }}>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#22c864', lineHeight: 1 }}>
                 <AnimatedCounter target={val} suffix={suffix} />
               </div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </motion.div>
@@ -201,6 +362,7 @@ function Hero() {
       <div style={{ paddingBottom: '5rem' }} />
     </section>
   )
+}
 }
 
 // ── SERVICES PREVIEW ─────────────────────────────────────────
