@@ -2,7 +2,7 @@
 
 > Site vitrine de l'agence **AKATech**, spécialisée dans la conception de solutions web sur-mesure pour les entreprises et startups en Côte d'Ivoire et en Afrique de l'Ouest.
 
-🌐 **Live** → [akatech.vercel.app](https://akatech.vercel.app/)
+🌐 **Live** → [akatech-agencenext.vercel.app](https://akatech-agencenext.vercel.app)
 
 ---
 
@@ -162,8 +162,8 @@ npm run build
 
 ## 👨‍💻 Auteur
 
-Développé par **MBOLLO AKA NOE ELVIS** — Développeur Full-Stack (React / Next.js / Flask / Django)
+Développé par **Aka W. Thomas** — Développeur Full-Stack (React / Next.js / Flask / Django)
 
 ---
 
-*© 2026 AKATech. Tous droits réservés.*
+*© 2025 AKATech. Tous droits réservés.*
