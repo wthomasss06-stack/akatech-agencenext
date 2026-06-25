@@ -7,7 +7,7 @@ import {
   ArrowRight, Shield
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, MarqueeStrip, SectionCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 
 
@@ -70,7 +70,7 @@ function HeroContact() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
           <SectionEye label="// Contactez-nous" center />
-          <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -107,7 +107,7 @@ function ContactChannels() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
           <SectionEye label="// Canaux de contact" />
-          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
             Comment nous contacter
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -150,7 +150,7 @@ function ContactChannels() {
         {/* Social row */}
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .5 }}
           style={{ marginTop: '1.5rem', padding: '1rem 1.3rem', borderRadius: 14, background: 'rgba(136,202,83,.04)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.78rem', fontWeight: 600, color: T.textMuted }}>Réseaux sociaux</span>
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.textMuted }}>Réseaux sociaux</span>
           <div style={{ display: 'flex', gap: '.6rem' }}>
             {[
               { Icon: FacebookIcon, href: 'https://web.facebook.com/profile.php?id=61577494705852', label: 'Facebook', color: '#1877f2' },
@@ -182,8 +182,8 @@ function ChannelIcon({ Icon, color, T }) {
 function ChannelInfo({ label, val, desc, T }) {
   return (
     <div style={{ minWidth: 0 }}>
-      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '.2rem' }}>{label}</div>
-      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.82rem', fontWeight: 600, color: T.textMain, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{val}</div>
+      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '.2rem' }}>{label}</div>
+      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 600, color: T.textMain, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{val}</div>
       <div style={{ fontSize: '.7rem', color: T.textMuted }}>{desc}</div>
     </div>
   )
@@ -203,7 +203,7 @@ function ProjectForm() {
     background: T.light ? '#ffffff' : 'rgba(136,202,83,.04)',
     border: `1px solid ${T.light ? 'rgba(0,0,0,.15)' : T.border}`,
     color: T.light ? '#111111' : 'rgba(255,255,255,.85)',
-    fontFamily: "'Syne',sans-serif", fontSize: '.88rem',
+    fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem',
     outline: 'none', transition: 'border-color .2s, box-shadow .2s',
     boxSizing: 'border-box',
     colorScheme: T.light ? 'light' : 'dark',
@@ -236,7 +236,7 @@ function ProjectForm() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <SectionEye label="// Formulaire de projet" />
-          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
             Décrivez votre projet
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -263,7 +263,7 @@ function ProjectForm() {
                     style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: '2px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                     <CheckCircle size={36} style={{ color: '#88ca53' }} />
                   </motion.div>
-                  <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
+                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
                   <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>
                     Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !
                   </p>
@@ -273,13 +273,13 @@ function ProjectForm() {
                   {/* Responsive 2-col grid — stacks on mobile */}
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem', marginBottom: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Votre nom *</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Votre nom *</label>
                       <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Email *</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Email *</label>
                       <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
@@ -288,13 +288,13 @@ function ProjectForm() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem', marginBottom: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
                       <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Type de projet</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Type de projet</label>
                       <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
@@ -310,7 +310,7 @@ function ProjectForm() {
                   </div>
 
                   <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Budget estimé</label>
+                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Budget estimé</label>
                     <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
                       onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                       onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
@@ -324,7 +324,7 @@ function ProjectForm() {
                   </div>
 
                   <div style={{ marginBottom: '1.8rem' }}>
-                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Décrivez votre projet *</label>
+                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Décrivez votre projet *</label>
                     <textarea rows={5} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
                       placeholder="Ex: J'ai une boutique de vêtements à Abidjan et je veux vendre en ligne avec paiement Mobile Money..."
                       value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
@@ -367,7 +367,7 @@ export default function ContactPage() {
       <ContactChannels />
       <ProjectForm />
       <MarqueeStrip />
-      <SectionCTA variant="strong" message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant." cta="Démarrer sur WhatsApp →" />
+      <PageCTA message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant." cta="Démarrer sur WhatsApp" />
     </div>
   )
 }

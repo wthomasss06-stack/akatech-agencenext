@@ -1,9 +1,9 @@
 'use client'
 import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Code, Check, Globe, ArrowUpRight } from 'lucide-react'
+import { Code, Check, Globe, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, LazyImg, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
 
@@ -49,7 +49,7 @@ function HeroRealisations() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 900, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Nos Réalisations" center />
-          <h1 style={{ fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             +18 réalisations livrées,<br /><GreenUnderline><span className="text-gradient">100% satisfaits.</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -238,10 +238,10 @@ function StackedRealisations() {
 
         {/* Heading flottant dans le sticky */}
         <div className="fcx-section-label">
-          <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.45em', textTransform: 'uppercase', marginBottom: '.6rem' }}>
+          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.45em', textTransform: 'uppercase', marginBottom: '.6rem' }}>
             // Scroll pour parcourir
           </p>
-          <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 'clamp(1.1rem,1.8vw,1.6rem)', color: T.textMain, letterSpacing: '-.02em', margin: 0 }}>
+          <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.1rem,1.8vw,1.6rem)', color: T.textMain, letterSpacing: '-.02em', margin: 0 }}>
             {total} réalisations, une par une.
           </h2>
         </div>
@@ -320,7 +320,7 @@ function StackedRealisations() {
           pointer-events: none; z-index: 1;
         }
         .fc-info { display: flex; flex-direction: column; gap: 2.2rem; min-height: 420px; }
-        .fc-name { font-family: 'Syne',sans-serif; font-size: clamp(2rem,3.5vw,3.2rem); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
+        .fc-name { font-family: 'JetBrains Mono',monospace; font-size: clamp(2rem,3.5vw,3.2rem); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
         .fc-sub { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: #88ca53; margin-top: .4rem; }
         .fc-meta { display: flex; flex-direction: column; gap: .55rem; border-left: 2px solid; padding-left: 1.2rem; }
         .fc-meta-row { display: flex; gap: 1rem; font-size: .78rem; }
@@ -337,7 +337,7 @@ function StackedRealisations() {
         .fc-cta {
           display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
           background: #88ca53; color: #04140a;
-          font-family: 'Syne',sans-serif; font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+          font-family: 'JetBrains Mono',monospace; font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
           text-decoration: none; border: 2.5px solid #88ca53; border-radius: 6px;
           transition: background .2s, color .2s, transform .15s; align-self: flex-start;
         }
@@ -359,34 +359,6 @@ function StackedRealisations() {
   )
 }
 
-function StartRealisation() {
-  const T = useTheme()
-  return (
-    <section style={{ padding: '7rem 5%', background: T.bgAlt }}>
-      <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <SectionEye label="// Votre Projet" center />
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
-            Votre réalisation peut être<br />
-            <GreenUnderline><span className="text-gradient">la prochaine ici.</span></GreenUnderline>
-          </h2>
-          <p style={{ fontSize: '.9rem', color: T.textSub, lineHeight: 1.75, maxWidth: 520, margin: '0 auto 2.5rem' }}>
-            Partagez votre idée. On l'écoute, on la chiffre gratuitement et on la réalise dans les délais. Aucun engagement pour commencer.
-          </p>
-          <a
-            href="https://wa.me/2250142507750?text=Bonjour AKATech, j'ai un projet web à vous soumettre."
-            target="_blank" rel="noreferrer"
-            className="btn-raised"
-            style={{ fontSize: '1rem', padding: '1rem 2.5rem' }}>
-            Démarrer ma réalisation <ArrowRight size={16} />
-          </a>
-        </motion.div>
-      </div>
-    </section>
-  )
-}
-
-
 /* ────────────────────────────────────────────────
    PAGE EXPORT
 ──────────────────────────────────────────────── */
@@ -395,7 +367,11 @@ export default function RealisationsPage() {
     <div>
       <HeroRealisations />
       <StackedRealisations />
-      <StartRealisation />
+
+      <PageCTA
+        message="Votre réalisation peut être la prochaine ici. Partagez votre idée — devis gratuit, sans engagement."
+        cta="Démarrer ma réalisation"
+      />
     </div>
   )
 }

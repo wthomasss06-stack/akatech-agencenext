@@ -190,7 +190,7 @@ export default function CardNav() {
         .aka-nav-cta {
           background: linear-gradient(135deg, #88ca53, #5a9e34);
           color: #04140a; border: none; padding: 7px 16px;
-          border-radius: 999px; font-family: 'Syne', sans-serif;
+          border-radius: 999px; font-family: 'JetBrains Mono',monospace;
           font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em;
           text-transform: uppercase; cursor: pointer;
           box-shadow: 0 4px 16px rgba(136,202,83,0.22);
@@ -217,7 +217,7 @@ export default function CardNav() {
         .aka-card-3 { background: #060e09; color: #F2EDE8; border: 1px solid rgba(255,255,255,0.06); }
 
         .aka-card-label {
-          font-family: 'Syne', sans-serif; font-style: italic;
+          font-family: 'JetBrains Mono',monospace; font-style: italic;
           font-size: 0.78rem; font-weight: 400; letter-spacing: 0.05em; opacity: 0.55;
         }
         .aka-card-1 .aka-card-label { color: #0a0c16; }
@@ -227,7 +227,7 @@ export default function CardNav() {
         .aka-card-links { display: flex; flex-direction: column; gap: 10px; }
         .aka-card-link {
           text-decoration: none; color: inherit;
-          font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700;
+          font-family: 'JetBrains Mono',monospace; font-size: 1rem; font-weight: 700;
           display: flex; align-items: center; gap: 10px;
           transition: transform 0.2s, color 0.2s; letter-spacing: -0.01em;
         }
@@ -242,7 +242,7 @@ export default function CardNav() {
         }
         .aka-card-logo-link:hover { transform: scale(1.05); }
         .aka-card-slogan {
-          font-family: 'Syne', sans-serif; font-weight: 700;
+          font-family: 'JetBrains Mono',monospace; font-weight: 700;
           font-size: 1.05rem; line-height: 1.25; letter-spacing: -0.01em;
           color: #0a0c16; margin: 0;
         }
@@ -251,7 +251,7 @@ export default function CardNav() {
         .aka-card-link:hover .aka-link-arrow { opacity: 1; }
 
         .aka-link-sub {
-          font-family: 'Syne', sans-serif; font-style: italic;
+          font-family: 'JetBrains Mono',monospace; font-style: italic;
           font-size: 0.68rem; opacity: 0.5; display: block;
           margin-top: -6px; font-weight: 400;
         }

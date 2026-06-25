@@ -112,7 +112,7 @@ export default function Loader() {
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 transition={{ delay: .5 }}
-                style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: 'rgba(136,202,83,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
+                style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: 'rgba(136,202,83,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
               >
                 Agence Digitale · Abidjan
               </motion.div>
@@ -141,10 +141,10 @@ export default function Loader() {
               </div>
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', color: 'rgba(255,255,255,.3)', letterSpacing: '.08em' }}>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(255,255,255,.3)', letterSpacing: '.08em' }}>
                   {phase === 1 ? '// Prêt ✓' : '// Chargement...'}
                 </span>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '1rem', fontWeight: 800, color: '#88ca53', letterSpacing: '.05em' }}>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', fontWeight: 800, color: '#88ca53', letterSpacing: '.05em' }}>
                   {progress}%
                 </span>
               </div>

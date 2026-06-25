@@ -212,7 +212,7 @@ export default function Footer({ variant = 'page' }) {
 
           {/* Services */}
           <div>
-            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>
               Services
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
@@ -239,7 +239,7 @@ export default function Footer({ variant = 'page' }) {
 
           {/* Navigation */}
           <div>
-            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>
               Navigation
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
@@ -276,7 +276,7 @@ export default function Footer({ variant = 'page' }) {
 
           {/* Contact */}
           <div>
-            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'Syne',sans-serif" }}>
+            <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>
               Contact
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>

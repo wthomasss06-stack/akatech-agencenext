@@ -248,7 +248,7 @@ export default function OrbHeroBg({ labels, orbColor = '#88ca53' }) {
             animationDelay: `${i * 0.3}s`,
           }} />
           <span style={{
-            fontFamily: "'Syne',sans-serif",
+            fontFamily: "'JetBrains Mono',monospace",
             fontSize: '0.6rem', fontWeight: 600,
             color: 'rgba(255,255,255,0.7)',
             letterSpacing: '.1em', textTransform: 'uppercase',

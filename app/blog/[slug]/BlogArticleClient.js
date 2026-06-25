@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Tag, ArrowRight, MessageCircle } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionCTA } from '@/components/ui/index'
+import { PageCTA } from '@/components/ui/index'
 import { BLOG_POSTS } from '@/lib/data'
 
 const FULL_ARTICLES = {
@@ -65,7 +65,7 @@ export default function BlogArticleClient({ slug }) {
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
-              <span style={{ padding: '.25rem .85rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+              <span style={{ padding: '.25rem .85rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
                 <Tag size={10} />{post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
@@ -76,7 +76,7 @@ export default function BlogArticleClient({ slug }) {
               </span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.15, marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.15, marginBottom: '2rem' }}>
               {post.title}
             </h1>
 
@@ -102,7 +102,7 @@ export default function BlogArticleClient({ slug }) {
                 </p>
               )}
               {block.type === 'h2' && (
-                <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.4rem', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', marginTop: '2.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+                <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.4rem', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', marginTop: '2.5rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '.6rem' }}>
                   <span style={{ width: 20, height: 2, background: T.green, display: 'inline-block', flexShrink: 0 }} />
                   {block.text}
                 </h2>
@@ -114,7 +114,7 @@ export default function BlogArticleClient({ slug }) {
               )}
               {block.type === 'cta' && (
                 <div style={{ margin: '2.5rem 0', padding: '2rem', borderRadius: 16, background: T.light ? 'rgba(22,163,74,.05)' : 'rgba(136,202,83,.05)', border: `1px solid ${T.border}`, textAlign: 'center' }}>
-                  <p style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: T.textMain, marginBottom: '1.2rem', fontSize: '1.05rem' }}>{block.text}</p>
+                  <p style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, color: T.textMain, marginBottom: '1.2rem', fontSize: '1.05rem' }}>{block.text}</p>
                   <Link href={block.href} className="btn-raised" style={{ display: 'inline-flex', padding: '.8rem 2rem' }}>
                     Nous contacter <ArrowRight size={14} />
                   </Link>
@@ -127,12 +127,12 @@ export default function BlogArticleClient({ slug }) {
           <motion.div
             initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .5 }}
             style={{ marginTop: '3rem', padding: '1.5rem', borderRadius: 14, background: T.light ? 'rgba(22,163,74,.04)' : 'rgba(136,202,83,.04)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
-            <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: `2px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: "'Syne',sans-serif", fontWeight: 800, color: T.green, fontSize: '1.1rem' }}>
+            <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: `2px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, color: T.green, fontSize: '1.1rem' }}>
               E
             </div>
             <div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, color: T.textMain, fontSize: '.9rem' }}>M'Bollo Aka Elvis</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.06em' }}>Fondateur · AKATech · Développeur Full-Stack</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, color: T.textMain, fontSize: '.9rem' }}>M'Bollo Aka Elvis</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.06em' }}>Fondateur · AKATech · Développeur Full-Stack</div>
             </div>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
               className="btn-raised"
@@ -147,7 +147,7 @@ export default function BlogArticleClient({ slug }) {
       {related.length > 0 && (
         <section style={{ padding: '4rem 5%', background: T.bgAlt }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1.4rem', color: T.textMain, marginBottom: '2rem' }}>
+            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1.4rem', color: T.textMain, marginBottom: '2rem' }}>
               Articles similaires
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: '1.5rem' }}>
@@ -162,10 +162,10 @@ export default function BlogArticleClient({ slug }) {
                       onMouseLeave={e => e.target.style.transform = 'scale(1)'} />
                   </div>
                   <div style={{ padding: '1.3rem' }}>
-                    <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: '.3rem', marginBottom: '.7rem' }}>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em', display: 'flex', alignItems: 'center', gap: '.3rem', marginBottom: '.7rem' }}>
                       <Clock size={10} />{p.readTime}
                     </span>
-                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.92rem', color: T.textMain, lineHeight: 1.4, marginBottom: '.9rem' }}>{p.title}</h3>
+                    <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.92rem', color: T.textMain, lineHeight: 1.4, marginBottom: '.9rem' }}>{p.title}</h3>
                     <Link href={`/blog/${p.slug}`}
                       style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontSize: '.8rem', fontWeight: 700, color: T.green, textDecoration: 'none' }}>
                       Lire <ArrowRight size={12} />
@@ -178,7 +178,7 @@ export default function BlogArticleClient({ slug }) {
         </section>
       )}
 
-      <SectionCTA variant="strong" message="Vous avez un projet web ? Discutons-en gratuitement." cta="Démarrer un projet →" />
+      <PageCTA message="Vous avez un projet web ? Discutons-en gratuitement." cta="Démarrer un projet" />
     </div>
   )
 }

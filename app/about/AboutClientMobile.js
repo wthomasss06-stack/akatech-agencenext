@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Users, Monitor, Code, Heart, Zap, Star, Target, MessageCircle, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS } from '@/lib/data'
 
@@ -62,7 +62,7 @@ function HeroAbout() {
       <div style={{ position: 'relative', zIndex: 10, width: '100%', padding: '7rem 5% 4rem' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <SectionEye label="// Qui sommes-nous" />
-          <h1 style={{ fontSize: 'clamp(2rem,7vw,3rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontSize: 'clamp(2rem,7vw,3rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             Votre croissance digitale,<br />
             <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
           </h1>
@@ -100,7 +100,7 @@ function StatsSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <SectionEye label="// En chiffres" center />
-        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
           Des résultats <GreenUnderline><span className="text-gradient">concrets</span></GreenUnderline>
         </h2>
       </motion.div>
@@ -109,10 +109,10 @@ function StatsSection() {
           <motion.div key={label} className="sku-card"
             initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .1 }}
             style={{ padding: '1.5rem 1rem', textAlign: 'center' }}>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green, lineHeight: 1 }}>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green, lineHeight: 1 }}>
               <AnimatedCounter target={val} suffix={suffix} />
             </div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.55rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
           </motion.div>
         ))}
       </div>
@@ -129,7 +129,7 @@ function FounderSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg, position: 'relative' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
         <SectionEye label="// Le Fondateur" />
-        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
+        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
           M'Bollo Aka <GreenUnderline><span className="text-gradient">Elvis</span></GreenUnderline>
         </h2>
         <p style={{ fontSize: '.95rem', color: T.textMain, lineHeight: 1.85, marginBottom: '.8rem' }}>
@@ -149,14 +149,14 @@ function FounderSection() {
               src="/images/founder.webp"
               alt="M'Bollo Aka Elvis"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 10%' }}
-              placeholder={<div style={{ width: 56, height: 56, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1.1rem' }}>E</div>}
+              placeholder={<div style={{ width: 56, height: 56, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.1rem' }}>E</div>}
             />
           </div>
           <div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '.9rem', color: T.textMain, marginBottom: '.15rem' }}>M'Bollo Aka Elvis</div>
-            <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '.45rem' }}>Dev Full-Stack · Fondateur, AKATech</div>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '.9rem', color: T.textMain, marginBottom: '.15rem' }}>M'Bollo Aka Elvis</div>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '.45rem' }}>Dev Full-Stack · Fondateur, AKATech</div>
             <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '.3rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', textDecoration: 'none', padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)' }}>
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '.3rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', textDecoration: 'none', padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)' }}>
               <ExternalLink size={10} /> Voir son portfolio
             </a>
           </div>
@@ -181,7 +181,7 @@ function TimelineSection() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <SectionEye label="// Notre Histoire" center />
-          <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
             L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -193,8 +193,8 @@ function TimelineSection() {
               style={{ position: 'relative', marginBottom: '2rem' }}>
               <div style={{ position: 'absolute', left: '-1.8rem', top: '1.1rem', width: 12, height: 12, borderRadius: '50%', background: '#88ca53', border: '2.5px solid rgba(136,202,83,.3)', boxShadow: '0 0 10px rgba(136,202,83,.4)' }} />
               <div className="sku-card" style={{ padding: '1.2rem 1.4rem' }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.85rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.35rem' }}>{year}</div>
-                <h3 style={{ fontSize: '.92rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.3rem' }}>{title}</h3>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.35rem' }}>{year}</div>
+                <h3 style={{ fontSize: '.92rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.3rem' }}>{title}</h3>
                 <p style={{ fontSize: '.78rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
               </div>
             </motion.div>
@@ -214,7 +214,7 @@ function ValuesSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <SectionEye label="// Nos Valeurs" center />
-        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
           Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
         </h2>
       </motion.div>
@@ -226,7 +226,7 @@ function ValuesSection() {
             <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(136,202,83,.1)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
               <Icon size={20} style={{ color: T.green }} />
             </div>
-            <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.4rem' }}>{title}</h3>
+            <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}>{title}</h3>
             <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65 }}>{desc}</p>
           </motion.div>
         ))}
@@ -244,7 +244,7 @@ function SkillsSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
         <SectionEye label="// Stack Technique" />
-        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
+        <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
           Les technologies qui font <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
         </h2>
         <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginBottom: '1.5rem' }}>
@@ -254,7 +254,7 @@ function SkillsSection() {
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.45rem' }}>
         {SKILLS.map((s, i) => (
           <motion.span key={s} initial={{ opacity: 0, y: 8 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .2 + i * .04 }}
-            style={{ padding: '.32rem .8rem', background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, borderRadius: 100, fontFamily: "'Syne',sans-serif", fontSize: '.62rem', fontWeight: 600, color: T.green, letterSpacing: '.05em' }}>
+            style={{ padding: '.32rem .8rem', background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, borderRadius: 100, fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', fontWeight: 600, color: T.green, letterSpacing: '.05em' }}>
             {s}
           </motion.span>
         ))}
@@ -280,7 +280,7 @@ function RayonSection() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <SectionEye label="// Rayon d'action" />
-          <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
             Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginBottom: '1.2rem' }}>
@@ -288,7 +288,7 @@ function RayonSection() {
           </p>
           <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', marginBottom: '1.8rem' }}>
             {['100% remote', 'WhatsApp & Zoom', 'FCFA & EUR'].map(b => (
-              <span key={b} style={{ padding: '.28rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{b}</span>
+              <span key={b} style={{ padding: '.28rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{b}</span>
             ))}
           </div>
         </motion.div>
@@ -299,8 +299,8 @@ function RayonSection() {
               style={{ padding: '.85rem 1rem', borderRadius: 12, background: primary ? 'linear-gradient(135deg,rgba(136,202,83,.14),rgba(136,202,83,.05))' : (T.light ? 'rgba(0,0,0,.03)' : 'rgba(255,255,255,.03)'), border: `1px solid ${primary ? 'rgba(136,202,83,.35)' : T.border}`, display: 'flex', alignItems: 'center', gap: '.65rem' }}>
               <FlagBadge code={code} primary={primary} />
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.75rem', color: primary ? '#88ca53' : T.textMain }}>{name}</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', color: T.textMuted }}>{note}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.75rem', color: primary ? '#88ca53' : T.textMain }}>{name}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: T.textMuted }}>{note}</div>
               </div>
             </motion.div>
           ))}
@@ -322,7 +322,7 @@ export default function AboutPageMobile() {
       {/* 5 */}<ValuesSection />
       {/* 6 */}<SkillsSection />
       {/* 7 */}<RayonSection />
-      <SectionCTA variant="strong" message="Prêt à collaborer avec AKATech ? Discutons de votre projet." cta="Démarrer un projet" />
+      <PageCTA message="Prêt à collaborer avec AKATech ? Discutons de votre projet." cta="Démarrer un projet" />
     </div>
   )
 }

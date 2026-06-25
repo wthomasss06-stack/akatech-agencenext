@@ -9,7 +9,7 @@ import {
   ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
 import { PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
 
 // ── HERO avec carrousel images auto ──────────────────────────
@@ -247,12 +247,12 @@ function Hero() {
                   initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .1 }}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
                 </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
-                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
+                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
                   {slide.title}
                   <motion.span
                     initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .22 }}
@@ -287,7 +287,7 @@ function Hero() {
               {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map((b, bi) => (
                 <motion.span key={b}
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
-                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
+                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
                   {b}
                 </motion.span>
               ))}
@@ -306,8 +306,8 @@ function Hero() {
                     <TrendingUp size={18} style={{ color: '#88ca53' }} />
                   </div>
                   <div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
                   </div>
                 </motion.div>
               </motion.div>
@@ -322,7 +322,7 @@ function Hero() {
                   <div style={{ display: 'flex' }}>
                     {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#88ca53' }} fill="#88ca53" />)}
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
                 </motion.div>
               </motion.div>
             </TiltCard>
@@ -348,10 +348,10 @@ function Hero() {
                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .9 + si * .08 }}
                 whileHover={{ background: 'rgba(136,202,83,.07)', transition: { duration: .2 } }}
                 style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center', cursor: 'default' }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
                   <AnimatedCounter target={val} suffix={suffix} />
                 </div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
               </motion.div>
             ))}
           </div>
@@ -382,7 +382,7 @@ function Hero() {
 
       {/* Scroll indicator */}
       <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
-        <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
           style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
@@ -504,7 +504,7 @@ function ServicesPreview() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <SectionEye label="// Nos Services" center />
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
             Des solutions qui travaillent pour vous,<br />
             <GreenUnderline><span className="text-gradient">même quand vous dormez</span></GreenUnderline>
           </h2>
@@ -515,11 +515,11 @@ function ServicesPreview() {
             slides={SERVICES_SLIDES}
             renderCaption={s => (
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em', marginBottom: '.3rem' }}>{s.n}</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '.25rem' }}>{s.title}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em', marginBottom: '.3rem' }}>{s.n}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '.25rem' }}>{s.title}</div>
                 <div style={{ display: 'flex', gap: '.7rem', alignItems: 'center' }}>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: '#88ca53' }}>{s.price}</span>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.5)' }}>· {s.del}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: '#88ca53' }}>{s.price}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.5)' }}>· {s.del}</span>
                 </div>
               </div>
             )}
@@ -548,7 +548,7 @@ function Process() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <SectionEye label="// Notre Processus" center />
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
             De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -558,9 +558,9 @@ function Process() {
             slides={PROCESS_SLIDES}
             renderCaption={s => (
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em', marginBottom: '.3rem' }}>{s.n}</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '.2rem' }}>{s.title}</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.72rem', color: 'rgba(255,255,255,.55)', fontStyle: 'italic' }}>{s.sub}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em', marginBottom: '.3rem' }}>{s.n}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '.2rem' }}>{s.title}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: 'rgba(255,255,255,.55)', fontStyle: 'italic' }}>{s.sub}</div>
               </div>
             )}
           />
@@ -630,7 +630,7 @@ function ProjectsCarousel() {
           style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <SectionEye label="// Réalisations" />
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               Nos dernières <GreenUnderline><span className="text-gradient">réalisations livrées</span></GreenUnderline>
             </h2>
           </div>
@@ -667,20 +667,20 @@ function ProjectsCarousel() {
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(6,14,9,.95) 0%,rgba(6,14,9,.3) 50%,transparent)' }} />
 
                       {/* Type badge */}
-                      <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+                      <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
                         {project.type}
                       </div>
 
                       {/* Live badge */}
                       {project.live && (
-                        <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
+                        <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
                           <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                           LIVE
                         </div>
                       )}
 
                       {/* Result */}
-                      <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
+                      <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
                         {project.result}
                       </div>
                     </div>
@@ -688,11 +688,11 @@ function ProjectsCarousel() {
                     {/* Content */}
                     <div style={{ padding: '1.2rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.35rem', gap: '.6rem' }}>
-                        <h3 style={{ fontSize: '.98rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif" }}>{project.title}</h3>
+                        <h3 style={{ fontSize: '.98rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{project.title}</h3>
                         {project.url && (
                           <a href={project.url} target="_blank" rel="noreferrer"
                             onClick={e => e.stopPropagation()}
-                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(136,202,83,.06)', transition: 'all .2s' }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(136,202,83,.06)', transition: 'all .2s' }}
                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.18)'; e.currentTarget.style.borderColor = '#88ca53' }}
                             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.06)'; e.currentTarget.style.borderColor = T.border }}>
                             <ExternalLink size={9} /> Voir
@@ -702,7 +702,7 @@ function ProjectsCarousel() {
                       <p style={{ fontSize: '.75rem', color: T.textSub, lineHeight: 1.55, marginBottom: '.9rem' }}>{project.desc.slice(0, 90)}…</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem' }}>
                         {project.tech.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green }}>{t}</span>
+                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green }}>{t}</span>
                         ))}
                       </div>
                     </div>
@@ -744,7 +744,7 @@ function Testimonials() {
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <SectionEye label="// Témoignages" center />
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
             Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -761,13 +761,13 @@ function Testimonials() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(136,202,83,.35)' }}>
                 <LazyImg src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>{t.name[0]}</div>} />
+                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>{t.name[0]}</div>} />
               </div>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
-                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>{t.role}</div>
+                <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem' }}>{t.name}</div>
+                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
               </div>
-              <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
+              <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -790,13 +790,11 @@ export default function HomePageMobile() {
       <Hero />
       <MarqueeStrip />
       <ServicesPreview />
-      <SectionCTA message="Vous avez une idée de projet ? On en parle — c'est gratuit et sans engagement." cta="Discuter sur WhatsApp" />
       <Process />
       <MarqueeStrip />
       <ProjectsCarousel />
-      <SectionCTA variant="strong" message="Ces projets ont été livrés dans les délais, avec formation incluse. Le vôtre peut l'être aussi." cta="Démarrer mon projet" />
       <Testimonials />
-      <SectionCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients →" />
+      <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />
     </div>
   )
 }

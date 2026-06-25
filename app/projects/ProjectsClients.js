@@ -28,7 +28,7 @@ function HeroRealisations() {
           <SectionEye label="// Nos Réalisations" center />
           <h1 style={{
             fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800,
-            fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.88)',
+            fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)',
             letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem',
           }}>
             +10 réalisations livrées,<br /><GreenUnderline><span className="text-gradient">100% satisfaits.</span></GreenUnderline>
@@ -103,7 +103,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
           {/* Numéro de réalisation */}
           <div className="no-pill-mobile" style={{
             position: 'absolute', top: '1.2rem', left: '1.2rem',
-            fontFamily: "'Orbitron',sans-serif", fontWeight: 900,
+            fontFamily: "'JetBrains Mono',monospace", fontWeight: 900,
             fontSize: '.65rem', color: 'rgba(136,202,83,.55)',
             letterSpacing: '.12em', zIndex: 2,
             background: 'rgba(3,8,6,.55)', backdropFilter: 'blur(6px)',
@@ -131,11 +131,11 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 
               {/* Badges */}
               <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+                <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
                   {project.type}
                 </div>
                 {project.live && (
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                     EN LIGNE
                   </div>
@@ -143,7 +143,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
               </div>
 
               {/* Résultat */}
-              <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
+              <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
                 {project.result}
               </div>
             </div>
@@ -151,18 +151,18 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
             {/* Contenu */}
             <div style={{ padding: '1.8rem 2rem' }}>
               <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1.2rem', marginBottom: '.6rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: T.textMain, fontFamily: "'Syne',sans-serif", letterSpacing: '-.02em', lineHeight: 1.2 }}>
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", letterSpacing: '-.02em', lineHeight: 1.2 }}>
                   {project.title}
                 </h3>
                 {project.url ? (
                   <a href={project.url} target="_blank" rel="noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)'; e.currentTarget.style.borderColor = '#88ca53' }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.08)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
                     <ExternalLink size={11} /> Voir le site
                   </a>
                 ) : (
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, padding: '.32rem .85rem', borderRadius: 100, border: `1px solid ${T.border}`, whiteSpace: 'nowrap' }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, padding: '.32rem .85rem', borderRadius: 100, border: `1px solid ${T.border}`, whiteSpace: 'nowrap' }}>
                     Démo locale
                   </span>
                 )}
@@ -172,7 +172,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.4rem' }}>
                 {(project.tech || []).map(t => (
-                  <span key={t} style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+                  <span key={t} style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
                     {t}
                   </span>
                 ))}
@@ -209,15 +209,15 @@ function StackedRealisations() {
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}
         >
           <div>
-            <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', marginBottom: '.4rem' }}>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', marginBottom: '.4rem' }}>
               // SCROLL POUR PARCOURIR
             </p>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
               {PROJECTS.length} réalisations, <GreenUnderline><span className="text-gradient">un par un.</span></GreenUnderline>
             </h2>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.5rem 1rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.2)' }}>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
               ↓ Scroll pour découvrir
             </span>
           </div>
@@ -258,7 +258,7 @@ function StartRealisation() {
       <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
           <SectionEye label="// Votre Projet" center />
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
             Votre réalisation peut être<br />
             <GreenUnderline><span className="text-gradient">la prochaine ici.</span></GreenUnderline>
           </h2>

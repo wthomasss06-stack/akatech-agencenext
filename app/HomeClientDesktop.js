@@ -10,7 +10,7 @@ import {
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, SectionCTA, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
 import { SERVICES, PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
@@ -228,12 +228,12 @@ function Hero() {
                   initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .1 }}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
                 </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
-                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
+                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
                   {slide.title}
                   <motion.span
                     initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .22 }}
@@ -266,7 +266,7 @@ function Hero() {
               {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map((b, bi) => (
                 <motion.span key={b}
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
-                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
+                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
                   {b}
                 </motion.span>
               ))}
@@ -284,8 +284,8 @@ function Hero() {
                     <TrendingUp size={18} style={{ color: '#88ca53' }} />
                   </div>
                   <div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
                   </div>
                 </motion.div>
               </motion.div>
@@ -300,7 +300,7 @@ function Hero() {
                   <div style={{ display: 'flex' }}>
                     {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#88ca53' }} fill="#88ca53" />)}
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
                 </motion.div>
               </motion.div>
             </TiltCard>
@@ -324,10 +324,10 @@ function Hero() {
                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .9 + si * .08 }}
                 whileHover={{ background: 'rgba(136,202,83,.07)', transition: { duration: .2 } }}
                 style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center', cursor: 'default' }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
                   <AnimatedCounter target={val} suffix={suffix} />
                 </div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
               </motion.div>
             ))}
           </div>
@@ -352,7 +352,7 @@ function Hero() {
       </div>
 
       <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
-        <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
           style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
@@ -542,15 +542,15 @@ function ServicesPreview() {
             viewport={{ once: true }}
             transition={{ duration: .7, ease: [.22,1,.36,1] }}
           >
-            <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.4em', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.4em', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
               // Nos Services
             </p>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 'clamp(2.2rem,4.5vw,3.8rem)', lineHeight: 1.1, textAlign: 'left', letterSpacing: '-.03em', color: T.textMain }}>
+            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.2rem,4.5vw,3.8rem)', lineHeight: 1.1, textAlign: 'left', letterSpacing: '-.03em', color: T.textMain }}>
               Des solutions<br />
               qui travaillent<br />
               pour <span style={{ color: '#88ca53' }}>vous.</span>
             </h2>
-            <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginTop: '1.4rem', maxWidth: 340 }}>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginTop: '1.4rem', maxWidth: 340 }}>
               Même quand vous dormez — chaque projet est livré dans les délais, avec le code le plus propre et le design le plus soigné.
             </p>
             <motion.div style={{ marginTop: '2rem' }}>
@@ -581,16 +581,16 @@ function ServicesPreview() {
               <div className="skew-fig-body">
                 {/* Numéro + badge */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.6rem' }}>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em' }}>{n}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.2rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'Syne',sans-serif", fontSize: '.58rem', fontWeight: 700, color: '#88ca53' }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em' }}>{n}</span>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.2rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#88ca53' }}>
                     <Icon size={10} /> {title}
                   </span>
                 </div>
-                <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1.05rem', color: T.textMain, letterSpacing: '-.02em', marginBottom: '.5rem' }}>{title}</h3>
+                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1.05rem', color: T.textMain, letterSpacing: '-.02em', marginBottom: '.5rem' }}>{title}</h3>
                 <p style={{ fontSize: '.82rem', color: T.textSub, lineHeight: 1.7, marginBottom: '.9rem' }}>{desc}</p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.88rem', fontWeight: 800, color: '#88ca53' }}>{price}</span>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', fontWeight: 800, color: '#88ca53' }}>{price}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
                     <Timer size={10} style={{ color: '#88ca53' }} /> {del}
                   </span>
                 </div>
@@ -734,7 +734,7 @@ function WhyUs() {
                   <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.45em', textTransform: 'uppercase', color: '#88ca53', marginBottom: '1.4rem', display: 'block' }}>
                     {s.n} — Built on Trust
                   </span>
-                  <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 'clamp(2.6rem,5.5vw,5rem)', lineHeight: .92, letterSpacing: '-.02em', color: T.textMain, marginBottom: '1rem', whiteSpace: 'pre-line' }}>
+                  <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.6rem,5.5vw,5rem)', lineHeight: .92, letterSpacing: '-.02em', color: T.textMain, marginBottom: '1rem', whiteSpace: 'pre-line' }}>
                     {s.title}
                   </h2>
                   <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', letterSpacing: '.12em', textTransform: 'uppercase', color: '#88ca53', opacity: .8, marginBottom: '1.4rem' }}>
@@ -803,7 +803,7 @@ function ProjectsCarousel() {
               <SectionEye label="// Réalisations" />
             </BlurReveal>
             <BlurReveal delay={0.1} direction="left">
-              <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+              <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
                 Nos dernières{' '}
                 <GreenUnderline>
                   <span className="text-gradient">
@@ -866,7 +866,7 @@ function ProjectsCarousel() {
                   {/* Collapsed index */}
                   {!isActive && (
                     <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 800, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.12em', writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
+                      <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 800, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.12em', writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
                         {project.title.slice(0, 12)}
                       </span>
                     </div>
@@ -881,35 +881,35 @@ function ProjectsCarousel() {
                     >
                       {/* Badges */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginBottom: '.7rem', flexWrap: 'wrap' }}>
-                        <span className="no-pill-mobile" style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.18)', border: '1px solid rgba(136,202,83,.4)', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700 }}>{project.type}</span>
+                        <span className="no-pill-mobile" style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.18)', border: '1px solid rgba(136,202,83,.4)', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700 }}>{project.type}</span>
                         {project.live && (
-                          <span style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '.2rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.55rem', color: '#fff', fontWeight: 700 }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '.2rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: '#fff', fontWeight: 700 }}>
                             <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                             LIVE
                           </span>
                         )}
-                        <span style={{ marginLeft: 'auto', fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1rem', color: '#88ca53' }}>{project.result}</span>
+                        <span style={{ marginLeft: 'auto', fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1rem', color: '#88ca53' }}>{project.result}</span>
                       </div>
 
                       {/* Title */}
-                      <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: '1.3rem', fontWeight: 800, color: '#fff', marginBottom: '.5rem', lineHeight: 1.2 }}>
+                      <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.3rem', fontWeight: 800, color: '#fff', marginBottom: '.5rem', lineHeight: 1.2 }}>
                         {project.title}
                       </h3>
-                      <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.82rem', color: 'rgba(255,255,255,.65)', lineHeight: 1.55, marginBottom: '1rem' }}>
+                      <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', color: 'rgba(255,255,255,.65)', lineHeight: 1.55, marginBottom: '1rem' }}>
                         {project.desc?.slice(0, 90)}…
                       </p>
 
                       {/* Tech pills */}
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem', marginBottom: '1rem' }}>
                         {project.tech?.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 600, color: '#88ca53' }}>{t}</span>
+                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: '#88ca53' }}>{t}</span>
                         ))}
                       </div>
 
                       {project.url && (
                         <a href={project.url} target="_blank" rel="noreferrer"
                           onClick={e => e.stopPropagation()}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: '#88ca53', fontSize: '.75rem', fontFamily: "'Syne',sans-serif", fontWeight: 700, textDecoration: 'none', padding: '.4rem .9rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s' }}
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: '#88ca53', fontSize: '.75rem', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, textDecoration: 'none', padding: '.4rem .9rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s' }}
                           onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)' }}
                           onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.08)' }}
                         >
@@ -958,7 +958,7 @@ function Testimonials() {
             <SectionEye label="// Témoignages" center />
           </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -977,13 +977,13 @@ function Testimonials() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(136,202,83,.35)' }}>
                 <LazyImg src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>{t.name[0]}</div>} />
+                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>{t.name[0]}</div>} />
               </div>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
-                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>{t.role}</div>
+                <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem' }}>{t.name}</div>
+                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
               </div>
-              <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
+              <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
             </div>
           </motion.div>
         </AnimatePresence>
@@ -997,117 +997,6 @@ function Testimonials() {
         </BlurReveal>
       </div>
     </section>
-  )
-}
-
-// ═══════════════════════════════════════════════════════════════
-// ── STICKY STACKING CTA — effet vrai_cta.html ─────────────────
-// ═══════════════════════════════════════════════════════════════
-function StickyCTABlock({ message, cta, href = 'https://wa.me/2250142507750', variant = 'default', zIndex = 2, rounded = false }) {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: false, margin: '-20%' })
-
-  const isDark = variant === 'dark' || variant === 'default'
-  const isStrong = variant === 'strong'
-
-  const bg = isStrong
-    ? (T.light ? '#f0fdf4' : '#061a0a')
-    : isDark
-      ? (T.light ? '#ffffff' : '#051208')
-      : (T.light ? '#f4faf5' : '#030c06')
-
-  const borderTop = rounded ? '28px 28px 0 0' : '0'
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        position: 'sticky',
-        top: 0,
-        zIndex,
-        background: bg,
-        borderRadius: borderTop,
-        boxShadow: rounded ? '0 -24px 60px rgba(0,0,0,.28)' : 'none',
-        overflow: 'hidden',
-        minHeight: '60vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '5rem 5%',
-      }}
-    >
-      {/* Grid background */}
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: T.light ? .3 : .15 }} />
-
-      {/* Radial glow */}
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 400, borderRadius: '50%', background: isStrong ? 'radial-gradient(ellipse,rgba(136,202,83,.12),transparent 65%)' : 'radial-gradient(ellipse,rgba(136,202,83,.06),transparent 65%)', pointerEvents: 'none' }} />
-
-      <motion.div
-        initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-        animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-        transition={{ duration: .8, ease: [.22,1,.36,1] }}
-        style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 700 }}
-      >
-        {isStrong && (
-          <motion.div
-            initial={{ opacity: 0, scale: .9 }}
-            animate={inView ? { opacity: 1, scale: 1 } : {}}
-            transition={{ delay: .1, duration: .5 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.5rem', backdropFilter: 'blur(8px)' }}
-          >
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.1em', textTransform: 'uppercase' }}>Prêt à démarrer ?</span>
-          </motion.div>
-        )}
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: .15, duration: .65, ease: [.22,1,.36,1] }}
-          style={{ fontSize: isStrong ? 'clamp(1.5rem,3.2vw,2.4rem)' : 'clamp(1.2rem,2.5vw,1.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '2rem' }}
-        >
-          {message}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: .28, duration: .55 }}
-          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}
-        >
-          <a
-            href={href}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-raised"
-            style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}
-          >
-            {cta} <ArrowRight size={16} />
-          </a>
-          {isStrong && (
-            <Link href="/projects" className="btn-ghost" style={{ fontSize: '1rem', padding: '1rem 2rem' }}>
-              Voir les projets
-            </Link>
-          )}
-        </motion.div>
-
-        {/* Trust pills */}
-        {isStrong && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={inView ? { opacity: 1 } : {}}
-            transition={{ delay: .45 }}
-            className="trust-badges"
-            style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '.5rem', marginTop: '1.8rem' }}
-          >
-            {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Support 48h'].map((b, bi) => (
-              <span key={b} style={{ padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.78rem', color: '#b3ee85' }}>{b}</span>
-            ))}
-          </motion.div>
-        )}
-      </motion.div>
-    </div>
   )
 }
 
@@ -1166,7 +1055,7 @@ function DomainesSection() {
       {/* Décoration big text */}
       <div style={{
         position: 'absolute', left: '-1%', top: '50%', transform: 'translateY(-50%)',
-        fontFamily: "'Syne',sans-serif", fontSize: 'clamp(10rem,18vw,18rem)', fontWeight: 900,
+        fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(10rem,18vw,18rem)', fontWeight: 900,
         color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)',
         lineHeight: 1, pointerEvents: 'none', userSelect: 'none', letterSpacing: '-.05em',
       }}>
@@ -1183,7 +1072,7 @@ function DomainesSection() {
           <BlurReveal delay={0.12}>
             <h2 style={{
               fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800,
-              fontFamily: "'Syne',sans-serif", color: T.textMain,
+              fontFamily: "'JetBrains Mono',monospace", color: T.textMain,
               letterSpacing: '-.03em', lineHeight: 1.15,
             }}>
               Dans quel axe de création{' '}
@@ -1223,7 +1112,7 @@ function DomainesSection() {
               {/* Numéro + Tag */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.4rem' }}>
                 <span style={{
-                  fontFamily: "'Syne',sans-serif", fontSize: '2.8rem', fontWeight: 900,
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: '2.8rem', fontWeight: 900,
                   color: T.light ? 'rgba(136,202,83,.18)' : 'rgba(136,202,83,.15)',
                   lineHeight: 1, letterSpacing: '-.05em',
                 }}>
@@ -1232,7 +1121,7 @@ function DomainesSection() {
                 <span style={{
                   padding: '.22rem .72rem', borderRadius: 100,
                   background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)',
-                  fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700,
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700,
                   color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase',
                 }}>
                   {tag}
@@ -1249,7 +1138,7 @@ function DomainesSection() {
                   <Icon size={20} style={{ color: '#88ca53' }} />
                 </div>
                 <h3 style={{
-                  fontFamily: "'Syne',sans-serif", fontSize: '.97rem', fontWeight: 800,
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.97rem', fontWeight: 800,
                   color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em',
                 }}>
                   {title}
@@ -1277,7 +1166,7 @@ function DomainesSection() {
 
         {/* CTA bas */}
         <BlurReveal delay={0.4} style={{ textAlign: 'center', marginTop: '3rem' }}>
-          <p style={{ fontFamily: "'Syne',sans-serif", fontSize: '.88rem', color: T.textMuted, marginBottom: '1.2rem' }}>
+          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textMuted, marginBottom: '1.2rem' }}>
             Votre projet ne rentre dans aucune case ? On s'adapte.
           </p>
           <a
@@ -1385,7 +1274,7 @@ function ScrollRevealText() {
         <p
           ref={textRef}
           style={{
-            fontFamily: "'Syne',sans-serif",
+            fontFamily: "'JetBrains Mono',monospace",
             fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
             fontWeight: 700,
             lineHeight: 1.32,
@@ -1428,46 +1317,15 @@ export default function HomePageDesktop() {
       <ScrollRevealText />
       <MarqueeStrip />
       <ServicesPreview />
-
-      {/* Sticky stacking CTA block 1 */}
-      <div style={{ position: 'relative' }}>
-        <StickyCTABlock
-          message="Vous avez une idée de projet ? On en parle — c'est gratuit et sans engagement."
-          cta="Discuter sur WhatsApp"
-          variant="default"
-          zIndex={2}
-          rounded={false}
-        />
-        <div style={{ position: 'relative', zIndex: 3 }}>
-          <WhyUs />
-        </div>
-      </div>
-
+      <WhyUs />
       <DomainesSection />
       <MarqueeStrip />
       <ProjectsCarousel />
+      <Testimonials />
 
-      {/* Sticky stacking CTA block 2 — strong variant avec effet vrai_cta.html */}
-      <div style={{ position: 'relative' }}>
-        <StickyCTABlock
-          message="Ces projets ont été livrés dans les délais, avec formation incluse. Le vôtre peut l'être aussi."
-          cta="Démarrer mon projet"
-          variant="strong"
-          zIndex={2}
-          rounded={false}
-        />
-        <div style={{ position: 'relative', zIndex: 3 }}>
-          <Testimonials />
-        </div>
-      </div>
-
-      {/* Final sticky CTA */}
-      <StickyCTABlock
+      <PageCTA
         message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite."
-        cta="Rejoindre nos clients →"
-        variant="dark"
-        zIndex={2}
-        rounded={true}
+        cta="Rejoindre nos clients"
       />
     </div>
   )

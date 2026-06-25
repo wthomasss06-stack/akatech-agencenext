@@ -47,7 +47,7 @@
   padding: 8px 16px 8px 14px;
   cursor: pointer;
   color: #f2ede8;
-  font-family: 'Syne', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-size: .68rem;
   font-weight: 700;
   letter-spacing: .08em;
@@ -174,7 +174,7 @@
   gap: .5rem;
   text-decoration: none;
   color: #f2ede8;
-  font-family: 'Syne', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-size: clamp(2rem, 9vw, 2.8rem);
   font-weight: 800;
   line-height: 1.3;
@@ -225,7 +225,7 @@
   display: block;
   height: 0.95em;
   line-height: 0.95em;
-  font-family: 'Syne', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-size: inherit;
   font-weight: 800;
   letter-spacing: -.02em;
@@ -306,7 +306,7 @@
   border-radius: 999px;
   background: linear-gradient(135deg, #88ca53, #5a9e34);
   color: #04140a;
-  font-family: 'Syne', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   font-size: .9rem;
   text-decoration: none;
@@ -316,7 +316,7 @@
   margin-top: .7rem;
   font-size: .68rem;
   color: rgba(242,237,232,.4);
-  font-family: 'Syne', sans-serif;
+  font-family: 'JetBrains Mono', monospace;
 }
 .light-mode .sm-panel-footer-sub { color: rgba(26,58,10,.45); }
 

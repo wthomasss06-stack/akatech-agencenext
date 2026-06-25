@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { Clock, ArrowRight, Tag, Search, BookOpen, TrendingUp, Globe, ShoppingCart, Code, Zap } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, MarqueeStrip, SectionCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
 
@@ -54,7 +54,7 @@ function HeroBlog() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <SectionEye label="// Blog & Ressources" center />
-          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             Insights & conseils<br />
             <GreenUnderline><span className="text-gradient">pour votre business digital</span></GreenUnderline>
           </h1>
@@ -90,21 +90,21 @@ function FeaturedPost() {
           <div style={{ position: 'relative', minHeight: 280 }}>
             <img src={post.img} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(3,8,6,.3),transparent)' }} />
-            <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.35)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+            <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.35)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
               ⭐ Article vedette
             </div>
           </div>
           {/* Content */}
           <div style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1rem' }}>
-              <span style={{ padding: '.25rem .8rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
+              <span style={{ padding: '.25rem .8rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                 {post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
                 <Clock size={11} />{post.readTime}
               </span>
             </div>
-            <h2 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: '1.4rem', color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '.9rem' }}>
+            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1.4rem', color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '.9rem' }}>
               {post.title}
             </h2>
             <p style={{ fontSize: '.85rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.8rem' }}>{post.excerpt}</p>
@@ -140,7 +140,7 @@ function BlogGrid() {
           <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
             {CATEGORIES.map(cat => (
               <button key={cat} onClick={() => setActiveCategory(cat)}
-                style={{ padding: '.45rem 1.1rem', borderRadius: 100, border: '1px solid', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontSize: '.8rem', fontWeight: 600, transition: 'all .2s', borderColor: activeCategory === cat ? T.green : T.border, background: activeCategory === cat ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: activeCategory === cat ? '#fff' : T.textSub }}>
+                style={{ padding: '.45rem 1.1rem', borderRadius: 100, border: '1px solid', cursor: 'pointer', fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 600, transition: 'all .2s', borderColor: activeCategory === cat ? T.green : T.border, background: activeCategory === cat ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: activeCategory === cat ? '#fff' : T.textSub }}>
                 {cat}
               </button>
             ))}
@@ -149,7 +149,7 @@ function BlogGrid() {
           <div style={{ position: 'relative' }}>
             <Search size={14} style={{ position: 'absolute', left: '.9rem', top: '50%', transform: 'translateY(-50%)', color: T.textMuted, pointerEvents: 'none' }} />
             <input
-              style={{ padding: '.6rem 1rem .6rem 2.4rem', borderRadius: 100, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.82rem', outline: 'none', width: 220 }}
+              style={{ padding: '.6rem 1rem .6rem 2.4rem', borderRadius: 100, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', outline: 'none', width: 220 }}
               placeholder="Rechercher..."
               value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
               onFocus={e => e.target.style.borderColor = '#88ca53'}
@@ -182,21 +182,21 @@ function BlogGrid() {
                   {/* Content */}
                   <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', marginBottom: '.9rem' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                         <CatIcon size={10} />{post.category}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.7rem', color: T.textMuted }}>
                         <Clock size={10} />{post.readTime}
                       </span>
                     </div>
-                    <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.98rem', color: T.textMain, letterSpacing: '-.02em', lineHeight: 1.4, marginBottom: '.7rem' }}>
+                    <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.98rem', color: T.textMain, letterSpacing: '-.02em', lineHeight: 1.4, marginBottom: '.7rem' }}>
                       {post.title}
                     </h3>
                     <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65, flex: 1, marginBottom: '1.4rem' }}>
                       {post.excerpt.length > 120 ? post.excerpt.slice(0, 120) + '…' : post.excerpt}
                     </p>
                     <Link href={`/blog/${post.slug}`}
-                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                       onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                       onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
                       Lire l'article <ArrowRight size={13} />
@@ -228,7 +228,7 @@ function Newsletter() {
             <Zap size={24} style={{ color: T.green }} />
           </div>
           <SectionEye label="// Newsletter" center />
-          <h2 style={{ fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
             Restez informé des dernières tendances
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, marginBottom: '2rem' }}>
@@ -236,13 +236,13 @@ function Newsletter() {
           </p>
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
+              style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
               ✅ Merci ! Vous êtes abonné.
             </motion.div>
           ) : (
             <div style={{ display: 'flex', gap: '.8rem' }}>
               <input type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
-                style={{ flex: 1, padding: '.85rem 1rem', borderRadius: 10, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.88rem', outline: 'none' }}
+                style={{ flex: 1, padding: '.85rem 1rem', borderRadius: 10, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', outline: 'none' }}
                 onFocus={e => e.target.style.borderColor = '#88ca53'}
                 onBlur={e => e.target.style.borderColor = T.border}
               />
@@ -264,7 +264,7 @@ export default function BlogPage() {
       <FeaturedPost />
       <BlogGrid />
       <Newsletter />
-      <SectionCTA message="Vous avez un projet web ? Discutons-en — consultation gratuite et sans engagement." cta="Démarrer un projet →" />
+      <PageCTA message="Vous avez un projet web ? Discutons-en — consultation gratuite et sans engagement." cta="Démarrer un projet" />
     </div>
   )
 }

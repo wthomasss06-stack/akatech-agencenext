@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
 
@@ -154,57 +154,6 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections, animKey = 'beam'
   )
 }
 
-function StickyCTABlock({ message, cta, href = 'https://wa.me/2250142507750', variant = 'default', zIndex = 2, rounded = false }) {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: false, margin: '-20%' })
-  const isStrong = variant === 'strong'
-  const bg = isStrong ? (T.light ? '#f0fdf4' : '#061a0a') : (T.light ? '#ffffff' : '#051208')
-  return (
-    <div ref={ref} style={{
-      position: 'sticky', top: 0, zIndex,
-      background: bg,
-      borderRadius: rounded ? '28px 28px 0 0' : 0,
-      boxShadow: rounded ? '0 -24px 60px rgba(0,0,0,.28)' : 'none',
-      overflow: 'hidden', minHeight: '60vh',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '5rem 5%',
-    }}>
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: T.light ? .3 : .15 }} />
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 400, borderRadius: '50%', background: isStrong ? 'radial-gradient(ellipse,rgba(136,202,83,.12),transparent 65%)' : 'radial-gradient(ellipse,rgba(136,202,83,.06),transparent 65%)', pointerEvents: 'none' }} />
-      <motion.div
-        initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-        animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-        transition={{ duration: .8, ease: [.22,1,.36,1] }}
-        style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 700 }}>
-        {isStrong && (
-          <motion.div
-            initial={{ opacity: 0, scale: .9 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: .1, duration: .5 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.5rem', backdropFilter: 'blur(8px)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.1em', textTransform: 'uppercase' }}>Prêt à démarrer ?</span>
-          </motion.div>
-        )}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15, duration: .65, ease: [.22,1,.36,1] }}
-          style={{ fontSize: isStrong ? 'clamp(1.5rem,3.2vw,2.4rem)' : 'clamp(1.2rem,2.5vw,1.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '2rem' }}>
-          {message}
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .28, duration: .55 }}
-          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
-          <a href={href} target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
-            {cta} <ArrowRight size={16} />
-          </a>
-          <Link href="/blog" className="btn-ghost" style={{ fontSize: '1rem', padding: '1rem 2rem' }}>
-            Tous les articles
-          </Link>
-        </motion.div>
-      </motion.div>
-    </div>
-  )
-}
-
 // ═══════════════════════════════════════════════════════════════
 // ── HERO ─────────────────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
@@ -246,7 +195,7 @@ function HeroBlog() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <SectionEye label="// Blog & Ressources" center />
-          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             Insights & conseils<br />
             <GreenUnderline><span className="text-gradient">pour votre business digital</span></GreenUnderline>
           </h1>
@@ -330,7 +279,7 @@ function FeaturedPost() {
               background: 'rgba(136,202,83,.18)',
               backdropFilter: 'blur(10px)',
               border: '1px solid rgba(136,202,83,.4)',
-              fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700,
+              fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700,
               color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase',
             }}>
               ⭐ Article vedette
@@ -339,7 +288,7 @@ function FeaturedPost() {
             {/* Date bas gauche */}
             <div style={{
               position: 'absolute', bottom: '1.2rem', left: '1.2rem',
-              fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600,
+              fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600,
               color: 'rgba(255,255,255,.7)',
             }}>
               {post.date}
@@ -375,12 +324,12 @@ function FeaturedPost() {
               <span style={{
                 padding: '.28rem .85rem', borderRadius: 100,
                 background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)',
-                fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700,
+                fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700,
                 color: '#88ca53', letterSpacing: '.06em',
               }}>
                 {post.category}
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace" }}>
                 <Clock size={11} /> {post.readTime}
               </span>
             </motion.div>
@@ -391,7 +340,7 @@ function FeaturedPost() {
               animate={inView ? { opacity: 1, x: 0 } : {}}
               transition={{ delay: .28, duration: .5, ease: [.22,1,.36,1] }}
               style={{
-                fontFamily: "'Syne', sans-serif",
+                fontFamily: "'JetBrains Mono',monospace",
                 fontWeight: 800,
                 fontSize: 'clamp(1.25rem, 2vw, 1.55rem)',
                 color: T.textMain,
@@ -427,7 +376,7 @@ function FeaturedPost() {
                 style={{ display: 'flex', flexWrap: 'wrap', gap: '.4rem', marginBottom: '1.6rem' }}
               >
                 {post.tags.slice(0, 3).map(tag => (
-                  <span key={tag} style={{ padding: '.18rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.06)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.62rem', fontWeight: 600, color: T.textMuted }}>
+                  <span key={tag} style={{ padding: '.18rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.06)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', fontWeight: 600, color: T.textMuted }}>
                     #{tag}
                   </span>
                 ))}
@@ -492,7 +441,7 @@ function HashtagCloud() {
     <section ref={ref} style={{ padding: '3rem 5%', background: T.bgAlt, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.1em', flexShrink: 0 }}>Sujets</span>
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.1em', flexShrink: 0 }}>Sujets</span>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
             {HASHTAGS.map((tag, i) => (
               <motion.span
@@ -501,7 +450,7 @@ function HashtagCloud() {
                 animate={inView ? { opacity: 1, scale: 1 } : {}}
                 transition={{ delay: i * .035, duration: .35 }}
                 whileHover={{ y: -2, background: 'rgba(136,202,83,.14)', borderColor: 'rgba(136,202,83,.4)', color: '#88ca53' }}
-                style={{ padding: '.28rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.06)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.7rem', fontWeight: 600, color: T.textSub, cursor: 'pointer', transition: 'all .2s' }}
+                style={{ padding: '.28rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.06)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 600, color: T.textSub, cursor: 'pointer', transition: 'all .2s' }}
               >
                 {tag}
               </motion.span>
@@ -544,7 +493,7 @@ function BlogGrid() {
             <SectionEye label="// Tous les articles" center />
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
+            <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
               Explorez nos <GreenUnderline>
                 <span className="text-gradient"><LetterReveal text="ressources digitales" stagger={0.025} /></span>
               </GreenUnderline>
@@ -569,7 +518,7 @@ function BlogGrid() {
                   <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} style={{ color: T.green }} />
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
               {/* Center */}
@@ -584,7 +533,7 @@ function BlogGrid() {
                   <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} style={{ color: T.green }} />
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.58rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
             </div>
@@ -597,7 +546,7 @@ function BlogGrid() {
             <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>
               {CATEGORIES.map(cat => (
                 <button key={cat} onClick={() => setActiveCategory(cat)}
-                  style={{ padding: '.45rem 1.1rem', borderRadius: 100, border: '1px solid', cursor: 'pointer', fontFamily: "'Syne',sans-serif", fontSize: '.8rem', fontWeight: 600, transition: 'all .2s', borderColor: activeCategory === cat ? T.green : T.border, background: activeCategory === cat ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: activeCategory === cat ? '#fff' : T.textSub }}>
+                  style={{ padding: '.45rem 1.1rem', borderRadius: 100, border: '1px solid', cursor: 'pointer', fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 600, transition: 'all .2s', borderColor: activeCategory === cat ? T.green : T.border, background: activeCategory === cat ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: activeCategory === cat ? '#fff' : T.textSub }}>
                   {cat}
                 </button>
               ))}
@@ -605,7 +554,7 @@ function BlogGrid() {
             <div style={{ position: 'relative' }}>
               <Search size={14} style={{ position: 'absolute', left: '.9rem', top: '50%', transform: 'translateY(-50%)', color: T.textMuted, pointerEvents: 'none' }} />
               <input
-                style={{ padding: '.6rem 1rem .6rem 2.4rem', borderRadius: 100, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.82rem', outline: 'none', width: 220 }}
+                style={{ padding: '.6rem 1rem .6rem 2.4rem', borderRadius: 100, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', outline: 'none', width: 220 }}
                 placeholder="Rechercher..."
                 value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                 onFocus={e => e.target.style.borderColor = '#88ca53'}
@@ -638,21 +587,21 @@ function BlogGrid() {
                     {/* Content */}
                     <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', marginBottom: '.9rem' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                           <CatIcon size={10} />{post.category}
                         </span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.7rem', color: T.textMuted }}>
                           <Clock size={10} />{post.readTime}
                         </span>
                       </div>
-                      <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.98rem', color: T.textMain, letterSpacing: '-.02em', lineHeight: 1.4, marginBottom: '.7rem' }}>
+                      <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.98rem', color: T.textMain, letterSpacing: '-.02em', lineHeight: 1.4, marginBottom: '.7rem' }}>
                         {post.title}
                       </h3>
                       <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65, flex: 1, marginBottom: '1.4rem' }}>
                         {post.excerpt.length > 120 ? post.excerpt.slice(0, 120) + '…' : post.excerpt}
                       </p>
                       <Link href={`/blog/${post.slug}`}
-                        style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                        style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                         onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                         onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
                         Lire l'article <ArrowRight size={13} />
@@ -685,7 +634,7 @@ function Newsletter() {
             <Zap size={24} style={{ color: T.green }} />
           </div>
           <SectionEye label="// Newsletter" center />
-          <h2 style={{ fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
             <LetterReveal text="Restez informé des dernières tendances" stagger={0.02} />
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, marginBottom: '2rem' }}>
@@ -693,13 +642,13 @@ function Newsletter() {
           </p>
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
-              style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>
+              style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
               ✅ Merci ! Vous êtes abonné.
             </motion.div>
           ) : (
             <div style={{ display: 'flex', gap: '.8rem' }}>
               <input type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
-                style={{ flex: 1, padding: '.85rem 1rem', borderRadius: 10, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.88rem', outline: 'none' }}
+                style={{ flex: 1, padding: '.85rem 1rem', borderRadius: 10, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', outline: 'none' }}
                 onFocus={e => e.target.style.borderColor = '#88ca53'}
                 onBlur={e => e.target.style.borderColor = T.border}
               />
@@ -759,7 +708,7 @@ function ProcessBlog() {
           <SectionEye label="// Votre roadmap digitale" center />
         </BlurReveal>
         <BlurReveal delay={0.1}>
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
             Du blog au{' '}
             <GreenUnderline>
               <span className="text-gradient">
@@ -789,10 +738,10 @@ function ProcessBlog() {
                 <div style={{ width: 80, height: 80, borderRadius: 24, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.28)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon size={32} style={{ color: '#88ca53' }} />
                 </div>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
               </div>
               <div>
-                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
                   <LetterReveal text={title} stagger={0.035} />
                 </h3>
                 <p style={{ fontSize: '1.05rem', color: T.textSub, lineHeight: 1.8, maxWidth: 480 }}>{desc}</p>
@@ -823,18 +772,12 @@ export default function BlogPage() {
       <HashtagCloud />
       <BlogGrid />
       <Newsletter />
+      <ProcessBlog />
 
-      {/* Sticky stacking — Process + CTA */}
-      <div style={{ position: 'relative' }}>
-        <ProcessBlog />
-        <StickyCTABlock
-          variant="strong"
-          zIndex={10}
-          rounded
-          message="Vous avez un projet web ? Discutons-en — consultation gratuite et sans engagement."
-          cta="Démarrer un projet →"
-        />
-      </div>
+      <PageCTA
+        message="Vous avez un projet web ? Discutons-en — consultation gratuite et sans engagement."
+        cta="Démarrer un projet"
+      />
     </div>
   )
 }

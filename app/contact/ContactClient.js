@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, MarqueeStrip, GreenUnderline } from '@/components/ui/index'
+import { SectionEye, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 
 // ═══════════════════════════════════════════════════════════════
@@ -149,54 +149,6 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections, animKey = 'beam'
   )
 }
 
-function StickyCTABlock({ message, cta, href = 'https://wa.me/2250142507750', variant = 'default', zIndex = 2, rounded = false }) {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: false, margin: '-20%' })
-  const isStrong = variant === 'strong'
-  const bg = isStrong ? (T.light ? '#f0fdf4' : '#061a0a') : (T.light ? '#ffffff' : '#051208')
-  return (
-    <div ref={ref} style={{
-      position: 'sticky', top: 0, zIndex,
-      background: bg,
-      borderRadius: rounded ? '28px 28px 0 0' : 0,
-      boxShadow: rounded ? '0 -24px 60px rgba(0,0,0,.28)' : 'none',
-      overflow: 'hidden', minHeight: '60vh',
-      display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '5rem 5%',
-    }}>
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: T.light ? .3 : .15 }} />
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 400, borderRadius: '50%', background: isStrong ? 'radial-gradient(ellipse,rgba(136,202,83,.12),transparent 65%)' : 'radial-gradient(ellipse,rgba(136,202,83,.06),transparent 65%)', pointerEvents: 'none' }} />
-      <motion.div
-        initial={{ opacity: 0, y: 40, filter: 'blur(8px)' }}
-        animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-        transition={{ duration: .8, ease: [.22,1,.36,1] }}
-        style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: 700 }}>
-        {isStrong && (
-          <motion.div
-            initial={{ opacity: 0, scale: .9 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: .1, duration: .5 }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.5rem', backdropFilter: 'blur(8px)' }}>
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.1em', textTransform: 'uppercase' }}>Prêt à démarrer ?</span>
-          </motion.div>
-        )}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15, duration: .65, ease: [.22,1,.36,1] }}
-          style={{ fontSize: isStrong ? 'clamp(1.5rem,3.2vw,2.4rem)' : 'clamp(1.2rem,2.5vw,1.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '2rem' }}>
-          {message}
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .28, duration: .55 }}
-          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '1rem' }}>
-          <a href={href} target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
-            {cta} <ArrowRight size={16} />
-          </a>
-        </motion.div>
-      </motion.div>
-    </div>
-  )
-}
-
 // ═══════════════════════════════════════════════════════════════
 // ── SVG ICONS ────────────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
@@ -256,7 +208,7 @@ function HeroContact() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
           <SectionEye label="// Contactez-nous" center />
-          <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -294,8 +246,8 @@ function ChannelIcon({ Icon, color, T }) {
 function ChannelInfo({ label, val, desc, T }) {
   return (
     <div style={{ minWidth: 0 }}>
-      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '.2rem' }}>{label}</div>
-      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.82rem', fontWeight: 600, color: T.textMain, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{val}</div>
+      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '.2rem' }}>{label}</div>
+      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 600, color: T.textMain, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{val}</div>
       <div style={{ fontSize: '.7rem', color: T.textMuted }}>{desc}</div>
     </div>
   )
@@ -322,7 +274,7 @@ function ContactChannels() {
             <SectionEye label="// Canaux de contact" />
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
               <LetterReveal text="Comment nous contacter" stagger={0.025} />
             </h2>
           </BlurReveal>
@@ -350,7 +302,7 @@ function ContactChannels() {
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} style={{ color }} />
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
               {/* Center */}
@@ -365,7 +317,7 @@ function ContactChannels() {
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} style={{ color }} />
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
                 </div>
               ))}
             </div>
@@ -407,7 +359,7 @@ function ContactChannels() {
         {/* Social row */}
         <BlurReveal delay={0.5}>
           <div style={{ marginTop: '1.5rem', padding: '1rem 1.3rem', borderRadius: 14, background: 'rgba(136,202,83,.04)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.78rem', fontWeight: 600, color: T.textMuted }}>Réseaux sociaux</span>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.textMuted }}>Réseaux sociaux</span>
             <div style={{ display: 'flex', gap: '.6rem' }}>
               {[
                 { Icon: FacebookIcon, href: 'https://web.facebook.com/profile.php?id=61577494705852', label: 'Facebook', color: '#1877f2' },
@@ -471,7 +423,7 @@ function GeoSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <BlurReveal style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <SectionEye label="// Rayon d'action" center />
-          <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
             Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, marginTop: '.75rem', lineHeight: 1.7, maxWidth: 500, margin: '.75rem auto 0' }}>
@@ -488,8 +440,8 @@ function GeoSection() {
               style={{ padding: '1rem 1.2rem', borderRadius: 14, background: primary ? 'linear-gradient(135deg,rgba(136,202,83,.12),rgba(136,202,83,.04))' : (T.light ? 'rgba(0,0,0,.03)' : 'rgba(255,255,255,.03)'), border: `1px solid ${primary ? 'rgba(136,202,83,.3)' : T.border}`, display: 'flex', alignItems: 'center', gap: '.75rem' }}>
               <FlagBadge code={code} primary={primary} />
               <div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.82rem', color: primary ? '#88ca53' : T.textMain }}>{name}</div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.62rem', color: T.textMuted }}>{note}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.82rem', color: primary ? '#88ca53' : T.textMain }}>{name}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted }}>{note}</div>
               </div>
             </motion.div>
           ))}
@@ -509,8 +461,8 @@ function GeoSection() {
                   <Icon size={14} style={{ color: '#88ca53' }} />
                 </div>
                 <div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em' }}>{label}</div>
-                  <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.78rem', fontWeight: 700, color: T.textMain }}>{val}</div>
+                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em' }}>{label}</div>
+                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain }}>{val}</div>
                 </div>
               </div>
             ))}
@@ -563,7 +515,7 @@ function ProcessContact() {
           <SectionEye label="// Votre devis express" center />
         </BlurReveal>
         <BlurReveal delay={0.1}>
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
             De la demande à la{' '}
             <GreenUnderline>
               <span className="text-gradient">
@@ -593,10 +545,10 @@ function ProcessContact() {
                 <div style={{ width: 80, height: 80, borderRadius: 24, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.28)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon size={32} style={{ color: '#88ca53' }} />
                 </div>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
               </div>
               <div>
-                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
                   <LetterReveal text={title} stagger={0.03} />
                 </h3>
                 <p style={{ fontSize: '1.05rem', color: T.textSub, lineHeight: 1.8, maxWidth: 480 }}>{desc}</p>
@@ -632,7 +584,7 @@ function ProjectForm() {
     background: T.light ? '#ffffff' : 'rgba(136,202,83,.04)',
     border: `1px solid ${T.light ? 'rgba(0,0,0,.15)' : T.border}`,
     color: T.light ? '#111111' : 'rgba(255,255,255,.85)',
-    fontFamily: "'Syne',sans-serif", fontSize: '.88rem',
+    fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem',
     outline: 'none', transition: 'border-color .2s, box-shadow .2s',
     boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark',
   }
@@ -666,7 +618,7 @@ function ProjectForm() {
         {/* ── Header ── */}
         <BlurReveal style={{ marginBottom: '2rem' }}>
           <SectionEye label="// Formulaire de projet" />
-          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
             <LetterReveal text="Décrivez votre projet" stagger={0.028} />
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -694,7 +646,7 @@ function ProjectForm() {
                     style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: '2px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                     <CheckCircle size={36} style={{ color: '#88ca53' }} />
                   </motion.div>
-                  <h3 style={{ fontFamily: "'Syne',sans-serif", fontWeight: 800, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
+                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
                   <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>
                     Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !
                   </p>
@@ -703,13 +655,13 @@ function ProjectForm() {
                 <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem', marginBottom: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Votre nom *</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Votre nom *</label>
                       <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Email *</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Email *</label>
                       <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
@@ -718,13 +670,13 @@ function ProjectForm() {
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem', marginBottom: '1rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
                       <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Type de projet</label>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Type de projet</label>
                       <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))}
                         onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
@@ -740,7 +692,7 @@ function ProjectForm() {
                   </div>
 
                   <div style={{ marginBottom: '1rem' }}>
-                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Budget estimé</label>
+                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Budget estimé</label>
                     <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.budget} onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
                       onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                       onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
@@ -754,7 +706,7 @@ function ProjectForm() {
                   </div>
 
                   <div style={{ marginBottom: '1.8rem' }}>
-                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'Syne',sans-serif", letterSpacing: '.06em', textTransform: 'uppercase' }}>Décrivez votre projet *</label>
+                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Décrivez votre projet *</label>
                     <textarea rows={5} style={{ ...inputStyle, resize: 'vertical', lineHeight: 1.6 }}
                       placeholder="Ex: J'ai une boutique de vêtements à Abidjan et je veux vendre en ligne avec paiement Mobile Money..."
                       value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
@@ -801,18 +753,12 @@ export default function ContactPage() {
       <GeoSection />
       <ProjectForm />
       <MarqueeStrip />
+      <ProcessContact />
 
-      {/* Sticky stacking — Process + CTA */}
-      <div style={{ position: 'relative' }}>
-        <ProcessContact />
-        <StickyCTABlock
-          variant="strong"
-          zIndex={10}
-          rounded
-          message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
-          cta="Démarrer sur WhatsApp →"
-        />
-      </div>
+      <PageCTA
+        message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
+        cta="Démarrer sur WhatsApp"
+      />
     </div>
   )
 }

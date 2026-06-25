@@ -119,11 +119,11 @@ function StickyCTABlock({ message, cta, href = 'https://wa.me/2250142507750', va
           <motion.div initial={{ opacity: 0, scale: .9 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: .1 }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.5rem', backdropFilter: 'blur(8px)' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-            <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.1em', textTransform: 'uppercase' }}>Prêt à démarrer ?</span>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.1em', textTransform: 'uppercase' }}>Prêt à démarrer ?</span>
           </motion.div>
         )}
         <motion.p initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}
-          style={{ fontSize: isStrong ? 'clamp(1.5rem,3.2vw,2.4rem)' : 'clamp(1.2rem,2.5vw,1.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '2rem' }}>
+          style={{ fontSize: isStrong ? 'clamp(1.5rem,3.2vw,2.4rem)' : 'clamp(1.2rem,2.5vw,1.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '2rem' }}>
           {message}
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .28 }}
@@ -136,7 +136,7 @@ function StickyCTABlock({ message, cta, href = 'https://wa.me/2250142507750', va
           <motion.div initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: .45 }}
             className="trust-badges" style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '.5rem', marginTop: '1.8rem' }}>
             {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Support 48h'].map((b) => (
-              <span key={b} style={{ padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.78rem', color: '#b3ee85' }}>{b}</span>
+              <span key={b} style={{ padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.78rem', color: '#b3ee85' }}>{b}</span>
             ))}
           </motion.div>
         )}
@@ -313,12 +313,12 @@ function Hero() {
                   initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .1 }}
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.8rem' }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
                 </motion.div>
 
                 <motion.h1
                   initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
-                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: '#ffffff', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
+                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: '#ffffff', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
                   {slide.title}
                 </motion.h1>
                 <motion.h1
@@ -353,7 +353,7 @@ function Hero() {
               {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map((b, bi) => (
                 <motion.span key={b}
                   initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
-                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85' }}>
+                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85' }}>
                   {b}
                 </motion.span>
               ))}
@@ -372,8 +372,8 @@ function Hero() {
                     <TrendingUp size={18} style={{ color: '#88ca53' }} />
                   </div>
                   <div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
-                    <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
                   </div>
                 </motion.div>
               </motion.div>
@@ -388,7 +388,7 @@ function Hero() {
                   <div style={{ display: 'flex' }}>
                     {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#88ca53' }} fill="#88ca53" />)}
                   </div>
-                  <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
                 </motion.div>
               </motion.div>
             </TiltCard>
@@ -414,10 +414,10 @@ function Hero() {
                 initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .9 + si * .08 }}
                 whileHover={{ background: 'rgba(136,202,83,.07)', transition: { duration: .2 } }}
                 style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center', cursor: 'default' }}>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
                   <AnimatedCounter target={val} suffix={suffix} />
                 </div>
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
               </motion.div>
             ))}
           </div>
@@ -434,7 +434,7 @@ function Hero() {
 
       {/* Scroll indicator */}
       <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
-        <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
           style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
@@ -469,7 +469,7 @@ function ServicesPreview() {
             <SectionEye label="// Nos Services" center />
           </BlurReveal>
           <BlurReveal delay={0.15}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
               <LetterReveal text="Des solutions qui travaillent" stagger={0.022} />
               <br />
               <LetterReveal text="pour vous, " stagger={0.022} />
@@ -490,12 +490,12 @@ function ServicesPreview() {
                     <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon size={20} style={{ color: T.green }} />
                     </div>
-                    <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{s.label}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{s.label}</span>
                   </div>
                 )
               })}
               <div id="svc-beam-center-services" style={{ width: 80, height: 80, borderRadius: '50%', background: 'linear-gradient(135deg,rgba(136,202,83,.25),rgba(136,202,83,.08))', border: '2px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)', justifySelf: 'center', boxShadow: '0 0 40px rgba(136,202,83,.2)', flexShrink: 0 }}>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.75rem', fontWeight: 900, color: '#88ca53', textAlign: 'center', letterSpacing: '-.03em' }}>AKA<br/>TECH</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 900, color: '#88ca53', textAlign: 'center', letterSpacing: '-.03em' }}>AKA<br/>TECH</span>
               </div>
               {serviceIcons.slice(3).map((s) => {
                 const Icon = s.Icon
@@ -504,7 +504,7 @@ function ServicesPreview() {
                     <div style={{ width: 42, height: 42, borderRadius: 12, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                       <Icon size={20} style={{ color: T.green }} />
                     </div>
-                    <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{s.label}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{s.label}</span>
                   </div>
                 )
               })}
@@ -528,14 +528,14 @@ function ServicesPreview() {
                       <Icon size={22} style={{ color: T.green }} />
                     </div>
                     <div>
-                      <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.2rem' }}>{n}</div>
-                      <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif" }}>{title}</h3>
+                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.2rem' }}>{n}</div>
+                      <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{title}</h3>
                     </div>
                   </div>
                   <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.2rem' }}>{desc}</p>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.9rem', borderTop: `1px solid ${T.border}` }}>
-                    <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{price}</span>
-                    <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{price}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
                       <Timer size={11} style={{ color: T.green }} />{del}
                     </span>
                   </div>
@@ -567,7 +567,7 @@ function WhyUs() {
   const dirs = ['right', 'up', 'left', 'up']
   return (
     <section style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)', fontFamily: "'Syne',sans-serif", fontSize: 'clamp(12rem,22vw,20rem)', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)', lineHeight: 1, pointerEvents: 'none', userSelect: 'none', letterSpacing: '-.05em' }}>
+      <div style={{ position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)', fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(12rem,22vw,20rem)', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)', lineHeight: 1, pointerEvents: 'none', userSelect: 'none', letterSpacing: '-.05em' }}>
         TRUST
       </div>
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
@@ -576,7 +576,7 @@ function WhyUs() {
             <SectionEye label="// Built on Trust" center />
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               Pourquoi les entrepreneurs{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="choisissent AKATech." stagger={0.03} /></span></GreenUnderline>
             </h2>
@@ -588,8 +588,8 @@ function WhyUs() {
               <motion.div className="sku-card" whileHover={{ y: -4 }}
                 style={{ padding: '1.8rem', height: '100%', position: 'relative', overflow: 'hidden' }}>
                 <div style={{ position: 'absolute', top: 0, right: 0, width: 80, height: 80, background: 'radial-gradient(circle at 100% 0%,rgba(136,202,83,.1),transparent 70%)', pointerEvents: 'none' }} />
-                <div style={{ fontFamily: "'Syne',sans-serif", fontSize: '.9rem', fontWeight: 800, color: T.green, opacity: .3, lineHeight: 1, marginBottom: '.8rem' }}>{n}</div>
-                <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", marginBottom: '.4rem' }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green, opacity: .3, lineHeight: 1, marginBottom: '.8rem' }}>{n}</div>
+                <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}>
                   <LetterReveal text={title} stagger={0.025} />
                 </h3>
                 <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
@@ -665,7 +665,7 @@ function ProjectsCarousel() {
               <SectionEye label="// Réalisations" />
             </BlurReveal>
             <BlurReveal delay={0.1} direction="left">
-              <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+              <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
                 Nos dernières{' '}
                 <GreenUnderline><span className="text-gradient"><LetterReveal text="réalisations livrées" stagger={0.03} /></span></GreenUnderline>
               </h2>
@@ -706,20 +706,20 @@ function ProjectsCarousel() {
                       <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(6,14,9,.95) 0%,rgba(6,14,9,.3) 50%,transparent)' }} />
 
                       {/* Type badge */}
-                      <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+                      <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
                         {project.type}
                       </div>
 
                       {/* Live badge */}
                       {project.live && (
-                        <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'Syne',sans-serif", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
+                        <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
                           <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                           LIVE
                         </div>
                       )}
 
                       {/* Result */}
-                      <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'Syne',sans-serif", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
+                      <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
                         {project.result}
                       </div>
                     </div>
@@ -727,11 +727,11 @@ function ProjectsCarousel() {
                     {/* Content */}
                     <div style={{ padding: '1.2rem' }}>
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.35rem', gap: '.6rem' }}>
-                        <h3 style={{ fontSize: '.98rem', fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif" }}>{project.title}</h3>
+                        <h3 style={{ fontSize: '.98rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{project.title}</h3>
                         {project.url && (
                           <a href={project.url} target="_blank" rel="noreferrer"
                             onClick={e => e.stopPropagation()}
-                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(136,202,83,.06)', transition: 'all .2s' }}
+                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(136,202,83,.06)', transition: 'all .2s' }}
                             onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.18)'; e.currentTarget.style.borderColor = '#88ca53' }}
                             onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.06)'; e.currentTarget.style.borderColor = T.border }}>
                             <ExternalLink size={9} /> Voir
@@ -741,7 +741,7 @@ function ProjectsCarousel() {
                       <p style={{ fontSize: '.75rem', color: T.textSub, lineHeight: 1.55, marginBottom: '.9rem' }}>{project.desc.slice(0, 90)}…</p>
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem' }}>
                         {project.tech.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600, color: T.green }}>{t}</span>
+                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green }}>{t}</span>
                         ))}
                       </div>
                     </div>
@@ -784,7 +784,7 @@ function Testimonials() {
             <SectionEye label="// Témoignages" center />
           </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -803,13 +803,13 @@ function Testimonials() {
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
                 <div style={{ width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(136,202,83,.35)' }}>
                   <LazyImg src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontWeight: 700 }}>{t.name[0]}</div>} />
+                    placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>{t.name[0]}</div>} />
                 </div>
                 <div style={{ textAlign: 'left' }}>
-                  <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'Syne',sans-serif", fontSize: '.9rem' }}>{t.name}</div>
-                  <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'Syne',sans-serif" }}>{t.role}</div>
+                  <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem' }}>{t.name}</div>
+                  <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
                 </div>
-                <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
+                <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
               </div>
             </motion.div>
           </AnimatePresence>
@@ -845,7 +845,7 @@ function DomainesIntervention() {
   return (
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
       {/* Big déco text */}
-      <div aria-hidden style={{ position: 'absolute', left: '-1%', top: '50%', transform: 'translateY(-50%)', fontFamily: "'Syne',sans-serif", fontSize: 'clamp(8rem,16vw,16rem)', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)', lineHeight: 1, pointerEvents: 'none', userSelect: 'none', letterSpacing: '-.05em' }}>DOM</div>
+      <div aria-hidden style={{ position: 'absolute', left: '-1%', top: '50%', transform: 'translateY(-50%)', fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(8rem,16vw,16rem)', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)', lineHeight: 1, pointerEvents: 'none', userSelect: 'none', letterSpacing: '-.05em' }}>DOM</div>
 
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Header */}
@@ -854,7 +854,7 @@ function DomainesIntervention() {
             <SectionEye label="// Domaines d'intervention" center />
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
               Dans quel axe de création{' '}
               <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
             </h2>
@@ -881,8 +881,8 @@ function DomainesIntervention() {
                 style={{ position: 'absolute', inset: 0, background: 'radial-gradient(400px circle at 30% 30%, rgba(136,202,83,.07), transparent 65%)', pointerEvents: 'none' }} />
 
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.4rem' }}>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '2.8rem', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.16)' : 'rgba(136,202,83,.13)', lineHeight: 1, letterSpacing: '-.05em' }}>{n}</span>
-                <span style={{ padding: '.22rem .72rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'Syne',sans-serif", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase' }}>{tag}</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '2.8rem', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.16)' : 'rgba(136,202,83,.13)', lineHeight: 1, letterSpacing: '-.05em' }}>{n}</span>
+                <span style={{ padding: '.22rem .72rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase' }}>{tag}</span>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.9rem' }}>
@@ -890,7 +890,7 @@ function DomainesIntervention() {
                   style={{ width: 42, height: 42, borderRadius: 11, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'background .2s' }}>
                   <Icon size={20} style={{ color: '#88ca53' }} />
                 </motion.div>
-                <h3 style={{ fontFamily: "'Syne',sans-serif", fontSize: '.97rem', fontWeight: 800, color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em' }}>{title}</h3>
+                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.97rem', fontWeight: 800, color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em' }}>{title}</h3>
               </div>
               <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7 }}>{desc}</p>
 
@@ -926,7 +926,7 @@ function StackTech() {
             <SectionEye label="// Stack Technique" center />
           </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               Les outils qui font{' '}
               <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
             </h2>
@@ -937,7 +937,7 @@ function StackTech() {
           {STACK_ROWS.map(({ label, items }, ri) => (
             <BlurReveal key={label} delay={ri * 0.08}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '.65rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.1em', flexShrink: 0, width: 120, textAlign: 'right' }}>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.1em', flexShrink: 0, width: 120, textAlign: 'right' }}>
                   {label}
                 </span>
                 <div style={{ height: 1, width: 20, background: T.border, flexShrink: 0 }} />
@@ -950,7 +950,7 @@ function StackTech() {
                       viewport={{ once: true }}
                       transition={{ delay: ri * .06 + si * .04 }}
                       whileHover={{ y: -2, background: 'rgba(136,202,83,.15)', borderColor: 'rgba(136,202,83,.4)' }}
-                      style={{ padding: '.32rem .85rem', background: 'rgba(136,202,83,.06)', border: `1px solid ${T.border}`, borderRadius: 100, fontFamily: "'Syne',sans-serif", fontSize: '.7rem', fontWeight: 600, color: T.green, cursor: 'default', transition: 'all .2s' }}>
+                      style={{ padding: '.32rem .85rem', background: 'rgba(136,202,83,.06)', border: `1px solid ${T.border}`, borderRadius: 100, fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 600, color: T.green, cursor: 'default', transition: 'all .2s' }}>
                       {s}
                     </motion.span>
                   ))}
@@ -980,7 +980,7 @@ function Process() {
           <SectionEye label="// Notre Processus" center />
         </BlurReveal>
         <BlurReveal delay={0.1}>
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
             De l'idée à la{' '}
             <GreenUnderline><span className="text-gradient"><LetterReveal text="mise en ligne" stagger={0.04} /></span></GreenUnderline>
           </h2>
@@ -995,10 +995,10 @@ function Process() {
                 <div style={{ width: 80, height: 80, borderRadius: 24, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.28)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Icon size={32} style={{ color: '#88ca53' }} />
                 </div>
-                <span style={{ fontFamily: "'Syne',sans-serif", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
               </div>
               <div>
-                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'Syne',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
                   <LetterReveal text={title} stagger={0.035} />
                 </h3>
                 <p style={{ fontSize: '1.05rem', color: T.textSub, lineHeight: 1.8, maxWidth: 480 }}>{desc}</p>
