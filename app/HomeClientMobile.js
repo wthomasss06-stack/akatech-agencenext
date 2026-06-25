@@ -6,7 +6,6 @@ import {
   ArrowRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   TrendingUp, Users, Clock, Award,
-  ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
@@ -428,15 +427,6 @@ function AutoSlider({ slides, renderCaption }) {
     return () => clearInterval(timerRef.current)
   }, [slides.length])
 
-  const btnStyle = {
-    display: 'flex', alignItems: 'center', justifyContent: 'center',
-    width: 36, height: 36, borderRadius: '50%',
-    background: 'rgba(11,26,16,.75)', backdropFilter: 'blur(8px)',
-    border: '1px solid rgba(136,202,83,.3)',
-    color: '#88ca53', cursor: 'pointer', flexShrink: 0,
-    transition: 'background .2s, border-color .2s',
-  }
-
   return (
     <div style={{ position: 'relative', width: '100%' }}>
       {/* Image principale — carrée */}
@@ -466,27 +456,12 @@ function AutoSlider({ slides, renderCaption }) {
         </AnimatePresence>
       </div>
 
-      {/* Nav chevrons + compteur */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '.85rem' }}>
-        <button style={btnStyle} onClick={() => go(idx - 1)}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.18)'; e.currentTarget.style.borderColor = '#88ca53' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(11,26,16,.75)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
-          <ChevronLeft size={18} />
-        </button>
-
-        {/* Dots centrés */}
-        <div style={{ display: 'flex', gap: '.35rem', alignItems: 'center' }}>
-          {slides.map((_, i) => (
-            <button key={i} onClick={() => go(i)}
-              style={{ width: i === idx ? 20 : 6, height: 6, borderRadius: 3, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .3s', padding: 0 }} />
-          ))}
-        </div>
-
-        <button style={btnStyle} onClick={() => go(idx + 1)}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.18)'; e.currentTarget.style.borderColor = '#88ca53' }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(11,26,16,.75)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
-          <ChevronRight size={18} />
-        </button>
+      {/* Dots centrés */}
+      <div style={{ display: 'flex', gap: '.35rem', alignItems: 'center', justifyContent: 'center', marginTop: '.85rem' }}>
+        {slides.map((_, i) => (
+          <button key={i} onClick={() => go(i)}
+            style={{ width: i === idx ? 20 : 6, height: 6, borderRadius: 3, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .3s', padding: 0 }} />
+        ))}
       </div>
     </div>
   )

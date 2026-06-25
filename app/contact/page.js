@@ -4,7 +4,7 @@ export const metadata = {
   title: 'Contact — AKATech | Devis Gratuit en 24h',
   description: "Contactez AKATech pour un devis gratuit. WhatsApp, email ou formulaire — réponse en moins de 24h.",
   alternates: { canonical: '/contact' },
-  openGraph: { title: 'Contact — AKATech', description: "Devis gratuit en 24h pour votre projet web à Abidjan.", locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech-agence.vercel.app/contact' },
+  openGraph: { title: 'Contact — AKATech', description: "Devis gratuit en 24h pour votre projet web à Abidjan.", locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/contact' },
 }
 
 const CONTACT_JSON_LD = {

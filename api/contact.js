@@ -141,7 +141,7 @@ export default async function handler(req, res) {
     const result = await resend.emails.send({
       /* Resend impose un domaine vérifié en from.
          Si le domaine n'est pas vérifié, garder onboarding@resend.dev
-         pour les tests, puis passer à noreply@akatech-agence.vercel.app (ou
+         pour les tests, puis passer à noreply@akatech.vercel.app (ou
          domaine custom) en prod une fois vérifié sur resend.com/domains. */
       from: process.env.FROM_EMAIL ?? 'onboarding@resend.dev',
       to:   process.env.ADMIN_EMAIL ?? 'wthomasss06@gmail.com',
@@ -188,7 +188,7 @@ export default async function handler(req, res) {
             ${safeMessage}
           </p>
           <p style="margin-top:24px;font-size:12px;color:#555;">
-            Envoyé depuis akatech-agence.vercel.app · ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Abidjan' })}
+            Envoyé depuis akatech.vercel.app · ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Abidjan' })}
           </p>
         </div>
       `,

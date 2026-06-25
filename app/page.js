@@ -1,6 +1,6 @@
 import HomeResponsive from './HomeResponsive'
 
-const SITE_URL = 'https://akatech-agence.vercel.app'
+const SITE_URL = 'https://akatech.vercel.app'
 
 export const metadata = {
   title: 'AKATech — Agence Web Abidjan | Sites, E-Commerce, SaaS',

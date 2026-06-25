@@ -1,7 +1,7 @@
 import BlogArticleClient from './BlogArticleClient'
 import { BLOG_POSTS } from '@/lib/data'
 
-const SITE_URL = 'https://akatech-agence.vercel.app'
+const SITE_URL = 'https://akatech.vercel.app'
 
 export function generateStaticParams() {
   return BLOG_POSTS.map(p => ({ slug: p.slug }))

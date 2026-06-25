@@ -154,7 +154,7 @@ export default function Footer({ variant = 'page' }) {
   ]
 
   return (
-    <footer style={{
+    <footer id="site-footer" style={{
       background: T.light ? '#f3f3f3' : '#020504',
       paddingTop: isPage ? '5rem' : '4rem',
       borderTop: `1px solid ${T.border}`,

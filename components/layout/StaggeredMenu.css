@@ -5,10 +5,12 @@
    ═══════════════════════════════════════════════ */
 
 .sm-root {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 0;
+  pointer-events: none;
   z-index: 9500;
+  overflow: visible;
 }
 
 /* ── Pre-layers (balayage) ── */
@@ -41,12 +43,12 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(136,202,83,.08);
-  border: 1px solid rgba(136,202,83,.22);
+  background: rgba(255,255,255,.12);
+  border: 1px solid rgba(255,255,255,.35);
   border-radius: 999px;
   padding: 8px 16px 8px 14px;
   cursor: pointer;
-  color: #f2ede8;
+  color: #ffffff;
   font-family: 'JetBrains Mono', monospace;
   font-size: .68rem;
   font-weight: 700;
@@ -56,17 +58,37 @@
   transition: background .2s, border-color .2s, transform .18s, color .2s;
   z-index: 10010;
 }
+.sm-toggle:hover {
+  background: rgba(255,255,255,.20);
+  border-color: rgba(255,255,255,.55);
+}
 .sm-toggle:active { transform: scale(.95); }
+
+/* Une fois scrollé (header non transparent) → repasse au style vert */
+.sm-header--scrolled .sm-toggle {
+  background: rgba(136,202,83,.08);
+  border-color: rgba(136,202,83,.28);
+  color: #f2ede8;
+}
+.sm-header--scrolled .sm-toggle:hover {
+  background: rgba(136,202,83,.16);
+  border-color: rgba(136,202,83,.5);
+}
 
 /* Light mode : le bouton passe vert foncé, lisible sur fond clair */
 .light-mode .sm-toggle {
-  background: rgba(95,145,55,0.10);
-  border-color: rgba(95,145,55,0.30);
+  background: rgba(255,255,255,.75);
+  border-color: rgba(95,145,55,0.35);
   color: #2d5a14;
 }
 .light-mode .sm-toggle:hover {
-  background: rgba(95,145,55,0.18);
-  border-color: rgba(95,145,55,0.5);
+  background: rgba(255,255,255,.95);
+  border-color: rgba(95,145,55,0.55);
+}
+.light-mode .sm-header--scrolled .sm-toggle {
+  background: rgba(95,145,55,0.10);
+  border-color: rgba(95,145,55,0.30);
+  color: #2d5a14;
 }
 
 /* ── Texte animé Menu/Close ── */
@@ -375,9 +397,9 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid rgba(136, 202, 83, 0.22);
-  background: rgba(136, 202, 83, 0.07);
-  color: rgba(242, 237, 232, 0.65);
+  border: 1px solid rgba(255,255,255,.35);
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -386,10 +408,23 @@
   flex-shrink: 0;
 }
 .sm-header-theme:hover {
+  color: #ffffff;
+  border-color: rgba(255,255,255,.6);
+  background: rgba(255,255,255,.22);
+}
+
+/* Scrolled → style vert */
+.sm-header--scrolled .sm-header-theme {
+  border-color: rgba(136, 202, 83, 0.22);
+  background: rgba(136, 202, 83, 0.07);
+  color: rgba(242, 237, 232, 0.65);
+}
+.sm-header--scrolled .sm-header-theme:hover {
   color: #88ca53;
   border-color: rgba(136, 202, 83, 0.5);
   background: rgba(136, 202, 83, 0.12);
 }
+
 .light-mode .sm-header-theme {
   color: #555;
   border-color: rgba(95, 145, 55, 0.25);

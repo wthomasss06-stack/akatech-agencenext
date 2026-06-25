@@ -6,7 +6,7 @@ import { BackToTop, FloatingWA } from '@/components/ui/index'
 import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
 
-const SITE_URL = 'https://akatech-agence.vercel.app'
+const SITE_URL = 'https://akatech.vercel.app'
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),

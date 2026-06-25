@@ -2,7 +2,7 @@ import { BLOG_POSTS } from '@/lib/data'
 
 export const dynamic = 'force-static'
 
-const SITE_URL = 'https://akatech-agence.vercel.app'
+const SITE_URL = 'https://akatech.vercel.app'
 
 export default function sitemap() {
   const staticRoutes = [

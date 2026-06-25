@@ -31,7 +31,7 @@ function HeroServices() {
   return (
     <section style={{ height: '100vh', minHeight: 600, width: '100%', background: '#060e09', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
       <AuroraHero labels={[]} />
-      <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 5%' }}>
+      <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '72px 5% 0' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <SectionEye label="// Nos Services" center />
           <h1 style={{ fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>

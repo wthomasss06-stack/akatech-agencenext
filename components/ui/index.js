@@ -1,7 +1,14 @@
 'use client'
 import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
+import { usePathname } from 'next/navigation'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useTheme } from '@/lib/theme'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 // ── LASER BEAM ───────────────────────────────────────────────
 // position: 'left' | 'center' | 'right'  (défaut 'right')
@@ -172,13 +179,20 @@ export function MicroCursor() {
   )
 }
 
-// ── BACK TO TOP ──────────────────────────────────────────────
+// ── BACK TO TOP — visible uniquement à l'arrivée sur le Footer ─
 export function BackToTop() {
+  const T = useTheme()
   const [visible, setVisible] = useState(false)
+
   useEffect(() => {
-    const fn = () => setVisible(window.scrollY > 400)
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
+    const footer = document.getElementById('site-footer')
+    if (!footer) return
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.05 }
+    )
+    observer.observe(footer)
+    return () => observer.disconnect()
   }, [])
 
   if (!visible) return null
@@ -188,52 +202,100 @@ export function BackToTop() {
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: .6, y: 20 }}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      aria-label="Remonter en haut de la page"
       style={{
         position: 'fixed', bottom: '6.5rem', right: '2rem', zIndex: 8999,
         width: 46, height: 46, borderRadius: '50%',
-        background: 'linear-gradient(145deg,#0e2416,#081208)',
-        border: '1px solid rgba(136,202,83,.35)',
-        boxShadow: '4px 4px 14px rgba(0,0,0,.7), 0 0 20px rgba(136,202,83,.15)',
+        background: T.light ? 'linear-gradient(145deg,#ffffff,#f0f0f0)' : 'linear-gradient(145deg,#0e2416,#081208)',
+        border: `1px solid ${T.border2}`,
+        boxShadow: T.light ? '4px 4px 14px rgba(0,0,0,.12), 0 0 20px rgba(136,202,83,.1)' : '4px 4px 14px rgba(0,0,0,.7), 0 0 20px rgba(136,202,83,.15)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        cursor: 'pointer', color: '#88ca53',
+        cursor: 'pointer', color: T.green,
       }}
     >
       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8 13V3M3 8l5-5 5 5" stroke="#88ca53" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 13V3M3 8l5-5 5 5" stroke={T.green} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </motion.button>
   )
 }
 
 // ── FLOATING WHATSAPP ─────────────────────────────────────────
+// Le bouton réagit en scrub (lié 1:1 au scroll) lorsque la section
+// PageCTA de la page traverse le viewport : il grossit et son halo
+// s'intensifie progressivement, puis revient à son état normal.
+// Le scrub anime un wrapper séparé pour ne jamais entrer en
+// conflit avec le `transform` géré par Framer Motion sur le lien.
 export function FloatingWA() {
+  const T = useTheme()
   const [hov, setHov] = useState(false)
+  const wrapRef = useRef(null)
+  const pathname = usePathname()
+
+  useEffect(() => {
+    // Délai court : on attend que le DOM de la nouvelle page (et son
+    // .page-cta-trigger) soit monté avant de (re)créer les triggers.
+    const timer = setTimeout(() => {
+      ScrollTrigger.refresh()
+    }, 100)
+
+    const ctx = gsap.context(() => {
+      const targets = document.querySelectorAll('.page-cta-trigger')
+      if (!targets.length || !wrapRef.current) return
+
+      targets.forEach((trigger) => {
+        gsap.fromTo(wrapRef.current,
+          { scale: 1, filter: 'drop-shadow(0 0 0px rgba(37,211,102,0))' },
+          {
+            scale: 1.18,
+            filter: 'drop-shadow(0 0 14px rgba(37,211,102,.75))',
+            ease: 'none',
+            scrollTrigger: {
+              trigger,
+              start: 'top bottom',
+              end: 'bottom center',
+              scrub: true,
+            },
+          }
+        )
+      })
+    })
+
+    return () => {
+      clearTimeout(timer)
+      ctx.revert()
+    }
+  }, [pathname])
+
   return (
-    <motion.a
-      href="https://wa.me/2250142507750?text=Bonjour+AKATech+!"
-      target="_blank" rel="noreferrer"
-      title="Démarrer sur WhatsApp"
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{ scale: 1, opacity: 1 }}
-      transition={{ delay: 2, type: 'spring', stiffness: 260, damping: 20 }}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 9000,
-        width: 54, height: 54, borderRadius: '50%',
-        background: 'linear-gradient(145deg,#25d366,#128c7e)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: hov ? '0 0 0 0 transparent, 6px 6px 20px rgba(0,0,0,.5)' : '4px 4px 14px rgba(0,0,0,.5)',
-        transform: hov ? 'scale(1.1)' : 'scale(1)',
-        transition: 'transform .2s, box-shadow .2s',
-        textDecoration: 'none',
-      }}
-    >
-      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-        <path d="M14 2C7.373 2 2 7.373 2 14c0 2.14.56 4.145 1.54 5.877L2 26l4.267-1.494A11.93 11.93 0 0 0 14 26c6.627 0 12-5.373 12-12S20.627 2 14 2Z" fill="rgba(255,255,255,.15)" stroke="white" strokeWidth="1.5" />
-        <path d="M10 8.5c-.4 0-.8.2-1.1.5-.6.6-1.4 1.8-1.4 3.1 0 2.8 2.1 5.5 3 6.4.9.9 3.6 3 6.4 3 1.3 0 2.5-.8 3.1-1.4.3-.3.5-.7.5-1.1v-1.6c0-.3-.2-.6-.5-.7l-2-.8c-.3-.1-.7 0-.9.2l-.7.8c-.2.2-.4.2-.6.1C14.6 16.7 11.3 13.4 11 12c-.1-.2 0-.4.1-.6l.8-.7c.2-.2.3-.6.2-.9l-.8-2c-.1-.3-.4-.5-.7-.5H10Z" fill="white" />
-      </svg>
-    </motion.a>
+    <div ref={wrapRef} style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 9000 }}>
+      <motion.a
+        href="https://wa.me/2250142507750?text=Bonjour+AKATech+!"
+        target="_blank" rel="noreferrer"
+        title="Démarrer sur WhatsApp"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 2, type: 'spring', stiffness: 260, damping: 20 }}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={() => setHov(false)}
+        style={{
+          width: 54, height: 54, borderRadius: '50%',
+          background: 'linear-gradient(145deg,#25d366,#128c7e)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: hov
+            ? (T.light ? '6px 6px 20px rgba(0,0,0,.18)' : '6px 6px 20px rgba(0,0,0,.5)')
+            : (T.light ? '4px 4px 14px rgba(0,0,0,.15)' : '4px 4px 14px rgba(0,0,0,.5)'),
+          transform: hov ? 'scale(1.1)' : 'scale(1)',
+          transition: 'transform .2s, box-shadow .2s',
+          textDecoration: 'none',
+        }}
+      >
+        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+          <path d="M14 2C7.373 2 2 7.373 2 14c0 2.14.56 4.145 1.54 5.877L2 26l4.267-1.494A11.93 11.93 0 0 0 14 26c6.627 0 12-5.373 12-12S20.627 2 14 2Z" fill="rgba(255,255,255,.15)" stroke="white" strokeWidth="1.5" />
+          <path d="M10 8.5c-.4 0-.8.2-1.1.5-.6.6-1.4 1.8-1.4 3.1 0 2.8 2.1 5.5 3 6.4.9.9 3.6 3 6.4 3 1.3 0 2.5-.8 3.1-1.4.3-.3.5-.7.5-1.1v-1.6c0-.3-.2-.6-.5-.7l-2-.8c-.3-.1-.7 0-.9.2l-.7.8c-.2.2-.4.2-.6.1C14.6 16.7 11.3 13.4 11 12c-.1-.2 0-.4.1-.6l.8-.7c.2-.2.3-.6.2-.9l-.8-2c-.1-.3-.4-.5-.7-.5H10Z" fill="white" />
+        </svg>
+      </motion.a>
+    </div>
   )
 }
 
@@ -301,7 +363,7 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
-    <section ref={ref} style={{ padding: '6rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+    <section ref={ref} className="page-cta-trigger" style={{ padding: '6rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: T.light ? .15 : .12 }} />
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.1),transparent 65%)', pointerEvents: 'none' }} />
       <motion.div initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }} animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}
