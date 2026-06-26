@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
@@ -72,12 +72,86 @@ export function LaserBeam({ position = 'right', intensity = 'medium', style = {}
   )
 }
 
-// ── SECTION EYE ──────────────────────────────────────────────
-export function SectionEye({ label, center }) {
+// ── GHOST TITLE ──────────────────────────────────────────────
+// Texte fantôme en contour (stroke) superposé à chaque titre de
+// section. Même mécanique que le cycle-text du StaggeredMenu :
+// pile de lignes scramblées dans un viewport overflow:hidden,
+// on glisse en yPercent jusqu'à atterrir sur le texte réel.
+// Déclenché par IntersectionObserver à l'entrée/sortie du
+// viewport (pas au hover) — cycle inverse à la sortie.
+// Usage : <h2><GhostTitle text="Mon titre de section" /></h2>
+const GHOST_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+*/=<>'
+
+function ghostScrambleLine(text) {
+  return text.split('').map(ch => (
+    /[a-zA-Z0-9]/.test(ch) ? GHOST_CHARS[Math.floor(Math.random() * GHOST_CHARS.length)] : ch
+  )).join('')
+}
+
+function ghostBuildSequence(opening, finalText, cycles = 3) {
+  const landing = opening ? finalText : ghostScrambleLine(finalText)
+  const start = opening ? ghostScrambleLine(finalText) : finalText
+  const seq = [start]
+  for (let i = 0; i < cycles; i++) seq.push(ghostScrambleLine(finalText))
+  seq.push(landing)
+  seq.push(landing)
+  return seq
+}
+
+function useGhostScroll(text, cycles = 3) {
+  const innerRef = useRef(null)
+  const tweenRef = useRef(null)
+  const [lines, setLines] = useState([text])
+
+  const play = useCallback((opening = true) => {
+    if (!text) return
+    tweenRef.current?.kill()
+    const seq = ghostBuildSequence(opening, text, cycles)
+    setLines(seq)
+    requestAnimationFrame(() => {
+      const inner = innerRef.current
+      if (!inner) return
+      gsap.set(inner, { yPercent: 0 })
+      const finalShift = ((seq.length - 1) / seq.length) * 100
+      tweenRef.current = gsap.to(inner, {
+        yPercent: -finalShift,
+        duration: 0.42 + seq.length * 0.055,
+        ease: 'power4.out',
+        overwrite: 'auto',
+      })
+    })
+  }, [text, cycles])
+
+  return { innerRef, lines, play }
+}
+
+export function GhostTitle({ text, className = '' }) {
+  const wrapRef = useRef(null)
+  const ghost = useGhostScroll(text)
+
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    let hasEntered = false
+    const io = new IntersectionObserver(
+      entries => entries.forEach(entry => {
+        if (entry.isIntersecting) { hasEntered = true; ghost.play(true) }
+        else if (hasEntered) { ghost.play(false) }
+      }),
+      { threshold: 0.4, rootMargin: '0px 0px -10% 0px' }
+    )
+    io.observe(el)
+    return () => io.disconnect()
+  }, [ghost.play])
+
   return (
-    <div style={{ display: 'flex', justifyContent: center ? 'center' : 'flex-start', marginBottom: '.8rem' }}>
-      <span className="s-eye">{label}</span>
-    </div>
+    <span ref={wrapRef} className={`ghost-title-wrap ${className}`} aria-hidden="true">
+      <span className="ghost-title-cycle">
+        <span className="ghost-title-inner" ref={ghost.innerRef}>
+          {ghost.lines.map((l, i) => <span className="ghost-title-line" key={i}>{l}</span>)}
+        </span>
+      </span>
+    </span>
   )
 }
 

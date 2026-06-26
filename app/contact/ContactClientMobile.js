@@ -7,7 +7,7 @@ import {
   ArrowRight, Shield
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 
 
@@ -69,8 +69,8 @@ function HeroContact() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
-          <SectionEye label="// Contactez-nous" center />
-          <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+            <GhostTitle text="Parlons de votre projet" />
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -106,8 +106,8 @@ function ContactChannels() {
     <section ref={ref} style={{ padding: 'clamp(3rem,6vw,5rem) 5% clamp(2rem,4vw,3rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
-          <SectionEye label="// Canaux de contact" />
-          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <GhostTitle text="Comment nous contacter" />
             Comment nous contacter
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -216,7 +216,7 @@ function ProjectForm() {
     setSending(true)
     setError('')
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('/api/contact/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -235,8 +235,8 @@ function ProjectForm() {
     <section ref={ref} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <SectionEye label="// Formulaire de projet" />
-          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <GhostTitle text="Décrivez votre projet" />
             Décrivez votre projet
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -364,8 +364,8 @@ export default function ContactPage() {
   return (
     <div>
       <HeroContact />
-      <ContactChannels />
       <ProjectForm />
+      <ContactChannels />
       <MarqueeStrip />
       <PageCTA message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant." cta="Démarrer sur WhatsApp" />
     </div>

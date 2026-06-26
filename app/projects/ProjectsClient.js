@@ -3,7 +3,7 @@ import { useRef, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { Code, Check, Globe, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
 
@@ -48,8 +48,8 @@ function HeroRealisations() {
       </div>
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 900, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <SectionEye label="// Nos Réalisations" center />
-          <h1 style={{ fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+            <GhostTitle text="+18 réalisations livrées, 100% satisfaits." />
             +18 réalisations livrées,<br /><GreenUnderline><span className="text-gradient">100% satisfaits.</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>

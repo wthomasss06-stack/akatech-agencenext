@@ -75,7 +75,7 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 }
 
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS } from '@/lib/data'
 
@@ -126,8 +126,8 @@ function HeroAbout() {
         <div className="hero-about-grid">
           <motion.div className="hero-title-block"
             initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-            <SectionEye label="// Qui sommes-nous" />
-            <h1 style={{ fontSize: 'clamp(2.2rem,4.5vw,3.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
+            <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,4.5vw,3.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
+              <GhostTitle text="Votre croissance digitale, c'est notre mission." />
               Votre croissance digitale,<br />
               <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
             </h1>
@@ -262,8 +262,8 @@ function StatsFounderSection() {
 
         {/* COLONNE DROITE — Fondateur (grande) */}
         <BlurReveal direction="right" delay={0.15}>
-          <SectionEye label="// Le Fondateur" />
-          <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.5rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.5rem' }}>
+            <GhostTitle text="M'Bollo Aka Elvis" />
             M'Bollo Aka <GreenUnderline><span className="text-gradient"><LetterReveal text="Elvis" stagger={0.05} /></span></GreenUnderline>
           </h2>
           <p style={{ fontSize: '1.05rem', color: T.textMain, lineHeight: 1.85, marginBottom: '.9rem' }}>
@@ -315,9 +315,9 @@ function TimelineSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <BlurReveal><SectionEye label="// Notre Histoire" center /></BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="L'évolution d'AKATech" />
               L'évolution d'<GreenUnderline><span className="text-gradient"><LetterReveal text="AKATech" stagger={0.05} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -352,9 +352,9 @@ function ValuesSection() {
       <div style={{ position: 'absolute', right: '-2%', top: '50%', transform: 'translateY(-50%)', fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(10rem,18vw,18rem)', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)', lineHeight: 1, pointerEvents: 'none', userSelect: 'none' }}>VALUES</div>
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <BlurReveal><SectionEye label="// Nos Valeurs" center /></BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Ce qui nous distingue" />
               Ce qui nous <GreenUnderline><span className="text-gradient"><LetterReveal text="distingue" stagger={0.04} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -388,8 +388,8 @@ function SkillsSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', position: 'relative', zIndex: 1 }}>
         <BlurReveal direction="left">
-          <SectionEye label="// Stack Technique" />
-          <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.8rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
+            <GhostTitle text="Les technologies qui font la différence" />
             Les technologies qui font{' '}
             <GreenUnderline><span className="text-gradient"><LetterReveal text="la différence" stagger={0.035} /></span></GreenUnderline>
           </h2>
@@ -456,8 +456,8 @@ function RayonSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
           <BlurReveal direction="left">
-            <SectionEye label="// Rayon d'action" />
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2, marginBottom: '1.2rem' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2, marginBottom: '1.2rem' }}>
+              <GhostTitle text="Où intervenons-nous ?" />
               Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
             </h2>
             <p style={{ fontSize: '.9rem', color: T.textSub, lineHeight: 1.8, marginBottom: '2rem' }}>

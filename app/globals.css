@@ -123,34 +123,38 @@ body.light-mode .sku-card:hover {
   transform: translateY(-2px);
 }
 
-/* Section Eye */
-.s-eye {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .65rem;
-  font-weight: 700;
-  letter-spacing: .12em;
-  color: var(--g1);
-  text-transform: uppercase;
-  margin-bottom: .8rem;
+/* Ghost Title — texte fantôme en contour superposé au h2/h1.
+   Positionné en absolu derrière le texte réel, contour seul
+   (-webkit-text-stroke), couleur discrète qui se confond avec
+   le fond. Se déclenche en scramble→texte au scroll. */
+.ghost-title-wrap {
+  position: absolute;
+  inset: 0;
+  display: block;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  user-select: none;
+  color: transparent;
+  font: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  -webkit-text-stroke: 1px rgba(136,202,83,.16);
+  transform: translate(.18em, .1em) scale(1.015);
 }
-.s-eye::before {
-  content: '';
-  width: 22px;
-  height: 1.5px;
-  background: var(--g1);
-  display: inline-block;
-  border-radius: 2px;
+body.light-mode .ghost-title-wrap {
+  -webkit-text-stroke: 1px rgba(95,145,55,.14);
 }
-.s-eye::after {
-  content: '';
-  width: 22px;
-  height: 1.5px;
-  background: var(--g1);
-  display: inline-block;
-  border-radius: 2px;
+.ghost-title-cycle {
+  display: block;
+  overflow: hidden;
+}
+.ghost-title-inner {
+  display: block;
+}
+.ghost-title-line {
+  display: block;
+  white-space: nowrap;
 }
 
 /* Text gradient — Scripte style (couleur solide, compatible cursive) */

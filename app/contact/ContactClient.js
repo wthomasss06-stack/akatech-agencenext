@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 
 // ═══════════════════════════════════════════════════════════════
@@ -207,8 +207,8 @@ function HeroContact() {
       </div>
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
-          <SectionEye label="// Contactez-nous" center />
-          <h1 style={{ fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+            <GhostTitle text="Parlons de votre projet" />
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -270,11 +270,9 @@ function ContactChannels() {
 
         {/* ── Header ── */}
         <div style={{ marginBottom: '2.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Canaux de contact" />
-          </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+              <GhostTitle text="Comment nous contacter" />
               <LetterReveal text="Comment nous contacter" stagger={0.025} />
             </h2>
           </BlurReveal>
@@ -422,8 +420,8 @@ function GeoSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .16 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <BlurReveal style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <SectionEye label="// Rayon d'action" center />
-          <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="Où intervenons-nous ?" />
             Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, marginTop: '.75rem', lineHeight: 1.7, maxWidth: 500, margin: '.75rem auto 0' }}>
@@ -511,11 +509,9 @@ function ProcessContact() {
     <section style={{ position: 'relative' }}>
       {/* Sticky header */}
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'center', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
-        <BlurReveal>
-          <SectionEye label="// Votre devis express" center />
-        </BlurReveal>
         <BlurReveal delay={0.1}>
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+            <GhostTitle text="De la demande à la mise en route" />
             De la demande à la{' '}
             <GreenUnderline>
               <span className="text-gradient">
@@ -596,7 +592,7 @@ function ProjectForm() {
     setSending(true)
     setError('')
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch('/api/contact/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -617,8 +613,8 @@ function ProjectForm() {
 
         {/* ── Header ── */}
         <BlurReveal style={{ marginBottom: '2rem' }}>
-          <SectionEye label="// Formulaire de projet" />
-          <h2 style={{ fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <GhostTitle text="Décrivez votre projet" />
             <LetterReveal text="Décrivez votre projet" stagger={0.028} />
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -749,11 +745,11 @@ export default function ContactPage() {
   return (
     <div>
       <HeroContact />
+      <ProjectForm />
       <ContactChannels />
       <GeoSection />
-      <ProjectForm />
-      <MarqueeStrip />
       <ProcessContact />
+      <MarqueeStrip />
 
       <PageCTA
         message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."

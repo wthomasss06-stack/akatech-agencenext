@@ -9,7 +9,7 @@ import {
   MessageCircle, Target, Code, Rocket, Timer, ChevronLeft, ChevronRight,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, GreenUnderline } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { SERVICES, PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
 
@@ -465,11 +465,9 @@ function ServicesPreview() {
 
         {/* Header avec BlurReveal + LetterReveal */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Nos Services" center />
-          </BlurReveal>
           <BlurReveal delay={0.15}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+              <GhostTitle text="Des solutions qui travaillent pour vous, même quand vous dormez" />
               <LetterReveal text="Des solutions qui travaillent" stagger={0.022} />
               <br />
               <LetterReveal text="pour vous, " stagger={0.022} />
@@ -572,11 +570,9 @@ function WhyUs() {
       </div>
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Built on Trust" center />
-          </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Pourquoi les entrepreneurs choisissent AKATech." />
               Pourquoi les entrepreneurs{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="choisissent AKATech." stagger={0.03} /></span></GreenUnderline>
             </h2>
@@ -661,11 +657,9 @@ function ProjectsCarousel() {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <BlurReveal direction="left">
-              <SectionEye label="// Réalisations" />
-            </BlurReveal>
             <BlurReveal delay={0.1} direction="left">
-              <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+                <GhostTitle text="Nos dernières réalisations livrées" />
                 Nos dernières{' '}
                 <GreenUnderline><span className="text-gradient"><LetterReveal text="réalisations livrées" stagger={0.03} /></span></GreenUnderline>
               </h2>
@@ -780,11 +774,9 @@ function Testimonials() {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Témoignages" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Ce que disent nos clients" />
               Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -850,11 +842,9 @@ function DomainesIntervention() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Domaines d'intervention" center />
-          </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+              <GhostTitle text="Dans quel axe de création s'inscrit votre projet ?" />
               Dans quel axe de création{' '}
               <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
             </h2>
@@ -922,11 +912,9 @@ function StackTech() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Stack Technique" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Les outils qui font la différence" />
               Les outils qui font{' '}
               <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
             </h2>
@@ -976,11 +964,9 @@ function Process() {
   return (
     <section style={{ position: 'relative' }}>
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'center', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
-        <BlurReveal>
-          <SectionEye label="// Notre Processus" center />
-        </BlurReveal>
         <BlurReveal delay={0.1}>
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+            <GhostTitle text="De l'idée à la mise en ligne" />
             De l'idée à la{' '}
             <GreenUnderline><span className="text-gradient"><LetterReveal text="mise en ligne" stagger={0.04} /></span></GreenUnderline>
           </h2>

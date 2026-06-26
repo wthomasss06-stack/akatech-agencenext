@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
 
@@ -194,8 +194,8 @@ function HeroBlog() {
       </div>
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-          <SectionEye label="// Blog & Ressources" center />
-          <h1 style={{ fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+            <GhostTitle text="Insights & conseils pour votre business digital" />
             Insights & conseils<br />
             <GreenUnderline><span className="text-gradient">pour votre business digital</span></GreenUnderline>
           </h1>
@@ -226,11 +226,6 @@ function FeaturedPost() {
   return (
     <section ref={ref} style={{ padding: '3rem 5% 0', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-
-        {/* Label section */}
-        <BlurReveal delay={0} style={{ marginBottom: '1.5rem' }}>
-          <SectionEye label="// Article vedette" />
-        </BlurReveal>
 
         {/* ── CARTE VEDETTE ── */}
         <motion.div
@@ -489,11 +484,9 @@ function BlogGrid() {
 
         {/* ── Section header ── */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Tous les articles" center />
-          </BlurReveal>
           <BlurReveal delay={0.12}>
-            <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
+              <GhostTitle text="Explorez nos ressources digitales" />
               Explorez nos <GreenUnderline>
                 <span className="text-gradient"><LetterReveal text="ressources digitales" stagger={0.025} /></span>
               </GreenUnderline>
@@ -633,8 +626,8 @@ function Newsletter() {
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
             <Zap size={24} style={{ color: T.green }} />
           </div>
-          <SectionEye label="// Newsletter" center />
-          <h2 style={{ fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+            <GhostTitle text="Restez informé des dernières tendances" />
             <LetterReveal text="Restez informé des dernières tendances" stagger={0.02} />
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, marginBottom: '2rem' }}>
@@ -704,11 +697,9 @@ function ProcessBlog() {
     <section style={{ position: 'relative' }}>
       {/* Sticky header */}
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'center', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
-        <BlurReveal>
-          <SectionEye label="// Votre roadmap digitale" center />
-        </BlurReveal>
         <BlurReveal delay={0.1}>
-          <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+            <GhostTitle text="Du blog au projet concret" />
             Du blog au{' '}
             <GreenUnderline>
               <span className="text-gradient">

@@ -3,7 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, Star, FileText, Lock, Clock, GraduationCap, Wrench, Globe } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { TESTIMONIALS, FAQ_ITEMS } from '@/lib/data'
 
@@ -191,8 +191,8 @@ function HeroPricing() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <SectionEye label="// Tarifs" center />
-          <h1 style={{ fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
+            <GhostTitle text="Des offres claires, pour chaque étape." />
             Des offres claires,<br />
             <GreenUnderline><span className="text-gradient">pour chaque étape.</span></GreenUnderline>
           </h1>
@@ -236,11 +236,9 @@ function PricingTabs() {
 
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Nos Offres" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
+              <GhostTitle text="Choisissez votre formule idéale" />
               Choisissez votre{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="formule idéale" stagger={0.035} /></span></GreenUnderline>
             </h2>
@@ -348,11 +346,9 @@ function GuaranteeStrip() {
       <style>{`@media(max-width:768px){.guarantee-grid{grid-template-columns:1fr !important}}`}</style>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Ce qui est toujours inclus" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Zéro surprise, zéro jargon." />
               Zéro surprise, <GreenUnderline><span className="text-gradient">zéro jargon.</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -420,11 +416,9 @@ function TrustedBy() {
 
       <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3.5rem', paddingLeft: '5%', paddingRight: '5%' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Ils nous font confiance" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.8rem,3vw,2.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.8rem,3vw,2.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Ce qu'ils disent de l'investissement" />
               Ce qu'ils disent de{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="l'investissement" stagger={0.04} /></span></GreenUnderline>
             </h2>
@@ -500,11 +494,9 @@ function FAQSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
       <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// FAQ" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Questions fréquentes" />
               Questions{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="fréquentes" stagger={0.05} /></span></GreenUnderline>
             </h2>

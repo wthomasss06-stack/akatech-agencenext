@@ -10,7 +10,7 @@ import {
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { SectionEye, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
 import { SERVICES, PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
@@ -799,11 +799,9 @@ function ProjectsCarousel() {
         {/* Header */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3.5rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <BlurReveal direction="left">
-              <SectionEye label="// Réalisations" />
-            </BlurReveal>
             <BlurReveal delay={0.1} direction="left">
-              <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+                <GhostTitle text="Nos dernières réalisations livrées" />
                 Nos dernières{' '}
                 <GreenUnderline>
                   <span className="text-gradient">
@@ -954,11 +952,9 @@ function Testimonials() {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Témoignages" center />
-          </BlurReveal>
           <BlurReveal delay={0.1}>
-            <h2 style={{ fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="Ce que disent nos clients" />
               Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -1066,15 +1062,14 @@ function DomainesSection() {
 
         {/* Header */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <BlurReveal>
-            <SectionEye label="// Domaines d'intervention" center />
-          </BlurReveal>
           <BlurReveal delay={0.12}>
             <h2 style={{
+              position: 'relative',
               fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800,
               fontFamily: "'JetBrains Mono',monospace", color: T.textMain,
               letterSpacing: '-.03em', lineHeight: 1.15,
             }}>
+              <GhostTitle text="Dans quel axe de création s'inscrit votre projet ?" />
               Dans quel axe de création{' '}
               <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
             </h2>
