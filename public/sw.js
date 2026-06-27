@@ -2,7 +2,7 @@ const CACHE_NAME = 'akatech-v1'
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/favicon.svg',
+  '/favicon.webp',
 ]
 
 self.addEventListener('install', (event) => {

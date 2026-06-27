@@ -57,13 +57,13 @@ function getClientIp(request) {
 }
 
 const PROJECT_TYPE_LABELS = {
-  'site-vitrine': 'Site Vitrine',
+  'site-vitrine': 'Conception de Site Web',
   'e-commerce': 'E-commerce',
   'application-web': 'Application Web / SaaS',
-  'api': 'API / Backend',
-  'dashboard': 'Dashboard / Data',
-  'maintenance': 'Maintenance / Support',
-  'recrutement': 'Candidature spontanée',
+  'cartes-dashboards': 'Cartes Interactives & Dashboards',
+  'api-backend': 'API & Backend',
+  'google-my-business': 'Fiche Google My Business',
+  'maintenance': 'Maintenance & Support',
   'autre': 'Autre',
 }
 
@@ -112,7 +112,9 @@ export async function POST(request) {
   /* ── Validation ── */
   const name = typeof body.name === 'string' ? body.name.trim() : ''
   const email = typeof body.email === 'string' ? body.email.trim() : ''
+  const phone = typeof body.phone === 'string' ? body.phone.trim() : ''
   const projectType = typeof body.projectType === 'string' ? body.projectType.trim() : ''
+  const budget = typeof body.budget === 'string' ? body.budget.trim() : ''
   const message = typeof body.message === 'string' ? body.message.trim() : ''
 
   const fieldErrors = {}
@@ -147,6 +149,8 @@ export async function POST(request) {
      l'email reçu via les champs name/email/message/projectType. */
   const safeName = escapeHtml(name)
   const safeEmail = escapeHtml(email)
+  const safePhone = escapeHtml(phone)
+  const safeBudget = escapeHtml(budget)
   const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>')
   const projectLabel = escapeHtml(PROJECT_TYPE_LABELS[projectType] || projectType || '—')
 
@@ -158,40 +162,73 @@ export async function POST(request) {
       from: process.env.FROM_EMAIL ?? 'onboarding@resend.dev',
       to: process.env.ADMIN_EMAIL ?? 'wthomasss06@gmail.com',
       reply_to: email,
-      subject: `🚀 NOUVEAU MESSAGE — ${safeName}`,
+      subject: `🚀 Nouveau projet — ${safeName} (${projectLabel})`,
       html: `
-        <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px;
-                    background:#0d0d0d;border-radius:12px;
-                    border:1px solid rgba(255,85,0,0.2);">
-          <h2 style="color:#FF5500;margin-bottom:24px;">
-            📬 Nouveau message via AKATech
-          </h2>
-          <table style="width:100%;border-collapse:collapse;">
-            <tr>
-              <td style="padding:8px 0;font-weight:700;color:#aaa;width:140px;">Nom</td>
-              <td style="padding:8px 0;color:#f2ede8;">${safeName}</td>
-            </tr>
-            <tr>
-              <td style="padding:8px 0;font-weight:700;color:#aaa;">Email</td>
-              <td style="padding:8px 0;color:#f2ede8;">
-                <a href="mailto:${safeEmail}" style="color:#FF5500;">${safeEmail}</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding:8px 0;font-weight:700;color:#aaa;">Type projet</td>
-              <td style="padding:8px 0;color:#f2ede8;">${projectLabel}</td>
-            </tr>
-          </table>
-          <hr style="border:none;border-top:1px solid rgba(255,85,0,0.2);margin:20px 0;" />
-          <p style="font-weight:700;color:#aaa;margin-bottom:8px;">Message :</p>
-          <p style="color:#f2ede8;line-height:1.7;
-                    background:rgba(255,85,0,0.06);padding:16px;
-                    border-radius:8px;border-left:4px solid #FF5500;">
-            ${safeMessage}
-          </p>
-          <p style="margin-top:24px;font-size:12px;color:#555;">
-            Envoyé depuis akatech-nextjs · ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Abidjan' })}
-          </p>
+        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;background:#0a120c;">
+
+          <!-- Header marque -->
+          <div style="padding:28px 32px;background:linear-gradient(135deg,#0d1a11 0%,#0a120c 100%);border-bottom:1px solid rgba(136,202,83,.25);">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.1em;color:#88ca53;text-transform:uppercase;">
+              AKATech
+            </div>
+            <div style="margin-top:4px;font-size:11px;color:rgba(255,255,255,.4);">
+              Nouvelle demande reçue via le formulaire de contact
+            </div>
+          </div>
+
+          <div style="padding:32px;">
+
+            <!-- Titre + badge type de projet -->
+            <h2 style="margin:0 0 6px;color:#f2ede8;font-size:20px;font-weight:800;">
+              ${safeName}
+            </h2>
+            <div style="display:inline-block;padding:5px 12px;border-radius:100px;background:rgba(136,202,83,.12);border:1px solid rgba(136,202,83,.3);font-size:12px;font-weight:700;color:#b3ee85;margin-bottom:24px;">
+              ${projectLabel}
+            </div>
+
+            <!-- Infos contact en cards -->
+            <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
+              <tr>
+                <td style="padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px 0 0 10px;border-right:none;">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px;">Email</div>
+                  <a href="mailto:${safeEmail}" style="font-size:13px;color:#88ca53;text-decoration:none;font-weight:600;">${safeEmail}</a>
+                </td>
+                <td style="padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:0 10px 10px 0;">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px;">WhatsApp / Tél</div>
+                  <span style="font-size:13px;color:#f2ede8;font-weight:600;">${safePhone || '—'}</span>
+                </td>
+              </tr>
+            </table>
+
+            <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+              <tr>
+                <td style="padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px;">Budget estimé</div>
+                  <span style="font-size:13px;color:#f2ede8;font-weight:600;">${safeBudget || 'Non précisé'}</span>
+                </td>
+              </tr>
+            </table>
+
+            <!-- Message -->
+            <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px;">
+              Description du projet
+            </div>
+            <p style="color:#e8e4df;line-height:1.7;font-size:14px;background:rgba(136,202,83,.05);padding:18px;border-radius:10px;border-left:3px solid #88ca53;margin:0 0 28px;">
+              ${safeMessage}
+            </p>
+
+            <!-- CTA -->
+            <a href="mailto:${safeEmail}" style="display:inline-block;padding:13px 26px;border-radius:100px;background:#88ca53;color:#0a120c;font-size:13px;font-weight:700;text-decoration:none;">
+              Répondre à ${safeName.split(' ')[0]} →
+            </a>
+
+          </div>
+
+          <div style="padding:18px 32px;border-top:1px solid rgba(255,255,255,.06);">
+            <p style="margin:0;font-size:11px;color:rgba(255,255,255,.3);">
+              Envoyé depuis akatech-nextjs · ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Abidjan' })}
+            </p>
+          </div>
         </div>
       `,
     })

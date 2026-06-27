@@ -572,3 +572,39 @@ export function GreenUnderline({ children, style = {}, color = '#88ca53' }) {
 
 // Alias rétrocompatible
 export const TrainUnderline = GreenUnderline
+
+// ── PAGE WATERMARK ───────────────────────────────────────────
+// Nom de la page en texte géant, en filigrane, derrière le H1
+// du hero (façon référence "studio" en arrière-plan). Utilisé
+// sur toutes les pages sauf l'accueil — voir Navbar.js NAV_LINKS.
+export function PageWatermark({ text, style = {} }) {
+  return (
+    <div aria-hidden="true" style={{
+      position: 'absolute',
+      top: '50%', left: '50%',
+      transform: 'translate(-50%,-50%)',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      overflow: 'hidden',
+      pointerEvents: 'none',
+      zIndex: 5,
+      ...style,
+    }}>
+      <span style={{
+        fontFamily: "'Rozha One', serif",
+        fontSize: 'clamp(7rem, 22vw, 19rem)',
+        lineHeight: 1,
+        color: 'transparent',
+        WebkitTextStroke: '1.5px rgba(255,255,255,.16)',
+        whiteSpace: 'nowrap',
+        letterSpacing: '-.02em',
+        userSelect: 'none',
+        mixBlendMode: 'overlay',
+      }}>
+        {text}
+      </span>
+    </div>
+  )
+}

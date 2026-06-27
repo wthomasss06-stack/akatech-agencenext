@@ -25,8 +25,13 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
     document.head.appendChild(style)
   }, [])
 
-  // Affichage 2.5× plus grand que le size logique — le logo PNG recadré est carré
-  const displaySize = Math.round(size * 2.5)
+  // Le fichier logo.webp est un rectangle large (1536×1024 ≈ 1.5:1), pas un
+  // carré — on respecte ce ratio pour que le logo remplisse vraiment sa boîte
+  // (avant : boîte carrée + object-fit:contain => le logo était "écrasé" et
+  // laissait un grand vide transparent en haut/bas, donc il paraissait petit).
+  const LOGO_RATIO = 1536 / 1024
+  const displayHeight = Math.round(size * 2.5)
+  const displayWidth = Math.round(displayHeight * LOGO_RATIO)
 
   return (
     <div
@@ -35,6 +40,7 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
       style={{
         display: 'inline-flex',
         alignItems: 'center',
+        justifyContent: 'center',
         cursor: onClick ? 'pointer' : 'default',
         position: 'relative',
         userSelect: 'none',
@@ -45,8 +51,8 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
 
       {/* Logo — fond transparent natif */}
       <div style={{
-        width: displaySize,
-        height: displaySize,
+        width: displayWidth,
+        height: displayHeight,
         flexShrink: 0,
         position: 'relative',
         animation: animate ? 'akaGlowPulse 3s ease-in-out infinite' : 'none',
@@ -54,8 +60,8 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
         <Image
           src="/images/logo.webp"
           alt="AKATech Logo"
-          width={displaySize}
-          height={displaySize}
+          width={displayWidth}
+          height={displayHeight}
           style={{
             objectFit: 'contain',
             width: '100%',

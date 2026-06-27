@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Moon, Sun } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useTheme } from '@/lib/theme'
+import { useGhostCycle } from './useGhostCycle'
 import './StaggeredMenu.css'
 
 /* ═══════════════════════════════════════════════
@@ -16,50 +17,6 @@ import './StaggeredMenu.css'
    items = NAV_LINKS { label, href } — navigation par
    route Next.js (site multi-pages, pas d'ancres).
    ═══════════════════════════════════════════════ */
-
-const GHOST_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+*/=<>'
-
-function ghostScramble(text) {
-  return text.split('').map(ch =>
-    /[a-zA-Z0-9]/.test(ch)
-      ? GHOST_CHARS[Math.floor(Math.random() * GHOST_CHARS.length)]
-      : ch
-  ).join('')
-}
-
-function buildGhostSeq(text, cycles = 3) {
-  const seq = [ghostScramble(text)]
-  for (let i = 0; i < cycles; i++) seq.push(ghostScramble(text))
-  seq.push(text, text)
-  return seq
-}
-
-function useGhostCycle(text) {
-  const innerRef = useRef(null)
-  const tweenRef = useRef(null)
-  const [lines, setLines] = useState([text])
-
-  const play = useCallback(() => {
-    if (!text) return
-    tweenRef.current?.kill()
-    const seq = buildGhostSeq(text, 3)
-    setLines(seq)
-    requestAnimationFrame(() => {
-      const inner = innerRef.current
-      if (!inner) return
-      gsap.set(inner, { yPercent: 0 })
-      const finalShift = ((seq.length - 1) / seq.length) * 100
-      tweenRef.current = gsap.to(inner, {
-        yPercent: -finalShift,
-        duration: 0.42 + seq.length * 0.055,
-        ease: 'power4.out',
-        overwrite: 'auto',
-      })
-    })
-  }, [text])
-
-  return { innerRef, lines, play }
-}
 
 function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
   const ghost = useGhostCycle(it.label.toUpperCase())
@@ -322,7 +279,7 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
       {/* ── Header mobile fixe : logo gauche + theme toggle + bouton menu ── */}
       <header className={`sm-header${scrolled || open ? ' sm-header--scrolled' : ''}`}>
         <Link href="/" className="sm-header-logo" onClick={closeMenu}>
-          <Logo size={22} showTag={false} animate={false} />
+          <Logo size={18} showTag={false} animate={false} />
         </Link>
         <div className="sm-header-right">
           <button

@@ -157,11 +157,12 @@ function HeroAbout() {
 
 // ── ABOUT STATS SLIDE AUTO (miroir exact de App.jsx) ─────────
 const ABOUT_STATS = [
-  { target: 18, suffix: '',  label: 'Projets',  sub: 'Livrés sur mesure, du concept au déploiement' },
-  { target: 3,  suffix: '+', label: 'Années',   sub: "D'expérience en développement web" },
-  { target: 12, suffix: '',  label: 'En prod.', sub: 'Applications actuellement en ligne' },
-  { target: 15, suffix: '',  label: 'Outils',   sub: 'Technologies maîtrisées au quotidien' },
-  { target: 10, suffix: '+', label: 'Clients',  sub: 'Particuliers, startups et PME accompagnés' },
+  { target: 18,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
+  { target: 10,  suffix: '+', label: 'Clients',    sub: 'Particuliers, startups et PME accompagnés' },
+  { target: 100, suffix: '%', label: 'Satisfaits', sub: 'Clients livrés dans les délais convenus' },
+  { target: 12,  suffix: '',  label: 'En prod.',   sub: 'Applications actuellement en ligne' },
+  { target: 3,   suffix: '+', label: 'Années',     sub: "D'expérience en développement web" },
+  { target: 15,  suffix: '',  label: 'Outils',     sub: 'Technologies maîtrisées au quotidien' },
 ]
 const SLIDE_MS = 4000
 
@@ -263,8 +264,8 @@ function StatsFounderSection() {
         {/* COLONNE DROITE — Fondateur (grande) */}
         <BlurReveal direction="right" delay={0.15}>
           <h2 style={{ position: 'relative', fontSize: 'clamp(1.8rem,3vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.5rem' }}>
-            <GhostTitle text="M'Bollo Aka Elvis" />
-            M'Bollo Aka <GreenUnderline><span className="text-gradient"><LetterReveal text="Elvis" stagger={0.05} /></span></GreenUnderline>
+            <GhostTitle text="Mission & vision" />
+            Mission & <GreenUnderline><span className="text-gradient"><LetterReveal text="vision" stagger={0.05} /></span></GreenUnderline>
           </h2>
           <p style={{ fontSize: '1.05rem', color: T.textMain, lineHeight: 1.85, marginBottom: '.9rem' }}>
             <strong style={{ color: T.textMain }}>AKATech</strong> construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus.
@@ -293,14 +294,12 @@ function StatsFounderSection() {
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', textDecoration: 'none', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)', transition: 'all .2s' }}
                 onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)'; e.currentTarget.style.borderColor = '#88ca53' }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.1)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
-                <ExternalLink size={11} /> Voir son portfolio
+                <ExternalLink size={11} /> Me contacter 
               </a>
             </div>
           </div>
 
-          <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised">
-            Me contacter <MessageCircle size={16} />
-          </a>
+          
         </BlurReveal>
       </div>
     </section>

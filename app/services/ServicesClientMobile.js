@@ -90,7 +90,7 @@ function ServicesList() {
           .svc-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: center; }
           @media (max-width: 768px) {
             .svc-detail-grid { display: flex; flex-direction: column; gap: 1.5rem; }
-            .svc-detail-img  { order: 1; width: 100%; height: 260px !important; }
+            .svc-detail-img  { order: 1; }
             .svc-detail-body { order: 2; width: 100%; }
           }
         `}</style>
@@ -101,7 +101,7 @@ function ServicesList() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: .35 }}
             className="svc-detail-grid">
             {/* Image */}
-            <div className="svc-detail-img" style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 40px rgba(0,0,0,.3)', height: 380 }}>
+            <div className="svc-detail-img" style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 40px rgba(0,0,0,.3)', aspectRatio: '1 / 1', width: '100%', maxWidth: 380, margin: '0 auto' }}>
               <LazyImg src={svc.img} alt={svc.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon size={48} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
             </div>
@@ -147,45 +147,6 @@ function ServicesList() {
   )
 }
 
-function AllServices() {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  return (
-    <section ref={ref} style={{ padding: '5rem 5%', background: T.bg }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(300px,1fr))', gap: '1.2rem' }}>
-          {SERVICES.map(({ icon, n, title, desc, price, del }, i) => {
-            const Icon = ICON_MAP[icon] || Globe
-            return (
-              <motion.div key={title} className="sku-card"
-                initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .08 }}
-                style={{ padding: '1.8rem' }}
-                whileHover={{ y: -4 }}>
-                <div style={{ width: 50, height: 50, borderRadius: 12, background: 'rgba(136,202,83,.1)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
-                  <Icon size={22} style={{ color: T.green }} />
-                </div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em', marginBottom: '.3rem' }}>{n}</div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.5rem' }}>{title}</h3>
-                <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.2rem' }}>{desc}</p>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingTop: '.9rem', borderTop: `1px solid ${T.border}` }}>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{price}</span>
-                  <a href={`https://wa.me/2250142507750?text=Bonjour, je suis intéressé par ${title}`} target="_blank" rel="noreferrer"
-                    style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 4, transition: 'gap .2s' }}
-                    onMouseEnter={e => e.currentTarget.style.gap = '8px'}
-                    onMouseLeave={e => e.currentTarget.style.gap = '4px'}>
-                    Devis <ArrowRight size={12} />
-                  </a>
-                </div>
-              </motion.div>
-            )
-          })}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 function TechSection() {
   const T = useTheme()
   const ref = useRef(null)
@@ -225,7 +186,6 @@ export default function ServicesPage() {
     <div>
       <HeroServices />
       <ServicesList />
-      <AllServices />
       <MarqueeStrip />
       <TechSection />
       <PageCTA message="Prêt à lancer votre projet ? Obtenez un devis gratuit en 24h." cta="Obtenir mon devis" />

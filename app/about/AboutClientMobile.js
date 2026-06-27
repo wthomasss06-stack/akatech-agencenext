@@ -129,8 +129,8 @@ function FounderSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg, position: 'relative' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
         <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
-          <GhostTitle text="M'Bollo Aka Elvis" />
-          M'Bollo Aka <GreenUnderline><span className="text-gradient">Elvis</span></GreenUnderline>
+          <GhostTitle text="Mission & vision" />
+          Mission &  <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
         </h2>
         <p style={{ fontSize: '.95rem', color: T.textMain, lineHeight: 1.85, marginBottom: '.8rem' }}>
           <strong>AKATech</strong> construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus.
@@ -157,14 +157,12 @@ function FounderSection() {
             <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '.45rem' }}>Dev Full-Stack · Fondateur, AKATech</div>
             <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer"
               style={{ display: 'inline-flex', alignItems: 'center', gap: '.3rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53', textDecoration: 'none', padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)' }}>
-              <ExternalLink size={10} /> Voir son portfolio
+              <ExternalLink size={10} /> Me contacter 
             </a>
           </div>
         </div>
 
-        <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.9rem' }}>
-          Me contacter <MessageCircle size={15} />
-        </a>
+        
       </motion.div>
     </section>
   )

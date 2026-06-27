@@ -102,7 +102,7 @@ akatech-nextjs/
 │
 ├── public/
 │   ├── images/                         # Photos équipe, clients, projets
-│   ├── favicon.svg
+│   ├── favicon.
 │   ├── manifest.json                   # Manifest PWA
 │   └── sw.js                           # Service Worker (cache offline)
 │

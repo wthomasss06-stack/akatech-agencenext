@@ -196,6 +196,34 @@ body.light-mode .text-gradient {
 /* Page transition */
 .page-enter { animation: fadeUp .5s ease forwards; }
 
+/* ═══════════════════════════════════════════════
+   Transition clair/sombre — effet "cercle" cinématique
+   (View Transitions API). Le cercle part du bouton
+   cliqué (--theme-x/--theme-y/--theme-radius posés en
+   JS dans lib/theme.js) et révèle le nouveau thème.
+   Si le navigateur ne supporte pas l'API, le thème
+   change instantanément (pas de souci, lib/theme.js
+   gère le fallback).
+   ═══════════════════════════════════════════════ */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) { z-index: 1; }
+::view-transition-new(root) {
+  z-index: 2;
+  animation: aka-theme-reveal .65s cubic-bezier(.22, 1, .36, 1) forwards;
+}
+@keyframes aka-theme-reveal {
+  from { clip-path: circle(0px at var(--theme-x, 50%) var(--theme-y, 50%)); }
+  to   { clip-path: circle(var(--theme-radius, 150%) at var(--theme-x, 50%) var(--theme-y, 50%)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation: none !important; }
+}
+
 /* Light mode nav */
 body.light-mode .nav-scrolled {
   background: rgba(255,255,255,.95) !important;

@@ -392,11 +392,11 @@ function Hero() {
 
 // ── DATA images services (miroir de SERVICES_SKEW du desktop) ──
 const SERVICES_SLIDES = [
-  { n: '01', title: 'Conception de Site Web',          price: 'À partir de 150 000 FCFA', del: '5-7 jours',         img: '/images/service/creation%20de%20site%20web.webp' },
-  { n: '02', title: 'Cartes Interactives & Dashboards', price: 'Sur devis',               del: '7-14 jours',        img: '/images/service/dasbord.webp' },
-  { n: '03', title: 'API & Backend Robustes',           price: 'À partir de 200 000 FCFA', del: '7-14 jours',       img: '/images/service/api.webp' },
-  { n: '04', title: 'Maintenance & Support',            price: 'À partir de 25 000 FCFA/mois', del: 'Mensuel',      img: '/images/service/maintenence.webp' },
-  { n: '05', title: 'Fiche Google My Business',         price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours',   img: '/images/service/fiche-google.webp' },
+  {  title: 'Conception de Site Web',                img: '/images/service/creation%20de%20site%20web.webp' },
+  {  title: 'Cartes Interactives & Dashboards',                        img: '/images/service/dasbord.webp' },
+  {  title: 'API & Backend Robustes',                 img: '/images/service/api.webp' },
+  {  title: 'Maintenance & Support',                 img: '/images/service/maintenence.webp' },
+  {  title: 'Fiche Google My Business',           img: '/images/service/fiche-google.webp' },
 ]
 
 // ── DATA images processus (miroir de WHY_PANELS du desktop) ──
@@ -409,6 +409,104 @@ const PROCESS_SLIDES = [
   { n: '06', title: 'Solde & facturation',     sub: 'Paiement final',           img: '/images/process/solde.webp' },
   { n: '07', title: 'Mise en ligne',           sub: 'Votre site est officiel',  img: '/images/process/mise%20en%20ligne.webp' },
 ]
+
+// ── À PROPOS ──────────────────────────────────────────────────
+function AboutSection() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  const TEXT = "AKATech conçoit des sites et applications sur mesure pour les PME ambitieuses d'Abidjan et d'Afrique de l'Ouest. Design premium, performance optimisée et SEO pensé pour convertir : chaque projet est construit pour renforcer votre image et générer de nouvelles opportunités d'affaires."
+  const greenWords = new Set(['PME', 'ambitieuses', 'premium,', 'optimisée', 'SEO', 'convertir', "d'affaires."])
+
+  return (
+    <section ref={ref} style={{ padding: '4rem 5%', background: T.bg, position: 'relative' }}>
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+        width: '80vw', height: '80vw', maxWidth: 500, maxHeight: 500, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(136,202,83,.045) 0%, transparent 65%)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <motion.h2 initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+          style={{
+            position: 'relative',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 'clamp(1.4rem,5vw,1.9rem)', fontWeight: 800,
+            color: T.textMain, letterSpacing: '-.03em',
+            marginBottom: '1.5rem',
+          }}>
+          <GhostTitle text="À propos de AKATech" />
+          À propos de <span className="text-gradient">AKATech</span>
+        </motion.h2>
+
+        <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+          style={{
+            fontFamily: "'JetBrains Mono',monospace",
+            fontSize: 'clamp(1rem,3.6vw,1.2rem)',
+            fontWeight: 700, lineHeight: 1.5,
+            color: T.textMain, margin: 0,
+          }}>
+          {TEXT.split(' ').map((word, i) => (
+            <span key={i} style={{ color: greenWords.has(word) ? '#88ca53' : 'inherit' }}>
+              {word}{' '}
+            </span>
+          ))}
+        </motion.p>
+      </div>
+    </section>
+  )
+}
+
+// ── STATS GRID (cartes dégradé gris, chiffres animés) ──────────
+const HOME_STATS = [
+  { target: 18,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
+  { target: 10,  suffix: '+', label: 'Clients',    sub: 'Particuliers, startups et PME accompagnés' },
+  { target: 100, suffix: '%', label: 'Satisfaits', sub: 'Clients livrés dans les délais convenus' },
+  { target: 12,  suffix: '',  label: 'En prod.',   sub: 'Applications actuellement en ligne' },
+  { target: 3,   suffix: '+', label: 'Années',     sub: "D'expérience en développement web" },
+  { target: 15,  suffix: '',  label: 'Outils',     sub: 'Technologies maîtrisées au quotidien' },
+]
+
+function StatsSection() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  return (
+    <section ref={ref} style={{ padding: '3.5rem 5% 4.5rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', width: 400, height: 300, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <style>{`
+          .stats-grid-mobile { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
+        `}</style>
+        <div className="stats-grid-mobile">
+          {HOME_STATS.map((s, i) => (
+            <motion.div key={s.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: .5, delay: i * .07, ease: [.22,1,.36,1] }}
+              style={{
+                padding: '1.3rem 1.1rem',
+                borderRadius: 16,
+                background: 'linear-gradient(155deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.015) 55%, rgba(255,255,255,0) 100%)',
+                border: '1px solid rgba(255,255,255,.08)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(100px circle at 85% 0%, rgba(136,202,83,.07), transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.7rem,6vw,2.1rem)', lineHeight: 1, color: '#88ca53', letterSpacing: '-.02em', marginBottom: '.45rem' }}>
+                <AnimatedCounter target={s.target} suffix={s.suffix} />
+              </div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain, marginBottom: '.3rem' }}>{s.label}</div>
+              <p style={{ fontSize: '.7rem', color: T.textMuted, lineHeight: 1.5, margin: 0 }}>{s.sub}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
 
 // ── SLIDE AUTO générique ─────────────────────────────────────
 function AutoSlider({ slides, renderCaption }) {
@@ -763,6 +861,8 @@ export default function HomePageMobile() {
   return (
     <div style={{ paddingTop: 0 }}>
       <Hero />
+      <AboutSection />
+      <StatsSection />
       <MarqueeStrip />
       <ServicesPreview />
       <Process />

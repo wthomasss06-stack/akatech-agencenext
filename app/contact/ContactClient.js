@@ -595,7 +595,7 @@ function ProjectForm() {
       const res = await fetch('/api/contact/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, projectType: form.service }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || "Erreur lors de l'envoi")
@@ -678,10 +678,12 @@ function ProjectForm() {
                         onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
                         <option value="">Choisir...</option>
                         <option value="site-vitrine">Conception de Site Web</option>
+                        <option value="e-commerce">E-commerce</option>
+                        <option value="application-web">Application Web / SaaS</option>
                         <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                        <option value="api">API & Backend</option>
+                        <option value="api-backend">API & Backend</option>
+                        <option value="google-my-business">Fiche Google My Business</option>
                         <option value="maintenance">Maintenance & Support</option>
-                        <option value="google-business">Fiche Google My Business</option>
                         <option value="autre">Autre</option>
                       </select>
                     </div>
@@ -693,10 +695,11 @@ function ProjectForm() {
                       onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                       onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
                       <option value="">Sélectionner...</option>
-                      <option>Moins de 150 000 FCFA</option>
-                      <option>150 000 – 300 000 FCFA</option>
+                      <option>Moins de 100 000 FCFA</option>
+                      <option>100 000 – 300 000 FCFA</option>
                       <option>300 000 – 600 000 FCFA</option>
-                      <option>Plus de 600 000 FCFA</option>
+                      <option>600 000 – 1 200 000 FCFA</option>
+                      <option>Plus de 1 200 000 FCFA</option>
                       <option>À discuter</option>
                     </select>
                   </div>

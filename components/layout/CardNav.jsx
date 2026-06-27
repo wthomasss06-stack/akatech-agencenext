@@ -6,6 +6,8 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useGhostCycle } from './useGhostCycle'
+import './CardNav.css'
 
 /* ── Slogans cycle — navJAX ─────────────────────────── */
 const NAV_SLOGANS = [
@@ -56,6 +58,27 @@ const ArrowIcon = () => (
   </svg>
 )
 
+/* ── Lien de carte avec ghost-cycle text au survol (même mécanique que StaggeredMenu) ── */
+function CardLinkWithGhost({ href, label, sub, onClick }) {
+  const ghost = useGhostCycle(label.toUpperCase())
+  return (
+    <Link href={href} className="aka-card-link" onClick={onClick} onMouseEnter={ghost.play}>
+      <ArrowIcon />
+      <span className="aka-card-link-textWrap">
+        <span className="aka-card-link-label">{label}</span>
+        <span className="aka-card-link-ghost" aria-hidden="true">
+          <span className="aka-card-ghost-cycle">
+            <span className="aka-card-ghost-inner" ref={ghost.innerRef}>
+              {ghost.lines.map((l, i) => <span className="aka-card-ghost-line" key={i}>{l}</span>)}
+            </span>
+          </span>
+        </span>
+        <em className="aka-link-sub">{sub}</em>
+      </span>
+    </Link>
+  )
+}
+
 export default function CardNav() {
   const T = useTheme()
   const navRef = useRef(null)
@@ -64,16 +87,8 @@ export default function CardNav() {
   const tlRef = useRef(null)
   const openRef = useRef(false)
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
 
-  /* ── Transparent dans le hero, glass + border en dehors ── */
-  useEffect(() => {
-    const threshold = window.innerHeight * 0.85
-    const onScroll = () => setScrolled(window.scrollY > threshold)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  /* ── Transparent partout, le fond ne revient que quand le menu est déployé ── */
 
   useEffect(() => {
     const nav = navRef.current
@@ -128,136 +143,26 @@ export default function CardNav() {
 
   return (
     <div className="aka-nav-container">
-      <style>{`
-        .aka-nav-container {
-          position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
-          width: 92%; max-width: 1100px; z-index: 9000;
-        }
-
-        nav.aka-card-nav {
-          background-color: ${scrolled || open
-            ? (T.light ? 'rgba(248,248,248,0.88)' : 'rgba(6,14,9,0.85)')
-            : 'transparent'};
-          backdrop-filter: ${scrolled || open ? 'blur(20px) saturate(160%)' : 'none'};
-          -webkit-backdrop-filter: ${scrolled || open ? 'blur(20px) saturate(160%)' : 'none'};
-          border-radius: 22px;
-          overflow: hidden;
-          border: ${scrolled || open
-            ? (T.light ? '1px solid rgba(95,145,55,0.18)' : '1px solid rgba(136,202,83,0.15)')
-            : '1px solid transparent'};
-          box-shadow: ${scrolled || open ? '0 8px 32px rgba(0,0,0,0.22)' : 'none'};
-          height: 64px;
-          transition: background-color 0.4s ease, border-color 0.4s ease,
-                      backdrop-filter 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .aka-nav-top {
-          height: 64px;
-          display: flex; align-items: center; justify-content: space-between;
-          padding: 0 18px;
-        }
-
-        .aka-hamburger {
-          width: 24px; height: 15px; cursor: pointer;
-          display: flex; flex-direction: column; justify-content: space-between;
-          z-index: 10; background: none; border: none; padding: 0;
-        }
-        .aka-hline {
-          width: 100%; height: 1.5px;
-          background: ${!scrolled && !open ? 'rgba(255,255,255,0.85)' : (T.light ? 'rgba(10,20,10,0.75)' : 'rgba(242,237,232,0.7)')};
-          transition: transform 0.35s cubic-bezier(0.77,0,0.175,1), opacity 0.3s, background 0.4s;
-          border-radius: 2px; transform-origin: center;
-        }
-        .aka-hamburger.open .aka-hline:nth-child(1) { transform: translateY(6.75px) rotate(45deg); background: #88ca53; }
-        .aka-hamburger.open .aka-hline:nth-child(2) { transform: translateY(-8.25px) rotate(-45deg); background: #88ca53; }
-
-        .aka-nav-logo {
-          display: flex; align-items: center;
-          text-decoration: none; line-height: 0;
-        }
-
-        .aka-nav-right { display: flex; align-items: center; gap: 8px; }
-        .aka-theme-btn {
-          width: 28px; height: 28px; border-radius: 8px;
-          border: 1px solid ${!scrolled && !open ? 'rgba(255,255,255,0.3)' : 'rgba(242,237,232,.15)'};
-          background: ${!scrolled && !open ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,.05)'};
-          color: ${!scrolled && !open ? 'rgba(255,255,255,0.85)' : 'rgba(242,237,232,.6)'};
-          display: flex; align-items: center; justify-content: center;
-          cursor: pointer; transition: all .2s;
-        }
-        .aka-theme-btn:hover { color: #88ca53; border-color: rgba(136,202,83,.4); }
-
-        .aka-nav-cta {
-          background: linear-gradient(135deg, #88ca53, #5a9e34);
-          color: #04140a; border: none; padding: 7px 16px;
-          border-radius: 999px; font-family: 'JetBrains Mono',monospace;
-          font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em;
-          text-transform: uppercase; cursor: pointer;
-          box-shadow: 0 4px 16px rgba(136,202,83,0.22);
-          transition: transform 0.25s, box-shadow 0.25s;
-          text-decoration: none; display: inline-block;
-        }
-        .aka-nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(136,202,83,0.38); }
-
-        .aka-nav-content {
-          display: grid; grid-template-columns: repeat(3, 1fr);
-          gap: 14px; padding: 14px;
-        }
-
-        .aka-nav-card {
-          border-radius: 18px; padding: 24px 22px; min-height: 230px;
-          display: flex; flex-direction: column; justify-content: space-between;
-          transform: translateY(45px); opacity: 0;
-          transition: box-shadow 0.3s;
-        }
-        .aka-nav-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
-
-        .aka-card-1 { background: #f0eeeb; color: #0a0c16; }
-        .aka-card-2 { background: #0a1f10; color: #F2EDE8; border: 1px solid rgba(136,202,83,0.22); }
-        .aka-card-3 { background: #060e09; color: #F2EDE8; border: 1px solid rgba(255,255,255,0.06); }
-
-        .aka-card-label {
-          font-family: 'JetBrains Mono',monospace; font-style: italic;
-          font-size: 0.78rem; font-weight: 400; letter-spacing: 0.05em; opacity: 0.55;
-        }
-        .aka-card-1 .aka-card-label { color: #0a0c16; }
-        .aka-card-2 .aka-card-label { color: #88ca53; opacity: 0.85; }
-        .aka-card-3 .aka-card-label { color: rgba(242,237,232,0.5); }
-
-        .aka-card-links { display: flex; flex-direction: column; gap: 10px; }
-        .aka-card-link {
-          text-decoration: none; color: inherit;
-          font-family: 'JetBrains Mono',monospace; font-size: 1rem; font-weight: 700;
-          display: flex; align-items: center; gap: 10px;
-          transition: transform 0.2s, color 0.2s; letter-spacing: -0.01em;
-        }
-        .aka-card-1 .aka-card-link:hover { color: #2f6a17; transform: translateX(5px); }
-        .aka-card-2 .aka-card-link:hover,
-        .aka-card-3 .aka-card-link:hover { color: #88ca53; transform: translateX(5px); }
-
-        .aka-card-brand { display: flex; flex-direction: column; gap: 14px; }
-        .aka-card-logo-link {
-          display: flex; align-items: center; justify-content: center;
-          width: 100%; line-height: 0; transition: transform 0.25s ease;
-        }
-        .aka-card-logo-link:hover { transform: scale(1.05); }
-        .aka-card-slogan {
-          font-family: 'JetBrains Mono',monospace; font-weight: 700;
-          font-size: 1.05rem; line-height: 1.25; letter-spacing: -0.01em;
-          color: #0a0c16; margin: 0;
-        }
-
-        .aka-link-arrow { width: 16px; height: 16px; opacity: 0.5; transition: opacity 0.2s; flex-shrink: 0; }
-        .aka-card-link:hover .aka-link-arrow { opacity: 1; }
-
-        .aka-link-sub {
-          font-family: 'JetBrains Mono',monospace; font-style: italic;
-          font-size: 0.68rem; opacity: 0.5; display: block;
-          margin-top: -6px; font-weight: 400;
-        }
-      `}</style>
-
-      <nav ref={navRef} className={'aka-card-nav' + (open ? ' is-open' : '')}>
+      <nav ref={navRef} className={'aka-card-nav' + (open ? ' is-open' : '')} style={{
+        '--nav-bg': open ? (T.light ? 'rgba(248,248,248,0.88)' : 'rgba(6,14,9,0.85)') : 'transparent',
+        '--nav-blur': open ? 'blur(20px) saturate(160%)' : 'none',
+        '--nav-border': open ? (T.light ? '1px solid rgba(95,145,55,0.18)' : '1px solid rgba(136,202,83,0.15)') : '1px solid transparent',
+        '--nav-shadow': open ? '0 8px 32px rgba(0,0,0,0.22)' : 'none',
+        '--nav-hline': '#88ca53',
+        '--nav-btn-border': !open ? 'rgba(255,255,255,0.3)' : 'rgba(242,237,232,.15)',
+        '--nav-btn-bg': !open ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,.05)',
+        '--nav-btn-color': '#88ca53',
+        '--card1-bg': T.light ? '#f0eeeb' : '#0d1a11',
+        '--card2-bg': T.light ? '#eaf5e2' : '#0a1f10',
+        '--card3-bg': T.light ? '#ffffff' : '#060e09',
+        '--card-text': T.light ? '#0a0c16' : '#f2ede8',
+        '--card1-border': T.light ? '1px solid rgba(10,20,10,0.06)' : '1px solid rgba(136,202,83,0.16)',
+        '--card2-border': T.light ? '1px solid rgba(95,145,55,0.18)' : '1px solid rgba(136,202,83,0.22)',
+        '--card3-border': T.light ? '1px solid rgba(10,20,10,0.08)' : '1px solid rgba(255,255,255,0.06)',
+        '--card3-label': T.light ? 'rgba(10,20,10,0.5)' : 'rgba(242,237,232,0.5)',
+        '--card1-link-hover': T.light ? '#2f6a17' : '#88ca53',
+        '--theme-green': T.green,
+      }}>
         <div className="aka-nav-top">
           <button className={'aka-hamburger' + (open ? ' open' : '')} onClick={toggle} aria-label="Menu" type="button">
             <div className="aka-hline" />
@@ -265,7 +170,7 @@ export default function CardNav() {
           </button>
 
           <Link href="/" className="aka-nav-logo" onClick={closeNav}>
-            <Image src="/images/logo.webp" alt="AKATech" width={46} height={46} style={{ objectFit: 'contain' }} priority />
+            <Image src="/images/logo.webp" alt="AKATech" width={75} height={50} style={{ objectFit: 'contain' }} priority />
           </Link>
 
           <div className="aka-nav-right">
@@ -283,7 +188,7 @@ export default function CardNav() {
             <div className="aka-card-label">Ce qu'on fait</div>
             <div className="aka-card-brand">
               <Link href="/" onClick={closeNav} className="aka-card-logo-link" aria-label="Retour à l'accueil">
-                <Image src="/images/logo.webp" alt="AKATech" width={92} height={92} style={{ objectFit: 'contain' }} />
+                <Image src="/images/logo.webp" alt="AKATech" width={138} height={92} style={{ objectFit: 'contain' }} />
               </Link>
               <NavSlogan />
             </div>
@@ -292,36 +197,18 @@ export default function CardNav() {
           <div className="aka-nav-card aka-card-2" ref={el => cardsRef.current[1] = el}>
             <div className="aka-card-label">Nos réalisations</div>
             <div className="aka-card-links">
-              <Link href="/projects" className="aka-card-link" onClick={closeNav}>
-                <ArrowIcon />
-                <span>Portfolio<em className="aka-link-sub">Projets sélectionnés</em></span>
-              </Link>
-              <Link href="/pricing" className="aka-card-link" onClick={closeNav}>
-                <ArrowIcon />
-                <span>Tarifs<em className="aka-link-sub">Devis transparents</em></span>
-              </Link>
-              <Link href="/blog" className="aka-card-link" onClick={closeNav}>
-                <ArrowIcon />
-                <span>Blog<em className="aka-link-sub">Conseils & actualités</em></span>
-              </Link>
+              <CardLinkWithGhost href="/projects" label="Portfolio" sub="Projets sélectionnés" onClick={closeNav} />
+              <CardLinkWithGhost href="/pricing" label="Tarifs" sub="Devis transparents" onClick={closeNav} />
+              <CardLinkWithGhost href="/blog" label="Blog" sub="Conseils & actualités" onClick={closeNav} />
             </div>
           </div>
 
           <div className="aka-nav-card aka-card-3" ref={el => cardsRef.current[2] = el}>
             <div className="aka-card-label">L'agence</div>
             <div className="aka-card-links">
-              <Link href="/services" className="aka-card-link" onClick={closeNav}>
-                <ArrowIcon />
-                <span>Service<em className="aka-link-sub">Ce que nous proposons</em></span>
-              </Link>
-              <Link href="/about" className="aka-card-link" onClick={closeNav}>
-                <ArrowIcon />
-                <span>À propos<em className="aka-link-sub">Notre équipe, Abidjan</em></span>
-              </Link>
-              <Link href="/contact" className="aka-card-link" onClick={closeNav}>
-                <ArrowIcon />
-                <span>Contact<em className="aka-link-sub">Parlons de ton projet</em></span>
-              </Link>
+              <CardLinkWithGhost href="/services" label="Service" sub="Ce que nous proposons" onClick={closeNav} />
+              <CardLinkWithGhost href="/about" label="À propos" sub="Notre équipe, Abidjan" onClick={closeNav} />
+              <CardLinkWithGhost href="/contact" label="Contact" sub="Parlons de ton projet" onClick={closeNav} />
             </div>
           </div>
         </div>

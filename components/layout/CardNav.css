@@ -1,0 +1,163 @@
+/* ═══════════════════════════════════════════════
+   CardNav.css — styles du nav desktop AKATech.
+   Extrait du <style>{`...`}</style> inline vers un
+   fichier statique pour éliminer tout risque de
+   mismatch d'hydratation SSR/CSR. Les valeurs qui
+   dépendent du thème/de l'état (open, T.light) sont
+   posées via CSS custom properties sur l'élément
+   <nav> (voir style inline dans CardNav.jsx).
+   ═══════════════════════════════════════════════ */
+
+.aka-nav-container {
+  position: fixed; top: 14px; left: 50%; transform: translateX(-50%);
+  width: 92%; max-width: 1100px; z-index: 9000;
+}
+
+nav.aka-card-nav {
+  background-color: var(--nav-bg);
+  backdrop-filter: var(--nav-blur);
+  -webkit-backdrop-filter: var(--nav-blur);
+  border-radius: 22px;
+  overflow: hidden;
+  border: var(--nav-border);
+  box-shadow: var(--nav-shadow);
+  height: 64px;
+  transition: background-color 0.4s ease, border-color 0.4s ease,
+              backdrop-filter 0.4s ease, box-shadow 0.4s ease;
+}
+
+.aka-nav-top {
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 18px;
+}
+
+.aka-hamburger {
+  width: 24px; height: 15px; cursor: pointer;
+  display: flex; flex-direction: column; justify-content: space-between;
+  z-index: 10; background: none; border: none; padding: 0;
+}
+.aka-hline {
+  width: 100%; height: 1.5px;
+  background: var(--nav-hline);
+  transition: transform 0.35s cubic-bezier(0.77,0,0.175,1), opacity 0.3s, background 0.4s;
+  border-radius: 2px; transform-origin: center;
+}
+.aka-hamburger.open .aka-hline:nth-child(1) { transform: translateY(6.75px) rotate(45deg); background: #88ca53; }
+.aka-hamburger.open .aka-hline:nth-child(2) { transform: translateY(-8.25px) rotate(-45deg); background: #88ca53; }
+
+.aka-nav-logo {
+  display: flex; align-items: center;
+  text-decoration: none; line-height: 0;
+}
+
+.aka-nav-right { display: flex; align-items: center; gap: 8px; }
+.aka-theme-btn {
+  width: 28px; height: 28px; border-radius: 8px;
+  border: var(--nav-btn-border);
+  background: var(--nav-btn-bg);
+  color: var(--nav-btn-color);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all .2s;
+}
+.aka-theme-btn:hover { color: #88ca53; border-color: rgba(136,202,83,.4); }
+
+.aka-nav-cta {
+  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  color: #04140a; border: none; padding: 7px 16px;
+  border-radius: 999px; font-family: 'JetBrains Mono',monospace;
+  font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em;
+  text-transform: uppercase; cursor: pointer;
+  box-shadow: 0 4px 16px rgba(136,202,83,0.22);
+  transition: transform 0.25s, box-shadow 0.25s;
+  text-decoration: none; display: inline-block;
+}
+.aka-nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(136,202,83,0.38); }
+
+.aka-nav-content {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 14px; padding: 14px;
+}
+
+.aka-nav-card {
+  border-radius: 18px; padding: 24px 22px; min-height: 230px;
+  display: flex; flex-direction: column; justify-content: space-between;
+  transform: translateY(45px); opacity: 0;
+  transition: box-shadow 0.3s, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+}
+.aka-nav-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+
+.aka-card-1 {
+  background: var(--card1-bg);
+  color: var(--card-text);
+  border: var(--card1-border);
+}
+.aka-card-2 {
+  background: var(--card2-bg);
+  color: var(--card-text);
+  border: var(--card2-border);
+}
+.aka-card-3 {
+  background: var(--card3-bg);
+  color: var(--card-text);
+  border: var(--card3-border);
+}
+
+.aka-card-label {
+  font-family: 'JetBrains Mono',monospace; font-style: italic;
+  font-size: 0.78rem; font-weight: 400; letter-spacing: 0.05em; opacity: 0.55;
+}
+.aka-card-1 .aka-card-label { color: var(--card-text); }
+.aka-card-2 .aka-card-label { color: var(--theme-green); opacity: 0.85; }
+.aka-card-3 .aka-card-label { color: var(--card3-label); }
+
+.aka-card-links { display: flex; flex-direction: column; gap: 10px; }
+.aka-card-link {
+  text-decoration: none; color: inherit;
+  display: flex; align-items: center; gap: 10px;
+  transition: transform 0.2s, color 0.2s;
+}
+.aka-card-1 .aka-card-link:hover { color: var(--card1-link-hover); transform: translateX(5px); }
+.aka-card-2 .aka-card-link:hover,
+.aka-card-3 .aka-card-link:hover { color: #88ca53; transform: translateX(5px); }
+
+.aka-card-brand { display: flex; flex-direction: column; gap: 14px; }
+.aka-card-logo-link {
+  display: flex; align-items: center; justify-content: center;
+  width: 100%; line-height: 0; transition: transform 0.25s ease;
+}
+.aka-card-logo-link:hover { transform: scale(1.05); }
+.aka-card-slogan {
+  font-family: 'JetBrains Mono',monospace; font-weight: 700;
+  font-size: 1.05rem; line-height: 1.25; letter-spacing: -0.01em;
+  color: var(--card-text); margin: 0;
+}
+
+.aka-link-arrow { width: 16px; height: 16px; opacity: 0.5; transition: opacity 0.2s; flex-shrink: 0; }
+.aka-card-link:hover .aka-link-arrow { opacity: 1; }
+
+/* ── Texte du lien + ghost-cycle (même mécanique que sm-panel-item) ── */
+.aka-card-link-textWrap { position: relative; display: flex; flex-direction: column; }
+.aka-card-link-label {
+  font-family: 'JetBrains Mono',monospace; font-size: 1rem; font-weight: 700;
+  letter-spacing: -0.01em; position: relative; text-transform: uppercase;
+}
+.aka-card-link-ghost {
+  position: absolute; inset: 0; overflow: hidden;
+  pointer-events: none; color: #88ca53;
+  opacity: 0; transition: opacity .18s;
+}
+.aka-card-link:hover .aka-card-link-ghost { opacity: 1; }
+.aka-card-ghost-cycle { display: block; overflow: hidden; height: 100%; }
+.aka-card-ghost-inner { display: block; }
+.aka-card-ghost-line {
+  display: block;
+  font-family: 'JetBrains Mono',monospace; font-size: 1rem; font-weight: 700;
+  letter-spacing: -0.01em; white-space: nowrap; text-transform: uppercase;
+}
+
+.aka-link-sub {
+  font-family: 'JetBrains Mono',monospace; font-style: italic;
+  font-size: 0.68rem; opacity: 0.5; display: block;
+  margin-top: -2px; font-weight: 400;
+}

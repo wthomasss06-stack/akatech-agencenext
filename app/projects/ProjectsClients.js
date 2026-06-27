@@ -31,7 +31,7 @@ function HeroRealisations() {
             fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)',
             letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem',
           }}>
-            +10 réalisations livrées,<br /><GreenUnderline><span className="text-gradient">100% satisfaits.</span></GreenUnderline>
+            +10 réalisations livrées,<br /><GreenUnderline><span className="text-gradient">99% satisfaits.</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
             Sites vitrines, e-commerces, SaaS, portfolios… Chaque réalisation est une histoire de transformation digitale réussie.

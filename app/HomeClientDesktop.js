@@ -11,41 +11,9 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
-import { SERVICES, PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
+import { SERVICES, PROJECTS, TESTIMONIALS } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
-
-// ── HERO SLIDES ───────────────────────────────────────────────
-const HERO_SLIDES = [
-  {
-    tag: '// Site Vitrine',
-    title: 'Votre présence digitale,',
-    accent: 'professionnelle & rentable.',
-    sub: "Un site qui travaille pour vous 24h/24 — attirez des clients, gagnez en crédibilité et développez votre activité.",
-    img: '/images/hero-bg.webp',
-  },
-  {
-    tag: '// E-Commerce',
-    title: 'Vendez en ligne,',
-    accent: 'même quand vous dormez.',
-    sub: "Boutique complète avec paiement Mobile Money, gestion stocks et tableau de bord admin. Livrée en 14 jours.",
-    img: '/images/about-2.webp',
-  },
-  {
-    tag: '// Application SaaS',
-    title: 'Automatisez vos tâches,',
-    accent: 'scalez votre activité.',
-    sub: "Des applications web sur-mesure pour digitaliser vos processus et économiser des heures de travail chaque semaine.",
-    img: '/images/about-1.webp',
-  },
-  {
-    tag: '// Portfolio Créatif',
-    title: 'Votre talent mérite',
-    accent: 'une vitrine digitale.',
-    sub: "Portfolios animés, modernes et percutants pour créatifs, graphistes et freelances qui veulent décrocher plus de clients.",
-    img: '/images/about-4.webp',
-  },
-]
 
 // ── TILT 3D CARD ──────────────────────────────────────────────
 function TiltCard({ children, style = {}, className = '', intensity = 14, perspective = 900 }) {
@@ -111,25 +79,91 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
 }
 
 // ── HERO (inchangé) ───────────────────────────────────────────
+// ── CIRCULAR PROJECTS GALLERY (inspiré Aeline/Catalis) ────────
+function CircularProjectsGallery() {
+  const T = useTheme()
+  const GALLERY_ITEMS = PROJECTS.slice(0, 5)
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setActive(a => (a + 1) % GALLERY_ITEMS.length), 2800)
+    return () => clearInterval(id)
+  }, [GALLERY_ITEMS.length])
+
+  // Position relative de chaque carte par rapport à `active` (-2..-1..0..1..2)
+  const order = GALLERY_ITEMS.map((_, i) => {
+    let rel = i - active
+    if (rel > GALLERY_ITEMS.length / 2) rel -= GALLERY_ITEMS.length
+    if (rel < -GALLERY_ITEMS.length / 2) rel += GALLERY_ITEMS.length
+    return rel
+  })
+
+  // Ratio natif 1600×815 ≈ 1.96:1
+  const CARD_W = 340
+  const CARD_H = Math.round(340 * (815 / 1600))  // ≈ 173px
+  const STEP   = CARD_W * 0.72                    // espacement entre centres
+
+  return (
+    <div style={{ position: 'relative', height: CARD_H + 60, display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 1200 }}>
+      {GALLERY_ITEMS.map((p, i) => {
+        const rel    = order[i]
+        const abs    = Math.abs(rel)
+        const x      = rel * STEP
+        const y      = abs * 14
+        const rot    = rel * 8
+        const scale  = 1 - abs * 0.13
+        const opacity = abs > 2 ? 0 : 1 - abs * 0.18
+        const isActive = rel === 0
+
+        return (
+          <motion.div key={p.id}
+            animate={{ x, y, rotate: rot, scale, opacity }}
+            transition={{ duration: .9, ease: [.22,1,.36,1] }}
+            onClick={() => setActive(i)}
+            style={{
+              position: 'absolute',
+              width: CARD_W,
+              height: CARD_H,
+              borderRadius: 10,
+              overflow: 'hidden',
+              zIndex: 10 - abs,
+              cursor: 'pointer',
+              border: isActive
+                ? '1.5px solid rgba(136,202,83,.6)'
+                : '1px solid rgba(255,255,255,.1)',
+              boxShadow: isActive
+                ? '0 0 0 3px rgba(136,202,83,.15), 0 12px 36px rgba(0,0,0,.6)'
+                : '0 6px 20px rgba(0,0,0,.4)',
+              transformStyle: 'preserve-3d',
+            }}>
+            <LazyImg
+              src={p.img}
+              alt={p.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' }}
+            />
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: isActive
+                ? 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.8) 100%)'
+                : 'linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.65) 100%)',
+            }} />
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.7rem 1rem' }}>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}>{p.title}</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(136,202,83,.9)', marginTop: '.1rem' }}>{p.type}</div>
+            </div>
+          </motion.div>
+        )
+      })}
+    </div>
+  )
+}
+
 function Hero() {
   const T = useTheme()
-  const [idx, setIdx] = useState(0)
-  const [imgIdx, setImgIdx] = useState(0)
-  const timerRef = useRef(null)
-
+  const wrapRef     = useRef(null)
   const layerBgRef  = useRef(null)
   const layerMidRef = useRef(null)
   const layerForeRef = useRef(null)
-
-  const next = useCallback(() => {
-    setIdx(i => (i + 1) % HERO_SLIDES.length)
-    setImgIdx(i => (i + 1) % HERO_SLIDES.length)
-  }, [])
-
-  useEffect(() => {
-    timerRef.current = setInterval(next, 5000)
-    return () => clearInterval(timerRef.current)
-  }, [next])
 
   useEffect(() => {
     const onMouse = (e) => {
@@ -156,43 +190,46 @@ function Hero() {
   }, [])
 
   useEffect(() => {
+    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200vh ci-dessous) :
+    // on calcule une progression 0→1 sur la distance pinnée, et on l'utilise
+    // pour zoomer + flouter + faire disparaître le Hero, comme la section
+    // pinnée "zoom-title" de 1.html — pour laisser émerger la suite de la page.
     const onScroll = () => {
-      const s = window.pageYOffset
+      const wrap = wrapRef.current
+      const winH = window.innerHeight
+      let progress = 0
+      if (wrap) {
+        const top = wrap.getBoundingClientRect().top
+        const pinDistance = wrap.offsetHeight - winH
+        progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+      }
+
       if (layerBgRef.current) {
-        const zoom = 1 + s * 0.0005
-        layerBgRef.current.style.transform = `scale(${zoom}) translateY(${s * 0.2}px)`
-        layerBgRef.current.style.filter = `blur(${Math.min(s / 60, 12)}px)`
+        const zoom = 1 + progress * 0.4
+        layerBgRef.current.style.transform = `scale(${zoom})`
+        layerBgRef.current.style.filter = `blur(${progress * 16}px)`
       }
       if (layerMidRef.current) {
-        layerMidRef.current.style.opacity  = Math.max(0, 1 - s / 700)
-        layerMidRef.current.style.transform = `translateY(${s * 0.5 * 0.8}px)`
-        layerMidRef.current.style.filter   = `blur(${s / 100}px)`
+        const scale = 1 + progress * 1.7
+        layerMidRef.current.style.opacity  = String(Math.max(0, 1 - progress * 1.25))
+        layerMidRef.current.style.transform = `scale(${scale})`
+        layerMidRef.current.style.filter   = `blur(${progress * 7}px)`
       }
       if (layerForeRef.current) {
-        layerForeRef.current.style.transform = `translateY(${s * 0.8 * 1.2}px)`
-        layerForeRef.current.style.opacity = Math.max(0, 1 - s / 400)
+        layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const slide = HERO_SLIDES[idx]
-
   return (
-    <section style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <div ref={wrapRef} style={{ position: 'relative', height: '200vh' }}>
+    <section style={{ height: '100vh', maxHeight: '100vh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <AnimatePresence mode="sync">
-          <motion.div key={imgIdx}
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [.4,0,.2,1] }}
-            style={{ position: 'absolute', inset: 0 }}>
-            <img src={HERO_SLIDES[imgIdx].img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          </motion.div>
-        </AnimatePresence>
+        <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
         <motion.div
@@ -212,126 +249,37 @@ function Hero() {
         />
       </div>
 
-      <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1200, padding: '0 5%', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <div className="hero-content-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', paddingTop: 80 }}>
+      <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '4rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
-          <div style={{ maxWidth: 680 }}>
-            <AnimatePresence mode="wait">
-              <motion.div key={idx}
-                initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -14, filter: 'blur(2px)' }}
-                transition={{ duration: .6, ease: [.22,1,.36,1] }}>
+        
 
-                <motion.div
-                  className="no-pill-mobile"
-                  initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .1 }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
-                </motion.div>
+        <motion.h1
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
+          style={{ position: 'relative', fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.8rem', maxWidth: 880, marginLeft: 'auto', marginRight: 'auto' }}>
+          <GhostTitle text="Digital, local,
+ " />
+          Digital, local,<br />
+          <GreenUnderline><span className="text-gradient">rentable.</span></GreenUnderline>
+        </motion.h1>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
-                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
-                  {slide.title}
-                  <motion.span
-                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .22 }}
-                    style={{ display: 'block', fontFamily: "'Dancing Script',cursive", color: '#88ca53', letterSpacing: '-.02em', marginTop: '.1em', marginBottom: '1.6rem' }}>
-                    <GreenUnderline>{slide.accent}</GreenUnderline>
-                  </motion.span>
-                </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .3 }}
-                  style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.75, marginBottom: '2.8rem', maxWidth: 520 }}>
-                  {slide.sub}
-                </motion.p>
-              </motion.div>
-            </AnimatePresence>
-
-            <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '3rem' }}>
-              <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
-                Démarrer mon projet <ArrowRight size={16} />
-              </a>
-              <Link href="/projects" className="btn-ghost" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
-                Voir les réalisations
-              </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .6 }}
-              className="trust-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
-              {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map((b, bi) => (
-                <motion.span key={b}
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
-                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
-                  {b}
-                </motion.span>
-              ))}
-            </motion.div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-end' }} className="hide-mobile">
-            <TiltCard intensity={13} perspective={800} style={{ borderRadius: 18 }}>
-              <motion.div initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .6, delay: .35 }}>
-                <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="sku-card"
-                  style={{ padding: '.85rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem', backdropFilter: 'blur(14px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.88)', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 30%,rgba(136,202,83,.07) 50%,transparent 70%)', backgroundSize: '200% 100%', animation: 'shimmer 3.2s ease-in-out infinite', pointerEvents: 'none' }} />
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(136,202,83,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <TrendingUp size={18} style={{ color: '#88ca53' }} />
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </TiltCard>
-
-            <TiltCard intensity={10} perspective={800} style={{ borderRadius: 18 }}>
-              <motion.div initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .6, delay: .48 }}>
-                <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  className="sku-card"
-                  style={{ padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(14px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.88)', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 30%,rgba(136,202,83,.07) 50%,transparent 70%)', backgroundSize: '200% 100%', animation: 'shimmer 4s ease-in-out infinite .9s', pointerEvents: 'none' }} />
-                  <div style={{ display: 'flex' }}>
-                    {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#88ca53' }} fill="#88ca53" />)}
-                  </div>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
-                </motion.div>
-              </motion.div>
-            </TiltCard>
-
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .7 }}
-              style={{ display: 'flex', flexDirection: 'column', gap: '.4rem', paddingTop: '.5rem' }}>
-              {HERO_SLIDES.map((_, i) => (
-                <button key={i} onClick={() => { setIdx(i); setImgIdx(i); clearInterval(timerRef.current); timerRef.current = setInterval(next, 5000) }}
-                  style={{ width: 4, height: i === idx ? 28 : 8, borderRadius: 2, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .35s', display: 'block' }} />
-              ))}
-            </motion.div>
-          </div>
-        </div>
+        
 
         <motion.div
-          initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .8, duration: .6 }}
-          style={{ marginTop: '3.5rem' }}>
-          <div className="stats-bar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(136,202,83,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(136,202,83,.12)', backdropFilter: 'blur(12px)' }}>
-            {STATS.map(({ val, suffix, label }, si) => (
-              <motion.div key={label}
-                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .9 + si * .08 }}
-                whileHover={{ background: 'rgba(136,202,83,.07)', transition: { duration: .2 } }}
-                style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center', cursor: 'default' }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
-                  <AnimatedCounter target={val} suffix={suffix} />
-                </div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
-              </motion.div>
-            ))}
-          </div>
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.8rem', justifyContent: 'center' }}>
+          <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
+            Démarrer mon projet <ArrowRight size={16} />
+          </a>
+          <Link href="/contact" className="btn-ghost" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
+             Prenez RDV
+          </Link>
         </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
+          <CircularProjectsGallery />
+        </motion.div>
+
+        
       </div>
 
       <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
@@ -351,13 +299,14 @@ function Hero() {
         ))}
       </div>
 
-      <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
         <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
           style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
 
     </section>
+    </div>
   )
 }
 
@@ -542,13 +491,11 @@ function ServicesPreview() {
             viewport={{ once: true }}
             transition={{ duration: .7, ease: [.22,1,.36,1] }}
           >
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.4em', textTransform: 'uppercase', marginBottom: '1.5rem' }}>
-              // Nos Services
-            </p>
-            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.2rem,4.5vw,3.8rem)', lineHeight: 1.1, textAlign: 'left', letterSpacing: '-.03em', color: T.textMain }}>
+            <h2 style={{ position: 'relative', fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.2rem,4.5vw,3.8rem)', lineHeight: 1.1, textAlign: 'left', letterSpacing: '-.03em', color: T.textMain }}>
+              <GhostTitle text="Des solutions qui travaillent pour vous." />
               Des solutions<br />
               qui travaillent<br />
-              pour <span style={{ color: '#88ca53' }}>vous.</span>
+              pour <GreenUnderline><span className="text-gradient">vous.</span></GreenUnderline>
             </h2>
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginTop: '1.4rem', maxWidth: 340 }}>
               Même quand vous dormez — chaque projet est livré dans les délais, avec le code le plus propre et le design le plus soigné.
@@ -1187,7 +1134,7 @@ function ScrollRevealText() {
   const textRef      = useRef(null)
   const wordsRef     = useRef([])
 
-  const TEXT = "AKATech développe des sites et applications web sur mesure qui renforcent votre image, automatisent votre activité et attirent de nouveaux clients. Design premium, performance ultra-rapide, référencement Google optimisé et accompagnement complet : tout est pensé pour faire évoluer votre business en Côte d'Ivoire."
+  const TEXT = "AKATech conçoit des sites et applications sur mesure pour les PME ambitieuses d'Abidjan et d'Afrique de l'Ouest. Design premium, performance optimisée et SEO pensé pour convertir : chaque projet est construit pour renforcer votre image et générer de nouvelles opportunités d'affaires."
 
   useEffect(() => {
     const container = containerRef.current
@@ -1254,16 +1201,17 @@ function ScrollRevealText() {
       }} />
 
       <div style={{ maxWidth: 940, width: '100%', position: 'relative', zIndex: 1 }}>
-        {/* Label scroll */}
-        <p style={{
+        {/* Titre de section */}
+        <h2 style={{
+          position: 'relative',
           fontFamily: "'JetBrains Mono', monospace",
-          fontSize: '.6rem', fontWeight: 600,
-          color: '#88ca53', letterSpacing: '.18em',
-          textTransform: 'uppercase', marginBottom: '2.5rem',
-          opacity: .65,
+          fontSize: 'clamp(1.5rem,2.6vw,2.1rem)', fontWeight: 800,
+          color: T.textMain, letterSpacing: '-.03em',
+          marginBottom: '2.5rem',
         }}>
-          // À propos de AKATech
-        </p>
+          <GhostTitle text="À propos de AKATech" />
+          À propos de <span className="text-gradient">AKATech</span>
+        </h2>
 
         {/* Texte principal avec effet blur-reveal */}
         <p
@@ -1280,7 +1228,7 @@ function ScrollRevealText() {
           }}
         >
           {(() => {
-          const greenWords = new Set(['mesure', 'automatisent', 'nouveaux', 'clients.', 'Design', 'premium,', 'ultra-rapide,', 'Google', 'évoluer', 'business'])
+          const greenWords = new Set(['PME', 'ambitieuses', 'premium,', 'optimisée', 'SEO', 'convertir', "d'affaires."])
           return TEXT.split(' ').map((word, i) => (
             <span
               key={i}
@@ -1304,12 +1252,166 @@ function ScrollRevealText() {
   )
 }
 
+// ── TUNNEL ARCHIVE 3D (transition À propos → Stats) ───────────
+// Port de l'effet "15 / LE TUNNEL ARCHIVE 3D" (5haut_niveay.html) :
+// grille pinnée en perspective 3D, qui avance vers la caméra au scroll.
+function ArchiveTunnelSection() {
+  const wrapRef = useRef(null)
+  const gridRef = useRef(null)
+  const TUNNEL_ITEMS = PROJECTS.slice(0, 6)
+  const DEPTHS = [0, -220, -60, -340, -120, -260]
+  const SPANS  = [1, 1, 1, 1, 2, 1]
+
+  useEffect(() => {
+    const onScroll = () => {
+      const wrap = wrapRef.current
+      const grid = gridRef.current
+      if (!wrap || !grid) return
+      const winH = window.innerHeight
+      const top = wrap.getBoundingClientRect().top
+      const pinDistance = wrap.offsetHeight - winH
+      const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+
+      grid.style.transform = `translateZ(${progress * 1000}px) rotateX(${progress * 15}deg)`
+      grid.style.opacity   = String(progress > 0.9 ? Math.max(0, 1 - (progress - 0.9) / 0.1) : 1)
+
+      const sat = Math.min(1, progress * 1.4)
+      grid.querySelectorAll('.tunnel-cell').forEach(cell => {
+        cell.style.filter = `grayscale(${1 - sat}) contrast(1.05)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <div ref={wrapRef} style={{ position: 'relative', height: '250vh', background: '#040a07' }}>
+      <section style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', perspective: '1200px', display: 'flex', alignItems: 'center' }}>
+        <div style={{ position: 'absolute', top: '2.2rem', left: '6%', zIndex: 5, fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', letterSpacing: '.32em', color: '#88ca53', textTransform: 'uppercase' }}>
+          Archive — Nos projets
+        </div>
+
+        <div
+          ref={gridRef}
+          style={{
+            width: '100%', height: '100%',
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '2vw',
+            padding: '15vh 8vw',
+            transformStyle: 'preserve-3d',
+            willChange: 'transform',
+          }}
+        >
+          {TUNNEL_ITEMS.map((p, i) => (
+            <div
+              key={p.id}
+              className="tunnel-cell"
+              style={{
+                gridColumn: SPANS[i] === 2 ? 'span 2' : 'auto',
+                position: 'relative',
+                minHeight: 180,
+                borderRadius: 10,
+                overflow: 'hidden',
+                border: '1px solid rgba(136,202,83,.4)',
+                transform: `translateZ(${DEPTHS[i] || 0}px)`,
+                filter: 'grayscale(1) contrast(1.05)',
+                transition: 'filter .15s linear',
+              }}
+            >
+              <LazyImg src={p.img} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 55%, rgba(0,0,0,.78) 100%)' }} />
+              <div style={{ position: 'absolute', bottom: '.6rem', left: '.7rem', right: '.7rem' }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#fff' }}>{p.title}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  )
+}
+
+// ── STATS GRID (cartes dégradé gris, chiffres animés) ──────────
+const HOME_STATS = [
+  { tag: 'Expérience',  target: 18,  suffix: '',  label: 'Projets',      sub: 'Livrés sur mesure, du concept au déploiement' },
+  { tag: 'Confiance',   target: 10,  suffix: '+', label: 'Clients',       sub: 'Particuliers, startups et PME accompagnés' },
+  { tag: 'Satisfaction',target: 99, suffix: '%', label: 'Satisfaits',    sub: 'Clients livrés dans les délais convenus' },
+  
+  { tag: 'Parcours',    target: 3,   suffix: '+', label: 'Années',        sub: "D'expérience en développement web" },
+  
+]
+
+function StatsSection() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-80px' })
+
+  // Spans bento (sur une grille 4 colonnes) — reproduit la mosaïque asymétrique :
+  // Ligne 1 : [Projets][Clients][   Satisfaits (x2)   ]
+  // Ligne 2 : [   En prod. (x2)   ][Années][Outils]
+  const SPANS = ['span 1', 'span 1', 'span 2', 'span 2', 'span 1', 'span 1']
+
+  return (
+    <section ref={ref} style={{ padding: '5rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: 700, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
+      <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <style>{`
+          .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.1rem;
+          }
+          @media (max-width: 760px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .stats-grid > div { grid-column: span 1 !important; }
+          }
+        `}</style>
+        <div className="stats-grid">
+          {HOME_STATS.map((s, i) => (
+            <motion.div key={s.label}
+              initial={{ opacity: 0, y: 24 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: .55, delay: i * .08, ease: [.22,1,.36,1] }}
+              style={{
+                gridColumn: SPANS[i],
+                padding: '1.8rem 1.6rem',
+                minHeight: 190,
+                borderRadius: 18,
+                background: `linear-gradient(155deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.015) 55%, rgba(255,255,255,0) 100%)`,
+                border: '1px solid rgba(255,255,255,.08)',
+                position: 'relative',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+              }}>
+              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120px circle at 85% 0%, rgba(136,202,83,.07), transparent 70%)', pointerEvents: 'none' }} />
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', fontWeight: 700, color: T.textMain, position: 'relative', zIndex: 1 }}>{s.tag}</div>
+              <div style={{ position: 'relative', zIndex: 1 }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.textMuted, marginBottom: '.3rem' }}>{s.label}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.2rem,4vw,2.8rem)', lineHeight: 1, color: '#88ca53', letterSpacing: '-.02em', marginBottom: '.5rem' }}>
+                  <AnimatedCounter target={s.target} suffix={s.suffix} />
+                </div>
+                <p style={{ fontSize: '.78rem', color: T.textMuted, lineHeight: 1.55, margin: 0 }}>{s.sub}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // ── HOME PAGE ────────────────────────────────────────────────
 export default function HomePageDesktop() {
   return (
     <div style={{ paddingTop: 0 }}>
       <Hero />
       <ScrollRevealText />
+      <ArchiveTunnelSection />
+      <StatsSection />
       <MarqueeStrip />
       <ServicesPreview />
       <WhyUs />
