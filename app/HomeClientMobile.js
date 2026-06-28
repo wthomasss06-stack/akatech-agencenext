@@ -185,7 +185,7 @@ function Hero() {
   const slide = HERO_SLIDES[idx]
 
   return (
-    <section style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <section id="home-hero" style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       {/* ── LAYER BG — arrière-plan image carousel (lent, zoom+blur scroll) ── */}
       <div

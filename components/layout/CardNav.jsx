@@ -2,11 +2,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { AnimatePresence, motion } from 'framer-motion'
-import Link from 'next/link'
 import Image from 'next/image'
 import { Moon, Sun } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useGhostCycle } from './useGhostCycle'
+import TransitionLink from './TransitionLink'
 import './CardNav.css'
 
 /* ── Slogans cycle — navJAX ─────────────────────────── */
@@ -62,7 +62,7 @@ const ArrowIcon = () => (
 function CardLinkWithGhost({ href, label, sub, onClick }) {
   const ghost = useGhostCycle(label.toUpperCase())
   return (
-    <Link href={href} className="aka-card-link" onClick={onClick} onMouseEnter={ghost.play}>
+    <TransitionLink href={href} className="aka-card-link" onClick={onClick} onMouseEnter={ghost.play}>
       <ArrowIcon />
       <span className="aka-card-link-textWrap">
         <span className="aka-card-link-label">{label}</span>
@@ -75,7 +75,7 @@ function CardLinkWithGhost({ href, label, sub, onClick }) {
         </span>
         <em className="aka-link-sub">{sub}</em>
       </span>
-    </Link>
+    </TransitionLink>
   )
 }
 
@@ -169,9 +169,9 @@ export default function CardNav() {
             <div className="aka-hline" />
           </button>
 
-          <Link href="/" className="aka-nav-logo" onClick={closeNav}>
+          <TransitionLink href="/" className="aka-nav-logo" onClick={closeNav}>
             <Image src="/images/logo.webp" alt="AKATech" width={75} height={50} style={{ objectFit: 'contain' }} priority />
-          </Link>
+          </TransitionLink>
 
           <div className="aka-nav-right">
             <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? 'Mode sombre' : 'Mode clair'} type="button">
@@ -187,9 +187,9 @@ export default function CardNav() {
           <div className="aka-nav-card aka-card-1" ref={el => cardsRef.current[0] = el}>
             <div className="aka-card-label">Ce qu'on fait</div>
             <div className="aka-card-brand">
-              <Link href="/" onClick={closeNav} className="aka-card-logo-link" aria-label="Retour à l'accueil">
+              <TransitionLink href="/" onClick={closeNav} className="aka-card-logo-link" aria-label="Retour à l'accueil">
                 <Image src="/images/logo.webp" alt="AKATech" width={138} height={92} style={{ objectFit: 'contain' }} />
-              </Link>
+              </TransitionLink>
               <NavSlogan />
             </div>
           </div>

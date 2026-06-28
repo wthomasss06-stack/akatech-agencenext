@@ -1,10 +1,10 @@
 'use client'
 import { useRef, useState, useEffect } from 'react'
-import Link from 'next/link'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Mail, MapPin, Phone, ChevronRight, ExternalLink } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useTheme } from '@/lib/theme'
+import TransitionLink from './TransitionLink'
 
 /* ── Slogans cycle — footer ──────────────────────────── */
 const FOOTER_SLOGANS = [
@@ -224,7 +224,7 @@ export default function Footer({ variant = 'page' }) {
                 ['Portfolio', '/services'],
                 ['Maintenance', '/services'],
               ].map(([label, href]) => (
-                <Link
+                <TransitionLink
                   key={label}
                   href={href}
                   style={lk}
@@ -232,7 +232,7 @@ export default function Footer({ variant = 'page' }) {
                   onMouseLeave={e => e.currentTarget.style.color = T.textMuted}
                 >
                   <ChevronRight size={10} style={{ color: T.greenSub, flexShrink: 0 }} />{label}
-                </Link>
+                </TransitionLink>
               ))}
             </div>
           </div>
@@ -251,7 +251,7 @@ export default function Footer({ variant = 'page' }) {
                 ['Blog', '/blog'],
                 ['Contact', '/contact'],
               ].map(([label, href]) => (
-                <Link
+                <TransitionLink
                   key={label}
                   href={href}
                   style={lk}
@@ -259,7 +259,7 @@ export default function Footer({ variant = 'page' }) {
                   onMouseLeave={e => e.currentTarget.style.color = T.textMuted}
                 >
                   <ChevronRight size={10} style={{ color: T.greenSub, flexShrink: 0 }} />{label}
-                </Link>
+                </TransitionLink>
               ))}
               <a
                 href="https://mbolloaka-dev.vercel.app/"
@@ -323,14 +323,14 @@ export default function Footer({ variant = 'page' }) {
         }}>
           <p style={{ textAlign: 'center', margin: 0 }}>
             © {year}{' '}
-            <a
+            <TransitionLink
               href="/"
               style={{ color: T.greenSub, transition: 'color .2s' }}
               onMouseEnter={e => e.currentTarget.style.color = T.green}
               onMouseLeave={e => e.currentTarget.style.color = T.greenSub}
             >
               AKATech
-            </a>
+            </TransitionLink>
             {' '}· Agence Digitale · Abidjan ·
           </p>
         </div>

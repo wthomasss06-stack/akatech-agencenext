@@ -1,0 +1,31 @@
+/* ════════════════════════════════════════════════
+   PageTransition.css — AKATech
+   Transition "Vertical Strip" — grille de cellules
+   en clip-path, déclenchée à chaque changement de
+   route interne (CardNav, StaggeredMenu, Footer).
+   Port du projet barba-js "vertical-strip-transition-10"
+   (inspiré Inkfish/SOTD) vers Next.js App Router.
+   Couleur : vert AKATech uni (#88ca53), aucune
+   alternance de teinte entre cellules — un seul aplat.
+   Le nombre de colonnes/lignes change en JS selon la
+   largeur d'écran (cf. GRID_*_MOBILE dans PageTransition.jsx).
+   ════════════════════════════════════════════════ */
+
+.aka-pt-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 999998; /* sous le Loader (99999) mais au-dessus de tout le reste */
+  display: grid;
+  pointer-events: none;
+  overflow: hidden;
+  touch-action: none;
+}
+
+.aka-pt-block {
+  background: #88ca53;
+  margin: -0.5px; /* évite les liserés de 1px entre cellules au rendu */
+  will-change: clip-path, transform;
+  transform: translateZ(0);
+  min-width: 100%;
+  min-height: 100%;
+}

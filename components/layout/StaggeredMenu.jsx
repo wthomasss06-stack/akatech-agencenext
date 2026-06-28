@@ -1,11 +1,11 @@
 'use client'
 import { useCallback, useLayoutEffect, useRef, useState, useEffect } from 'react'
 import { gsap } from 'gsap'
-import Link from 'next/link'
 import { Moon, Sun } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useTheme } from '@/lib/theme'
 import { useGhostCycle } from './useGhostCycle'
+import TransitionLink from './TransitionLink'
 import './StaggeredMenu.css'
 
 /* ═══════════════════════════════════════════════
@@ -23,7 +23,7 @@ function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
 
   return (
     <li className="sm-panel-itemWrap" key={it.href + idx}>
-      <Link
+      <TransitionLink
         className={'sm-panel-item' + (isActive ? ' sm-panel-item--active' : '')}
         href={it.href}
         aria-label={it.label}
@@ -51,7 +51,7 @@ function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
             <polyline points="7 7 17 7 17 17" />
           </svg>
         </span>
-      </Link>
+      </TransitionLink>
     </li>
   )
 }
@@ -278,9 +278,9 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
     <>
       {/* ── Header mobile fixe : logo gauche + theme toggle + bouton menu ── */}
       <header className={`sm-header${scrolled || open ? ' sm-header--scrolled' : ''}`}>
-        <Link href="/" className="sm-header-logo" onClick={closeMenu}>
+        <TransitionLink href="/" className="sm-header-logo" onClick={closeMenu}>
           <Logo size={18} showTag={false} animate={false} />
-        </Link>
+        </TransitionLink>
         <div className="sm-header-right">
           <button
             onClick={T.toggle}

@@ -5,6 +5,7 @@ import Footer from '@/components/layout/Footer'
 import { BackToTop, FloatingWA } from '@/components/ui/index'
 import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
+import { PageTransitionProvider } from '@/components/layout/PageTransition'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -134,13 +135,15 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <ThemeProvider>
-          <ScrollToTop />
-          <Loader />
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
-          <FloatingWA />
-          <BackToTop />
+          <PageTransitionProvider>
+            <ScrollToTop />
+            <Loader />
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+            <FloatingWA />
+            <BackToTop />
+          </PageTransitionProvider>
         </ThemeProvider>
       </body>
     </html>

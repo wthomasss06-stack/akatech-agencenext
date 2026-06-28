@@ -226,7 +226,7 @@ function Hero() {
 
   return (
     <div ref={wrapRef} style={{ position: 'relative', height: '200vh' }}>
-    <section style={{ height: '100vh', maxHeight: '100vh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <section id="home-hero" style={{ height: '100vh', maxHeight: '100vh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
