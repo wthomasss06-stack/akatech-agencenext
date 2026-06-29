@@ -268,6 +268,7 @@
   border: 1.5px solid rgba(242,237,232,.2);
   color: #f2ede8;
   opacity: .4;
+  transform: rotate(25deg);
   transition:
     border-color .25s,
     color .25s,
@@ -285,7 +286,7 @@
   color: #020a05;
   background: #88ca53;
   opacity: 1;
-  transform: rotate(45deg);
+  transform: rotate(50deg);
 }
 .light-mode .sm-panel-item:hover .sm-panel-item-arrow,
 .light-mode .sm-panel-item--active .sm-panel-item-arrow {

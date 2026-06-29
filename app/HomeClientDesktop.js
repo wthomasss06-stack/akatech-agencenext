@@ -492,7 +492,7 @@ function HoverImageReveal({ items }) {
             <div style={{
               width: 38, height: 38, flexShrink: 0,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transform: hovered === i ? 'rotate(45deg)' : 'rotate(0deg)',
+              transform: hovered === i ? 'rotate(50deg)' : 'rotate(25deg)',
               transition: 'transform .25s cubic-bezier(.22,1,.36,1)',
             }}>
               <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
@@ -821,7 +821,7 @@ function DomaineCard({ n, Icon, title, desc, tag, img, index, inView }) {
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
       onMouseMove={onMouseMove}
-      style={{ background: T.bgAlt, padding: '2.2rem', position: 'relative', overflow: 'visible', cursor: 'default' }}
+      style={{ background: T.card, padding: '2.2rem', position: 'relative', overflow: 'visible', cursor: 'default' }}
     >
       {/* Glow hover */}
       <div style={{
