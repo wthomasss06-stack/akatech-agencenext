@@ -79,7 +79,7 @@ export function LaserBeam({ position = 'right', intensity = 'medium', style = {}
 // on glisse en yPercent jusqu'à atterrir sur le texte réel.
 // Déclenché par IntersectionObserver à l'entrée/sortie du
 // viewport (pas au hover) — cycle inverse à la sortie.
-// Usage : <h2><GhostTitle text="Mon titre de section" /></h2>
+// Usage : <h2><GhostTitle text="MON TITRE DE SECTION" /></h2>
 const GHOST_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+*/=<>'
 
 function ghostScrambleLine(text) {
@@ -138,7 +138,7 @@ export function GhostTitle({ text, className = '' }) {
         if (entry.isIntersecting) { hasEntered = true; ghost.play(true) }
         else if (hasEntered) { ghost.play(false) }
       }),
-      { threshold: 0.4, rootMargin: '0px 0px -10% 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
     )
     io.observe(el)
     return () => io.disconnect()

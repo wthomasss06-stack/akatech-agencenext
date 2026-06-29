@@ -591,7 +591,7 @@ function ServicesPreview() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1} direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="Des solutions qui travaillent pour vous." />
+              <GhostTitle text="DES SOLUTIONS QUI TRAVAILLENT POUR VOUS." />
               Des solutions qui{' '}
               <GreenUnderline>
                 <span className="text-gradient">
@@ -650,7 +650,7 @@ function WhyUs() {
         {/* Header — titre sur trait rouge */}
         <BlurReveal delay={0.1} direction="left">
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '3rem' }}>
-            <GhostTitle text="Built on Trust." />
+            <GhostTitle text="BUILT ON TRUST." />
             Built on{' '}
             <GreenUnderline><span className="text-gradient">Trust.</span></GreenUnderline>
           </h2>
@@ -698,7 +698,7 @@ function Testimonials() {
         <div style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="Ce que disent nos clients" />
+              <GhostTitle text="CE QUE DISENT NOS CLIENTS" />
               Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -972,7 +972,7 @@ function DomainesSection() {
               color: T.textMain,
               lineHeight: 1,
             }}>
-              <GhostTitle text="Dans quel axe de création s'inscrit votre projet ?" />
+              <GhostTitle text="DANS QUEL AXE DE CRÉATION S'INSCRIT VOTRE PROJET ?" />
               Dans quel axe de création{' '}
               <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
             </h2>
@@ -1123,7 +1123,7 @@ function ScrollRevealText() {
           color: T.textMain,
           marginBottom: '2.5rem',
         }}>
-          <GhostTitle text="À propos de AKATech" />
+          <GhostTitle text="À PROPOS DE AKATECH" />
           À propos de <GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
         </h2>
 

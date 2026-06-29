@@ -58,7 +58,7 @@ function HeroRealisations() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 900, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="+18 réalisations livrées, 99% satisfaits." />
+            <GhostTitle text="+18 RÉALISATIONS LIVRÉES, 99% SATISFAITS." />
             +18 réalisations livrées,<br /><GreenUnderline><span className="text-gradient">99% satisfaits.</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -247,7 +247,8 @@ function StackedRealisations() {
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', marginBottom: '.4rem' }}>
               // SCROLL POUR PARCOURIR
             </p>
-            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+              <GhostTitle text="RÉALISATIONS, UN PAR UN." />
               {PROJECTS.length} réalisations, <GreenUnderline><span className="text-gradient">un par un.</span></GreenUnderline>
             </h2>
           </div>

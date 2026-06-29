@@ -266,7 +266,7 @@ function HeroContact() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="Parlons de votre projet" />
+            <GhostTitle text="PARLONS DE VOTRE PROJET" />
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -331,7 +331,7 @@ function ContactChannels() {
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-              <GhostTitle text="Comment nous contacter" />
+              <GhostTitle text="COMMENT NOUS CONTACTER" />
               Comment nous <GreenUnderline><span className="text-gradient"><LetterReveal text="contacter" stagger={0.025} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -483,7 +483,7 @@ function GeoSection() {
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="Où intervenons-nous ?" />
+              <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
               Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -557,7 +557,7 @@ function ProcessContact() {
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'left', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
-            <GhostTitle text="De la demande à la mise en route" />
+            <GhostTitle text="DE LA DEMANDE À LA MISE EN ROUTE" />
             De la demande à la{' '}
             <GreenUnderline>
               <span className="text-gradient">
@@ -661,7 +661,7 @@ function ProjectForm() {
         {/* ── Header ── */}
         <BlurReveal style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-            <GhostTitle text="Décrivez votre projet" />
+            <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
             Décrivez votre <GreenUnderline><span className="text-gradient"><LetterReveal text="projet" stagger={0.028} /></span></GreenUnderline>
           </h2>
         </BlurReveal>

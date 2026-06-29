@@ -62,7 +62,7 @@ function HeroAbout() {
       <div style={{ position: 'relative', zIndex: 10, width: '100%', padding: '7rem 5% 4rem' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2rem,7vw,3rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="Votre croissance digitale, c'est notre mission." />
+            <GhostTitle text="VOTRE CROISSANCE DIGITALE, C'EST NOTRE MISSION." />
             Votre croissance digitale,<br />
             <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
           </h1>
@@ -187,8 +187,8 @@ function FounderSection() {
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg, position: 'relative' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
-        <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
-          <GhostTitle text="Mission & vision" />
+        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
+          <GhostTitle text="MISSION & VISION" />
           Mission &  <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
         </h2>
         <p style={{ fontSize: '.95rem', color: T.textMain, lineHeight: 1.85, marginBottom: '.8rem' }}>
@@ -237,8 +237,8 @@ function TimelineSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="L'évolution d'AKATech" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="L'ÉVOLUTION D'AKATECH" />
             L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -270,8 +270,8 @@ function ValuesSection() {
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-          <GhostTitle text="Ce qui nous distingue" />
+        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <GhostTitle text="CE QUI NOUS DISTINGUE" />
           Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
         </h2>
       </motion.div>
@@ -300,8 +300,8 @@ function SkillsSection() {
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-        <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
-          <GhostTitle text="Les technologies qui font la différence" />
+        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
+          <GhostTitle text="LES TECHNOLOGIES QUI FONT LA DIFFÉRENCE" />
           Les technologies qui font <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
         </h2>
         <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginBottom: '1.5rem' }}>
@@ -336,8 +336,8 @@ function RayonSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
-            <GhostTitle text="Où intervenons-nous ?" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
+            <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
             Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginBottom: '1.2rem' }}>

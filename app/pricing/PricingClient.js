@@ -192,7 +192,7 @@ function HeroPricing() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
-            <GhostTitle text="Des offres claires, pour chaque étape." />
+            <GhostTitle text="DES OFFRES CLAIRES, POUR CHAQUE ÉTAPE." />
             Des offres claires,<br />
             <GreenUnderline><span className="text-gradient">pour chaque étape.</span></GreenUnderline>
           </h1>
@@ -238,7 +238,7 @@ function PricingTabs() {
         <div style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
-              <GhostTitle text="Choisissez votre formule idéale" />
+              <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
               Choisissez votre{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="formule idéale" stagger={0.035} /></span></GreenUnderline>
             </h2>
@@ -348,7 +348,7 @@ function GuaranteeStrip() {
         <div style={{ textAlign: 'left', marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="Zéro surprise, zéro jargon." />
+              <GhostTitle text="ZÉRO SURPRISE, ZÉRO JARGON." />
               Zéro surprise, <GreenUnderline><span className="text-gradient">zéro jargon.</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -454,7 +454,7 @@ function TrustedBy() {
         <div style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="Ce qu'ils disent de l'investissement" />
+              <GhostTitle text="CE QU'ILS DISENT DE L'INVESTISSEMENT" />
               Ce qu'ils disent de{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="l'investissement" stagger={0.04} /></span></GreenUnderline>
             </h2>
@@ -560,7 +560,7 @@ function FAQSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="Questions fréquentes" />
+            <GhostTitle text="QUESTIONS FRÉQUENTES" />
             Questions{' '}
             <GreenUnderline><span className="text-gradient"><LetterReveal text="fréquentes" stagger={0.05} /></span></GreenUnderline>
           </h2>

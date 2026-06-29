@@ -403,7 +403,7 @@ function AboutSection() {
         pointerEvents: 'none',
       }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
-        <motion.h2 initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+        <motion.h2 className="section-title-big" initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           style={{
             position: 'relative',
             fontFamily: "'JetBrains Mono', monospace",
@@ -411,7 +411,7 @@ function AboutSection() {
             color: T.textMain, letterSpacing: '-.03em',
             marginBottom: '1.5rem',
           }}>
-          <GhostTitle text="À propos de AKATech" />
+          <GhostTitle text="À PROPOS DE AKATECH" />
           À propos de <span className="text-gradient">AKATech</span>
         </motion.h2>
 
@@ -589,8 +589,8 @@ function ServicesPreview() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
-            <GhostTitle text="Des solutions qui travaillent pour vous, même quand vous dormez" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+            <GhostTitle text="DES SOLUTIONS QUI TRAVAILLENT POUR VOUS, MÊME QUAND VOUS DORMEZ" />
             Des solutions qui travaillent pour vous,<br />
             <GreenUnderline><span className="text-gradient">même quand vous dormez</span></GreenUnderline>
           </h2>
@@ -633,8 +633,8 @@ function Process() {
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bg }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="De l'idée à la mise en ligne" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE" />
             De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -711,8 +711,8 @@ function ProjectsSection() {
         {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           style={{ marginBottom: '2.5rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
-            <GhostTitle text="Nos dernières réalisations" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
+            <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
             Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
@@ -851,8 +851,8 @@ function Testimonials() {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="Ce que disent nos clients" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="CE QUE DISENT NOS CLIENTS" />
             Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
           </h2>
         </motion.div>

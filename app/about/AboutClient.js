@@ -185,7 +185,7 @@ function HeroAbout() {
           <motion.div className="hero-title-block"
             initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
             <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,4.5vw,3.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
-              <GhostTitle text="Votre croissance digitale, c'est notre mission." />
+              <GhostTitle text="VOTRE CROISSANCE DIGITALE, C'EST NOTRE MISSION." />
               Votre croissance digitale,<br />
               <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
             </h1>
@@ -317,7 +317,7 @@ function StatsFounderSection() {
         <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="Mission & vision" />
+              <GhostTitle text="MISSION & VISION" />
               Mission & <GreenUnderline><span className="text-gradient"><LetterReveal text="vision" stagger={0.05} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -391,7 +391,7 @@ function TimelineSection() {
         <div style={{ textAlign: 'left', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="L'évolution d'AKATech" />
+              <GhostTitle text="L'ÉVOLUTION D'AKATECH" />
               L'évolution d'<GreenUnderline><span className="text-gradient"><LetterReveal text="AKATech" stagger={0.05} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -429,7 +429,7 @@ function ValuesSection() {
         <div style={{ textAlign: 'left', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="Ce qui nous distingue" />
+              <GhostTitle text="CE QUI NOUS DISTINGUE" />
               Ce qui nous <GreenUnderline><span className="text-gradient"><LetterReveal text="distingue" stagger={0.04} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -466,7 +466,7 @@ function SkillsSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.12}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-            <GhostTitle text="Les technologies qui font la différence" />
+            <GhostTitle text="LES TECHNOLOGIES QUI FONT LA DIFFÉRENCE" />
             Les technologies qui font{' '}
             <GreenUnderline><span className="text-gradient"><LetterReveal text="la différence" stagger={0.035} /></span></GreenUnderline>
           </h2>
@@ -543,7 +543,7 @@ function RayonSection() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
           <BlurReveal direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '1.2rem' }}>
-              <GhostTitle text="Où intervenons-nous ?" />
+              <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
               Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
             </h2>
             <WordRevealP

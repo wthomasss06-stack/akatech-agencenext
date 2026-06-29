@@ -70,7 +70,7 @@ function HeroContact() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="Parlons de votre projet" />
+            <GhostTitle text="PARLONS DE VOTRE PROJET" />
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -106,8 +106,8 @@ function ContactChannels() {
     <section ref={ref} style={{ padding: 'clamp(3rem,6vw,5rem) 5% clamp(2rem,4vw,3rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-            <GhostTitle text="Comment nous contacter" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <GhostTitle text="COMMENT NOUS CONTACTER" />
             Comment nous contacter
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
@@ -235,8 +235,8 @@ function ProjectForm() {
     <section ref={ref} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-            <GhostTitle text="Décrivez votre projet" />
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.3rem,3vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
             Décrivez votre projet
           </h2>
           <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, maxWidth: 500 }}>
