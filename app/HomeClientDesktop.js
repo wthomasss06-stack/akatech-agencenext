@@ -612,9 +612,7 @@ function ServicesPreview() {
         {/* Bouton + liste — centrés */}
         <div style={{ paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
           <BlurReveal direction="right" style={{ marginBottom: '2rem' }}>
-            <Link href="/services" className="btn-ghost" style={{ padding: '.65rem 1.4rem', fontSize: '.82rem' }}>
-              Tous les services <ArrowRight size={13} />
-            </Link>
+            
           </BlurReveal>
 
           {/* ── Hover Image Reveal — tous les services ── */}
