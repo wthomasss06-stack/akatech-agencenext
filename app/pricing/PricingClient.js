@@ -235,9 +235,9 @@ function PricingTabs() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
               <GhostTitle text="Choisissez votre formule idéale" />
               Choisissez votre{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="formule idéale" stagger={0.035} /></span></GreenUnderline>
@@ -345,9 +345,9 @@ function GuaranteeStrip() {
     <section style={{ padding: '5rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
       <style>{`@media(max-width:768px){.guarantee-grid{grid-template-columns:1fr !important}}`}</style>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'left', marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               <GhostTitle text="Zéro surprise, zéro jargon." />
               Zéro surprise, <GreenUnderline><span className="text-gradient">zéro jargon.</span></GreenUnderline>
             </h2>
@@ -381,8 +381,44 @@ function TrustedBy() {
   const T = useTheme()
   const items = [...TESTIMONIALS, ...TESTIMONIALS]
 
+  // Scroll-reveal mot par mot + tilt
+  const sectionRef  = useRef(null)
+  const trustTextRef  = useRef(null)
+  const trustWordsRef = useRef([])
+  const TRUST_TEXT  = "Des entrepreneurs ivoiriens qui ont transformé leur présence digitale avec AKATech."
+  const TRUST_GREEN = new Set(['ivoiriens', 'transformé', 'présence', 'digitale', 'AKATech.'])
+
+  useEffect(() => {
+    const container = sectionRef.current
+    const textEl    = trustTextRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const total    = winH + container.offsetHeight
+      const traveled = winH - rect.top
+      const progress = Math.max(0, Math.min(1, traveled / total))
+      // tilt
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.2))
+      // mots
+      const words = trustWordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, progress / 0.40))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <section style={{ padding: '7rem 0', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
+    <section ref={sectionRef} style={{ padding: '7rem 0', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
       <style>{`
         @keyframes scroll-left {
           0%   { transform: translateX(0); }
@@ -415,17 +451,46 @@ function TrustedBy() {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 400, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
 
       <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3.5rem', paddingLeft: '5%', paddingRight: '5%' }}>
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <div style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.8rem,3vw,2.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               <GhostTitle text="Ce qu'ils disent de l'investissement" />
               Ce qu'ils disent de{' '}
               <GreenUnderline><span className="text-gradient"><LetterReveal text="l'investissement" stagger={0.04} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.2}>
-            <p style={{ fontSize: '.9rem', color: T.textSub, maxWidth: 480, margin: '.8rem auto 0', lineHeight: 1.7 }}>
-              Des entrepreneurs ivoiriens qui ont transformé leur présence digitale avec AKATech.
+            <p
+              ref={trustTextRef}
+              style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+                fontWeight: 700,
+                color: T.textSub,
+                lineHeight: 1.32,
+                marginTop: '.8rem',
+                paddingLeft: 'var(--body-indent)',
+                paddingRight: 'var(--body-indent)',
+                transformOrigin: '0% 50%',
+                transition: 'transform .05s linear',
+              }}
+            >
+              {TRUST_TEXT.split(' ').map((word, i) => (
+                <span
+                  key={i}
+                  ref={el => { trustWordsRef.current[i] = el }}
+                  style={{
+                    display: 'inline-block',
+                    marginRight: '0.28em',
+                    opacity: 0.08,
+                    filter: 'blur(9px)',
+                    willChange: 'opacity, filter',
+                    color: TRUST_GREEN.has(word) ? '#88ca53' : 'inherit',
+                  }}
+                >
+                  {word}
+                </span>
+              ))}
             </p>
           </BlurReveal>
         </div>
@@ -492,16 +557,16 @@ function FAQSection() {
   return (
     <section style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
+        <BlurReveal delay={0.1}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="Questions fréquentes" />
+            Questions{' '}
+            <GreenUnderline><span className="text-gradient"><LetterReveal text="fréquentes" stagger={0.05} /></span></GreenUnderline>
+          </h2>
+        </BlurReveal>
+      </div>
       <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <BlurReveal delay={0.1}>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="Questions fréquentes" />
-              Questions{' '}
-              <GreenUnderline><span className="text-gradient"><LetterReveal text="fréquentes" stagger={0.05} /></span></GreenUnderline>
-            </h2>
-          </BlurReveal>
-        </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
           {FAQ_ITEMS.map(({ q, a }, i) => (

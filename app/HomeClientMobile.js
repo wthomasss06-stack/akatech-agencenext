@@ -5,11 +5,11 @@ import Link from 'next/link'
 import {
   ArrowRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
-  TrendingUp, Users, Clock, Award,
+  Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
-import { PROJECTS, TESTIMONIALS, STATS } from '@/lib/data'
+import { PROJECTS, TESTIMONIALS } from '@/lib/data'
 
 // ── HERO avec carrousel images auto ──────────────────────────
 const HERO_SLIDES = [
@@ -107,16 +107,92 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
   )
 }
 
+// ── CIRCULAR PROJECTS GALLERY — adapté mobile (ratio 16:9, largeur réduite) ──
+function CircularProjectsGallery() {
+  const T = useTheme()
+  const GALLERY_ITEMS = [
+    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
+    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
+    ...PROJECTS.filter(p => p.id === 12),
+  ]
+  const [active, setActive] = useState(0)
+
+  useEffect(() => {
+    const id = setInterval(() => setActive(a => (a + 1) % GALLERY_ITEMS.length), 2800)
+    return () => clearInterval(id)
+  }, [GALLERY_ITEMS.length])
+
+  const order = GALLERY_ITEMS.map((_, i) => {
+    let rel = i - active
+    if (rel > GALLERY_ITEMS.length / 2) rel -= GALLERY_ITEMS.length
+    if (rel < -GALLERY_ITEMS.length / 2) rel += GALLERY_ITEMS.length
+    return rel
+  })
+
+  // Dimensions mobiles : cartes plus petites, ratio natif 1600×815
+  const CARD_W = 220
+  const CARD_H = Math.round(220 * (815 / 1600))  // ≈ 112px
+  const STEP   = CARD_W * 0.68
+
+  return (
+    <div style={{ position: 'relative', height: CARD_H + 48, display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 900, marginTop: '1.2rem' }}>
+      {GALLERY_ITEMS.map((p, i) => {
+        const rel    = order[i]
+        const abs    = Math.abs(rel)
+        const x      = rel * STEP
+        const y      = abs * 10
+        const rot    = rel * 7
+        const scale  = 1 - abs * 0.13
+        const opacity = abs > 2 ? 0 : 1 - abs * 0.20
+        const isActive = rel === 0
+
+        return (
+          <motion.div key={p.id}
+            animate={{ x, y, rotate: rot, scale, opacity }}
+            transition={{ duration: .9, ease: [.22,1,.36,1] }}
+            onClick={() => setActive(i)}
+            style={{
+              position: 'absolute',
+              width: CARD_W,
+              height: CARD_H,
+              borderRadius: 8,
+              overflow: 'hidden',
+              zIndex: 10 - abs,
+              cursor: 'pointer',
+              border: isActive ? '1.5px solid rgba(136,202,83,.6)' : '1px solid rgba(255,255,255,.1)',
+              boxShadow: isActive ? '0 0 0 3px rgba(136,202,83,.15), 0 8px 24px rgba(0,0,0,.6)' : '0 4px 14px rgba(0,0,0,.4)',
+              transformStyle: 'preserve-3d',
+            }}>
+            <LazyImg
+              src={p.img}
+              alt={p.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' }}
+            />
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: isActive
+                ? 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.8) 100%)'
+                : 'linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.65) 100%)',
+            }} />
+            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.45rem .7rem' }}>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}>{p.title}</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: 'rgba(136,202,83,.9)', marginTop: '.05rem' }}>{p.type}</div>
+            </div>
+          </motion.div>
+        )
+      })}
+    </div>
+  )
+}
+
 function Hero() {
   const T = useTheme()
   const [idx, setIdx] = useState(0)
   const [imgIdx, setImgIdx] = useState(0)
   const timerRef = useRef(null)
-
-  // ── Layer refs (data-speed équivalent du HTML) ──
-  const layerBgRef  = useRef(null)  // speed 0.2  — bouge peu, zoom au scroll
-  const layerMidRef = useRef(null)  // speed 0.5  — fade + blur + translate au scroll
-  const layerForeRef = useRef(null) // speed 0.8  — sort vite
+  const layerBgRef   = useRef(null)
+  const layerMidRef  = useRef(null)
+  const layerForeRef = useRef(null)
 
   const next = useCallback(() => {
     setIdx(i => (i + 1) % HERO_SLIDES.length)
@@ -128,54 +204,23 @@ function Hero() {
     return () => clearInterval(timerRef.current)
   }, [next])
 
-  // ── SOURIS : translate3d par vitesse + rotateX/Y (copie exacte du HTML) ──
-  useEffect(() => {
-    const onMouse = (e) => {
-      const x = (e.clientX - window.innerWidth  / 2) / (window.innerWidth  / 2)
-      const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2)
-      const rotX = y * -5
-      const rotY = x *  5
-
-      const apply = (el, speed, noRotate = false) => {
-        if (!el) return
-        const mx = x * 50 * speed
-        const my = y * 50 * speed
-        // Pas de rotateX/Y sur layerMid — sinon le hit-test des boutons décale
-        if (noRotate) {
-          el.style.transform = `translate3d(${mx}px,${my}px,0)`
-        } else {
-          el.style.transform = `translate3d(${mx}px,${my}px,0) rotateX(${rotX}deg) rotateY(${rotY}deg)`
-        }
-      }
-      apply(layerBgRef.current,   0.2)
-      apply(layerMidRef.current,  0.5, true)   // ← translate seul sur le layer boutons
-      apply(layerForeRef.current, 0.8)
-    }
-    window.addEventListener('mousemove', onMouse)
-    return () => window.removeEventListener('mousemove', onMouse)
-  }, [])
-
-  // ── SCROLL : zoom bg + fade/blur mid + fore sort vite (copie exacte du HTML) ──
+  // ── SCROLL : zoom bg + fade mid + fore (adapté mobile — pas de sticky) ──
   useEffect(() => {
     const onScroll = () => {
       const s = window.pageYOffset
-
-      // Layer BG — zoom + translateY
       if (layerBgRef.current) {
         const zoom = 1 + s * 0.0005
-        layerBgRef.current.style.transform = `scale(${zoom}) translateY(${s * 0.2}px)`
-        layerBgRef.current.style.filter = `blur(${Math.min(s / 60, 12)}px)`
+        layerBgRef.current.style.transform = `scale(${zoom}) translateY(${s * 0.18}px)`
+        layerBgRef.current.style.filter = `blur(${Math.min(s / 65, 10)}px)`
       }
-      // Layer MID — fade + blur cinématique + translateY
       if (layerMidRef.current) {
-        layerMidRef.current.style.opacity  = Math.max(0, 1 - s / 700)
-        layerMidRef.current.style.transform = `translateY(${s * 0.5 * 0.8}px)`
-        layerMidRef.current.style.filter   = `blur(${s / 100}px)`
+        layerMidRef.current.style.opacity  = Math.max(0, 1 - s / 650)
+        layerMidRef.current.style.transform = `translateY(${s * 0.38}px)`
+        layerMidRef.current.style.filter   = `blur(${s / 110}px)`
       }
-      // Layer FORE — sort de l'écran plus vite
       if (layerForeRef.current) {
-        layerForeRef.current.style.transform = `translateY(${s * 0.8 * 1.2}px)`
-        layerForeRef.current.style.opacity = Math.max(0, 1 - s / 400)
+        layerForeRef.current.style.transform = `translateY(${s * 0.9}px)`
+        layerForeRef.current.style.opacity = Math.max(0, 1 - s / 380)
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -185,13 +230,10 @@ function Hero() {
   const slide = HERO_SLIDES[idx]
 
   return (
-    <section id="home-hero" style={{ height: '100vh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <section id="home-hero" style={{ minHeight: '100svh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', background: '#030806' }}>
 
-      {/* ── LAYER BG — arrière-plan image carousel (lent, zoom+blur scroll) ── */}
-      <div
-        ref={layerBgRef}
-        style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}
-      >
+      {/* ── LAYER BG ── */}
+      <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <AnimatePresence mode="sync">
           <motion.div key={imgIdx}
             initial={{ opacity: 0, scale: 1.06 }}
@@ -202,22 +244,18 @@ function Hero() {
             <img src={HERO_SLIDES[imgIdx].img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
           </motion.div>
         </AnimatePresence>
-        {/* Overlays */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
-        {/* Orbe vert */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(170deg, rgba(3,8,6,.97) 0%, rgba(3,8,6,.82) 50%, rgba(3,8,6,.55) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(3,8,6,.96) 100%)' }} />
         <motion.div
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
           animate={{ background: [
-            'radial-gradient(700px circle at 25% 38%, rgba(136,202,83,.055) 0%, transparent 62%)',
-            'radial-gradient(700px circle at 72% 58%, rgba(136,202,83,.075) 0%, transparent 62%)',
-            'radial-gradient(700px circle at 25% 38%, rgba(136,202,83,.055) 0%, transparent 62%)',
+            'radial-gradient(500px circle at 20% 40%, rgba(136,202,83,.055) 0%, transparent 62%)',
+            'radial-gradient(500px circle at 75% 55%, rgba(136,202,83,.075) 0%, transparent 62%)',
+            'radial-gradient(500px circle at 20% 40%, rgba(136,202,83,.055) 0%, transparent 62%)',
           ]}}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
-        {/* Grid bg */}
         <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .13, pointerEvents: 'none' }} />
-        {/* Scan line */}
         <motion.div
           animate={{ top: ['-5%', '105%'] }}
           transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 2 }}
@@ -225,165 +263,84 @@ function Hero() {
         />
       </div>
 
-      {/* ── LAYER MID — contenu texte (vitesse 0.5, fade+blur cinéma) ── */}
+      {/* ── LAYER MID — contenu ── */}
       <div
         ref={layerMidRef}
-        style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1200, padding: '0 5%', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}
+        style={{ position: 'relative', zIndex: 10, width: '100%', padding: '0 5%', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 80px)', paddingBottom: '5rem', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}
       >
-        <div className="hero-content-grid" style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '4rem', alignItems: 'center', paddingTop: 80 }}>
+        {/* Sous-titre slide */}
+        <AnimatePresence mode="wait">
+          <motion.div key={`sub-${idx}`}
+            initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
+            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+            exit={{ opacity: 0, y: -10, filter: 'blur(2px)' }}
+            transition={{ duration: .5, ease: [.22,1,.36,1] }}>
+            <p style={{ fontSize: 'clamp(.85rem,3.5vw,.97rem)', color: 'rgba(255,255,255,.58)', lineHeight: 1.7, maxWidth: 480, margin: '0 auto 2rem' }}>
+              {slide.sub}
+            </p>
+          </motion.div>
+        </AnimatePresence>
 
-          {/* Texte gauche */}
-          <div style={{ maxWidth: 680 }}>
-            <AnimatePresence mode="wait">
-              <motion.div key={idx}
-                initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, y: -14, filter: 'blur(2px)' }}
-                transition={{ duration: .6, ease: [.22,1,.36,1] }}>
-
-                <motion.div
-                  className="no-pill-mobile"
-                  initial={{ opacity: 0, x: -16 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .5, delay: .1 }}
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.8rem', backdropFilter: 'blur(8px)' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
-                </motion.div>
-
-                <motion.h1
-                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
-                  style={{ fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.3rem' }}>
-                  {slide.title}
-                  <motion.span
-                    initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .22 }}
-                    style={{ display: 'block', fontFamily: "'Dancing Script',cursive", color: '#88ca53', letterSpacing: '-.02em', marginTop: '.1em', marginBottom: '1.6rem' }}>
-                    <GreenUnderline>{slide.accent}</GreenUnderline>
-                  </motion.span>
-                </motion.h1>
-                <motion.p
-                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .3 }}
-                  style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.6)', lineHeight: 1.75, marginBottom: '2.8rem', maxWidth: 520 }}>
-                  {slide.sub}
-                </motion.p>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* CTAs */}
-            <motion.div
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', marginBottom: '3rem' }}>
-              <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
-                Démarrer mon projet <ArrowRight size={16} />
-              </a>
-              <Link href="/projects" className="btn-ghost" style={{ fontSize: '1rem', padding: '1rem 2.2rem' }}>
-                Voir les réalisations
-              </Link>
-            </motion.div>
-
-            {/* Trust badges */}
-            <motion.div
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .6 }}
-              className="trust-badges" style={{ display: 'flex', flexWrap: 'wrap', gap: '.6rem' }}>
-              {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Formation incluse', '✓ Support 48h'].map((b, bi) => (
-                <motion.span key={b}
-                  initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
-                  style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
-                  {b}
-                </motion.span>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Stat cards droite — font partie du layer-mid */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-end' }} className="hide-mobile">
-            <TiltCard intensity={13} perspective={800} style={{ borderRadius: 18 }}>
-              <motion.div initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .6, delay: .35 }}>
-                <motion.div animate={{ y: [0, -8, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
-                  className="sku-card"
-                  style={{ padding: '.85rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem', backdropFilter: 'blur(14px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.88)', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 30%,rgba(136,202,83,.07) 50%,transparent 70%)', backgroundSize: '200% 100%', animation: 'shimmer 3.2s ease-in-out infinite', pointerEvents: 'none' }} />
-                  <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(136,202,83,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                    <TrendingUp size={18} style={{ color: '#88ca53' }} />
-                  </div>
-                  <div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53' }}>+10</div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.52rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em' }}>Projets livrés</div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </TiltCard>
-
-            <TiltCard intensity={10} perspective={800} style={{ borderRadius: 18 }}>
-              <motion.div initial={{ opacity: 0, x: 28 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .6, delay: .48 }}>
-                <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                  className="sku-card"
-                  style={{ padding: '.75rem 1rem', display: 'flex', alignItems: 'center', gap: '.6rem', backdropFilter: 'blur(14px)', background: T.light ? 'rgba(255,255,255,.92)' : 'rgba(11,26,16,.88)', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(120deg,transparent 30%,rgba(136,202,83,.07) 50%,transparent 70%)', backgroundSize: '200% 100%', animation: 'shimmer 4s ease-in-out infinite .9s', pointerEvents: 'none' }} />
-                  <div style={{ display: 'flex' }}>
-                    {[1,2,3,4,5].map(s => <Star key={s} size={12} style={{ color: '#88ca53' }} fill="#88ca53" />)}
-                  </div>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: T.textMain }}>100% satisfaits</span>
-                </motion.div>
-              </motion.div>
-            </TiltCard>
-
-            {/* Slide dots */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .7 }}
-              style={{ display: 'flex', flexDirection: 'column', gap: '.4rem', paddingTop: '.5rem' }}>
-              {HERO_SLIDES.map((_, i) => (
-                <button key={i} onClick={() => { setIdx(i); setImgIdx(i); clearInterval(timerRef.current); timerRef.current = setInterval(next, 5000) }}
-                  style={{ width: 4, height: i === idx ? 28 : 8, borderRadius: 2, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .35s', display: 'block' }} />
-              ))}
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Stats bar — dans le layer-mid, suit le fade */}
+        {/* CTAs */}
         <motion.div
-          initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .8, duration: .6 }}
-          style={{ marginTop: '3.5rem' }}>
-          <div className="stats-bar-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: '1px', background: 'rgba(136,202,83,.12)', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(136,202,83,.12)', backdropFilter: 'blur(12px)' }}>
-            {STATS.map(({ val, suffix, label }, si) => (
-              <motion.div key={label}
-                initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .9 + si * .08 }}
-                whileHover={{ background: 'rgba(136,202,83,.07)', transition: { duration: .2 } }}
-                style={{ padding: '1.5rem', background: 'rgba(3,8,6,.7)', textAlign: 'center', cursor: 'default' }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: '#88ca53', lineHeight: 1 }}>
-                  <AnimatedCounter target={val} suffix={suffix} />
-                </div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.35)', textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
-              </motion.div>
-            ))}
-          </div>
+          initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
+          style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', alignItems: 'center', marginBottom: '1.8rem' }}>
+          <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.95rem', padding: '.95rem 2rem', width: '100%', maxWidth: 340, justifyContent: 'center' }}>
+            Démarrer mon projet <ArrowRight size={15} />
+          </a>
+          
+        </motion.div>
+
+        {/* Trust badges */}
+        <motion.div
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .6 }}
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '.45rem', justifyContent: 'center', marginBottom: '1.8rem' }}>
+          {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Support 48h'].map((b, bi) => (
+            <motion.span key={b}
+              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
+              style={{ padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.72rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
+              {b}
+            </motion.span>
+          ))}
+        </motion.div>
+
+        {/* Galerie circulaire projets — hero desktop signature */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
+          <CircularProjectsGallery />
+        </motion.div>
+
+        {/* Dots de slide */}
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .75 }}
+          style={{ display: 'flex', justifyContent: 'center', gap: '.45rem', marginTop: '1.4rem' }}>
+          {HERO_SLIDES.map((_, i) => (
+            <button key={i} onClick={() => { setIdx(i); setImgIdx(i); clearInterval(timerRef.current); timerRef.current = setInterval(next, 5000) }}
+              style={{ width: i === idx ? 24 : 8, height: 8, borderRadius: 4, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .35s', padding: 0 }} />
+          ))}
         </motion.div>
       </div>
 
-      {/* ── LAYER FORE — cartes flottantes foreground (vitesse 0.8, sort plus vite) ── */}
-      <div
-        ref={layerForeRef}
-        style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}
-      >
-        {/* Particules */}
+      {/* ── LAYER FORE — particules ── */}
+      <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
         {[
-          { left: '12%', top: '22%', s: 4, op: .22, dur: 3.8, dy: 0 },
-          { left: '28%', top: '65%', s: 3, op: .12, dur: 5.1, dy: 1.2 },
-          { left: '55%', top: '28%', s: 4, op: .26, dur: 4.4, dy: 0.6 },
-          { left: '70%', top: '72%', s: 3, op: .10, dur: 6.2, dy: 1.8 },
-          { left: '83%', top: '18%', s: 4, op: .18, dur: 3.2, dy: 0.3 },
-          { left: '92%', top: '52%', s: 3, op: .14, dur: 4.9, dy: 2.1 },
+          { left: '8%',  top: '18%', s: 3, op: .18, dur: 3.8, dy: 0 },
+          { left: '88%', top: '28%', s: 4, op: .22, dur: 4.4, dy: .6 },
+          { left: '15%', top: '72%', s: 3, op: .12, dur: 5.1, dy: 1.2 },
+          { left: '80%', top: '68%', s: 3, op: .10, dur: 6.2, dy: 1.8 },
+          { left: '50%', top: '14%', s: 4, op: .14, dur: 3.2, dy: .3 },
         ].map((p, i) => (
           <motion.div key={i}
             style={{ position: 'absolute', width: p.s, height: p.s, borderRadius: '50%', background: '#88ca53', left: p.left, top: p.top, opacity: p.op }}
-            animate={{ y: [0, -20, 0] }}
+            animate={{ y: [0, -18, 0] }}
             transition={{ duration: p.dur, repeat: Infinity, ease: 'easeInOut', delay: p.dy }}
           />
         ))}
       </div>
 
       {/* Scroll indicator */}
-      <div style={{ position: 'absolute', bottom: '2rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
+      <div style={{ position: 'absolute', bottom: '1.4rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .24, zIndex: 15, pointerEvents: 'none' }}>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.35rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
-          style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
+          style={{ width: 1, height: 30, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
 
     </section>
@@ -458,14 +415,12 @@ function AboutSection() {
   )
 }
 
-// ── STATS GRID (cartes dégradé gris, chiffres animés) ──────────
+// ── STATS — chiffres géants éditoriaux (miroir desktop), responsive 2-col mobile ──
 const HOME_STATS = [
-  { target: 18,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
-  { target: 10,  suffix: '+', label: 'Clients',    sub: 'Particuliers, startups et PME accompagnés' },
-  { target: 100, suffix: '%', label: 'Satisfaits', sub: 'Clients livrés dans les délais convenus' },
-  { target: 12,  suffix: '',  label: 'En prod.',   sub: 'Applications actuellement en ligne' },
-  { target: 3,   suffix: '+', label: 'Années',     sub: "D'expérience en développement web" },
-  { target: 15,  suffix: '',  label: 'Outils',     sub: 'Technologies maîtrisées au quotidien' },
+  { target: 18,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
+  { target: 99,  suffix: '%', label: 'Clients satisfaits',  sub: 'Livrés dans les délais'    },
+  { target: 10,  suffix: '+', label: 'Clients accompagnés', sub: 'Startups, PME, créatifs'   },
+  { target: 3,   suffix: '+', label: "Années d'expérience", sub: 'En développement web'       },
 ]
 
 function StatsSection() {
@@ -474,36 +429,76 @@ function StatsSection() {
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
-    <section ref={ref} style={{ padding: '3.5rem 5% 4.5rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '10%', left: '50%', transform: 'translateX(-50%)', width: 400, height: 300, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
+    <section ref={ref} style={{ padding: '5rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+
+      {/* Halo */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 320, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.04),transparent 65%)', pointerEvents: 'none' }} />
+
+      {/* Séparateur haut */}
+      <div style={{ position: 'absolute', top: 0, left: '5%', right: '5%', height: 1, background: T.border }} />
+
       <div style={{ position: 'relative', zIndex: 1 }}>
         <style>{`
-          .stats-grid-mobile { display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; }
+          .stats-editorial-mobile {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+          }
         `}</style>
-        <div className="stats-grid-mobile">
+        <div className="stats-editorial-mobile">
           {HOME_STATS.map((s, i) => (
             <motion.div key={s.label}
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 32 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: .5, delay: i * .07, ease: [.22,1,.36,1] }}
+              transition={{ duration: .7, delay: i * .1, ease: [.22,1,.36,1] }}
               style={{
-                padding: '1.3rem 1.1rem',
-                borderRadius: 16,
-                background: 'linear-gradient(155deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.015) 55%, rgba(255,255,255,0) 100%)',
-                border: '1px solid rgba(255,255,255,.08)',
-                position: 'relative',
-                overflow: 'hidden',
+                padding: 'clamp(1.4rem,4vw,2rem) clamp(.9rem,3vw,1.6rem)',
+                borderLeft: `1px solid ${T.border}`,
+                borderBottom: i < 2 ? `1px solid ${T.border}` : 'none',
               }}>
-              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(100px circle at 85% 0%, rgba(136,202,83,.07), transparent 70%)', pointerEvents: 'none' }} />
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.7rem,6vw,2.1rem)', lineHeight: 1, color: '#88ca53', letterSpacing: '-.02em', marginBottom: '.45rem' }}>
+
+              {/* Chiffre géant */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontWeight: 900,
+                fontSize: 'clamp(3rem,12vw,5rem)',
+                lineHeight: 1,
+                color: T.light ? '#111' : 'rgba(255,255,255,.92)',
+                letterSpacing: '-.04em',
+                marginBottom: '.4rem',
+              }}>
                 <AnimatedCounter target={s.target} suffix={s.suffix} />
               </div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain, marginBottom: '.3rem' }}>{s.label}</div>
-              <p style={{ fontSize: '.7rem', color: T.textMuted, lineHeight: 1.5, margin: 0 }}>{s.sub}</p>
+
+              {/* Label principal */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 'clamp(.65rem,2.5vw,.78rem)',
+                fontWeight: 700,
+                color: T.light ? '#5f9137' : '#88ca53',
+                letterSpacing: '.02em',
+                marginBottom: '.15rem',
+              }}>
+                {s.label}
+              </div>
+
+              {/* Sous-label */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 'clamp(.58rem,2.2vw,.68rem)',
+                color: T.textMuted,
+                letterSpacing: '.02em',
+                lineHeight: 1.4,
+              }}>
+                {s.sub}
+              </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Séparateur bas */}
+      <div style={{ position: 'absolute', bottom: 0, left: '5%', right: '5%', height: 1, background: T.border }} />
     </section>
   )
 }
@@ -642,157 +637,179 @@ function Process() {
     </section>
   )
 }
-function ProjectsCarousel() {
+// ── DERNIÈRES RÉALISATIONS — grille éditoriale (miroir ArchiveTunnel desktop) ──
+// Grille 2-col sur mobile, colorisation scroll grayscale→couleur,
+// swipe tactile, cartes avec badges type / live / result
+function ProjectsSection() {
   const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-  const [center, setCenter] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
-  const autoRef = useRef(null)
-  const CARDS = [
+  const ref      = useRef(null)
+  const inView   = useInView(ref, { once: true, margin: '-60px' })
+  const sectionRef = useRef(null)
+  const cellRefs   = useRef([])
+
+  const ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
   ]
-  const N = CARDS.length
 
-  const advance = useCallback(() => setCenter(c => (c + 1) % N), [N])
-
+  // ── Colorisation au scroll : grayscale(1) → grayscale(0) ──
   useEffect(() => {
-    if (!inView || isHovered) return
-    autoRef.current = setInterval(advance, 3200)
-    return () => clearInterval(autoRef.current)
-  }, [inView, isHovered, advance])
+    const onScroll = () => {
+      const section = sectionRef.current
+      if (!section) return
+      const rect    = section.getBoundingClientRect()
+      const winH    = window.innerHeight
+      const total   = winH + section.offsetHeight
+      const traveled = winH - rect.top
+      const progress = Math.max(0, Math.min(1, traveled / total))
 
-  const getCardStyle = (i) => {
-    // Position relative to center
-    let offset = i - center
-    // Wrap around
-    if (offset > N / 2) offset -= N
-    if (offset < -N / 2) offset += N
-
-    const abs = Math.abs(offset)
-    if (abs > 2) return null // don't render far cards
-
-    const xMap  = [0, 310, 580, -310, -580]
-    const zMap  = [0, -80, -200, -80, -200]
-    const scaleMap = [1, .82, .66, .82, .66]
-    const opacMap  = [1, .85, .45, .85, .45]
-    const rotMap   = [0, 12, 20, -12, -20]
-    const zIdxMap  = [10, 8, 4, 8, 4]
-
-    const idx = ((offset % N) + N) % N
-    const clampIdx = Math.min(idx, 4)
-
-    return {
-      x: offset >= 0 ? xMap[Math.min(offset, 2)] : -xMap[Math.min(-offset, 2)],
-      z: zMap[Math.min(abs, 2)],
-      scale: scaleMap[Math.min(abs, 2)],
-      opacity: opacMap[Math.min(abs, 2)],
-      rotateY: offset >= 0 ? rotMap[Math.min(offset, 2)] : -rotMap[Math.min(-offset, 2)],
-      zIndex: zIdxMap[Math.min(abs, 2)],
+      cellRefs.current.forEach((cell, i) => {
+        if (!cell) return
+        // chaque cellule se colorie avec un décalage d'entrée
+        const start = i * 0.06
+        const local = Math.max(0, Math.min(1, (progress - start) / 0.35))
+        const grey  = 1 - local
+        cell.style.filter = `grayscale(${grey.toFixed(2)}) contrast(1.04)`
+      })
     }
-  }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // ── Swipe tactile horizontal sur la ligne de 3 cartes optionnel ──
+  const [active, setActive] = useState(null) // card en plein focus au tap
 
   return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+    <section
+      ref={el => { ref.current = el; sectionRef.current = el }}
+      style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}
+    >
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
 
+      <div style={{ position: 'relative', zIndex: 1 }}>
+
+        {/* Header */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-          style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '4rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <div>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="Nos dernières réalisations livrées" />
-              Nos dernières <GreenUnderline><span className="text-gradient">réalisations livrées</span></GreenUnderline>
-            </h2>
-          </div>
-          <Link href="/projects" className="btn-ghost" style={{ padding: '.65rem 1.4rem', fontSize: '.82rem' }}>
+          style={{ marginBottom: '2.5rem' }}>
+          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
+            <GhostTitle text="Nos dernières réalisations" />
+            Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+          </h2>
+          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
+            — scroll pour révéler en couleur
+          </p>
+        </motion.div>
+
+        {/* Grille 2 colonnes */}
+        <style>{`
+          .archive-grid-mobile {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: clamp(.5rem, 2vw, .9rem);
+          }
+          /* La 5e carte prend 2 colonnes pour équilibrer */
+          .archive-grid-mobile > div:nth-child(5) { grid-column: span 2; }
+        `}</style>
+
+        <div className="archive-grid-mobile">
+          {ITEMS.map((p, i) => (
+            <motion.div
+              key={p.id}
+              ref={el => { cellRefs.current[i] = el }}
+              initial={{ opacity: 0, y: 28 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: .55, delay: i * .07, ease: [.22,1,.36,1] }}
+              onClick={() => setActive(active === i ? null : i)}
+              style={{
+                position: 'relative',
+                borderRadius: 10,
+                overflow: 'hidden',
+                border: active === i ? '1.5px solid rgba(136,202,83,.6)' : '1px solid rgba(136,202,83,.25)',
+                boxShadow: active === i ? '0 0 0 3px rgba(136,202,83,.12)' : 'none',
+                filter: 'grayscale(1) contrast(1.04)',
+                transition: 'border-color .25s, box-shadow .25s',
+                cursor: 'pointer',
+                willChange: 'filter',
+                aspectRatio: i === 4 ? '16/6' : '4/3',
+              }}
+            >
+              <LazyImg
+                src={p.img}
+                alt={p.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .5s', transform: active === i ? 'scale(1.04)' : 'scale(1)' }}
+              />
+
+              {/* Overlay gradient bas */}
+              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.82) 100%)' }} />
+
+              {/* Type badge */}
+              <div style={{
+                position: 'absolute', top: '.55rem', left: '.55rem',
+                padding: '.18rem .55rem', borderRadius: 100,
+                background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(136,202,83,.3)',
+                fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', fontWeight: 700, color: '#88ca53',
+              }}>
+                {p.type}
+              </div>
+
+              {/* Live badge */}
+              {p.live && (
+                <div style={{
+                  position: 'absolute', top: '.55rem', right: '.55rem',
+                  display: 'flex', alignItems: 'center', gap: '.25rem',
+                  padding: '.16rem .5rem', borderRadius: 100,
+                  background: 'rgba(136,202,83,.88)',
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.48rem', color: '#fff', fontWeight: 700,
+                }}>
+                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
+                  LIVE
+                </div>
+              )}
+
+              {/* Info bas */}
+              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.65rem .75rem' }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.62rem,2.5vw,.75rem)', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '.2rem' }}>
+                  {p.title}
+                </div>
+
+                {/* Result + lien — visibles au tap */}
+                <AnimatePresence>
+                  {active === i && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
+                      transition={{ duration: .2 }}
+                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginTop: '.2rem', flexWrap: 'wrap' }}
+                    >
+                      {p.result && (
+                        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53' }}>
+                          {p.result}
+                        </span>
+                      )}
+                      {p.url && (
+                        <a href={p.url} target="_blank" rel="noreferrer"
+                          onClick={e => e.stopPropagation()}
+                          style={{ display: 'flex', alignItems: 'center', gap: '.2rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 600, color: '#fff', textDecoration: 'none', padding: '.14rem .45rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.4)', background: 'rgba(136,202,83,.14)' }}>
+                          <ExternalLink size={8} /> Voir
+                        </a>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA bas */}
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .5 }}
+          style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+          <Link href="/projects" className="btn-ghost" style={{ fontSize: '.88rem', padding: '.8rem 1.8rem' }}>
             Toutes les réalisations <ArrowRight size={13} />
           </Link>
         </motion.div>
-
-        {/* 3D stage */}
-        <div
-          style={{ perspective: '1200px', height: 420, position: 'relative', marginBottom: '2.5rem' }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', transformStyle: 'preserve-3d' }}>
-            {CARDS.map((project, i) => {
-              const cs = getCardStyle(i)
-              if (!cs) return null
-              const isCenter = i === center
-              return (
-                <motion.div
-                  key={project.title}
-                  animate={{ x: cs.x, z: cs.z, scale: cs.scale, opacity: cs.opacity, rotateY: cs.rotateY }}
-                  transition={{ type: 'spring', stiffness: 220, damping: 28 }}
-                  style={{ position: 'absolute', width: 300, zIndex: cs.zIndex, cursor: isCenter ? 'default' : 'pointer', transformStyle: 'preserve-3d' }}
-                  onClick={() => !isCenter && setCenter(i)}
-                >
-                  <div className="sku-card" style={{ overflow: 'hidden', border: isCenter ? '1px solid rgba(136,202,83,.45)' : `1px solid ${T.border}`, boxShadow: isCenter ? '0 0 40px rgba(136,202,83,.2), 12px 12px 40px rgba(0,0,0,.6)' : undefined, transition: 'border-color .3s, box-shadow .3s' }}>
-
-                    {/* Image */}
-                    <div style={{ height: 200, position: 'relative', overflow: 'hidden' }}>
-                      <img src={project.img} alt={project.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .5s', transform: isCenter ? 'scale(1.04)' : 'scale(1)' }} />
-                      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(6,14,9,.95) 0%,rgba(6,14,9,.3) 50%,transparent)' }} />
-
-                      {/* Type badge */}
-                      <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', left: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
-                        {project.type}
-                      </div>
-
-                      {/* Live badge */}
-                      {project.live && (
-                        <div className="no-pill-mobile" style={{ position: 'absolute', top: '.8rem', right: '.8rem', display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.22rem .6rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', color: '#fff', fontWeight: 700 }}>
-                          <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                          LIVE
-                        </div>
-                      )}
-
-                      {/* Result */}
-                      <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '.8rem', right: '.8rem', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(0,0,0,.6)', backdropFilter: 'blur(6px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
-                        {project.result}
-                      </div>
-                    </div>
-
-                    {/* Content */}
-                    <div style={{ padding: '1.2rem' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '.35rem', gap: '.6rem' }}>
-                        <h3 style={{ fontSize: '.98rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{project.title}</h3>
-                        {project.url && (
-                          <a href={project.url} target="_blank" rel="noreferrer"
-                            onClick={e => e.stopPropagation()}
-                            style={{ display: 'flex', alignItems: 'center', gap: '.25rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', flexShrink: 0, padding: '.22rem .6rem', borderRadius: 100, border: `1px solid ${T.border}`, background: 'rgba(136,202,83,.06)', transition: 'all .2s' }}
-                            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.18)'; e.currentTarget.style.borderColor = '#88ca53' }}
-                            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.06)'; e.currentTarget.style.borderColor = T.border }}>
-                            <ExternalLink size={9} /> Voir
-                          </a>
-                        )}
-                      </div>
-                      <p style={{ fontSize: '.75rem', color: T.textSub, lineHeight: 1.55, marginBottom: '.9rem' }}>{project.desc.slice(0, 90)}…</p>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem' }}>
-                        {project.tech.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green }}>{t}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Dot indicators */}
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '.45rem' }}>
-          {CARDS.map((_, i) => (
-            <button key={i} onClick={() => setCenter(i)}
-              style={{ width: i === center ? 24 : 8, height: 8, borderRadius: 4, background: i === center ? '#88ca53' : 'rgba(136,202,83,.2)', border: 'none', cursor: 'pointer', transition: 'all .3s' }} />
-          ))}
-        </div>
       </div>
     </section>
   )
@@ -867,7 +884,7 @@ export default function HomePageMobile() {
       <ServicesPreview />
       <Process />
       <MarqueeStrip />
-      <ProjectsCarousel />
+      <ProjectsSection />
       <Testimonials />
       <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />
     </div>

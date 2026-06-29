@@ -483,9 +483,9 @@ function BlogGrid() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         {/* ── Section header ── */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'left', marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,3vw,2.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
               <GhostTitle text="Explorez nos ressources digitales" />
               Explorez nos <GreenUnderline>
                 <span className="text-gradient"><LetterReveal text="ressources digitales" stagger={0.025} /></span>
@@ -619,19 +619,74 @@ function Newsletter() {
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
 
+  // ── blur-reveal + tilt ────────────────────────────────────
+  const nlContainerRef = useRef(null)
+  const nlTextRef      = useRef(null)
+  const nlWordsRef     = useRef([])
+  const NL_TEXT  = "Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail."
+  const NL_GREEN = new Set(['digitaux,', 'technologies', 'ivoiriens', 'boîte', 'mail.'])
+
+  useEffect(() => {
+    const container = nlContainerRef.current
+    const textEl    = nlTextRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const total    = winH + container.offsetHeight
+      const traveled = winH - rect.top
+      const progress = Math.max(0, Math.min(1, traveled / total))
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
+      const words = nlWordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, progress / 0.40))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <section style={{ padding: '5rem 5%', background: T.bgAlt }}>
-      <div style={{ maxWidth: 560, margin: '0 auto', textAlign: 'center' }}>
+    <section ref={nlContainerRef} style={{ padding: '5rem 5%', background: T.bgAlt }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <BlurReveal>
-          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+          <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <Zap size={24} style={{ color: T.green }} />
           </div>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.5rem,2.5vw,2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem', textAlign: 'left' }}>
             <GhostTitle text="Restez informé des dernières tendances" />
-            <LetterReveal text="Restez informé des dernières tendances" stagger={0.02} />
+            Restez informé des <GreenUnderline><span className="text-gradient"><LetterReveal text="dernières tendances" stagger={0.02} /></span></GreenUnderline>
           </h2>
-          <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.7, marginBottom: '2rem' }}>
-            Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail.
+          {/* ── blur-reveal mot par mot + tilt ── */}
+          <p
+            ref={nlTextRef}
+            style={{
+              fontFamily: "'JetBrains Mono',monospace",
+              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+              fontWeight: 700,
+              color: T.textSub,
+              lineHeight: 1.32,
+              marginBottom: '2rem',
+              paddingLeft: 'var(--body-indent)',
+              maxWidth: 860,
+              transformOrigin: '0% 50%',
+              transition: 'transform .05s linear',
+              opacity: 0.08,
+            }}
+          >
+            {NL_TEXT.split(' ').map((word, i) => (
+              <span key={i} ref={el => { nlWordsRef.current[i] = el }}
+                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: NL_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
+                {word}
+              </span>
+            ))}
           </p>
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
@@ -639,7 +694,7 @@ function Newsletter() {
               ✅ Merci ! Vous êtes abonné.
             </motion.div>
           ) : (
-            <div style={{ display: 'flex', gap: '.8rem' }}>
+            <div style={{ display: 'flex', gap: '.8rem', maxWidth: 520, margin: '0 auto' }}>
               <input type="email" placeholder="votre@email.com" value={email} onChange={e => setEmail(e.target.value)}
                 style={{ flex: 1, padding: '.85rem 1rem', borderRadius: 10, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', outline: 'none' }}
                 onFocus={e => e.target.style.borderColor = '#88ca53'}
@@ -696,9 +751,9 @@ function ProcessBlog() {
   return (
     <section style={{ position: 'relative' }}>
       {/* Sticky header */}
-      <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'center', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
+      <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'left', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
         <BlurReveal delay={0.1}>
-          <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
             <GhostTitle text="Du blog au projet concret" />
             Du blog au{' '}
             <GreenUnderline>

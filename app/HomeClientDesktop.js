@@ -82,7 +82,11 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
 // ── CIRCULAR PROJECTS GALLERY (inspiré Aeline/Catalis) ────────
 function CircularProjectsGallery() {
   const T = useTheme()
-  const GALLERY_ITEMS = PROJECTS.slice(0, 5)
+  const GALLERY_ITEMS = [
+    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
+    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
+    ...PROJECTS.filter(p => p.id === 12),
+  ]
   const [active, setActive] = useState(0)
 
   useEffect(() => {
@@ -440,111 +444,187 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections }) {
 // ── SERVICES — Two-Column Skewed Images (HTML skew-section) ──
 // ═══════════════════════════════════════════════════════════════
 const SERVICES_SKEW = [
-  { n: '01', Icon: Globe,    title: 'Conception de Site Web',          desc: "Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce.", price: 'À partir de 150 000 FCFA', del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp' },
-  { n: '02', Icon: Map,      title: 'Cartes Interactives & Dashboards', desc: "Intégration de cartes Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces actionnables.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/dasbord.webp' },
-  { n: '03', Icon: Server,   title: 'API & Backend Robustes',           desc: "Conception d'API RESTful sécurisées avec Django ou Flask. Authentification JWT, gestion des rôles, intégration Mobile Money.", price: 'À partir de 200 000 FCFA', del: '7-14 jours', img: '/images/service/api.webp' },
-  { n: '04', Icon: Wrench,   title: 'Maintenance & Support',            desc: "Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier.", price: 'À partir de 25 000 FCFA/mois', del: 'Contrat mensuel', img: '/images/service/maintenence.webp' },
-  { n: '05', Icon: MapPin,   title: 'Fiche Google My Business',         desc: "Création ou optimisation de votre fiche Google (NAP, photos, SEO local) et suivi mensuel : avis, publications et statistiques.", price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours', img: '/images/service/fiche-google.webp' },
+  { n: '01', Icon: Globe,    title: 'Conception de Site Web',          desc: "Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce.", price: 'À partir de 100 000 FCFA', del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
+  { n: '02', Icon: Map,      title: 'Cartes Interactives & Dashboards', desc: "Intégration de cartes Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces actionnables.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
+  { n: '03', Icon: Server,   title: 'API & Backend Robustes',           desc: "Conception d'API RESTful sécurisées avec Django ou Flask. Authentification JWT, gestion des rôles, intégration Mobile Money.", price: 'À partir de 200 000 FCFA', del: '7-14 jours', img: '/images/service/api.webp', slug: 'api-backend' },
+  { n: '04', Icon: Wrench,   title: 'Maintenance & Support',            desc: "Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier.", price: 'À partir de 20 000 FCFA/mois', del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
+  { n: '05', Icon: MapPin,   title: 'Fiche Google My Business',         desc: "Création ou optimisation de votre fiche Google (NAP, photos, SEO local) et suivi mensuel : avis, publications et statistiques.", price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
 ]
+
+// ── HOVER IMAGE REVEAL — style identity_branding ─────────────
+// Flèche ↗ pivote 45° au hover + titre large + séparateur + image curseur 1:1
+function HoverImageReveal({ items }) {
+  const [hovered, setHovered] = useState(null)
+  const [pos, setPos]         = useState({ x: 0, y: 0 })
+  const [rot, setRot]         = useState(0)
+  const containerRef          = useRef(null)
+  const rafRef                = useRef(null)
+  const T = useTheme()
+
+  const onMouseMove = (e) => {
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(() => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+      setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    })
+  }
+
+  const onEnter = (i) => { setHovered(i); setRot((Math.random() - 0.5) * 10) }
+  const onLeave = () => setHovered(null)
+
+  return (
+    <div ref={containerRef} onMouseMove={onMouseMove} style={{ position: 'relative', userSelect: 'none' }}>
+
+      {/* ── Rows + séparateurs ── */}
+      {items.map((item, i) => {
+        const RowTag = item.href ? Link : 'div'
+        const rowProps = item.href ? { href: item.href } : {}
+        return (
+        <div key={i}>
+          <RowTag
+            {...rowProps}
+            onMouseEnter={() => onEnter(i)}
+            onMouseLeave={onLeave}
+            style={{
+              display: 'flex', alignItems: 'center', gap: '1.4rem',
+              padding: '1.1rem 0',
+              paddingLeft: hovered === i ? '.5rem' : '0',
+              cursor: item.href ? 'pointer' : 'default',
+              textDecoration: 'none',
+              transition: 'padding-left .25s ease',
+            }}
+          >
+            {/* Flèche ↗ — pivote à 45° au hover, sans contours */}
+            <div style={{
+              width: 38, height: 38, flexShrink: 0,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transform: hovered === i ? 'rotate(45deg)' : 'rotate(0deg)',
+              transition: 'transform .25s cubic-bezier(.22,1,.36,1)',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
+                <path d="M2 12L12 2M12 2H5M12 2V9"
+                  stroke="#88ca53" strokeWidth="1.8"
+                  strokeLinecap="round" strokeLinejoin="round"
+                  style={{ opacity: hovered === i ? 1 : 0.38, transition: 'opacity .22s' }}
+                />
+              </svg>
+            </div>
+
+            {/* Numéro */}
+            <span style={{
+              fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700,
+              minWidth: '2rem', letterSpacing: '.3em', transition: 'color .22s',
+              color: hovered === i ? '#88ca53' : 'rgba(136,202,83,.32)',
+            }}>
+              {item.n}
+            </span>
+
+            {/* Titre */}
+            <span style={{
+              fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, flex: 1,
+              fontSize: 'clamp(1.5rem,2.8vw,2.4rem)', letterSpacing: '-.03em', lineHeight: 1,
+              color: hovered === i ? T.textMain : T.textMuted,
+              transition: 'color .25s ease',
+            }}>
+              {item.label}
+            </span>
+
+            {/* Tag slide-in */}
+            {item.tag && (
+              <span style={{
+                padding: '.22rem .75rem', borderRadius: 100,
+                background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.22)',
+                fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700,
+                color: '#88ca53', whiteSpace: 'nowrap',
+                opacity: hovered === i ? 1 : 0,
+                transform: hovered === i ? 'translateX(0)' : 'translateX(10px)',
+                transition: 'opacity .22s ease, transform .22s ease',
+              }}>
+                {item.tag}
+              </span>
+            )}
+          </RowTag>
+
+          {/* Séparateur horizontal */}
+          <div style={{
+            height: 1,
+            background: hovered === i
+              ? 'linear-gradient(90deg,rgba(136,202,83,.55) 0%,rgba(136,202,83,.06) 100%)'
+              : T.border,
+            transition: 'background .28s ease',
+          }} />
+        </div>
+        )
+      })}
+
+      {/* ── Image curseur 1:1 — 260×260 ── */}
+      <div style={{
+        position: 'absolute', top: 0, left: 0,
+        width: 260, height: 260,
+        borderRadius: 16, overflow: 'hidden',
+        pointerEvents: 'none', zIndex: 20,
+        transform: `translate(${pos.x + 24}px,${pos.y - 130}px) rotate(${rot}deg) scale(${hovered !== null ? 1 : 0.75})`,
+        opacity: hovered !== null ? 1 : 0,
+        transition: 'opacity .22s ease, transform .16s cubic-bezier(.22,1,.36,1)',
+        boxShadow: '0 24px 70px rgba(0,0,0,.55)',
+        border: '1.5px solid rgba(136,202,83,.35)',
+        willChange: 'transform, opacity',
+      }}>
+        {hovered !== null && items[hovered]?.img && (
+          <img src={items[hovered].img} alt={items[hovered].label}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        )}
+      </div>
+    </div>
+  )
+}
 
 function ServicesPreview() {
   const T = useTheme()
+  const ref = useRef(null)
+
+  // Tous les services — hover image reveal, chaque ligne pointe vers son service sur /services
+  const HOVER_ITEMS = SERVICES_SKEW.map(s => ({
+    n: s.n, label: s.title, img: s.img, tag: s.del, href: `/services#${s.slug}`,
+  }))
 
   return (
-    <section style={{ background: T.bg, borderTop: `1px solid ${T.border}` }}>
-      <style>{`
-        .skew-section-grid { display: grid; grid-template-columns: 1fr 1fr; }
-        .skew-sticky-col {
-          position: sticky; top: 0; height: 100vh;
-          display: flex; align-items: center; justify-content: center;
-          padding: 3rem 4vw 3rem 5%;
-        }
-        .skew-right-col { display: grid; gap: 4rem; padding: 7rem 5% 7rem 3rem; }
-        .skew-fig { display: flex; flex-direction: column; gap: 1.2rem; }
-        .skew-fig:nth-child(odd)  .skew-fig-img { transform: skewX(-6deg); }
-        .skew-fig:nth-child(even) .skew-fig-img { transform: skewX( 6deg); }
-        .skew-fig-img {
-          width: 100%; max-width: 420px; aspect-ratio: 1 / 1;
-          object-fit: cover; border-radius: 18px;
-          box-shadow: 0 40px 90px rgba(0,0,0,0.45);
-          transition: transform 0.5s cubic-bezier(.22,1,.36,1), box-shadow 0.4s;
-          display: block;
-        }
-        .skew-fig:hover .skew-fig-img { transform: skewX(0) scale(1.03) !important; box-shadow: 0 50px 100px rgba(0,0,0,0.55); }
-        .skew-fig-body { padding: 0 .5rem; }
-        @media (max-width: 900px) {
-          .skew-section-grid { grid-template-columns: 1fr; }
-          .skew-sticky-col { position: static; height: auto; padding: 4rem 5% 2rem; }
-          .skew-right-col  { padding: 0 5% 5rem; gap: 3rem; }
-          .skew-fig:nth-child(odd)  .skew-fig-img,
-          .skew-fig:nth-child(even) .skew-fig-img { transform: none; }
-        }
-      `}</style>
+    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
-      <div className="skew-section-grid">
-
-        {/* ── GAUCHE sticky — titre ── */}
-        <div className="skew-sticky-col">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: .7, ease: [.22,1,.36,1] }}
-          >
-            <h2 style={{ position: 'relative', fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.2rem,4.5vw,3.8rem)', lineHeight: 1.1, textAlign: 'left', letterSpacing: '-.03em', color: T.textMain }}>
+        {/* Header — titre sur trait rouge, contenu sur trait jaune */}
+        <div style={{ marginBottom: '3rem' }}>
+          <BlurReveal delay={0.1} direction="left">
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
               <GhostTitle text="Des solutions qui travaillent pour vous." />
-              Des solutions<br />
-              qui travaillent<br />
-              pour <GreenUnderline><span className="text-gradient">vous.</span></GreenUnderline>
+              Des solutions qui{' '}
+              <GreenUnderline>
+                <span className="text-gradient">
+                  <LetterReveal text="travaillent pour vous." stagger={0.03} />
+                </span>
+              </GreenUnderline>
             </h2>
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginTop: '1.4rem', maxWidth: 340 }}>
-              Même quand vous dormez — chaque projet est livré dans les délais, avec le code le plus propre et le design le plus soigné.
-            </p>
-            <motion.div style={{ marginTop: '2rem' }}>
-              <Link href="/services" className="btn-raised" style={{ fontSize: '.82rem', display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-                Voir tous les services <ArrowRight size={13} />
-              </Link>
-            </motion.div>
-          </motion.div>
+          </BlurReveal>
         </div>
 
-        {/* ── DROITE — images skewées ── */}
-        <div className="skew-right-col">
-          {SERVICES_SKEW.map(({ n, Icon, title, desc, price, del, img }, i) => (
-            <motion.figure
-              key={n}
-              className="skew-fig"
-              initial={{ opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: .6, ease: [.22,1,.36,1] }}
-            >
-              <img
-                src={img}
-                alt={title}
-                className="skew-fig-img"
-                loading="lazy"
-              />
-              <div className="skew-fig-body">
-                {/* Numéro + badge */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.6rem' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em' }}>{n}</span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', padding: '.2rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#88ca53' }}>
-                    <Icon size={10} /> {title}
-                  </span>
-                </div>
-                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1.05rem', color: T.textMain, letterSpacing: '-.02em', marginBottom: '.5rem' }}>{title}</h3>
-                <p style={{ fontSize: '.82rem', color: T.textSub, lineHeight: 1.7, marginBottom: '.9rem' }}>{desc}</p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', fontWeight: 800, color: '#88ca53' }}>{price}</span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, display: 'inline-flex', alignItems: 'center', gap: 3 }}>
-                    <Timer size={10} style={{ color: '#88ca53' }} /> {del}
-                  </span>
-                </div>
-              </div>
-            </motion.figure>
-          ))}
+        {/* Bouton + liste — centrés */}
+        <div style={{ paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
+          <BlurReveal direction="right" style={{ marginBottom: '2rem' }}>
+            <Link href="/services" className="btn-ghost" style={{ padding: '.65rem 1.4rem', fontSize: '.82rem' }}>
+              Tous les services <ArrowRight size={13} />
+            </Link>
+          </BlurReveal>
+
+          {/* ── Hover Image Reveal — tous les services ── */}
+          <BlurReveal delay={0.15}>
+            <div style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, padding: '.5rem 0' }}>
+              <HoverImageReveal items={HOVER_ITEMS} />
+            </div>
+          </BlurReveal>
         </div>
+
       </div>
     </section>
   )
@@ -566,321 +646,47 @@ const WHY_PANELS = [
 
 function WhyUs() {
   const T = useTheme()
-  const sectionRef = useRef(null)
-  const panelsRef = useRef([])
-  const imgsRef = useRef([])
-  const total = WHY_PANELS.length
-
-  /* ── Port fidèle du mécanisme ServicesSection (App.jsx) :
-     scroll vertical dans la zone pin → crossfade synchronisé
-     des panels de texte (gauche) et de la pile d'images (droite) ── */
-  useEffect(() => {
-    const section = sectionRef.current
-    if (!section) return
-
-    const panels = panelsRef.current
-    const images = imgsRef.current
-
-    images.forEach((img, i) => {
-      if (!img) return
-      img.style.opacity = i === 0 ? '1' : '0'
-      img.style.transform = i === 0 ? 'translateY(0%) scale(1)' : 'translateY(110%) scale(.9)'
-    })
-
-    const update = () => {
-      const rect = section.getBoundingClientRect()
-      const scrollable = section.offsetHeight - window.innerHeight
-      if (scrollable <= 0) return
-      const progress = Math.max(0, Math.min(1, -rect.top / scrollable))
-      const idx = Math.min(total - 1, Math.floor(progress * total))
-
-      panels.forEach((p, i) => {
-        if (!p) return
-        const active = i === idx
-        p.style.opacity = active ? '1' : '0'
-        p.style.transform = active ? 'translateY(0)' : 'translateY(28px)'
-        p.style.pointerEvents = active ? 'all' : 'none'
-      })
-
-      images.forEach((img, i) => {
-        if (!img) return
-        const active = i === idx
-        img.style.opacity = active ? '1' : (i < idx ? '0' : '0')
-        img.style.transform = active ? 'translateY(0%) scale(1)' : (i < idx ? 'translateY(-4%) scale(.93)' : 'translateY(110%) scale(.9)')
-      })
-    }
-
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    update()
-    return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
-    }
-  }, [total])
-
-  return (
-    <section style={{ background: T.bg, position: 'relative', borderTop: `1px solid ${T.border}` }}>
-      <style>{`
-        .why-pin { position: relative; height: ${total * 100}vh; }
-        .why-sticky { position: sticky; top: 0; height: 100vh; width: 100%; overflow: hidden; }
-        .why-grid { height: 100%; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
-
-        .why-text-col { position: relative; height: 100%; }
-        .why-panel {
-          position: absolute; inset: 0;
-          display: flex; flex-direction: column;
-          justify-content: center; align-items: center;
-          text-align: center; padding: 0 6vw;
-          transition: opacity .5s cubic-bezier(.25,1,.5,1), transform .5s cubic-bezier(.25,1,.5,1);
-          will-change: opacity, transform;
-        }
-
-        .why-img-col {
-          position: relative; height: 100%;
-          display: flex; align-items: center; justify-content: center;
-          border-left: 1px solid rgba(136,202,83,.08);
-          background: radial-gradient(circle at center, rgba(136,202,83,.05) 0%, transparent 70%);
-          overflow: hidden;
-        }
-        .why-stack { position: relative; width: min(560px, 70%); aspect-ratio: 1/1; max-height: 80vh; }
-        .why-stack img {
-          position: absolute; inset: 0; width: 100%; height: 100%;
-          object-fit: cover; border-radius: 20px;
-          border: 1.5px solid rgba(136,202,83,.22);
-          box-shadow: 0 32px 80px rgba(0,0,0,.5);
-          will-change: transform, opacity;
-          transform-origin: top center;
-          transition: opacity .5s cubic-bezier(.25,1,.5,1), transform .5s cubic-bezier(.25,1,.5,1);
-        }
-
-        @media (max-width: 900px) {
-          .why-pin { height: auto !important; }
-          .why-sticky { height: auto; position: static; }
-          .why-grid { grid-template-columns: 1fr; height: auto; gap: 3rem; }
-          .why-text-col { height: auto; min-height: 46vh; }
-          .why-panel { position: relative; padding: 4rem 6vw 0; }
-          .why-img-col { height: 46vh; border-left: none; border-top: 1px solid rgba(136,202,83,.08); }
-          .why-stack { width: auto; height: 85%; max-width: 85%; }
-        }
-      `}</style>
-
-      <div ref={sectionRef} className="why-pin">
-        <div className="why-sticky">
-          <div className="why-grid">
-
-            {/* ── Gauche : panels texte, crossfade selon scroll ── */}
-            <div className="why-text-col">
-              {WHY_PANELS.map((s, i) => (
-                <div
-                  key={s.n}
-                  ref={el => panelsRef.current[i] = el}
-                  className="why-panel"
-                  style={{ opacity: i === 0 ? 1 : 0, transform: i === 0 ? 'translateY(0)' : 'translateY(28px)', pointerEvents: i === 0 ? 'all' : 'none' }}
-                >
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.45em', textTransform: 'uppercase', color: '#88ca53', marginBottom: '1.4rem', display: 'block' }}>
-                    {s.n} — Built on Trust
-                  </span>
-                  <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.6rem,5.5vw,5rem)', lineHeight: .92, letterSpacing: '-.02em', color: T.textMain, marginBottom: '1rem', whiteSpace: 'pre-line' }}>
-                    {s.title}
-                  </h2>
-                  <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', letterSpacing: '.12em', textTransform: 'uppercase', color: '#88ca53', opacity: .8, marginBottom: '1.4rem' }}>
-                    {s.sub}
-                  </p>
-                  <p style={{ fontSize: 'clamp(.88rem,1.2vw,1.05rem)', lineHeight: 1.8, color: T.textSub, maxWidth: '38ch' }}>
-                    {s.desc}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* ── Droite : pile d'images, crossfade synchronisé ── */}
-            <div className="why-img-col">
-              <div className="why-stack">
-                {WHY_PANELS.map((s, i) => (
-                  <img
-                    key={s.n}
-                    ref={el => imgsRef.current[i] = el}
-                    src={s.img}
-                    alt={s.title.replace('\n', ' ')}
-                    onError={e => { e.target.style.background = '#141414'; e.target.style.opacity = '.3' }}
-                  />
-                ))}
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-function ProjectsCarousel() {
-  const T = useTheme()
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  const CARDS = [
-    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
-    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
-    ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
-  ]
-
-  const [activeIdx, setActiveIdx] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
-  const autoRef = useRef(null)
-
-  useEffect(() => {
-    if (!inView || isHovered) return
-    autoRef.current = setInterval(() => {
-      setActiveIdx(i => (i + 1) % CARDS.length)
-    }, 3200)
-    return () => clearInterval(autoRef.current)
-  }, [inView, isHovered, CARDS.length])
+  // Étapes du processus — hover image reveal (même pattern que ServicesPreview)
+  const HOVER_ITEMS = WHY_PANELS.map(p => ({
+    n: p.n, label: p.title.replace('\n', ' '), img: p.img, tag: p.sub,
+  }))
 
   return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
+    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
-        {/* Header */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '3.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <div>
-            <BlurReveal delay={0.1} direction="left">
-              <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-                <GhostTitle text="Nos dernières réalisations livrées" />
-                Nos dernières{' '}
-                <GreenUnderline>
-                  <span className="text-gradient">
-                    <LetterReveal text="réalisations livrées" stagger={0.03} />
-                  </span>
-                </GreenUnderline>
-              </h2>
-            </BlurReveal>
-          </div>
-          <BlurReveal direction="right">
-            <Link href="/projects" className="btn-ghost" style={{ padding: '.65rem 1.4rem', fontSize: '.82rem' }}>
-              Toutes les réalisations <ArrowRight size={13} />
-            </Link>
+        {/* Header — titre sur trait rouge */}
+        <BlurReveal delay={0.1} direction="left">
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '3rem' }}>
+            <GhostTitle text="Built on Trust." />
+            Built on{' '}
+            <GreenUnderline><span className="text-gradient">Trust.</span></GreenUnderline>
+          </h2>
+        </BlurReveal>
+
+        {/* Label + liste — centrés */}
+        <div style={{ paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
+          <BlurReveal delay={0.05}>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.42em', textTransform: 'uppercase', color: '#88ca53', display: 'block', marginBottom: '1.5rem' }}>
+              Notre processus
+            </span>
+          </BlurReveal>
+
+          {/* ── Hover Image Reveal — toutes les étapes du processus ── */}
+          <BlurReveal delay={0.15}>
+            <div style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, padding: '.5rem 0' }}>
+              <HoverImageReveal items={HOVER_ITEMS} />
+            </div>
           </BlurReveal>
         </div>
 
-        {/* ── Expanding accordion gallery ── */}
-        <BlurReveal delay={0.2}>
-          <div
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            style={{ display: 'flex', gap: 6, height: 480, borderRadius: 20, overflow: 'hidden', width: '100%', justifyContent: 'center' }}
-          >
-            {CARDS.map((project, i) => {
-              const isActive = i === activeIdx
-              return (
-                <div
-                  key={project.title}
-                  onMouseEnter={() => setActiveIdx(i)}
-                  onClick={() => setActiveIdx(i)}
-                  style={{
-                    position: 'relative',
-                    height: '100%',
-                    flex: isActive ? '5 0 0' : '1 0 0',
-                    minWidth: isActive ? 0 : 52,
-                    maxWidth: isActive ? 520 : 80,
-                    borderRadius: 14,
-                    overflow: 'hidden',
-                    cursor: isActive ? 'default' : 'pointer',
-                    transition: 'flex 0.55s cubic-bezier(0.25, 1, 0.5, 1), max-width 0.55s cubic-bezier(0.25, 1, 0.5, 1)',
-                  }}
-                >
-                  {/* Background image */}
-                  <img
-                    src={project.img}
-                    alt={project.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform .6s ease', transform: isActive ? 'scale(1.04)' : 'scale(1.08)' }}
-                  />
-
-                  {/* Collapsed tint */}
-                  {!isActive && (
-                    <div style={{ position: 'absolute', inset: 0, background: 'rgba(3,8,6,.65)', backdropFilter: 'blur(1px)' }} />
-                  )}
-
-                  {/* Active gradient */}
-                  {isActive && (
-                    <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.95) 0%, rgba(3,8,6,.3) 50%, transparent 100%)' }} />
-                  )}
-
-                  {/* Collapsed index */}
-                  {!isActive && (
-                    <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 800, color: 'rgba(255,255,255,.4)', textTransform: 'uppercase', letterSpacing: '.12em', writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>
-                        {project.title.slice(0, 12)}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Active content */}
-                  <div style={{ position: 'absolute', inset: 0, padding: '1.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', opacity: isActive ? 1 : 0, transition: 'opacity .3s ease .15s', pointerEvents: isActive ? 'auto' : 'none' }}>
-                    <motion.div
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={isActive ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
-                      transition={{ duration: 0.55, delay: 0.1, ease: [.22,1,.36,1] }}
-                    >
-                      {/* Badges */}
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginBottom: '.7rem', flexWrap: 'wrap' }}>
-                        <span className="no-pill-mobile" style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.18)', border: '1px solid rgba(136,202,83,.4)', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700 }}>{project.type}</span>
-                        {project.live && (
-                          <span style={{ display: 'flex', alignItems: 'center', gap: 3, padding: '.2rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: '#fff', fontWeight: 700 }}>
-                            <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                            LIVE
-                          </span>
-                        )}
-                        <span style={{ marginLeft: 'auto', fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1rem', color: '#88ca53' }}>{project.result}</span>
-                      </div>
-
-                      {/* Title */}
-                      <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.3rem', fontWeight: 800, color: '#fff', marginBottom: '.5rem', lineHeight: 1.2 }}>
-                        {project.title}
-                      </h3>
-                      <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', color: 'rgba(255,255,255,.65)', lineHeight: 1.55, marginBottom: '1rem' }}>
-                        {project.desc?.slice(0, 90)}…
-                      </p>
-
-                      {/* Tech pills */}
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.3rem', marginBottom: '1rem' }}>
-                        {project.tech?.slice(0, 3).map(t => (
-                          <span key={t} style={{ padding: '.18rem .55rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: '#88ca53' }}>{t}</span>
-                        ))}
-                      </div>
-
-                      {project.url && (
-                        <a href={project.url} target="_blank" rel="noreferrer"
-                          onClick={e => e.stopPropagation()}
-                          style={{ display: 'inline-flex', alignItems: 'center', gap: 5, color: '#88ca53', fontSize: '.75rem', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, textDecoration: 'none', padding: '.4rem .9rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s' }}
-                          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)' }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.08)' }}
-                        >
-                          Voir le projet <ExternalLink size={11} />
-                        </a>
-                      )}
-                    </motion.div>
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-
-          {/* Dot indicators */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '.45rem', marginTop: '1.8rem' }}>
-            {CARDS.map((_, i) => (
-              <button key={i} onClick={() => setActiveIdx(i)}
-                style={{ width: i === activeIdx ? 28 : 8, height: 8, borderRadius: 4, background: i === activeIdx ? '#88ca53' : 'rgba(136,202,83,.2)', border: 'none', cursor: 'pointer', transition: 'all .35s' }} />
-            ))}
-          </div>
-        </BlurReveal>
       </div>
     </section>
   )
 }
-
 // ── TESTIMONIALS (inchangé) ───────────────────────────────────
 function Testimonials() {
   const T = useTheme()
@@ -897,16 +703,21 @@ function Testimonials() {
   return (
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
-      <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+
+      {/* Titre — colonne gauche alignée avec tous les autres titres (maxWidth 1200) */}
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
               <GhostTitle text="Ce que disent nos clients" />
               Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
+      </div>
 
+      {/* Carrousel — reste centré dans sa propre colonne (maxWidth 900) */}
+      <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.2}>
         <AnimatePresence mode="wait">
           <motion.div key={idx} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -30 }} transition={{ duration: .4 }}
@@ -952,47 +763,203 @@ const DOMAINES = [
     title: 'Sites Vitrine & Landing Pages',
     desc:  "Votre présence digitale professionnelle, optimisée pour convertir vos visiteurs en clients. Design sur mesure, SEO intégré, livré en 7 à 14 jours.",
     tag:   'Site Vitrine',
+    img:   '/images/projects/techflow-preview.webp',        // TechFlow — site vitrine
   },
   {
     n: '02', Icon: ShoppingBag,
     title: 'E-Commerce & Boutiques en ligne',
     desc:  "Boutiques complètes avec paiement Mobile Money (Orange Money, Wave), gestion des stocks, tableau de bord admin et notifications commandes.",
     tag:   'E-Commerce',
+    img:   '/images/projects/shopci-preview.webp',          // ShopCI — marketplace e-commerce
   },
   {
     n: '03', Icon: LayoutDashboard,
     title: 'Applications SaaS & Métier',
     desc:  "Des outils web sur mesure pour automatiser vos processus, gérer vos équipes et économiser des heures de travail chaque semaine.",
     tag:   'SaaS',
+    img:   '/images/projects/nexura-preview.webp',          // Nexura — app métier full-stack
   },
   {
     n: '04', Icon: Cog,
     title: 'Digitalisation de processus',
     desc:  "Remplacez vos fichiers Excel et WhatsApp par des applications robustes. Suivi en temps réel, rôles utilisateurs, reporting intégré.",
     tag:   'Digitalisation',
+    img:   '/images/projects/moncashjour-preview.webp',     // MonCashJour — dashboard gestion ventes
   },
   {
     n: '05', Icon: Image,
     title: 'Portfolios & Identités créatives',
     desc:  "Des vitrines animées et percutantes pour créatifs, photographes, graphistes et freelances qui veulent décrocher plus de clients.",
     tag:   'Portfolio',
+    img:   '/images/projects/jean-edy-preview.webp',        // Jean Edy — portfolio React avancé
   },
   {
     n: '06', Icon: Wrench,
     title: 'Maintenance & Évolutions',
     desc:  "Votre investissement sur la durée. Mises à jour, nouvelles fonctionnalités, corrections et support technique réactif sous 48h.",
     tag:   'Support',
+    img:   '/images/service/maintenence.webp',              // Service maintenance AKATech
   },
 ]
+
+// ── DOMAINE CARD — gère son propre hover + image curseur rectangulaire ──
+function DomaineCard({ n, Icon, title, desc, tag, img, index, inView }) {
+  const T = useTheme()
+  const [isHovered, setIsHovered] = useState(false)
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const [rot, setRot] = useState(0)
+  const cardRef = useRef(null)
+  const rafRef  = useRef(null)
+
+  const onMouseMove = (e) => {
+    cancelAnimationFrame(rafRef.current)
+    rafRef.current = requestAnimationFrame(() => {
+      const rect = cardRef.current?.getBoundingClientRect()
+      if (!rect) return
+      setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    })
+  }
+
+  const onEnter = () => { setIsHovered(true); setRot((Math.random() - 0.5) * 8) }
+  const onLeave = () => setIsHovered(false)
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 24 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55, delay: index * 0.07, ease: [.22,1,.36,1] }}
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      onMouseMove={onMouseMove}
+      style={{ background: T.bgAlt, padding: '2.2rem', position: 'relative', overflow: 'visible', cursor: 'default' }}
+    >
+      {/* Glow hover */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'radial-gradient(400px circle at 30% 30%, rgba(136,202,83,.07), transparent 65%)',
+        opacity: isHovered ? 1 : 0, transition: 'opacity .25s',
+      }} />
+
+      {/* Numéro + Tag */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.4rem', position: 'relative', zIndex: 1 }}>
+        <span style={{
+          fontFamily: "'JetBrains Mono',monospace", fontSize: '2.8rem', fontWeight: 900,
+          color: T.light ? 'rgba(136,202,83,.18)' : 'rgba(136,202,83,.15)',
+          lineHeight: 1, letterSpacing: '-.05em',
+        }}>
+          {n}
+        </span>
+        <span style={{
+          padding: '.22rem .72rem', borderRadius: 100,
+          background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)',
+          fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700,
+          color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase',
+        }}>
+          {tag}
+        </span>
+      </div>
+
+      {/* Icône + Titre */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.9rem', position: 'relative', zIndex: 1 }}>
+        <div style={{
+          width: 42, height: 42, borderRadius: 11,
+          background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.18)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+        }}>
+          <Icon size={20} style={{ color: '#88ca53' }} />
+        </div>
+        <h3 style={{
+          fontFamily: "'JetBrains Mono',monospace", fontSize: '.97rem', fontWeight: 800,
+          color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em',
+        }}>
+          {title}
+        </h3>
+      </div>
+
+      {/* Description */}
+      <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, position: 'relative', zIndex: 1 }}>
+        {desc}
+      </p>
+
+      {/* Barre verte bas au hover */}
+      <div style={{
+        position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
+        background: 'linear-gradient(90deg, transparent, #88ca53, transparent)',
+        transformOrigin: 'left',
+        transform: isHovered ? 'scaleX(1)' : 'scaleX(0)',
+        transition: 'transform .3s ease',
+      }} />
+
+      {/* ── Image capture d'écran qui suit le curseur — rectangulaire, propre à cette card ── */}
+      {img && (
+        <div style={{
+          position: 'absolute', top: 0, left: 0,
+          width: 280, height: 178,                 // ratio ~16:10, format capture d'écran PC
+          borderRadius: 12, overflow: 'hidden',
+          pointerEvents: 'none', zIndex: 30,
+          transform: `translate(${pos.x - 140}px, ${pos.y - 215}px) rotate(${rot}deg) scale(${isHovered ? 1 : 0.7})`,
+          opacity: isHovered ? 1 : 0,
+          transition: 'opacity .22s ease, transform .18s cubic-bezier(.22,1,.36,1)',
+          boxShadow: '0 24px 70px rgba(0,0,0,.55)',
+          border: '1.5px solid rgba(136,202,83,.35)',
+          willChange: 'transform, opacity',
+        }}>
+          <img
+            src={img}
+            alt={title}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        </div>
+      )}
+    </motion.div>
+  )
+}
 
 function DomainesSection() {
   const T   = useTheme()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
+  // Scroll-reveal mot par mot + tilt — même mécanique que ScrollRevealText
+  const sectionRef  = useRef(null)
+  const domTextRef  = useRef(null)
+  const domWordsRef = useRef([])
+  const DOM_TEXT = "De la vitrine au SaaS, de la boutique au portfolio — nous intervenons sur l'ensemble de la chaîne digitale pour concrétiser votre vision."
+  const DOM_GREEN = new Set(['SaaS,', 'portfolio', 'chaîne', 'digitale', 'concrétiser', 'vision.'])
+
+  useEffect(() => {
+    const container = sectionRef.current
+    const textEl    = domTextRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const total    = winH + container.offsetHeight
+      const traveled = winH - rect.top
+      const progress = Math.max(0, Math.min(1, traveled / total))
+      // tilt
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.2))
+      // mots
+      const words = domWordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, progress / 0.40))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
     <section
-      ref={ref}
+      ref={el => { ref.current = el; sectionRef.current = el }}
       style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}
     >
       {/* Décoration big text */}
@@ -1008,101 +975,61 @@ function DomainesSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+        <div style={{ textAlign: 'left', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 style={{
+            <h2 className="section-title-big" style={{
               position: 'relative',
-              fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800,
-              fontFamily: "'JetBrains Mono',monospace", color: T.textMain,
-              letterSpacing: '-.03em', lineHeight: 1.15,
+              fontSize: 'clamp(2.6rem,5vw,4rem)',
+              color: T.textMain,
+              lineHeight: 1,
             }}>
               <GhostTitle text="Dans quel axe de création s'inscrit votre projet ?" />
               Dans quel axe de création{' '}
               <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
             </h2>
           </BlurReveal>
-          <BlurReveal delay={0.2}>
-            <p style={{ fontSize: '1rem', color: T.textSub, lineHeight: 1.75, maxWidth: 560, margin: '1rem auto 0' }}>
-              De la vitrine au SaaS, de la boutique au portfolio — nous intervenons sur l'ensemble de la chaîne digitale pour concrétiser votre vision.
-            </p>
-          </BlurReveal>
+          <p
+            ref={domTextRef}
+            style={{
+              fontFamily: "'JetBrains Mono',monospace",
+              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+              fontWeight: 700,
+              lineHeight: 1.32,
+              color: T.textSub,
+              margin: '1rem 0 0',
+              paddingLeft: 'var(--body-indent)',
+              paddingRight: 'var(--body-indent)',
+              transformOrigin: '0% 50%',
+              transition: 'transform .05s linear',
+            }}
+          >
+            {DOM_TEXT.split(' ').map((word, i) => (
+              <span
+                key={i}
+                ref={el => { domWordsRef.current[i] = el }}
+                style={{
+                  display: 'inline-block',
+                  marginRight: '0.28em',
+                  opacity: 0.08,
+                  filter: 'blur(9px)',
+                  willChange: 'opacity, filter',
+                  color: DOM_GREEN.has(word) ? '#88ca53' : 'inherit',
+                }}
+              >
+                {word}
+              </span>
+            ))}
+          </p>
         </div>
 
-        {/* Grille */}
+        {/* Grille — chaque card gère son propre hover + image curseur */}
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '1px', background: T.border, borderRadius: 20, overflow: 'hidden',
+          gap: '1px', background: T.border, borderRadius: 20, overflow: 'visible',
           border: `1px solid ${T.border}`,
         }}>
-          {DOMAINES.map(({ n, Icon, title, desc, tag }, i) => (
-            <motion.div
-              key={n}
-              initial={{ opacity: 0, y: 24 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, delay: i * 0.07, ease: [.22,1,.36,1] }}
-              whileHover="hover"
-              style={{ background: T.bgAlt, padding: '2.2rem', position: 'relative', overflow: 'hidden' }}
-            >
-              {/* Glow hover */}
-              <motion.div
-                variants={{ hover: { opacity: 1 } }}
-                initial={{ opacity: 0 }}
-                transition={{ duration: .25 }}
-                style={{ position: 'absolute', inset: 0, background: 'radial-gradient(400px circle at 30% 30%, rgba(136,202,83,.07), transparent 65%)', pointerEvents: 'none' }}
-              />
-
-              {/* Numéro + Tag */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.4rem' }}>
-                <span style={{
-                  fontFamily: "'JetBrains Mono',monospace", fontSize: '2.8rem', fontWeight: 900,
-                  color: T.light ? 'rgba(136,202,83,.18)' : 'rgba(136,202,83,.15)',
-                  lineHeight: 1, letterSpacing: '-.05em',
-                }}>
-                  {n}
-                </span>
-                <span style={{
-                  padding: '.22rem .72rem', borderRadius: 100,
-                  background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)',
-                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700,
-                  color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase',
-                }}>
-                  {tag}
-                </span>
-              </div>
-
-              {/* Icône + Titre */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.9rem' }}>
-                <div style={{
-                  width: 42, height: 42, borderRadius: 11,
-                  background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.18)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}>
-                  <Icon size={20} style={{ color: '#88ca53' }} />
-                </div>
-                <h3 style={{
-                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.97rem', fontWeight: 800,
-                  color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em',
-                }}>
-                  {title}
-                </h3>
-              </div>
-
-              {/* Description */}
-              <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7 }}>
-                {desc}
-              </p>
-
-              {/* Barre verte bas au hover */}
-              <motion.div
-                variants={{ hover: { scaleX: 1 } }}
-                initial={{ scaleX: 0 }}
-                style={{
-                  position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
-                  background: 'linear-gradient(90deg, transparent, #88ca53, transparent)',
-                  transformOrigin: 'left',
-                }}
-              />
-            </motion.div>
+          {DOMAINES.map((domaine, i) => (
+            <DomaineCard key={domaine.n} {...domaine} index={i} inView={inView} />
           ))}
         </div>
 
@@ -1179,11 +1106,10 @@ function ScrollRevealText() {
     <section
       ref={containerRef}
       style={{
-        padding: '18vh 8vw',
+        padding: '12rem 5%',
         minHeight: '120vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
         background: T.bg,
         position: 'relative',
       }}
@@ -1200,17 +1126,16 @@ function ScrollRevealText() {
         pointerEvents: 'none',
       }} />
 
-      <div style={{ maxWidth: 940, width: '100%', position: 'relative', zIndex: 1 }}>
+      <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 1 }}>
         {/* Titre de section */}
-        <h2 style={{
+        <h2 className="section-title-big" style={{
           position: 'relative',
-          fontFamily: "'JetBrains Mono', monospace",
-          fontSize: 'clamp(1.5rem,2.6vw,2.1rem)', fontWeight: 800,
-          color: T.textMain, letterSpacing: '-.03em',
+          fontSize: 'clamp(2.8rem,5.5vw,4.4rem)',
+          color: T.textMain,
           marginBottom: '2.5rem',
         }}>
           <GhostTitle text="À propos de AKATech" />
-          À propos de <span className="text-gradient">AKATech</span>
+          À propos de <GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
         </h2>
 
         {/* Texte principal avec effet blur-reveal */}
@@ -1225,6 +1150,8 @@ function ScrollRevealText() {
             transformOrigin: '0% 50%',
             transition: 'transform .05s linear',
             margin: 0,
+            paddingLeft: 'var(--body-indent)',
+            paddingRight: 'var(--body-indent)',
           }}
         >
           {(() => {
@@ -1256,9 +1183,14 @@ function ScrollRevealText() {
 // Port de l'effet "15 / LE TUNNEL ARCHIVE 3D" (5haut_niveay.html) :
 // grille pinnée en perspective 3D, qui avance vers la caméra au scroll.
 function ArchiveTunnelSection() {
+  const T = useTheme()
   const wrapRef = useRef(null)
   const gridRef = useRef(null)
-  const TUNNEL_ITEMS = PROJECTS.slice(0, 6)
+  const TUNNEL_ITEMS = [
+    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
+    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
+    ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
+  ]
   const DEPTHS = [0, -220, -60, -340, -120, -260]
   const SPANS  = [1, 1, 1, 1, 2, 1]
 
@@ -1286,11 +1218,18 @@ function ArchiveTunnelSection() {
   }, [])
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', height: '250vh', background: '#040a07' }}>
-      <section style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', perspective: '1200px', display: 'flex', alignItems: 'center' }}>
-        <div style={{ position: 'absolute', top: '2.2rem', left: '6%', zIndex: 5, fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', letterSpacing: '.32em', color: '#88ca53', textTransform: 'uppercase' }}>
-          Archive — Nos projets
+    <div ref={wrapRef} style={{ position: 'relative', height: '250vh', background: T.bg }}>
+
+      {/* Titre de section — statique, même système d'alignement que les autres titres (maxWidth 1200) */}
+      <div style={{ padding: '5rem 5% 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
+            Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+          </h2>
         </div>
+      </div>
+
+      <section style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', perspective: '1200px', display: 'flex', alignItems: 'center' }}>
 
         <div
           ref={gridRef}
@@ -1333,14 +1272,12 @@ function ArchiveTunnelSection() {
   )
 }
 
-// ── STATS GRID (cartes dégradé gris, chiffres animés) ──────────
+// ── STATS — chiffres géants éditoriaux, quinconce (ref web_design_result) ──
 const HOME_STATS = [
-  { tag: 'Expérience',  target: 18,  suffix: '',  label: 'Projets',      sub: 'Livrés sur mesure, du concept au déploiement' },
-  { tag: 'Confiance',   target: 10,  suffix: '+', label: 'Clients',       sub: 'Particuliers, startups et PME accompagnés' },
-  { tag: 'Satisfaction',target: 99, suffix: '%', label: 'Satisfaits',    sub: 'Clients livrés dans les délais convenus' },
-  
-  { tag: 'Parcours',    target: 3,   suffix: '+', label: 'Années',        sub: "D'expérience en développement web" },
-  
+  { target: 18,  suffix: '',  label: 'Projets livrés',                  sub: 'Du concept au déploiement', col: 1, row: 1 },
+  { target: 99,  suffix: '%', label: 'Clients satisfaits',              sub: 'Livrés dans les délais',    col: 3, row: 1 },
+  { target: 10,  suffix: '+', label: 'Clients accompagnés',             sub: 'Startups, PME, créatifs',   col: 5, row: 1 },
+  { target: 3,   suffix: '+', label: "Années d'expérience",             sub: 'En développement web',      col: 2, row: 2 },
 ]
 
 function StatsSection() {
@@ -1348,58 +1285,101 @@ function StatsSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
-  // Spans bento (sur une grille 4 colonnes) — reproduit la mosaïque asymétrique :
-  // Ligne 1 : [Projets][Clients][   Satisfaits (x2)   ]
-  // Ligne 2 : [   En prod. (x2)   ][Années][Outils]
-  const SPANS = ['span 1', 'span 1', 'span 2', 'span 2', 'span 1', 'span 1']
+  // Positons quinconce : ligne 1 → col 1, 3, 5 ; ligne 2 → col 2, 4
+  // Sur une grille de 6 colonnes égales
+  const POSITIONS = [
+    { gridColumn: '1 / 3', gridRow: 1 },   // 18  — gauche
+    { gridColumn: '3 / 5', gridRow: 1 },   // 99% — centre
+    { gridColumn: '5 / 7', gridRow: 1 },   // 10+ — droite
+    { gridColumn: '2 / 4', gridRow: 2 },   // 3+  — décalé gauche
+  ]
 
   return (
-    <section ref={ref} style={{ padding: '5rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)', width: 700, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
+    <section ref={ref} style={{ padding: '7rem 5% 8rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+
+      {/* Halo subtil */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 800, height: 500, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.04),transparent 65%)', pointerEvents: 'none' }} />
+
+      {/* Séparateur haut */}
+      <div style={{ position: 'absolute', top: 0, left: '5%', right: '5%', height: 1, background: T.border }} />
+
       <div style={{ maxWidth: 1100, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <style>{`
-          .stats-grid {
+          .stats-quinconce {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.1rem;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: auto auto;
+            row-gap: 1rem;
+            column-gap: 0;
           }
           @media (max-width: 760px) {
-            .stats-grid { grid-template-columns: repeat(2, 1fr); }
-            .stats-grid > div { grid-column: span 1 !important; }
+            .stats-quinconce {
+              grid-template-columns: 1fr 1fr;
+              grid-template-rows: unset;
+            }
+            .stats-quinconce > div {
+              grid-column: span 1 !important;
+              grid-row: unset !important;
+            }
           }
         `}</style>
-        <div className="stats-grid">
+
+        <div className="stats-quinconce">
           {HOME_STATS.map((s, i) => (
-            <motion.div key={s.label}
-              initial={{ opacity: 0, y: 24 }}
+            <motion.div
+              key={s.label}
+              initial={{ opacity: 0, y: 32 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: .55, delay: i * .08, ease: [.22,1,.36,1] }}
+              transition={{ duration: .7, delay: i * .12, ease: [.22,1,.36,1] }}
               style={{
-                gridColumn: SPANS[i],
-                padding: '1.8rem 1.6rem',
-                minHeight: 190,
-                borderRadius: 18,
-                background: `linear-gradient(155deg, rgba(255,255,255,.05) 0%, rgba(255,255,255,.015) 55%, rgba(255,255,255,0) 100%)`,
-                border: '1px solid rgba(255,255,255,.08)',
-                position: 'relative',
-                overflow: 'hidden',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
+                gridColumn: POSITIONS[i].gridColumn,
+                gridRow: POSITIONS[i].gridRow,
+                padding: '2.5rem 1rem 2.5rem 0',
+                borderLeft: `1px solid ${T.border}`,
+                paddingLeft: '1.8rem',
               }}>
-              <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120px circle at 85% 0%, rgba(136,202,83,.07), transparent 70%)', pointerEvents: 'none' }} />
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', fontWeight: 700, color: T.textMain, position: 'relative', zIndex: 1 }}>{s.tag}</div>
-              <div style={{ position: 'relative', zIndex: 1 }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.textMuted, marginBottom: '.3rem' }}>{s.label}</div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(2.2rem,4vw,2.8rem)', lineHeight: 1, color: '#88ca53', letterSpacing: '-.02em', marginBottom: '.5rem' }}>
-                  <AnimatedCounter target={s.target} suffix={s.suffix} />
-                </div>
-                <p style={{ fontSize: '.78rem', color: T.textMuted, lineHeight: 1.55, margin: 0 }}>{s.sub}</p>
+
+              {/* Chiffre géant */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontWeight: 900,
+                fontSize: 'clamp(4rem,8vw,7rem)',
+                lineHeight: 1,
+                color: T.light ? '#111' : 'rgba(255,255,255,.92)',
+                letterSpacing: '-.04em',
+                marginBottom: '.5rem',
+              }}>
+                <AnimatedCounter target={s.target} suffix={s.suffix} />
+              </div>
+
+              {/* Label principal */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: '.82rem',
+                fontWeight: 700,
+                color: T.light ? '#5f9137' : '#88ca53',
+                letterSpacing: '.02em',
+                marginBottom: '.2rem',
+              }}>
+                {s.label}
+              </div>
+
+              {/* Sous-label */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: '.7rem',
+                color: T.textMuted,
+                letterSpacing: '.02em',
+              }}>
+                {s.sub}
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Séparateur bas */}
+      <div style={{ position: 'absolute', bottom: 0, left: '5%', right: '5%', height: 1, background: T.border }} />
     </section>
   )
 }
@@ -1410,14 +1390,13 @@ export default function HomePageDesktop() {
     <div style={{ paddingTop: 0 }}>
       <Hero />
       <ScrollRevealText />
-      <ArchiveTunnelSection />
       <StatsSection />
+      <ArchiveTunnelSection />
       <MarqueeStrip />
       <ServicesPreview />
       <WhyUs />
       <DomainesSection />
       <MarqueeStrip />
-      <ProjectsCarousel />
       <Testimonials />
 
       <PageCTA
