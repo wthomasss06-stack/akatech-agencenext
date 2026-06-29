@@ -246,25 +246,18 @@ function Hero() {
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
         <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .13, pointerEvents: 'none' }} />
-        <motion.div
-          animate={{ top: ['-5%', '105%'] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 2 }}
-          style={{ position: 'absolute', left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(136,202,83,.32),transparent)', pointerEvents: 'none' }}
-        />
+
       </div>
 
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '4rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
         
 
-        <motion.h1
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .55, delay: .15 }}
-          style={{ position: 'relative', fontSize: 'clamp(2.4rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.8rem', maxWidth: 880, marginLeft: 'auto', marginRight: 'auto' }}>
-          <GhostTitle text="Digital, local,
- " />
-          Digital, local,<br />
-          <GreenUnderline><span className="text-gradient">rentable.</span></GreenUnderline>
-        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45, delay: .12 }}
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.78rem,1vw,.9rem)', fontWeight: 500, letterSpacing: '.01em', color: 'rgba(255,255,255,.52)', marginBottom: '1.6rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7, textAlign: 'center' }}>
+          Un site qui travaille pour vous 24h/24 — attirez des clients, gagnez en crédibilité et <span style={{ color: '#88ca53' }}>développez votre activité.</span>
+        </motion.p>
 
         
 
@@ -611,9 +604,7 @@ function ServicesPreview() {
 
         {/* Bouton + liste — centrés */}
         <div style={{ paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
-          <BlurReveal direction="right" style={{ marginBottom: '2rem' }}>
-            
-          </BlurReveal>
+          
 
           {/* ── Hover Image Reveal — tous les services ── */}
           <BlurReveal delay={0.15}>

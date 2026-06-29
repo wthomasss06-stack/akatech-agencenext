@@ -91,31 +91,90 @@ function HeroAbout() {
   )
 }
 
-// ── 2. STATS ─────────────────────────────────────────────────
+// ── 2. STATS — chiffres géants éditoriaux (miroir HomeClientMobile) ──
+const ABOUT_STATS = [
+  { target: 18,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
+  { target: 99,  suffix: '%', label: 'Clients satisfaits',  sub: 'Livrés dans les délais'    },
+  { target: 10,  suffix: '+', label: 'Clients accompagnés', sub: 'Startups, PME, créatifs'   },
+  { target: 3,   suffix: '+', label: "Années d'expérience", sub: 'En développement web'       },
+]
+
 function StatsSection() {
   const T = useTheme()
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
   return (
-    <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h2 style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-          <GhostTitle text="Des résultats concrets" />
-          Des résultats <GreenUnderline><span className="text-gradient">concrets</span></GreenUnderline>
-        </h2>
-      </motion.div>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '.75rem' }}>
-        {STATS.map(({ val, suffix, label }, i) => (
-          <motion.div key={label} className="sku-card"
-            initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .1 }}
-            style={{ padding: '1.5rem 1rem', textAlign: 'center' }}>
-            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green, lineHeight: 1 }}>
-              <AnimatedCounter target={val} suffix={suffix} />
-            </div>
-            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em', marginTop: '.4rem' }}>{label}</div>
-          </motion.div>
-        ))}
+    <section ref={ref} style={{ padding: '5rem 5% 6rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+
+      {/* Halo */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 500, height: 320, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.04),transparent 65%)', pointerEvents: 'none' }} />
+
+      {/* Séparateur haut */}
+      <div style={{ position: 'absolute', top: 0, left: '5%', right: '5%', height: 1, background: T.border }} />
+
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <style>{`
+          .stats-editorial-about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+          }
+        `}</style>
+        <div className="stats-editorial-about">
+          {ABOUT_STATS.map((s, i) => (
+            <motion.div key={s.label}
+              initial={{ opacity: 0, y: 32 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: .7, delay: i * .1, ease: [.22,1,.36,1] }}
+              style={{
+                padding: 'clamp(1.4rem,4vw,2rem) clamp(.9rem,3vw,1.6rem)',
+                borderLeft: `1px solid ${T.border}`,
+                borderBottom: i < 2 ? `1px solid ${T.border}` : 'none',
+              }}>
+
+              {/* Chiffre géant */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontWeight: 900,
+                fontSize: 'clamp(3rem,12vw,5rem)',
+                lineHeight: 1,
+                color: T.light ? '#111' : 'rgba(255,255,255,.92)',
+                letterSpacing: '-.04em',
+                marginBottom: '.4rem',
+              }}>
+                <AnimatedCounter target={s.target} suffix={s.suffix} />
+              </div>
+
+              {/* Label principal */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 'clamp(.65rem,2.5vw,.78rem)',
+                fontWeight: 700,
+                color: T.light ? '#5f9137' : '#88ca53',
+                letterSpacing: '.02em',
+                marginBottom: '.15rem',
+              }}>
+                {s.label}
+              </div>
+
+              {/* Sous-label */}
+              <div style={{
+                fontFamily: "'JetBrains Mono',monospace",
+                fontSize: 'clamp(.58rem,2.2vw,.68rem)',
+                color: T.textMuted,
+                letterSpacing: '.02em',
+                lineHeight: 1.4,
+              }}>
+                {s.sub}
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
+
+      {/* Séparateur bas */}
+      <div style={{ position: 'absolute', bottom: 0, left: '5%', right: '5%', height: 1, background: T.border }} />
     </section>
   )
 }

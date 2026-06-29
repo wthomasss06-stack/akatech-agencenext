@@ -246,7 +246,7 @@ export default function Loader() {
               transition={{ duration: .6, ease: [.22,1,.36,1] }}
               style={{ marginBottom: '2rem' }}
             >
-              <div style={{ position: 'relative', width: 150, height: 150, margin: '0 auto 1rem' }}>
+              <div style={{ position: 'relative', width: 220, height: 220, margin: '0 auto 1rem' }}>
                 <motion.img
                   src="/images/logo.webp"
                   alt="AKATech"
