@@ -39,6 +39,64 @@ function LetterReveal({ text, style = {}, stagger = 0.028 }) {
   )
 }
 
+/* ─── WordRevealP — scroll-reveal mot par mot + tilt ────── */
+function useWordReveal(sectionRef, textRef, wordsRef) {
+  useEffect(() => {
+    const container = sectionRef.current
+    const textEl    = textRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const progress = Math.max(0, Math.min(1, (winH - rect.top) / (winH + container.offsetHeight)))
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.35 + progress * 1.4))
+      const words = wordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, (progress - 0.05) / (0.50 - 0.05)))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.76) / 0.26))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+}
+
+function WordRevealP({ text, greenWords = [], sectionRef, extraStyle = {} }) {
+  const textRef  = useRef(null)
+  const wordsRef = useRef([])
+  const green    = new Set(greenWords)
+  useWordReveal(sectionRef, textRef, wordsRef)
+  return (
+    <p ref={textRef} style={{
+      fontFamily: "'JetBrains Mono',monospace",
+      fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+      fontWeight: 700,
+      lineHeight: 1.32,
+      paddingLeft: 'var(--body-indent)',
+      paddingRight: 'var(--body-indent)',
+      transformOrigin: '0% 50%',
+      transition: 'transform .05s linear',
+      margin: 0,
+      ...extraStyle,
+    }}>
+      {text.split(' ').map((word, i) => (
+        <span key={i} ref={el => { wordsRef.current[i] = el }}
+          style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08,
+            filter: 'blur(9px)', willChange: 'opacity, filter',
+            color: green.has(word) ? '#88ca53' : 'inherit' }}>
+          {word}
+        </span>
+      ))}
+    </p>
+  )
+}
+
 /* ─── TiltCard ───────────────────────────────────────────── */
 function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
   const ref = useRef(null)
@@ -235,61 +293,10 @@ function AboutStatsSlide() {
 // ── 2. STATS + FONDATEUR (220px / 1fr) ───────────────────────
 function StatsFounderSection() {
   const T = useTheme()
-
-  // ── blur-reveal + tilt sur les 3 gros p ──────────────────
-  const sfContainerRef = useRef(null)
-  const sfP1Ref        = useRef(null)
-  const sfP1Words      = useRef([])
-  const sfP2Ref        = useRef(null)
-  const sfP2Words      = useRef([])
-  const sfP3Ref        = useRef(null)
-  const sfP3Words      = useRef([])
-
-  const SF_TEXT1 = "AKATech construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus."
-  const SF_GREEN1 = new Set(['AKATech', 'PME', "d'Ivoire", 'professionnaliser', 'automatiser'])
-
-  const SF_TEXT2 = "Nous aidons les entreprises à transformer leur présence en ligne en véritable levier de croissance, avec des produits web clairs, performants et adaptés aux usages locaux."
-  const SF_GREEN2 = new Set(['transformer', 'croissance,', 'performants', 'locaux.'])
-
-  const SF_TEXT3 = "Notre approche repose sur la fiabilité, la simplicité et l'impact concret."
-  const SF_GREEN3 = new Set(['fiabilité,', 'simplicité', "l'impact", 'concret.'])
-
-  useEffect(() => {
-    const container = sfContainerRef.current
-    if (!container) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-
-      const applyP = (pEl, words, offset) => {
-        if (!pEl) return
-        const tilt  = 3 * (1 - Math.min((progress - offset) / 0.25, 1))
-        pEl.style.transform = `rotate(${Math.max(0, tilt)}deg)`
-        pEl.style.opacity   = String(Math.min(1, 0.5 + (progress - offset) * 3))
-        if (!words.length) return
-        const wProg = Math.max(0, Math.min(1, (progress - offset) / 0.30))
-        words.forEach((span, i) => {
-          if (!span) return
-          const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-          span.style.opacity = String(0.08 + local * 0.92)
-          span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-        })
-      }
-
-      applyP(sfP1Ref.current, sfP1Words.current, 0.05)
-      applyP(sfP2Ref.current, sfP2Words.current, 0.12)
-      applyP(sfP3Ref.current, sfP3Words.current, 0.20)
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const sectionRef = useRef(null)
 
   return (
-    <section ref={sfContainerRef} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
+    <section ref={sectionRef} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 700, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
       <style>{`
         .stats-founder-grid {
@@ -325,80 +332,24 @@ function StatsFounderSection() {
 
         {/* COLONNE DROITE — Fondateur (grande) */}
         <BlurReveal direction="right" delay={0.15}>
-          {/* ── p1 : blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={sfP1Ref}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textMain,
-              lineHeight: 1.32,
-              marginBottom: '1rem',
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {SF_TEXT1.split(' ').map((word, i) => (
-              <span key={i} ref={el => { sfP1Words.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: SF_GREEN1.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
-
-          {/* ── p2 : blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={sfP2Ref}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              marginBottom: '1rem',
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {SF_TEXT2.split(' ').map((word, i) => (
-              <span key={i} ref={el => { sfP2Words.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: SF_GREEN2.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
-
-          {/* ── p3 : blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={sfP3Ref}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              marginBottom: '2rem',
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {SF_TEXT3.split(' ').map((word, i) => (
-              <span key={i} ref={el => { sfP3Words.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: SF_GREEN3.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="AKATech construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus."
+            greenWords={['AKATech', 'PME', "d'Ivoire", 'professionnaliser', 'automatiser']}
+            extraStyle={{ color: T.textMain, marginBottom: '1rem', paddingLeft: 0, paddingRight: 0 }}
+          />
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="Nous aidons les entreprises à transformer leur présence en ligne en véritable levier de croissance, avec des produits web clairs, performants et adaptés aux usages locaux."
+            greenWords={['transformer', 'croissance', 'performants', 'locaux.']}
+            extraStyle={{ color: T.textSub, marginBottom: '1rem', marginTop: '1rem', paddingLeft: 0, paddingRight: 0 }}
+          />
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="Notre approche repose sur la fiabilité, la simplicité et l'impact concret."
+            greenWords={['fiabilité,', 'simplicité', "l'impact", 'concret.']}
+            extraStyle={{ color: T.textSub, marginBottom: '2rem', marginTop: '1rem', paddingLeft: 0, paddingRight: 0 }}
+          />
 
           {/* Photo + identité + portfolio */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', padding: '1.2rem 1.4rem', borderRadius: 16, background: 'rgba(136,202,83,.06)', border: '1px solid rgba(136,202,83,.2)', marginBottom: '1.8rem' }}>
@@ -506,44 +457,10 @@ function ValuesSection() {
 function SkillsSection() {
   const T = useTheme()
   const ref = useRef(null)
+  const sectionRef = useRef(null)
   const inView = useInView(ref, { once: true })
-
-  // ── blur-reveal + tilt ────────────────────────────────────
-  const skContainerRef = useRef(null)
-  const skTextRef      = useRef(null)
-  const skWordsRef     = useRef([])
-  const SK_TEXT  = "J'utilise les meilleures technologies modernes — sélectionnées pour leur performance, leur fiabilité et leur adéquation avec vos besoins réels."
-  const SK_GREEN = new Set(['meilleures', 'technologies', 'performance,', 'fiabilité', "besoins"])
-
-  useEffect(() => {
-    const container = skContainerRef.current
-    const textEl    = skTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
-      const words = skWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <section ref={el => { ref.current = el; skContainerRef.current = el }} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+    <section ref={el => { ref.current = el; sectionRef.current = el }} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
       {/* h2 — au-dessus des 2 colonnes, aligné à gauche, même style que les autres sections */}
       <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left', position: 'relative', zIndex: 1 }}>
@@ -558,30 +475,12 @@ function SkillsSection() {
 
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'center', position: 'relative', zIndex: 1 }}>
         <BlurReveal direction="left">
-          {/* ── blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={skTextRef}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              marginBottom: '2rem',
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {SK_TEXT.split(' ').map((word, i) => (
-              <span key={i} ref={el => { skWordsRef.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: SK_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="J'utilise les meilleures technologies modernes — sélectionnées pour leur performance, leur fiabilité et leur adéquation avec vos besoins réels."
+            greenWords={['meilleures', 'performance,', 'fiabilité', "besoins", 'réels.']}
+            extraStyle={{ color: T.textSub, marginBottom: '2rem', paddingLeft: 0, paddingRight: 0 }}
+          />
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
             {SKILLS.map((s, i) => (
               <motion.span key={s} initial={{ opacity: 0, y: 8 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 + i * .04 }}
@@ -636,43 +535,9 @@ function FlagBadge({ code, primary }) {
 
 function RayonSection() {
   const T = useTheme()
-
-  // ── blur-reveal + tilt ────────────────────────────────────
-  const rayContainerRef = useRef(null)
-  const rayTextRef      = useRef(null)
-  const rayWordsRef     = useRef([])
-  const RAY_TEXT  = "Basés à Abidjan, nous travaillons à distance avec des entrepreneurs à travers l'Afrique de l'Ouest et la diaspora. WhatsApp, Zoom, Notion — notre setup est fait pour ça."
-  const RAY_GREEN = new Set(['Abidjan,', "l'Afrique", "l'Ouest", 'diaspora.', 'WhatsApp,', 'Zoom,', 'Notion'])
-
-  useEffect(() => {
-    const container = rayContainerRef.current
-    const textEl    = rayTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
-      const words = rayWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
+  const sectionRef = useRef(null)
   return (
-    <section ref={rayContainerRef} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
+    <section ref={sectionRef} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
@@ -681,30 +546,12 @@ function RayonSection() {
               <GhostTitle text="Où intervenons-nous ?" />
               Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
             </h2>
-            {/* ── blur-reveal mot par mot + tilt ── */}
-            <p
-              ref={rayTextRef}
-              style={{
-                fontFamily: "'JetBrains Mono',monospace",
-                fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-                fontWeight: 700,
-                color: T.textSub,
-                lineHeight: 1.32,
-                marginBottom: '2rem',
-                paddingLeft: 'var(--body-indent)',
-                paddingRight: 'var(--body-indent)',
-                transformOrigin: '0% 50%',
-                transition: 'transform .05s linear',
-                opacity: 0.08,
-              }}
-            >
-              {RAY_TEXT.split(' ').map((word, i) => (
-                <span key={i} ref={el => { rayWordsRef.current[i] = el }}
-                  style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: RAY_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
-                  {word}
-                </span>
-              ))}
-            </p>
+            <WordRevealP
+              sectionRef={sectionRef}
+              text="Basés à Abidjan, nous travaillons à distance avec des entrepreneurs à travers l'Afrique de l'Ouest et la diaspora. WhatsApp, Zoom, Notion — notre setup est fait pour ça."
+              greenWords={['Abidjan,', "l'Afrique", "l'Ouest", 'diaspora.', 'WhatsApp,', 'Zoom,', 'Notion']}
+              extraStyle={{ color: T.textSub, marginBottom: '2rem', paddingLeft: 0, paddingRight: 0 }}
+            />
             <div style={{ display: 'flex', gap: '.75rem', flexWrap: 'wrap' }}>
               {['100% remote', 'WhatsApp & Zoom', 'Suivi en temps réel', 'FCFA & EUR'].map(b => (
                 <span key={b} style={{ padding: '.3rem .85rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 600, color: '#88ca53' }}>{b}</span>

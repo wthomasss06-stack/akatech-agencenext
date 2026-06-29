@@ -47,6 +47,64 @@ function LetterReveal({ text, style = {}, stagger = 0.028 }) {
   )
 }
 
+/* ─── WordRevealP — scroll-reveal mot par mot + tilt ────── */
+function useWordReveal(sectionRef, textRef, wordsRef) {
+  useEffect(() => {
+    const container = sectionRef.current
+    const textEl    = textRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const progress = Math.max(0, Math.min(1, (winH - rect.top) / (winH + container.offsetHeight)))
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.2))
+      const words = wordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, progress / 0.40))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+}
+
+function WordRevealP({ text, greenWords = [], sectionRef, extraStyle = {} }) {
+  const textRef  = useRef(null)
+  const wordsRef = useRef([])
+  const green    = new Set(greenWords)
+  useWordReveal(sectionRef, textRef, wordsRef)
+  return (
+    <p ref={textRef} style={{
+      fontFamily: "'JetBrains Mono',monospace",
+      fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+      fontWeight: 700,
+      lineHeight: 1.32,
+      paddingLeft: 'var(--body-indent)',
+      paddingRight: 'var(--body-indent)',
+      transformOrigin: '0% 50%',
+      transition: 'transform .05s linear',
+      margin: 0,
+      ...extraStyle,
+    }}>
+      {text.split(' ').map((word, i) => (
+        <span key={i} ref={el => { wordsRef.current[i] = el }}
+          style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08,
+            filter: 'blur(9px)', willChange: 'opacity, filter',
+            color: green.has(word) ? '#88ca53' : 'inherit' }}>
+          {word}
+        </span>
+      ))}
+    </p>
+  )
+}
+
 function TiltCard({ children, style = {}, className = '', intensity = 12, perspective = 900 }) {
   const ref = useRef(null)
   const glowRef = useRef(null)
@@ -255,6 +313,7 @@ function ChannelInfo({ label, val, desc, T }) {
 
 function ContactChannels() {
   const T = useTheme()
+  const sectionRef = useRef(null)
   const beamContainerRef = useRef(null)
 
   const beamConnections = [
@@ -264,42 +323,8 @@ function ContactChannels() {
     { id: 'cnt-n-3', color: '#86efac', cx: -30, cy: -20 },
   ]
 
-  // ── blur-reveal + tilt ────────────────────────────────────
-  const cchContainerRef = useRef(null)
-  const cchTextRef      = useRef(null)
-  const cchWordsRef     = useRef([])
-  const CCH_TEXT  = "Choisissez le canal qui vous convient. WhatsApp est le plus rapide — on répond en moins de 2h."
-  const CCH_GREEN = new Set(['WhatsApp', 'rapide', '2h.'])
-
-  useEffect(() => {
-    const container = cchContainerRef.current
-    const textEl    = cchTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
-      const words = cchWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <section ref={cchContainerRef} style={{ padding: 'clamp(3rem,6vw,5rem) 5% clamp(2rem,4vw,3rem)', background: T.bgAlt }}>
+    <section ref={sectionRef} style={{ padding: 'clamp(3rem,6vw,5rem) 5% clamp(2rem,4vw,3rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* ── Header ── */}
@@ -310,29 +335,12 @@ function ContactChannels() {
               Comment nous <GreenUnderline><span className="text-gradient"><LetterReveal text="contacter" stagger={0.025} /></span></GreenUnderline>
             </h2>
           </BlurReveal>
-          {/* ── blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={cchTextRef}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {CCH_TEXT.split(' ').map((word, i) => (
-              <span key={i} ref={el => { cchWordsRef.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: CCH_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="Choisissez le canal qui vous convient. WhatsApp est le plus rapide — on répond en moins de 2h."
+            greenWords={['WhatsApp', 'rapide', '2h.']}
+            extraStyle={{ color: T.textSub }}
+          />
         </div>
 
         {/* ── Beam constellation ── */}
@@ -467,43 +475,9 @@ function FlagBadge({ code, primary }) {
 
 function GeoSection() {
   const T = useTheme()
-
-  // ── blur-reveal + tilt ────────────────────────────────────
-  const geoContainerRef = useRef(null)
-  const geoTextRef      = useRef(null)
-  const geoWordsRef     = useRef([])
-  const GEO_TEXT  = "Basés à Abidjan, on travaille 100% remote avec des clients partout en Afrique de l'Ouest et la diaspora."
-  const GEO_GREEN = new Set(['Abidjan,', '100%', 'remote', "l'Ouest", 'diaspora.'])
-
-  useEffect(() => {
-    const container = geoContainerRef.current
-    const textEl    = geoTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
-      const words = geoWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
+  const sectionRef = useRef(null)
   return (
-    <section ref={geoContainerRef} style={{ padding: '5rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+    <section ref={sectionRef} style={{ padding: '5rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .16 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ marginBottom: '2.5rem' }}>
@@ -513,30 +487,12 @@ function GeoSection() {
               Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
             </h2>
           </BlurReveal>
-          {/* ── blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={geoTextRef}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              marginTop: '.75rem',
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {GEO_TEXT.split(' ').map((word, i) => (
-              <span key={i} ref={el => { geoWordsRef.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: GEO_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="Basés à Abidjan, on travaille 100% remote avec des clients partout en Afrique de l'Ouest et la diaspora."
+            greenWords={['Abidjan,', 'remote', "l'Afrique", "l'Ouest", 'diaspora.']}
+            extraStyle={{ color: T.textSub, marginTop: '.75rem' }}
+          />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '.85rem', marginBottom: '2rem' }}>
@@ -555,27 +511,7 @@ function GeoSection() {
           ))}
         </div>
 
-        {/* Disponibilité */}
-        <BlurReveal delay={0.4}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.05)', border: '1px solid rgba(136,202,83,.15)' }}>
-            {[
-              { Icon: Clock,         label: 'Lun – Sam', val: '8h – 20h (GMT)' },
-              { Icon: MessageCircle, label: 'WhatsApp',  val: 'Réponse < 2h'   },
-              { Icon: Mail,          label: 'Email',     val: 'Réponse < 24h'  },
-              { Icon: Phone,         label: 'Appel',     val: 'Sur rendez-vous'},
-            ].map(({ Icon, label, val }) => (
-              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '.6rem', padding: '.5rem 1rem', borderRadius: 100, background: T.light ? 'rgba(255,255,255,.8)' : 'rgba(11,26,16,.6)', border: `1px solid ${T.border}` }}>
-                <div style={{ width: 28, height: 28, borderRadius: 8, background: 'rgba(136,202,83,.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  <Icon size={14} style={{ color: '#88ca53' }} />
-                </div>
-                <div>
-                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.08em' }}>{label}</div>
-                  <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain }}>{val}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </BlurReveal>
+        
       </div>
     </section>
   )
@@ -680,44 +616,11 @@ function ProcessContact() {
 function ProjectForm() {
   const T = useTheme()
   const ref = useRef(null)
+  const sectionRef = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', budget: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
-
-  // ── blur-reveal + tilt ────────────────────────────────────
-  const pfContainerRef = useRef(null)
-  const pfTextRef      = useRef(null)
-  const pfWordsRef     = useRef([])
-  const PF_TEXT  = "Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit."
-  const PF_GREEN = new Set(['formulaire', '24h', 'devis', 'gratuit.'])
-
-  useEffect(() => {
-    const container = pfContainerRef.current
-    const textEl    = pfTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
-      const words = pfWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
 
   const inputStyle = {
     width: '100%', padding: '.8rem .95rem', borderRadius: 10,
@@ -752,7 +655,7 @@ function ProjectForm() {
   }
 
   return (
-    <section ref={el => { ref.current = el; pfContainerRef.current = el }} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
+    <section ref={el => { ref.current = el; sectionRef.current = el }} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
 
         {/* ── Header ── */}
@@ -761,30 +664,13 @@ function ProjectForm() {
             <GhostTitle text="Décrivez votre projet" />
             Décrivez votre <GreenUnderline><span className="text-gradient"><LetterReveal text="projet" stagger={0.028} /></span></GreenUnderline>
           </h2>
-          {/* ── blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={pfTextRef}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {PF_TEXT.split(' ').map((word, i) => (
-              <span key={i} ref={el => { pfWordsRef.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: PF_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
         </BlurReveal>
+        <WordRevealP
+          sectionRef={sectionRef}
+          text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit."
+          greenWords={['formulaire', 'email', '24h', 'gratuit.']}
+          extraStyle={{ color: T.textSub, marginBottom: '2rem' }}
+        />
 
         {/* ── Form card — TiltCard ── */}
         <BlurReveal delay={0.15}>

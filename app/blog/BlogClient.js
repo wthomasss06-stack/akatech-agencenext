@@ -52,6 +52,64 @@ function LetterReveal({ text, style = {}, stagger = 0.028 }) {
   )
 }
 
+/* ─── WordRevealP — scroll-reveal mot par mot + tilt ────── */
+function useWordReveal(sectionRef, textRef, wordsRef) {
+  useEffect(() => {
+    const container = sectionRef.current
+    const textEl    = textRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const progress = Math.max(0, Math.min(1, (winH - rect.top) / (winH + container.offsetHeight)))
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.2))
+      const words = wordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, (progress - 0.15) / (0.65 - 0.15)))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.78) / 0.24))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+}
+
+function WordRevealP({ text, greenWords = [], sectionRef, extraStyle = {} }) {
+  const textRef  = useRef(null)
+  const wordsRef = useRef([])
+  const green    = new Set(greenWords)
+  useWordReveal(sectionRef, textRef, wordsRef)
+  return (
+    <p ref={textRef} style={{
+      fontFamily: "'JetBrains Mono',monospace",
+      fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+      fontWeight: 700,
+      lineHeight: 1.32,
+      paddingLeft: 'var(--body-indent)',
+      paddingRight: 'var(--body-indent)',
+      transformOrigin: '0% 50%',
+      transition: 'transform .05s linear',
+      margin: 0,
+      ...extraStyle,
+    }}>
+      {text.split(' ').map((word, i) => (
+        <span key={i} ref={el => { wordsRef.current[i] = el }}
+          style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08,
+            filter: 'blur(9px)', willChange: 'opacity, filter',
+            color: green.has(word) ? '#88ca53' : 'inherit' }}>
+          {word}
+        </span>
+      ))}
+    </p>
+  )
+}
+
 function TiltCard({ children, style = {}, className = '', intensity = 12, perspective = 900 }) {
   const ref = useRef(null)
   const glowRef = useRef(null)
@@ -616,45 +674,12 @@ function BlogGrid() {
 // ═══════════════════════════════════════════════════════════════
 function Newsletter() {
   const T = useTheme()
+  const sectionRef = useRef(null)
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
 
-  // ── blur-reveal + tilt ────────────────────────────────────
-  const nlContainerRef = useRef(null)
-  const nlTextRef      = useRef(null)
-  const nlWordsRef     = useRef([])
-  const NL_TEXT  = "Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail."
-  const NL_GREEN = new Set(['digitaux,', 'technologies', 'ivoiriens', 'boîte', 'mail.'])
-
-  useEffect(() => {
-    const container = nlContainerRef.current
-    const textEl    = nlTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.25, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.4))
-      const words = nlWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <section ref={nlContainerRef} style={{ padding: '5rem 5%', background: T.bgAlt }}>
+    <section ref={sectionRef} style={{ padding: '5rem 5%', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <BlurReveal>
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
@@ -664,30 +689,13 @@ function Newsletter() {
             <GhostTitle text="Restez informé des dernières tendances" />
             Restez informé des <GreenUnderline><span className="text-gradient"><LetterReveal text="dernières tendances" stagger={0.02} /></span></GreenUnderline>
           </h2>
-          {/* ── blur-reveal mot par mot + tilt ── */}
-          <p
-            ref={nlTextRef}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              color: T.textSub,
-              lineHeight: 1.32,
-              marginBottom: '2rem',
-              paddingLeft: 'var(--body-indent)',
-              maxWidth: 860,
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-              opacity: 0.08,
-            }}
-          >
-            {NL_TEXT.split(' ').map((word, i) => (
-              <span key={i} ref={el => { nlWordsRef.current[i] = el }}
-                style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08, filter: 'blur(9px)', willChange: 'opacity, filter', color: NL_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
-                {word}
-              </span>
-            ))}
-          </p>
+        </BlurReveal>
+        <WordRevealP
+          sectionRef={sectionRef}
+          text="Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail."
+          greenWords={['digitaux,', 'technologies', 'ivoiriens', 'mail.']}
+          extraStyle={{ color: T.textSub, marginBottom: '2rem' }}
+        />
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
               style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
@@ -705,7 +713,6 @@ function Newsletter() {
               </button>
             </div>
           )}
-        </BlurReveal>
       </div>
     </section>
   )

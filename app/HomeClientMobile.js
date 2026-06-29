@@ -268,13 +268,29 @@ function Hero() {
         ref={layerMidRef}
         style={{ position: 'relative', zIndex: 10, width: '100%', padding: '0 5%', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 80px)', paddingBottom: '5rem', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}
       >
-        {/* Sous-titre slide */}
+        {/* Tag + titre + accent + sub */}
         <AnimatePresence mode="wait">
-          <motion.div key={`sub-${idx}`}
+          <motion.div key={`slide-${idx}`}
             initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
             animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
             exit={{ opacity: 0, y: -10, filter: 'blur(2px)' }}
             transition={{ duration: .5, ease: [.22,1,.36,1] }}>
+
+            {/* Tag */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.4rem', backdropFilter: 'blur(8px)' }}>
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
+              <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
+            </div>
+
+            {/* H1 + accent cursif */}
+            <h1 style={{ fontSize: 'clamp(2rem,9vw,3.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.4rem' }}>
+              {slide.title}
+              <span style={{ display: 'block', fontFamily: "'Dancing Script',cursive", color: '#88ca53', letterSpacing: '-.02em', marginTop: '.1em', marginBottom: '1.2rem' }}>
+                <GreenUnderline>{slide.accent}</GreenUnderline>
+              </span>
+            </h1>
+
+            {/* Sub */}
             <p style={{ fontSize: 'clamp(.85rem,3.5vw,.97rem)', color: 'rgba(255,255,255,.58)', lineHeight: 1.7, maxWidth: 480, margin: '0 auto 2rem' }}>
               {slide.sub}
             </p>
@@ -288,7 +304,9 @@ function Hero() {
           <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.95rem', padding: '.95rem 2rem', width: '100%', maxWidth: 340, justifyContent: 'center' }}>
             Démarrer mon projet <ArrowRight size={15} />
           </a>
-          
+          <Link href="/projects" className="btn-ghost" style={{ fontSize: '.9rem', padding: '.9rem 2rem', width: '100%', maxWidth: 340, justifyContent: 'center' }}>
+            Voir les réalisations
+          </Link>
         </motion.div>
 
         {/* Trust badges */}
