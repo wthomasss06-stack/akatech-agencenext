@@ -6,6 +6,7 @@ import {
   useTransform,
   useMotionTemplate,
   AnimatePresence,
+  useInView,
 } from 'framer-motion'
 import { Code, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -235,31 +236,6 @@ function StackedRealisations() {
   return (
     <section style={{ background: T.bg, paddingBottom: '6rem' }}>
 
-      {/* En-tête section */}
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '4rem 5% 2rem' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}
-        >
-          <div>
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', marginBottom: '.4rem' }}>
-              // SCROLL POUR PARCOURIR
-            </p>
-            <h2 className="section-title-big" style={{ position: 'relative', fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
-              <GhostTitle text="RÉALISATIONS, UN PAR UN." />
-              {PROJECTS.length} réalisations, <GreenUnderline><span className="text-gradient">un par un.</span></GreenUnderline>
-            </h2>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.5rem 1rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: '1px solid rgba(136,202,83,.2)' }}>
-            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
-              ↓ Scroll pour découvrir
-            </span>
-          </div>
-        </motion.div>
-      </div>
-
       {/* Zone de scroll — hauteur = N cartes × 100vh */}
       <div
         ref={containerRef}
@@ -288,17 +264,68 @@ function StackedRealisations() {
    CTA FINAL
 ──────────────────────────────────────────────── */
 /* ────────────────────────────────────────────────
+   INTRO PROJECTS MOBILE
+──────────────────────────────────────────────── */
+function ProjectsIntro() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  const TEXT = "Ci‑dessous : des projets réalisés pour des PME, startups et créateurs. Vous trouverez les objectifs initiaux, les technologies mises en œuvre et les résultats obtenus (augmentation du trafic, conversions, productivité). Chaque réalisation est le fruit d’une démarche centrée utilisateur et d’un développement sur mesure."
+  const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'objectifs', 'technologies', 'conversions,', 'productivité).', 'utilisateur', 'mesure.'])
+
+  return (
+    <section ref={ref} style={{ padding: '6rem 5% 4rem', background: T.bg, position: 'relative' }}>
+      <div style={{
+        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
+        width: '80vw', height: '80vw', maxWidth: 500, maxHeight: 500, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(136,202,83,.045) 0%, transparent 65%)',
+        pointerEvents: 'none',
+      }} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <motion.h2 className="section-title-big" initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
+          style={{
+            position: 'relative',
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800,
+            color: T.textMain, letterSpacing: '-.03em',
+            marginBottom: '1.5rem',
+          }}>
+          <GhostTitle text="VOTRE PROJET, NOTRE PROCHAIN SUCCÈS ?" />
+          Votre projet, <span className="text-gradient">notre prochain succès&nbsp;?</span>
+        </motion.h2>
+
+        <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+          style={{
+            fontFamily: "'JetBrains Mono',monospace",
+            fontSize: 'clamp(1rem,3.6vw,1.2rem)',
+            fontWeight: 700, lineHeight: 1.5,
+            color: T.textMain, margin: 0,
+          }}>
+          {TEXT.split(' ').map((word, i) => (
+            <span key={i} style={{ color: greenWords.has(word.replace(/[().,;?!]/g, '')) || greenWords.has(word) ? '#88ca53' : 'inherit' }}>
+              {word}{' '}
+            </span>
+          ))}
+        </motion.p>
+      </div>
+    </section>
+  )
+}
+
+/* ────────────────────────────────────────────────
    PAGE EXPORT
 ──────────────────────────────────────────────── */
 export default function RealisationsPage() {
   return (
     <div>
       <HeroRealisations />
+      <ProjectsIntro />
       <StackedRealisations />
 
       <PageCTA
         message="Votre réalisation peut être la prochaine ici. Partagez votre idée — devis gratuit, sans engagement."
-        cta="Démarrer ma réalisation"
+        cta="Parlons de votre projet"
       />
     </div>
   )

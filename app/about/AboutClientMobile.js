@@ -187,11 +187,11 @@ function FounderSection() {
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg, position: 'relative' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
-        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
+        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1.2rem' }}>
           <GhostTitle text="MISSION & VISION" />
           Mission &  <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
         </h2>
-        <p style={{ fontSize: '.95rem', color: T.textMain, lineHeight: 1.85, marginBottom: '.8rem' }}>
+        <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.2rem' }}>
           <strong>AKATech</strong> construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus.
         </p>
         <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.85, marginBottom: '.8rem' }}>
@@ -237,7 +237,7 @@ function TimelineSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="L'ÉVOLUTION D'AKATECH" />
             L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
           </h2>
@@ -270,7 +270,7 @@ function ValuesSection() {
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
           <GhostTitle text="CE QUI NOUS DISTINGUE" />
           Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
         </h2>
@@ -300,11 +300,11 @@ function SkillsSection() {
   return (
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
+        <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
           <GhostTitle text="LES TECHNOLOGIES QUI FONT LA DIFFÉRENCE" />
           Les technologies qui font <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
         </h2>
-        <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginBottom: '1.5rem' }}>
+        <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.5rem' }}>
           J'utilise les meilleures technologies modernes — sélectionnées pour leur performance, leur fiabilité et leur adéquation avec vos besoins réels.
         </p>
       </motion.div>
@@ -336,11 +336,11 @@ function RayonSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.6rem,5vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.8rem' }}>
             <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
             Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
           </h2>
-          <p style={{ fontSize: '.88rem', color: T.textSub, lineHeight: 1.75, marginBottom: '1.2rem' }}>
+          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.2rem' }}>
             Basés à <strong style={{ color: T.textMain }}>Abidjan</strong>, nous travaillons à distance avec des entrepreneurs à travers l'Afrique de l'Ouest et la diaspora.
           </p>
           <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap', marginBottom: '1.8rem' }}>

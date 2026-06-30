@@ -1,6 +1,6 @@
 'use client'
 import { useRef, useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { Code, Check, Globe, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
@@ -360,17 +360,145 @@ function StackedRealisations() {
 }
 
 /* ────────────────────────────────────────────────
+   INTRO PROJECTS — Scroll reveal word by word (effet A propos de AKATech)
+──────────────────────────────────────────────── */
+function ProjectsIntro() {
+  const T = useTheme()
+  const containerRef = useRef(null)
+  const textRef      = useRef(null)
+  const wordsRef     = useRef([])
+
+  const TEXT = "Ci‑dessous : des projets réalisés pour des PME, startups et créateurs. Vous trouverez les objectifs initiaux, les technologies mises en œuvre et les résultats obtenus (augmentation du trafic, conversions, productivité). Chaque réalisation est le fruit d’une démarche centrée utilisateur et d’un développement sur mesure."
+
+  useEffect(() => {
+    const container = containerRef.current
+    const textEl    = textRef.current
+    if (!container || !textEl) return
+
+    const onScroll = () => {
+      const rect        = container.getBoundingClientRect()
+      const winH        = window.innerHeight
+      const sectionH    = container.offsetHeight
+      const totalTravel = winH + sectionH
+      const traveled    = winH - rect.top
+      const progress    = Math.max(0, Math.min(1, traveled / totalTravel))
+
+      // Tilt : 3deg → 0deg, fini à progress 0.35
+      const rotDeg = 3 * (1 - Math.min(progress / 0.35, 1))
+      textEl.style.transform = `rotate(${rotDeg}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.6 + progress * 0.8))
+
+      // Mots : démarre à 0.10, tous révélés à 0.65 max
+      const words  = wordsRef.current
+      if (!words.length) return
+      const wStart = 0.10
+      const wEnd   = 0.65
+      const wProg  = Math.max(0, Math.min(1, (progress - wStart) / (wEnd - wStart)))
+
+      words.forEach((span, i) => {
+        if (!span) return
+        const threshold = i / (words.length - 1)
+        const local     = Math.max(0, Math.min(1, (wProg - threshold * 0.82) / 0.22))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  return (
+    <section
+      ref={containerRef}
+      style={{
+        padding: '12rem 5%',
+        minHeight: '120vh',
+        display: 'flex',
+        alignItems: 'center',
+        background: T.bg,
+        position: 'relative',
+      }}
+    >
+      {/* Décoration lumineuse subtile */}
+      <div style={{
+        position: 'absolute',
+        top: '50%', left: '50%',
+        transform: 'translate(-50%,-50%)',
+        width: '60vw', height: '60vw',
+        maxWidth: 700, maxHeight: 700,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(136,202,83,.045) 0%, transparent 65%)',
+        pointerEvents: 'none',
+      }} />
+
+      <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        {/* Titre de section */}
+        <h2 className="section-title-big" style={{
+          position: 'relative',
+          fontSize: 'clamp(2.8rem,5.5vw,4.4rem)',
+          color: T.textMain,
+          marginBottom: '2.5rem',
+        }}>
+          <GhostTitle text="VOTRE PROJET, NOTRE PROCHAIN SUCCÈS ?" />
+          Votre projet, <GreenUnderline><span className="text-gradient">notre prochain succès&nbsp;?</span></GreenUnderline>
+        </h2>
+
+        {/* Texte principal avec effet blur-reveal */}
+        <p
+          ref={textRef}
+          style={{
+            fontFamily: "'JetBrains Mono',monospace",
+            fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+            fontWeight: 700,
+            lineHeight: 1.32,
+            color: T.textMain,
+            transformOrigin: '0% 50%',
+            transition: 'transform .05s linear',
+            margin: 0,
+            paddingLeft: 'var(--body-indent)',
+            paddingRight: 'var(--body-indent)',
+          }}
+        >
+          {(() => {
+            const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'objectifs', 'technologies', 'conversions,', 'productivité).', 'utilisateur', 'mesure.'])
+            return TEXT.split(' ').map((word, i) => (
+              <span
+                key={i}
+                ref={el => { wordsRef.current[i] = el }}
+                style={{
+                  display: 'inline-block',
+                  marginRight: '0.28em',
+                  opacity: 0.08,
+                  filter: 'blur(9px)',
+                  willChange: 'opacity, filter',
+                  color: greenWords.has(word.replace(/[().,;?!]/g, '')) || greenWords.has(word) ? '#88ca53' : 'inherit',
+                }}
+              >
+                {word}
+              </span>
+            ))
+          })()}
+        </p>
+      </div>
+    </section>
+  )
+}
+
+/* ────────────────────────────────────────────────
    PAGE EXPORT
 ──────────────────────────────────────────────── */
 export default function RealisationsPage() {
   return (
     <div>
       <HeroRealisations />
+      <ProjectsIntro />
       <StackedRealisations />
 
       <PageCTA
         message="Votre réalisation peut être la prochaine ici. Partagez votre idée — devis gratuit, sans engagement."
-        cta="Démarrer ma réalisation"
+        cta="Parlons de votre projet"
       />
     </div>
   )
