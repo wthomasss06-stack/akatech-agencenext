@@ -1213,6 +1213,7 @@ function ArchiveTunnelSection() {
       <div style={{ padding: '5rem 5% 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
+            <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
             Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
           </h2>
         </div>

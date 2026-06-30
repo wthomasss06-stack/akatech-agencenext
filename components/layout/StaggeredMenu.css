@@ -293,6 +293,7 @@
   border-color: #5f9137;
   background: #5f9137;
   color: #f0f5ec;
+  transform: rotate(50deg);
 }
 
 /* Numéros ordinaux */

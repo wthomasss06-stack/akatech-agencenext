@@ -534,6 +534,7 @@ body.light-mode .cta-circle-btn:hover .cta-circle-arrow {
   border-color: #5f9137;
   background: #5f9137;
   color: #f0f5ec;
+  transform: rotate(50deg);
 }
 .cta-circle-btn:hover .cta-circle-label { color: var(--g1); }
 body.light-mode .cta-circle-btn:hover .cta-circle-label { color: #5f9137; }
