@@ -204,11 +204,23 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                 )}
               </div>
 
-              <p style={{ fontSize: '.9rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.2rem' }}>{project.desc}</p>
+              <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.2rem' }}>{project.desc}</p>
 
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.4rem' }}>
+              {/* Stack technique */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
                 {(project.tech || []).map(t => (
-                  <span key={t} style={{ padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
+                  <span key={t} style={{
+                    padding: '.3rem .85rem',
+                    borderRadius: 100,
+                    background: 'rgba(136,202,83,.1)',
+                    border: '1px solid rgba(136,202,83,.35)',
+                    fontFamily: "'JetBrains Mono',monospace",
+                    fontSize: '.72rem',
+                    fontWeight: 700,
+                    color: '#88ca53',
+                    letterSpacing: '.04em',
+                    whiteSpace: 'nowrap',
+                  }}>
                     {t}
                   </span>
                 ))}

@@ -71,6 +71,18 @@ function ServicesList() {
             <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
             Choisissez votre <GreenUnderline><span className="text-gradient">solution</span></GreenUnderline>
           </h2>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginTop: '1rem' }}>
+            {'De la '}
+            <span style={{ color: '#88ca53' }}>consultation</span>
+            {' au '}
+            <span style={{ color: '#88ca53' }}>déploiement</span>
+            {', chaque service est conçu pour répondre aux réalités du marché ivoirien — '}
+            <span style={{ color: '#88ca53' }}>rapide</span>
+            {', '}
+            <span style={{ color: '#88ca53' }}>efficace</span>
+            {', rentable.'}
+          </motion.p>
         </motion.div>
 
         {/* Tabs */}
@@ -159,6 +171,20 @@ function TechSection() {
             <GhostTitle text="DES TECHNOLOGIES ÉPROUVÉES" />
             Des technologies <GreenUnderline><span className="text-gradient">éprouvées</span></GreenUnderline>
           </h2>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginTop: '1rem' }}>
+            {'Des outils '}
+            <span style={{ color: '#88ca53' }}>modernes</span>
+            {' et '}
+            <span style={{ color: '#88ca53' }}>sélectionnés</span>
+            {' pour leur performance — '}
+            <span style={{ color: '#88ca53' }}>React</span>
+            {', '}
+            <span style={{ color: '#88ca53' }}>Next.js</span>
+            {', '}
+            <span style={{ color: '#88ca53' }}>Django</span>
+            {' et bien plus pour votre projet.'}
+          </motion.p>
         </motion.div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '1rem' }}>
           {TECH_STACK.map(({ cat, items }, i) => (

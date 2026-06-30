@@ -135,6 +135,26 @@ function BlogGrid() {
   return (
     <section ref={ref} style={{ padding: '4rem 5%', background: T.bg }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        {/* Section header */}
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+            <GhostTitle text="TOUS LES ARTICLES" />
+            Tous les <GreenUnderline><span className="text-gradient">articles</span></GreenUnderline>
+          </h2>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain }}>
+            {'Stratégie '}
+            <span style={{ color: '#88ca53' }}>digitale</span>
+            {', '}
+            <span style={{ color: '#88ca53' }}>SEO</span>
+            {', '}
+            <span style={{ color: '#88ca53' }}>e-commerce</span>
+            {' — des contenus concrets pour les '}
+            <span style={{ color: '#88ca53' }}>entrepreneurs</span>
+            {' ivoiriens.'}
+          </motion.p>
+        </motion.div>
+
         {/* Filters */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'center', marginBottom: '3rem', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', gap: '.5rem', flexWrap: 'wrap' }}>

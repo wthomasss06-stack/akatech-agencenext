@@ -209,6 +209,18 @@ function PricingTabs() {
 
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
+        {/* Intro */}
+        <motion.p initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .05 }}
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, textAlign: 'center', marginBottom: '1.8rem' }}>
+          {'Pas de '}
+          <span style={{ color: '#88ca53' }}>frais cachés</span>
+          {'. Des prix '}
+          <span style={{ color: '#88ca53' }}>honnêtes</span>
+          {' adaptés au marché africain — devis '}
+          <span style={{ color: '#88ca53' }}>gratuit</span>
+          {' et sans engagement.'}
+        </motion.p>
+
         {/* Tabs */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
           style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
@@ -452,6 +464,16 @@ function FAQSection() {
             <GhostTitle text="QUESTIONS FRÉQUENTES" />
             Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
           </h2>
+          <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginTop: '1rem' }}>
+            {'Toutes les réponses sur nos '}
+            <span style={{ color: '#88ca53' }}>tarifs</span>
+            {', nos '}
+            <span style={{ color: '#88ca53' }}>délais</span>
+            {' et notre processus de '}
+            <span style={{ color: '#88ca53' }}>livraison</span>
+            {'.'}
+          </motion.p>
         </motion.div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>

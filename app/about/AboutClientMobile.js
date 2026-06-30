@@ -194,12 +194,24 @@ function FounderSection() {
         <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.2rem' }}>
           <strong>AKATech</strong> construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus.
         </p>
-        <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.85, marginBottom: '.8rem' }}>
-          Nous aidons les entreprises à transformer leur présence en ligne en véritable levier de croissance, avec des produits web clairs, performants et adaptés aux usages locaux.
-        </p>
-        <p style={{ fontSize: '.9rem', color: T.textSub, lineHeight: 1.85, marginBottom: '2rem' }}>
-          Notre approche repose sur la <strong style={{ color: T.textMain }}>fiabilité</strong>, la <strong style={{ color: T.textMain }}>simplicité</strong> et l'<strong style={{ color: T.textMain }}>impact concret</strong>.
-        </p>
+        <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .08 }}
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1rem' }}>
+          {'Nous aidons les entreprises à transformer leur présence en ligne en véritable levier de '}
+          <span style={{ color: '#88ca53' }}>croissance</span>
+          {', avec des produits web clairs, '}
+          <span style={{ color: '#88ca53' }}>performants</span>
+          {" et adaptés aux usages locaux."}
+        </motion.p>
+        <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .14 }}
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '2rem' }}>
+          {'Notre approche repose sur la '}
+          <span style={{ color: '#88ca53' }}>fiabilité</span>
+          {', la '}
+          <span style={{ color: '#88ca53' }}>simplicité</span>
+          {" et l'"}
+          <span style={{ color: '#88ca53' }}>impact concret</span>
+          {'.'}
+        </motion.p>
 
         {/* Photo + identité + portfolio */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.1rem', borderRadius: 14, background: 'rgba(136,202,83,.06)', border: '1px solid rgba(136,202,83,.2)', marginBottom: '1.5rem' }}>
