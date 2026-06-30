@@ -153,65 +153,95 @@ const TIMELINE = [
   { year: '2025', title: "Aujourd'hui", desc: "+18 projets livrés, 100% de clients satisfaits. L'agence continue de grandir et d'innover." },
 ]
 
-// ── 1. HERO ──────────────────────────────────────────────────
+
+/* ────────────────────────────────────────────────
+   HERO
+──────────────────────────────────────────────── */
 function HeroAbout() {
   const T = useTheme()
+  const layerBgRef   = useRef(null)
+  const layerMidRef  = useRef(null)
+  const layerForeRef = useRef(null)
+
+  useEffect(() => {
+    const onMouse = (e) => {
+      const x = (e.clientX - window.innerWidth  / 2) / (window.innerWidth  / 2)
+      const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2)
+      const rX = y * -5, rY = x * 5
+      const apply = (el, sp) => { if (el) el.style.transform = `translate3d(${x*50*sp}px,${y*50*sp}px,0) rotateX(${rX}deg) rotateY(${rY}deg)` }
+      apply(layerBgRef.current, 0.2); apply(layerMidRef.current, 0.5); apply(layerForeRef.current, 0.8)
+    }
+    window.addEventListener('mousemove', onMouse)
+    return () => window.removeEventListener('mousemove', onMouse)
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => {
+      const s = window.pageYOffset
+      if (layerBgRef.current) { layerBgRef.current.style.transform = `scale(${1 + s * 0.0005}) translateY(${s * 0.2}px)`; layerBgRef.current.style.filter = `blur(${Math.min(s / 60, 12)}px)` }
+      if (layerMidRef.current) { layerMidRef.current.style.opacity = Math.max(0, 1 - s / 700); layerMidRef.current.style.transform = `translateY(${s * 0.4}px)`; layerMidRef.current.style.filter = `blur(${s / 100}px)` }
+      if (layerForeRef.current) { layerForeRef.current.style.transform = `translateY(${-s * 0.96}px)`; layerForeRef.current.style.opacity = Math.max(0, 1 - s / 400) }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <section style={{ height: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', background: T.bg }}>
-      <style>{`
-        .hero-about-grid {
-          max-width: 1200px;
-          margin: 0 auto;
-          width: 100%;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          align-items: center;
-        }
-        .hero-title-block  { grid-column: 1; }
-        .hero-photos-block { grid-column: 2; }
-        @media (max-width: 768px) {
-          .hero-about-grid { display: flex; flex-direction: column; gap: 2rem; }
-          .hero-title-block  { order: 1; }
-          .hero-photos-block { order: 2; }
-          .hero-photo-grid   { grid-template-rows: 220px 160px !important; }
-        }
-      `}</style>
-      <div style={{ position: 'absolute', inset: '-8%', zIndex: 1 }}>
+    <section style={{ height: '100vh', minHeight: 640, position: 'relative', overflow: 'hidden', background: '#060e09' }}>
+      <div ref={layerBgRef} style={{ position: 'absolute', inset: '-8%', zIndex: 1, willChange: 'transform, filter', transition: 'transform .1s ease-out' }}>
         <AuroraHero labels={[]} />
-        <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, transparent 20%, ${T.bg} 100%)`, opacity: T.light ? 1 : .95 }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(6,14,9,.95) 100%)' }} />
       </div>
-      <div style={{ position: 'relative', zIndex: 10, width: '100%', padding: '9rem 5% 6rem' }}>
-        <div className="hero-about-grid">
-          <motion.div className="hero-title-block"
-            initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-            <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,4.5vw,3.5rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
-              <GhostTitle text="VOTRE CROISSANCE DIGITALE, C'EST NOTRE MISSION." />
-              Votre croissance digitale,<br />
-              <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
-            </h1>
-          </motion.div>
-          <motion.div className="hero-photos-block"
-            initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: .7, delay: .2 }}>
-            <div className="hero-photo-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '280px 200px', gap: '1rem' }}>
-              <motion.div whileHover={{ scale: 1.02 }} style={{ gridRow: '1 / 3', borderRadius: 16, overflow: 'hidden', border: '1px solid rgba(136,202,83,.2)', boxShadow: '8px 8px 32px rgba(0,0,0,.3)' }}>
-                <LazyImg src="/images/about-1.webp" alt="AKATech Team" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Users size={32} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.03 }} style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(136,202,83,.15)', boxShadow: '6px 6px 24px rgba(0,0,0,.2)' }}>
-                <LazyImg src="/images/about-2.webp" alt="Bureau" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Monitor size={28} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.03 }} style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(136,202,83,.15)', boxShadow: '6px 6px 24px rgba(0,0,0,.2)' }}>
-                <LazyImg src="/images/about-3.webp" alt="Développement" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Code size={28} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
-              </motion.div>
-            </div>
+
+      {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
+      <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
+          <GhostTitle text="AKATECH" />
+          AKATECH
+          
+        </motion.h1>
+
+        <div className="hr-side">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
+            <p className="hr-kicker">Votre croissance digitale</p>
+            <p className="hr-desc"> c'est notre mission.</p>
           </motion.div>
         </div>
       </div>
+
+      <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
+        {[{left:'8%',top:'25%',s:4,op:.18,dur:3.8,dy:0},{left:'22%',top:'68%',s:3,op:.11,dur:5.1,dy:1.2},{left:'60%',top:'22%',s:4,op:.20,dur:4.4,dy:0.6},{left:'75%',top:'70%',s:3,op:.09,dur:6.2,dy:1.8},{left:'88%',top:'15%',s:4,op:.15,dur:3.2,dy:0.3}].map((p,i) => (
+          <motion.div key={i} style={{ position:'absolute', width:p.s, height:p.s, borderRadius:'50%', background:'#88ca53', left:p.left, top:p.top, opacity:p.op }}
+            animate={{ y:[0,-18,0] }} transition={{ duration:p.dur, repeat:Infinity, ease:'easeInOut', delay:p.dy }} />
+        ))}
+      </div>
+
+      <style>{`
+        .hr-row { position: relative; z-index: 10; height: 100%; }
+        .hr-title {
+          position: absolute; left: 8vw; bottom: 4.5rem; margin: 0;
+          font-family: 'JetBrains Mono', monospace; font-weight: 800;
+          font-size: clamp(4.5rem, 13vw, 15rem); line-height: .92; letter-spacing: -.04em;
+          color: rgba(255,255,255,.95);
+        }
+        .hr-star {
+          display: inline-block; position: relative; top: -.5em;
+          margin-left: .15em; font-size: .3em; color: #88ca53;
+        }
+        .hr-side {
+          position: absolute; right: 8vw; top: 0; bottom: 0;
+          margin: auto 0; max-width: 360px; height: fit-content;
+        }
+        .hr-kicker {
+          font-family: 'JetBrains Mono', monospace; font-size: .62rem; font-weight: 700;
+          color: #88ca53; letter-spacing: .3em; text-transform: uppercase; margin: 0 0 .9rem;
+        }
+        .hr-desc { font-size: .95rem; color: rgba(255,255,255,.6); line-height: 1.7; margin: 0; }
+      `}</style>
     </section>
   )
 }
+
 
 // ── ABOUT STATS SLIDE AUTO (miroir exact de App.jsx) ─────────
 const ABOUT_STATS = [

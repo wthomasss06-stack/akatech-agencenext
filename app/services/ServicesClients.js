@@ -44,31 +44,94 @@ const TECH_STACK = [
   { cat: 'Outils', items: ['Git', 'VS Code','Vercel'] },
 ]
 
+/* ────────────────────────────────────────────────
+   HERO
+──────────────────────────────────────────────── */
 function HeroServices() {
   const T = useTheme()
+  const layerBgRef   = useRef(null)
+  const layerMidRef  = useRef(null)
+  const layerForeRef = useRef(null)
+
+  useEffect(() => {
+    const onMouse = (e) => {
+      const x = (e.clientX - window.innerWidth  / 2) / (window.innerWidth  / 2)
+      const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2)
+      const rX = y * -5, rY = x * 5
+      const apply = (el, sp) => { if (el) el.style.transform = `translate3d(${x*50*sp}px,${y*50*sp}px,0) rotateX(${rX}deg) rotateY(${rY}deg)` }
+      apply(layerBgRef.current, 0.2); apply(layerMidRef.current, 0.5); apply(layerForeRef.current, 0.8)
+    }
+    window.addEventListener('mousemove', onMouse)
+    return () => window.removeEventListener('mousemove', onMouse)
+  }, [])
+
+  useEffect(() => {
+    const onScroll = () => {
+      const s = window.pageYOffset
+      if (layerBgRef.current) { layerBgRef.current.style.transform = `scale(${1 + s * 0.0005}) translateY(${s * 0.2}px)`; layerBgRef.current.style.filter = `blur(${Math.min(s / 60, 12)}px)` }
+      if (layerMidRef.current) { layerMidRef.current.style.opacity = Math.max(0, 1 - s / 700); layerMidRef.current.style.transform = `translateY(${s * 0.4}px)`; layerMidRef.current.style.filter = `blur(${s / 100}px)` }
+      if (layerForeRef.current) { layerForeRef.current.style.transform = `translateY(${-s * 0.96}px)`; layerForeRef.current.style.opacity = Math.max(0, 1 - s / 400) }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   return (
-    <section style={{ height: '100vh', minHeight: 640, width: '100%', background: '#060e09', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
-      <AuroraHero labels={[]} />
-      <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '0 5%' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="DES SOLUTIONS WEB QUI TRAVAILLENT POUR VOUS" />
-            Des solutions web qui{' '}
-            <GreenUnderline><span className="text-gradient">travaillent pour vous</span></GreenUnderline>
-          </h1>
-          <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 620, margin: '0 auto 2.5rem' }}>
-            De la consultation au déploiement, chaque service est conçu pour répondre aux réalités du marché ivoirien — rapide, efficace, rentable.
-          </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
-            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem' }}>
-              Devis gratuit <MessageCircle size={16} />
-            </a>
-            <a href="#services-list" className="btn-ghost" style={{ fontSize: '1rem' }}>
-              Voir les services
-            </a>
-          </div>
-        </motion.div>
+    <section style={{ height: '100vh', minHeight: 640, position: 'relative', overflow: 'hidden', background: '#060e09' }}>
+      <div ref={layerBgRef} style={{ position: 'absolute', inset: '-8%', zIndex: 1, willChange: 'transform, filter', transition: 'transform .1s ease-out' }}>
+        <AuroraHero labels={[]} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(6,14,9,.95) 100%)' }} />
       </div>
+
+      {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
+      <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
+          <GhostTitle text="SERVICES" />
+          SERVICES
+          
+        </motion.h1>
+
+        <div className="hr-side">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
+            <p className="hr-kicker">De la consultation au déploiement</p>
+            <p className="hr-desc">,chaque service est conçu pour répondre aux réalités du marché ivoirien — rapide, efficace, rentable.</p>
+          </motion.div>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
+            
+            
+          </div>
+        </div>
+      </div>
+
+      <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
+        {[{left:'8%',top:'25%',s:4,op:.18,dur:3.8,dy:0},{left:'22%',top:'68%',s:3,op:.11,dur:5.1,dy:1.2},{left:'60%',top:'22%',s:4,op:.20,dur:4.4,dy:0.6},{left:'75%',top:'70%',s:3,op:.09,dur:6.2,dy:1.8},{left:'88%',top:'15%',s:4,op:.15,dur:3.2,dy:0.3}].map((p,i) => (
+          <motion.div key={i} style={{ position:'absolute', width:p.s, height:p.s, borderRadius:'50%', background:'#88ca53', left:p.left, top:p.top, opacity:p.op }}
+            animate={{ y:[0,-18,0] }} transition={{ duration:p.dur, repeat:Infinity, ease:'easeInOut', delay:p.dy }} />
+        ))}
+      </div>
+
+      <style>{`
+        .hr-row { position: relative; z-index: 10; height: 100%; }
+        .hr-title {
+          position: absolute; left: 8vw; bottom: 4.5rem; margin: 0;
+          font-family: 'JetBrains Mono', monospace; font-weight: 800;
+          font-size: clamp(4.5rem, 13vw, 15rem); line-height: .92; letter-spacing: -.04em;
+          color: rgba(255,255,255,.95);
+        }
+        .hr-star {
+          display: inline-block; position: relative; top: -.5em;
+          margin-left: .15em; font-size: .3em; color: #88ca53;
+        }
+        .hr-side {
+          position: absolute; right: 8vw; top: 0; bottom: 0;
+          margin: auto 0; max-width: 360px; height: fit-content;
+        }
+        .hr-kicker {
+          font-family: 'JetBrains Mono', monospace; font-size: .62rem; font-weight: 700;
+          color: #88ca53; letter-spacing: .3em; text-transform: uppercase; margin: 0 0 .9rem;
+        }
+        .hr-desc { font-size: .95rem; color: rgba(255,255,255,.6); line-height: 1.7; margin: 0; }
+      `}</style>
     </section>
   )
 }

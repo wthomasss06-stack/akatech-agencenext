@@ -212,9 +212,9 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections, animKey = 'beam'
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ── HERO ─────────────────────────────────────────────────────
-// ═══════════════════════════════════════════════════════════════
+/* ────────────────────────────────────────────────
+   HERO
+──────────────────────────────────────────────── */
 function HeroBlog() {
   const T = useTheme()
   const layerBgRef   = useRef(null)
@@ -245,32 +245,61 @@ function HeroBlog() {
   }, [])
 
   return (
-    <section style={{ height: '100vh', minHeight: 640, position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#060e09' }}>
+    <section style={{ height: '100vh', minHeight: 640, position: 'relative', overflow: 'hidden', background: '#060e09' }}>
       <div ref={layerBgRef} style={{ position: 'absolute', inset: '-8%', zIndex: 1, willChange: 'transform, filter', transition: 'transform .1s ease-out' }}>
         <AuroraHero labels={[]} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(6,14,9,.95) 100%)' }} />
       </div>
-      <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '0 5%', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="INSIGHTS & CONSEILS POUR VOTRE BUSINESS DIGITAL" />
-            Insights & conseils<br />
-            <GreenUnderline><span className="text-gradient">pour votre business digital</span></GreenUnderline>
-          </h1>
-          <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
-            Stratégie digitale, développement web, SEO et e-commerce — des contenus concrets pour les entrepreneurs ivoiriens.
-          </p>
-        </motion.div>
+
+      {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
+      <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
+          <GhostTitle text="LE BLOG" />
+          LE BLOG
+          
+        </motion.h1>
+
+        <div className="hr-side">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
+            <p className="hr-kicker">Stratégie digitale, développement web, SEO et e-commerce</p>
+            <p className="hr-desc">—des contenus concrets pour les entrepreneurs ivoiriens.</p>
+          </motion.div>
+        </div>
       </div>
+
       <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
         {[{left:'8%',top:'25%',s:4,op:.18,dur:3.8,dy:0},{left:'22%',top:'68%',s:3,op:.11,dur:5.1,dy:1.2},{left:'60%',top:'22%',s:4,op:.20,dur:4.4,dy:0.6},{left:'75%',top:'70%',s:3,op:.09,dur:6.2,dy:1.8},{left:'88%',top:'15%',s:4,op:.15,dur:3.2,dy:0.3}].map((p,i) => (
           <motion.div key={i} style={{ position:'absolute', width:p.s, height:p.s, borderRadius:'50%', background:'#88ca53', left:p.left, top:p.top, opacity:p.op }}
             animate={{ y:[0,-18,0] }} transition={{ duration:p.dur, repeat:Infinity, ease:'easeInOut', delay:p.dy }} />
         ))}
       </div>
+
+      <style>{`
+        .hr-row { position: relative; z-index: 10; height: 100%; }
+        .hr-title {
+          position: absolute; left: 8vw; bottom: 4.5rem; margin: 0;
+          font-family: 'JetBrains Mono', monospace; font-weight: 800;
+          font-size: clamp(4.5rem, 13vw, 15rem); line-height: .92; letter-spacing: -.04em;
+          color: rgba(255,255,255,.95);
+        }
+        .hr-star {
+          display: inline-block; position: relative; top: -.5em;
+          margin-left: .15em; font-size: .3em; color: #88ca53;
+        }
+        .hr-side {
+          position: absolute; right: 8vw; top: 0; bottom: 0;
+          margin: auto 0; max-width: 360px; height: fit-content;
+        }
+        .hr-kicker {
+          font-family: 'JetBrains Mono', monospace; font-size: .62rem; font-weight: 700;
+          color: #88ca53; letter-spacing: .3em; text-transform: uppercase; margin: 0 0 .9rem;
+        }
+        .hr-desc { font-size: .95rem; color: rgba(255,255,255,.6); line-height: 1.7; margin: 0; }
+      `}</style>
     </section>
   )
 }
+
 
 // ═══════════════════════════════════════════════════════════════
 // ── FEATURED POST — BlurReveal + TiltCard + LetterReveal ─────
