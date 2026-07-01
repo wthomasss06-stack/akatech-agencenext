@@ -34,9 +34,9 @@ function HeroServices() {
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '72px 5% 0' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="DES SOLUTIONS WEB QUI TRAVAILLENT POUR VOUS" />
-            Des solutions web qui{' '}
-            <GreenUnderline><span className="text-gradient">travaillent pour vous</span></GreenUnderline>
+            <GhostTitle text="NOS PRESTATIONS" />
+            NOS{' '}
+            <GreenUnderline><span className="text-gradient">PRESTATIONS</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 620, margin: '0 auto 2.5rem' }}>
             De la consultation au déploiement, chaque service est conçu pour répondre aux réalités du marché ivoirien — rapide, efficace, rentable.

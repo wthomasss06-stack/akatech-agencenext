@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import {
-  ArrowRight, Star, ExternalLink,
+  ArrowRight, Star, ExternalLink, ChevronDown,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
 } from 'lucide-react'
@@ -365,24 +365,80 @@ function Hero() {
   )
 }
 
-// ── DATA images services (miroir de SERVICES_SKEW du desktop) ──
-const SERVICES_SLIDES = [
-  {  title: 'Conception de Site Web',                img: '/images/service/creation%20de%20site%20web.webp' },
-  {  title: 'Cartes Interactives & Dashboards',                        img: '/images/service/dasbord.webp' },
-  {  title: 'API & Backend Robustes',                 img: '/images/service/api.webp' },
-  {  title: 'Maintenance & Support',                 img: '/images/service/maintenence.webp' },
-  {  title: 'Fiche Google My Business',           img: '/images/service/fiche-google.webp' },
+// ── DATA prestations — texte complet (remplace les visuels image) ──
+const SERVICES_ITEMS = [
+  {
+    n: '01', Icon: Globe, title: 'Création de Sites Web',
+    tagline: 'Votre présence en ligne professionnelle.',
+    bullets: [
+      { h: 'Site vitrine moderne', d: 'Design attractif et performant.' },
+      { h: 'Boutique e-commerce', d: 'Vendez vos produits en ligne.' },
+      { h: 'Portfolio créatif', d: 'Mettez en valeur vos réalisations.' },
+      { h: 'Application SaaS sur mesure', d: 'Solutions adaptées à vos besoins.' },
+      { h: 'Design responsive', d: 'Parfait sur tous les écrans.' },
+      { h: 'Optimisation SEO', d: 'Soyez visible, soyez choisi.' },
+    ],
+    price: 'À partir de 100 000 FCFA',
+  },
+  {
+    n: '02', Icon: Map, title: 'Cartes Interactives & Dashboards',
+    tagline: 'Visualisez vos données avec puissance.',
+    bullets: [
+      { h: 'Cartes Mapbox interactives', d: 'Explorez vos données en temps réel.' },
+      { h: 'Géolocalisation avancée', d: 'Suivi précis et analyse spatiale.' },
+      { h: 'Dashboards analytiques', d: 'Indicateurs clés et visualisations claires.' },
+      { h: 'Données temps réel', d: 'Toujours à jour pour de meilleures décisions.' },
+      { h: 'Rapports personnalisés', d: 'Sur mesure selon vos besoins.' },
+    ],
+    price: 'Sur devis',
+  },
+  {
+    n: '03', Icon: Server, title: 'API & Backend Robustes',
+    tagline: 'Connectez et automatisez vos systèmes.',
+    bullets: [
+      { h: 'API REST & GraphQL', d: 'Des interfaces modernes et performantes.' },
+      { h: 'Architecture sécurisée', d: 'Protection des données et des accès.' },
+      { h: 'Intégration de services tiers', d: 'Connectez vos outils et plateformes.' },
+      { h: 'Automatisation des processus', d: 'Gagnez du temps, réduisez les tâches manuelles.' },
+      { h: 'Performance et scalabilité', d: 'Des systèmes conçus pour grandir avec vous.' },
+    ],
+    price: 'Sur devis',
+  },
+  {
+    n: '04', Icon: Wrench, title: 'Maintenance & Support',
+    tagline: 'Votre projet sécurisé et toujours performant.',
+    bullets: [
+      { h: 'Sauvegardes automatiques', d: 'Vos données sont protégées en continu.' },
+      { h: 'Mises à jour régulières', d: 'Plus de sécurité et de stabilité.' },
+      { h: 'Surveillance 24h/24', d: 'Monitoring temps réel, incidents anticipés.' },
+      { h: 'Support WhatsApp', d: 'Une assistance rapide et à portée de main.' },
+      { h: 'Assistance rapide', d: 'Notre équipe réactive pour vos problèmes.' },
+    ],
+    price: 'À partir de 20 000 FCFA',
+  },
+  {
+    n: '05', Icon: MapPin, title: 'Fiche Google My Business',
+    tagline: 'Soyez visible sur Google Maps et la recherche locale.',
+    bullets: [
+      { h: 'Optimisation complète', d: 'NAP, catégories, description, photos et services.' },
+      { h: 'Gestion des avis', d: 'Réponses rapides pour votre e-réputation.' },
+      { h: 'Publications régulières', d: 'Actualités, offres et événements.' },
+      { h: 'Suivi des performances', d: 'Statistiques claires pour mesurer vos résultats.' },
+      { h: 'Plus de visibilité', d: 'Attirez plus de clients locaux chaque mois.' },
+    ],
+    price: 'À partir de 20 000 FCFA',
+  },
 ]
 
-// ── DATA images processus (miroir de WHY_PANELS du desktop) ──
-const PROCESS_SLIDES = [
-  { n: '01', title: 'Prise de contact',        sub: 'On vous écoute',           img: '/images/process/prise%20de%20contact.webp' },
-  { n: '02', title: 'Devis & conditions',      sub: 'Proposition détaillée',    img: '/images/process/devis%20et%20condition.webp' },
-  { n: '03', title: 'Acompte de démarrage',    sub: '50% pour lancer',          img: '/images/process/acompte.webp' },
-  { n: '04', title: 'Création du site',        sub: 'Design 100% sur mesure',   img: '/images/process/creation%20du%20site.webp' },
-  { n: '05', title: 'Livraison pour validation', sub: 'Vous testez en premier', img: '/images/process/livraison.webp' },
-  { n: '06', title: 'Solde & facturation',     sub: 'Paiement final',           img: '/images/process/solde.webp' },
-  { n: '07', title: 'Mise en ligne',           sub: 'Votre site est officiel',  img: '/images/process/mise%20en%20ligne.webp' },
+// ── DATA processus — texte complet (remplace les visuels image) ──
+const PROCESS_ITEMS = [
+  { n: '01', title: 'Prise de contact & brief', badge: '1 à 2 jours', desc: "Vous me présentez votre projet et vos besoins. Nous échangeons sur vos références afin de définir le pack le plus adapté." },
+  { n: '02', title: 'Devis & conditions', badge: '1 jour', desc: "Vous recevez un devis détaillé indiquant le montant total, l'acompte de 50%, le solde à la livraison, le délai et les prestations incluses." },
+  { n: '03', title: 'Acompte reçu', badge: 'Feu vert', desc: "Dès réception de l'acompte, je récupère vos contenus — logo, textes, photos — et le développement démarre immédiatement." },
+  { n: '04', title: 'Création du site', badge: 'Délai annoncé', desc: "Je développe votre site : pages, design responsive, animations, formulaire de contact, SEO de base — et je configure l'hébergement et le nom de domaine." },
+  { n: '05', title: 'Livraison & validation', badge: '1 à 2 jours', desc: "Vous recevez un lien de prévisualisation pour tester le site et demander vos retours avant la mise en ligne définitive." },
+  { n: '06', title: 'Solde payé', badge: 'Fichiers transmis', desc: "Une fois le solde réglé, je vous transmets les fichiers sources, les accès à l'hébergement et au nom de domaine, ainsi que le mot de passe d'administration." },
+  { n: '07', title: 'Mise en ligne & support', badge: 'Projet livré', desc: "Votre site est en ligne. Selon le pack, vous bénéficiez d'un mois de support, et je vous accompagne pour le renouvellement après la première année." },
 ]
 
 // ── À PROPOS ──────────────────────────────────────────────────
@@ -521,68 +577,75 @@ function StatsSection() {
   )
 }
 
-// ── SLIDE AUTO générique ─────────────────────────────────────
-function AutoSlider({ slides, renderCaption }) {
-  const [idx, setIdx] = useState(0)
-  const timerRef = useRef(null)
-
-  const go = useCallback((next) => {
-    const n = ((next % slides.length) + slides.length) % slides.length
-    setIdx(n)
-    clearInterval(timerRef.current)
-    timerRef.current = setInterval(() => setIdx(i => (i + 1) % slides.length), 3500)
-  }, [slides.length])
-
-  useEffect(() => {
-    timerRef.current = setInterval(() => setIdx(i => (i + 1) % slides.length), 3500)
-    return () => clearInterval(timerRef.current)
-  }, [slides.length])
+// ── ACCORDION générique — titre au clic, description en dépli ──
+// Un seul panneau ouvert à la fois. `renderHeader` reçoit (item, isOpen)
+// et doit remplir la ligne cliquable (le chevron est géré ici).
+// `renderBody` reçoit (item) et remplit le contenu déplié.
+function Accordion({ items, defaultOpen = 0, renderHeader, renderBody }) {
+  const T = useTheme()
+  const [open, setOpen] = useState(defaultOpen)
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
-      {/* Image principale — carrée */}
-      <div style={{ position: 'relative', width: '100%', aspectRatio: '1/1', borderRadius: 20, overflow: 'hidden', boxShadow: '0 24px 60px rgba(0,0,0,0.35)' }}>
-        <AnimatePresence mode="sync">
-          <motion.img
-            key={idx}
-            src={slides[idx].img}
-            alt={slides[idx].title}
-            initial={{ opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: .7, ease: [.4,0,.2,1] }}
-            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
-        </AnimatePresence>
-        {/* Overlay bas */}
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.75) 0%, transparent 55%)', pointerEvents: 'none' }} />
-        {/* Caption */}
-        <AnimatePresence mode="wait">
-          <motion.div key={idx}
-            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-            transition={{ duration: .35 }}
-            style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '1.2rem 1.4rem' }}>
-            {renderCaption(slides[idx])}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+    <div style={{ borderTop: `1px solid ${T.border}` }}>
+      {items.map((item, i) => {
+        const isOpen = open === i
+        return (
+          <div key={item.n || i} style={{ borderBottom: `1px solid ${T.border}` }}>
+            <button
+              onClick={() => setOpen(isOpen ? -1 : i)}
+              aria-expanded={isOpen}
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '.7rem',
+                padding: '1.15rem 0',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                textAlign: 'left',
+                WebkitTapHighlightColor: 'transparent',
+                color: 'inherit',
+              }}
+            >
+              {renderHeader(item, isOpen)}
+              <motion.span
+                animate={{ rotate: isOpen ? 180 : 0 }}
+                transition={{ duration: .3, ease: [.22,1,.36,1] }}
+                style={{ flexShrink: 0, display: 'flex', color: isOpen ? '#88ca53' : T.textMuted }}
+              >
+                <ChevronDown size={17} />
+              </motion.span>
+            </button>
 
-      {/* Dots centrés */}
-      <div style={{ display: 'flex', gap: '.35rem', alignItems: 'center', justifyContent: 'center', marginTop: '.85rem' }}>
-        {slides.map((_, i) => (
-          <button key={i} onClick={() => go(i)}
-            style={{ width: i === idx ? 20 : 6, height: 6, borderRadius: 3, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .3s', padding: 0 }} />
-        ))}
-      </div>
+            <AnimatePresence initial={false}>
+              {isOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: .35, ease: [.22,1,.36,1] }}
+                  style={{ overflow: 'hidden' }}
+                >
+                  <div style={{ paddingBottom: '1.4rem' }}>
+                    {renderBody(item)}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        )
+      })}
     </div>
   )
 }
 
-// ── SERVICES PREVIEW ─────────────────────────────────────────
+// ── SERVICES PREVIEW — accordéon (icône/titre/tarif + détails au clic) ──
 function ServicesPreview() {
   const T = useTheme()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
+  const ICON_BOX = 42
 
   return (
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative' }}>
@@ -590,23 +653,61 @@ function ServicesPreview() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
-            <GhostTitle text="DES SOLUTIONS QUI TRAVAILLENT POUR VOUS, MÊME QUAND VOUS DORMEZ" />
-            Des solutions qui travaillent pour vous,<br />
-            <GreenUnderline><span className="text-gradient">même quand vous dormez</span></GreenUnderline>
+            <GhostTitle text="NOS PRESTATIONS, " />
+            NOS,<br />
+            <GreenUnderline><span className="text-gradient">PRESTATIONS</span></GreenUnderline>
           </h2>
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}>
-          <AutoSlider
-            slides={SERVICES_SLIDES}
-            renderCaption={s => (
-              <div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em', marginBottom: '.3rem' }}>{s.n}</div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '.25rem' }}>{s.title}</div>
-                <div style={{ display: 'flex', gap: '.7rem', alignItems: 'center' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: '#88ca53' }}>{s.price}</span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: 'rgba(255,255,255,.5)' }}>· {s.del}</span>
+          <Accordion
+            items={SERVICES_ITEMS}
+            renderHeader={(s, isOpen) => {
+              const SIcon = s.Icon
+              return (
+                <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '.85rem', minWidth: 0 }}>
+                  <span style={{
+                    width: ICON_BOX, height: ICON_BOX, flexShrink: 0, borderRadius: 10,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    background: isOpen ? 'rgba(136,202,83,.16)' : 'rgba(136,202,83,.08)',
+                    border: `1px solid ${isOpen ? 'rgba(136,202,83,.45)' : 'rgba(136,202,83,.2)'}`,
+                    color: '#88ca53', transition: 'background .25s, border-color .25s',
+                  }}>
+                    <SIcon size={18} />
+                  </span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '.5rem' }}>
+                      <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.56rem', fontWeight: 700, color: 'rgba(136,202,83,.55)', letterSpacing: '.2em' }}>{s.n}</span>
+                    </div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(.82rem,3.4vw,.92rem)', color: T.textMain, letterSpacing: '-.01em', lineHeight: 1.25 }}>
+                      {s.title}
+                    </div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', marginTop: '.15rem' }}>
+                      {s.price}
+                    </div>
+                  </div>
                 </div>
+              )
+            }}
+            renderBody={s => (
+              <div style={{ paddingLeft: ICON_BOX + 14, paddingRight: '.5rem' }}>
+                <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.76rem', fontStyle: 'italic', color: T.textMuted, lineHeight: 1.6, marginBottom: '.9rem' }}>
+                  {s.tagline}
+                </p>
+                <div style={{ marginBottom: '1.1rem' }}>
+                  {s.bullets.map((b, bi) => (
+                    <div key={bi} style={{ display: 'flex', gap: '.6rem', padding: '.55rem 0', borderTop: bi ? `1px solid ${T.border}` : 'none' }}>
+                      <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#88ca53', marginTop: '.45rem', flexShrink: 0 }} />
+                      <div>
+                        <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.78rem', color: T.textMain, lineHeight: 1.4 }}>{b.h}</div>
+                        <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: T.textMuted, lineHeight: 1.5, marginTop: '.1rem' }}>{b.d}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.78rem', padding: '.7rem 1.3rem', width: '100%', justifyContent: 'center' }}>
+                  Demander un devis <ArrowRight size={13} />
+                </a>
               </div>
             )}
           />
@@ -623,7 +724,7 @@ function ServicesPreview() {
   )
 }
 
-// ── PROCESS — slide auto avec images ─────────────────────────
+// ── PROCESS — accordéon (étape/titre/statut + détail au clic) ────
 function Process() {
   const T = useTheme()
   const ref = useRef(null)
@@ -640,14 +741,32 @@ function Process() {
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}>
-          <AutoSlider
-            slides={PROCESS_SLIDES}
-            renderCaption={s => (
-              <div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.3em', marginBottom: '.3rem' }}>{s.n}</div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1rem', color: '#fff', marginBottom: '.2rem' }}>{s.title}</div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: 'rgba(255,255,255,.55)', fontStyle: 'italic' }}>{s.sub}</div>
+          <Accordion
+            items={PROCESS_ITEMS}
+            renderHeader={(s, isOpen) => (
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '.4rem', minWidth: 0 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '.7rem' }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.66rem', fontWeight: 700, color: isOpen ? '#88ca53' : 'rgba(136,202,83,.5)', letterSpacing: '.1em', flexShrink: 0 }}>
+                    {s.n}
+                  </span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(.84rem,3.4vw,.94rem)', color: T.textMain, letterSpacing: '-.01em', lineHeight: 1.3 }}>
+                    {s.title}
+                  </span>
+                </div>
+                <span style={{
+                  alignSelf: 'flex-start', padding: '.2rem .6rem', borderRadius: 100,
+                  background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.24)',
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.56rem', fontWeight: 700,
+                  color: '#88ca53', letterSpacing: '.03em', whiteSpace: 'nowrap',
+                }}>
+                  {s.badge}
+                </span>
               </div>
+            )}
+            renderBody={s => (
+              <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', lineHeight: 1.75, color: T.textMuted, paddingLeft: '2.15rem', paddingRight: '.5rem' }}>
+                {s.desc}
+              </p>
             )}
           />
         </motion.div>

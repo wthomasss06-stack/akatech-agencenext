@@ -591,11 +591,11 @@ function ServicesPreview() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1} direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="DES SOLUTIONS QUI TRAVAILLENT POUR VOUS." />
-              Des solutions qui{' '}
+              <GhostTitle text="NOS PRESTATIONS." />
+              NOS{' '}
               <GreenUnderline>
                 <span className="text-gradient">
-                  <LetterReveal text="travaillent pour vous." stagger={0.03} />
+                  <LetterReveal text="PRESTATIONS." stagger={0.03} />
                 </span>
               </GreenUnderline>
             </h2>
@@ -650,9 +650,9 @@ function WhyUs() {
         {/* Header — titre sur trait rouge */}
         <BlurReveal delay={0.1} direction="left">
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '3rem' }}>
-            <GhostTitle text="BUILT ON TRUST." />
-            Built on{' '}
-            <GreenUnderline><span className="text-gradient">Trust.</span></GreenUnderline>
+            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE." />
+            DE L'IDÉE À LA MISE{' '}
+            <GreenUnderline><span className="text-gradient">EN LIGNE.</span></GreenUnderline>
           </h2>
         </BlurReveal>
 
