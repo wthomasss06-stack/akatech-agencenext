@@ -1379,14 +1379,14 @@ export default function HomePageDesktop() {
   return (
     <div style={{ paddingTop: 0 }}>
       <Hero />
-      <ScrollRevealText />
       <StatsSection />
+      <ServicesPreview />
       <ArchiveTunnelSection />
       <MarqueeStrip />
-      <ServicesPreview />
-      <WhyUs />
       <DomainesSection />
+      <WhyUs />
       <MarqueeStrip />
+      <ScrollRevealText />
       <Testimonials />
 
       <PageCTA

@@ -779,170 +779,190 @@ function Process() {
 // swipe tactile, cartes avec badges type / live / result
 function ProjectsSection() {
   const T = useTheme()
-  const ref      = useRef(null)
-  const inView   = useInView(ref, { once: true, margin: '-60px' })
-  const sectionRef = useRef(null)
-  const cellRefs   = useRef([])
+  const ref     = useRef(null)
+  const inView  = useInView(ref, { once: true, margin: '-60px' })
+  const wrapRef = useRef(null)   // runway de scroll pour le pin
+  const gridRef = useRef(null)   // grille — reçoit la profondeur 3D scroll-driven
+  const cellRefs = useRef([])
 
   const ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
   ]
+  // Profondeurs par carte — même principe que ArchiveTunnelSection desktop, amplitude réduite pour mobile
+  const DEPTHS = [0, -90, -30, -140, -60, -110]
 
-  // ── Colorisation au scroll : grayscale(1) → grayscale(0) ──
+  // ── Pin + tunnel 3D + colorisation au scroll (miroir de ArchiveTunnelSection desktop) ──
   useEffect(() => {
+    let raf = null
     const onScroll = () => {
-      const section = sectionRef.current
-      if (!section) return
-      const rect    = section.getBoundingClientRect()
-      const winH    = window.innerHeight
-      const total   = winH + section.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const wrap = wrapRef.current
+        const grid = gridRef.current
+        if (!wrap || !grid) return
+        const winH = window.innerHeight
+        const top  = wrap.getBoundingClientRect().top
+        const pinDistance = wrap.offsetHeight - winH
+        const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
 
-      cellRefs.current.forEach((cell, i) => {
-        if (!cell) return
-        // chaque cellule se colorie avec un décalage d'entrée
-        const start = i * 0.06
-        const local = Math.max(0, Math.min(1, (progress - start) / 0.35))
-        const grey  = 1 - local
-        cell.style.filter = `grayscale(${grey.toFixed(2)}) contrast(1.04)`
+        grid.style.transform = `translateZ(${progress * 340}px) rotateX(${progress * 8}deg)`
+        grid.style.opacity   = String(progress > 0.92 ? Math.max(0, 1 - (progress - 0.92) / 0.08) : 1)
+
+        cellRefs.current.forEach((cell, i) => {
+          if (!cell) return
+          const start = i * 0.05
+          const local = Math.max(0, Math.min(1, (progress - start) / 0.4))
+          cell.style.filter = `grayscale(${(1 - local).toFixed(2)}) contrast(1.04)`
+        })
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      if (raf) cancelAnimationFrame(raf)
+    }
   }, [])
 
-  // ── Swipe tactile horizontal sur la ligne de 3 cartes optionnel ──
-  const [active, setActive] = useState(null) // card en plein focus au tap
+  // ── Tap pour dévoiler résultat + lien ──
+  const [active, setActive] = useState(null)
 
   return (
-    <section
-      ref={el => { ref.current = el; sectionRef.current = el }}
-      style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}
-    >
+    <section ref={ref} style={{ background: T.bg, position: 'relative' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
 
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      {/* Runway de scroll pour le pin (hauteur réduite vs desktop : format mobile) */}
+      <div ref={wrapRef} style={{ position: 'relative', height: '190vh' }}>
 
-        {/* Header */}
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-          style={{ marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
-            <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
-            Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
-          </h2>
-          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
-            — scroll pour révéler en couleur
-          </p>
-        </motion.div>
-
-        {/* Grille 2 colonnes */}
-        <style>{`
-          .archive-grid-mobile {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: clamp(.5rem, 2vw, .9rem);
-          }
-          /* La 5e carte prend 2 colonnes pour équilibrer */
-          .archive-grid-mobile > div:nth-child(5) { grid-column: span 2; }
-        `}</style>
-
-        <div className="archive-grid-mobile">
-          {ITEMS.map((p, i) => (
-            <motion.div
-              key={p.id}
-              ref={el => { cellRefs.current[i] = el }}
-              initial={{ opacity: 0, y: 28 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: .55, delay: i * .07, ease: [.22,1,.36,1] }}
-              onClick={() => setActive(active === i ? null : i)}
-              style={{
-                position: 'relative',
-                borderRadius: 10,
-                overflow: 'hidden',
-                border: active === i ? '1.5px solid rgba(136,202,83,.6)' : '1px solid rgba(136,202,83,.25)',
-                boxShadow: active === i ? '0 0 0 3px rgba(136,202,83,.12)' : 'none',
-                filter: 'grayscale(1) contrast(1.04)',
-                transition: 'border-color .25s, box-shadow .25s',
-                cursor: 'pointer',
-                willChange: 'filter',
-                aspectRatio: i === 4 ? '16/6' : '4/3',
-              }}
-            >
-              <LazyImg
-                src={p.img}
-                alt={p.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .5s', transform: active === i ? 'scale(1.04)' : 'scale(1)' }}
-              />
-
-              {/* Overlay gradient bas */}
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.82) 100%)' }} />
-
-              {/* Type badge */}
-              <div style={{
-                position: 'absolute', top: '.55rem', left: '.55rem',
-                padding: '.18rem .55rem', borderRadius: 100,
-                background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(136,202,83,.3)',
-                fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', fontWeight: 700, color: '#88ca53',
-              }}>
-                {p.type}
-              </div>
-
-              {/* Live badge */}
-              {p.live && (
-                <div style={{
-                  position: 'absolute', top: '.55rem', right: '.55rem',
-                  display: 'flex', alignItems: 'center', gap: '.25rem',
-                  padding: '.16rem .5rem', borderRadius: 100,
-                  background: 'rgba(136,202,83,.88)',
-                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.48rem', color: '#fff', fontWeight: 700,
-                }}>
-                  <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  LIVE
-                </div>
-              )}
-
-              {/* Info bas */}
-              <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.65rem .75rem' }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.62rem,2.5vw,.75rem)', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '.2rem' }}>
-                  {p.title}
-                </div>
-
-                {/* Result + lien — visibles au tap */}
-                <AnimatePresence>
-                  {active === i && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
-                      transition={{ duration: .2 }}
-                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginTop: '.2rem', flexWrap: 'wrap' }}
-                    >
-                      {p.result && (
-                        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53' }}>
-                          {p.result}
-                        </span>
-                      )}
-                      {p.url && (
-                        <a href={p.url} target="_blank" rel="noreferrer"
-                          onClick={e => e.stopPropagation()}
-                          style={{ display: 'flex', alignItems: 'center', gap: '.2rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 600, color: '#fff', textDecoration: 'none', padding: '.14rem .45rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.4)', background: 'rgba(136,202,83,.14)' }}>
-                          <ExternalLink size={8} /> Voir
-                        </a>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </motion.div>
-          ))}
+        {/* Titre — au-dessus du pin, défile normalement */}
+        <div style={{ padding: '7rem 5% 0', position: 'relative', zIndex: 1 }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
+              <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
+              Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+            </h2>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
+              — scroll pour révéler en couleur
+            </p>
+          </motion.div>
         </div>
 
-        {/* CTA bas */}
-        <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .5 }}
-          style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+        {/* Zone pinnée — tunnel 3D */}
+        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', perspective: 900, display: 'flex', alignItems: 'center', zIndex: 1 }}>
+          <style>{`
+            .archive-grid-mobile {
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              grid-template-rows: repeat(4, 1fr);
+              gap: clamp(.5rem, 2vw, .9rem);
+            }
+            /* La 5e carte prend 2 colonnes pour équilibrer */
+            .archive-grid-mobile > div:nth-child(5) { grid-column: span 2; }
+          `}</style>
+
+          <div ref={gridRef} className="archive-grid-mobile" style={{ width: '100%', height: '80vh', padding: '0 6vw', transformStyle: 'preserve-3d', willChange: 'transform' }}>
+            {ITEMS.map((p, i) => (
+              <motion.div
+                key={p.id}
+                initial={{ opacity: 0, y: 24 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: .5, delay: i * .06, ease: [.22,1,.36,1] }}
+                style={{ height: '100%' }}
+              >
+                <div
+                  ref={el => { cellRefs.current[i] = el }}
+                  onClick={() => setActive(active === i ? null : i)}
+                  style={{
+                    position: 'relative',
+                    width: '100%', height: '100%',
+                    borderRadius: 10,
+                    overflow: 'hidden',
+                    border: active === i ? '1.5px solid rgba(136,202,83,.6)' : '1px solid rgba(136,202,83,.25)',
+                    boxShadow: active === i ? '0 0 0 3px rgba(136,202,83,.12)' : 'none',
+                    filter: 'grayscale(1) contrast(1.04)',
+                    transform: `translateZ(${DEPTHS[i] || 0}px)`,
+                    transition: 'border-color .25s, box-shadow .25s, filter .12s linear',
+                    cursor: 'pointer',
+                    willChange: 'filter, transform',
+                  }}
+                >
+                  <LazyImg
+                    src={p.img}
+                    alt={p.title}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .5s', transform: active === i ? 'scale(1.04)' : 'scale(1)' }}
+                  />
+
+                  {/* Overlay gradient bas */}
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.82) 100%)' }} />
+
+                  {/* Type badge */}
+                  <div style={{
+                    position: 'absolute', top: '.55rem', left: '.55rem',
+                    padding: '.18rem .55rem', borderRadius: 100,
+                    background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(136,202,83,.3)',
+                    fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', fontWeight: 700, color: '#88ca53',
+                  }}>
+                    {p.type}
+                  </div>
+
+                  {/* Live badge */}
+                  {p.live && (
+                    <div style={{
+                      position: 'absolute', top: '.55rem', right: '.55rem',
+                      display: 'flex', alignItems: 'center', gap: '.25rem',
+                      padding: '.16rem .5rem', borderRadius: 100,
+                      background: 'rgba(136,202,83,.88)',
+                      fontFamily: "'JetBrains Mono',monospace", fontSize: '.48rem', color: '#fff', fontWeight: 700,
+                    }}>
+                      <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
+                      LIVE
+                    </div>
+                  )}
+
+                  {/* Info bas */}
+                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.65rem .75rem' }}>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.62rem,2.5vw,.75rem)', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '.2rem' }}>
+                      {p.title}
+                    </div>
+
+                    {/* Result + lien — visibles au tap */}
+                    <AnimatePresence>
+                      {active === i && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
+                          transition={{ duration: .2 }}
+                          style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginTop: '.2rem', flexWrap: 'wrap' }}
+                        >
+                          {p.result && (
+                            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53' }}>
+                              {p.result}
+                            </span>
+                          )}
+                          {p.url && (
+                            <a href={p.url} target="_blank" rel="noreferrer"
+                              onClick={e => e.stopPropagation()}
+                              style={{ display: 'flex', alignItems: 'center', gap: '.2rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 600, color: '#fff', textDecoration: 'none', padding: '.14rem .45rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.4)', background: 'rgba(136,202,83,.14)' }}>
+                              <ExternalLink size={8} /> Voir
+                            </a>
+                          )}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* CTA — hors du pin, flow normal */}
+      <div style={{ padding: '2.5rem 5% 7rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 }}>
           <Link href="/projects" className="btn-ghost" style={{ fontSize: '.88rem', padding: '.8rem 1.8rem' }}>
             Toutes les réalisations <ArrowRight size={13} />
           </Link>
@@ -951,6 +971,8 @@ function ProjectsSection() {
     </section>
   )
 }
+
+// Domaines section removed for mobile (kept desktop-only)
 
 // ── TESTIMONIALS ─────────────────────────────────────────────
 function Testimonials() {
@@ -1015,13 +1037,13 @@ export default function HomePageMobile() {
   return (
     <div style={{ paddingTop: 0 }}>
       <Hero />
-      <AboutSection />
       <StatsSection />
-      <MarqueeStrip />
       <ServicesPreview />
+      <ProjectsSection />
+      <MarqueeStrip />
       <Process />
       <MarqueeStrip />
-      <ProjectsSection />
+      <AboutSection />
       <Testimonials />
       <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />
     </div>
