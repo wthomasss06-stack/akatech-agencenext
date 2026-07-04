@@ -1,12 +1,14 @@
 'use client'
 import { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 import { gsap } from 'gsap'
 import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, Orbit } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useGhostCycle } from './useGhostCycle'
 import TransitionLink from './TransitionLink'
+import { useBlobTransition } from './BlobTransition'
 import './CardNav.css'
 
 /* ── Slogans cycle — navJAX ─────────────────────────── */
@@ -81,6 +83,14 @@ function CardLinkWithGhost({ href, label, sub, onClick }) {
 
 export default function CardNav() {
   const T = useTheme()
+  const pathname = usePathname()
+  const blobNavigate = useBlobTransition()
+  const inExplorer = pathname?.startsWith('/explorer')
+
+  const handleExplorerToggle = (e) => {
+    blobNavigate(inExplorer ? '/' : '/explorer/', e)
+  }
+
   const navRef = useRef(null)
   const contentRef = useRef(null)
   const cardsRef = useRef([])
@@ -174,6 +184,16 @@ export default function CardNav() {
           </TransitionLink>
 
           <div className="aka-nav-right">
+            <button
+              onClick={handleExplorerToggle}
+              className={'aka-explorer-btn' + (inExplorer ? ' is-active' : '')}
+              title={inExplorer ? "Retour au site" : "Mode Explorer — globe des projets"}
+              aria-pressed={inExplorer}
+              type="button"
+            >
+              <Orbit size={13} />
+              <span>Explorer</span>
+            </button>
             <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? 'Mode sombre' : 'Mode clair'} type="button">
               {T.light ? <Moon size={13} /> : <Sun size={13} />}
             </button>

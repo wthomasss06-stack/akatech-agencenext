@@ -166,6 +166,51 @@
 
 .sm-panel-logo { margin-bottom: 2.5rem; }
 
+.sm-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+.sm-panel-logo-link {
+  display: inline-flex;
+  align-items: center;
+  color: #88ca53;
+  text-decoration: none;
+}
+.light-mode .sm-panel-logo-link { color: #5f9137; }
+
+.sm-panel-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(136,202,83,.35);
+  background: rgba(136,202,83,.08);
+  color: #88ca53;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, color .2s, transform .2s;
+}
+.sm-panel-close:hover {
+  background: rgba(136,202,83,.18);
+  border-color: #88ca53;
+  transform: translateY(-1px);
+}
+.light-mode .sm-panel-close {
+  border-color: rgba(95,145,55,.25);
+  background: rgba(95,145,55,.08);
+  color: #5f9137;
+}
+.light-mode .sm-panel-close:hover {
+  background: rgba(95,145,55,.16);
+}
+
 /* ════════════════════════════════════
    NAV LIST
    ════════════════════════════════════ */

@@ -28,11 +28,14 @@ nav.aka-card-nav {
 
 .aka-nav-top {
   height: 64px;
-  display: flex; align-items: center; justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   padding: 0 18px;
 }
 
 .aka-hamburger {
+  justify-self: start;
   width: 24px; height: 15px; cursor: pointer;
   display: flex; flex-direction: column; justify-content: space-between;
   z-index: 10; background: none; border: none; padding: 0;
@@ -47,11 +50,32 @@ nav.aka-card-nav {
 .aka-hamburger.open .aka-hline:nth-child(2) { transform: translateY(-8.25px) rotate(-45deg); background: #88ca53; }
 
 .aka-nav-logo {
+  justify-self: center;
   display: flex; align-items: center;
   text-decoration: none; line-height: 0;
 }
 
-.aka-nav-right { display: flex; align-items: center; gap: 8px; }
+.aka-nav-right { justify-self: end; display: flex; align-items: center; gap: 8px; }
+
+.aka-explorer-btn {
+  display: flex; align-items: center; gap: 6px;
+  height: 28px; padding: 0 12px; border-radius: 999px;
+  border: var(--nav-btn-border);
+  background: var(--nav-btn-bg);
+  color: var(--nav-btn-color);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer; transition: all .25s;
+}
+.aka-explorer-btn:hover { color: #88ca53; border-color: rgba(136,202,83,.4); }
+.aka-explorer-btn.is-active {
+  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  border-color: transparent; color: #04140a;
+  box-shadow: 0 0 0 3px rgba(136,202,83,.18);
+}
+.aka-explorer-btn.is-active:hover { color: #04140a; }
+.aka-explorer-btn svg { flex-shrink: 0; }
+
 .aka-theme-btn {
   width: 28px; height: 28px; border-radius: 8px;
   border: var(--nav-btn-border);

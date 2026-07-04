@@ -5,8 +5,8 @@ import Footer from '@/components/layout/Footer'
 import { BackToTop, FloatingWA } from '@/components/ui/index'
 import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
-import RegisterSW from '@/components/ui/RegisterSW'
 import { PageTransitionProvider } from '@/components/layout/PageTransition'
+import { BlobTransitionProvider } from '@/components/layout/BlobTransition'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -47,10 +47,6 @@ export const metadata = {
     description: "Sites vitrines, e-commerce, SaaS et API sur-mesure pour entrepreneurs ivoiriens.",
     images: ['/images/og-cover.webp'],
   },
-  icons: {
-    icon: '/favicon.svg',
-    apple: '/favicon.svg',
-  },
 }
 
 export const viewport = {
@@ -86,12 +82,6 @@ const ORG_JSON_LD = {
     addressLocality: 'Abidjan',
     addressCountry: 'CI',
   },
-  geo: {
-    '@type': 'GeoCoordinates',
-    latitude: 5.359952,
-    longitude: -4.008256,
-  },
-  hasMap: 'https://www.google.com/maps/search/?api=1&query=5.359952,-4.008256',
   areaServed: [
     { '@type': 'Country', name: "Côte d'Ivoire" },
     { '@type': 'Place', name: 'Afrique de l\'Ouest' },
@@ -130,18 +120,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="application-name" content="AKATech" />
-        <meta name="theme-color" content="#22c864" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-        <meta name="geo.region" content="CI" />
-        <meta name="geo.placename" content="Abidjan" />
-        <meta name="geo.position" content="5.359952;-4.008256" />
-        <meta name="ICBM" content="5.359952, -4.008256" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.webp" type="image/png" />
+        <link rel="apple-touch-icon" href="/favicon.webp" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -153,14 +133,15 @@ export default function RootLayout({ children }) {
       <body>
         <ThemeProvider>
           <PageTransitionProvider>
-            <ScrollToTop />
-            <Loader />
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-            <FloatingWA />
-            <BackToTop />
-            <RegisterSW />
+            <BlobTransitionProvider>
+              <ScrollToTop />
+              <Loader />
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+              <FloatingWA />
+              <BackToTop />
+            </BlobTransitionProvider>
           </PageTransitionProvider>
         </ThemeProvider>
       </body>

@@ -10,7 +10,9 @@ import {
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
+import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
+import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { SERVICES, PROJECTS, TESTIMONIALS } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
@@ -255,7 +257,7 @@ function Hero() {
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45, delay: .12 }}
-          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.78rem,1vw,.9rem)', fontWeight: 500, letterSpacing: '.01em', color: 'rgba(255,255,255,.52)', marginBottom: '1.6rem', maxWidth: 500, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7, textAlign: 'center' }}>
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,1.3vw,1.15rem)', fontWeight: 500, letterSpacing: '.005em', color: 'rgba(255,255,255,.6)', marginBottom: '1.6rem', maxWidth: 600, marginLeft: 'auto', marginRight: 'auto', lineHeight: 1.7, textAlign: 'center' }}>
           Un site qui travaille pour vous 24h/24 — attirez des clients, gagnez en crédibilité et <span style={{ color: '#88ca53' }}>développez votre activité.</span>
         </motion.p>
 
@@ -1382,10 +1384,10 @@ export default function HomePageDesktop() {
       <StatsSection />
       <ServicesPreview />
       <ArchiveTunnelSection />
-      <MarqueeStrip />
+      <TrustStacksMarquee />
       <DomainesSection />
       <WhyUs />
-      <MarqueeStrip />
+      <ConversionMarquee />
       <ScrollRevealText />
       <Testimonials />
 

@@ -4,7 +4,8 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, LazyImg, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { SERVICES } from '@/lib/data'
 
@@ -269,7 +270,7 @@ export default function ServicesPage() {
     <div>
       <HeroServices />
       <ServicesList />
-      <MarqueeStrip />
+      <ConversionMarquee />
       <TechSection />
       <PageCTA message="Prêt à lancer votre projet ? Obtenez un devis gratuit en 24h." cta="Obtenir mon devis" />
     </div>

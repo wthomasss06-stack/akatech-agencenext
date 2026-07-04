@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { Users, Monitor, Code, Check, Award, Heart, Globe, Zap, Star, Target, Rocket, MessageCircle, ExternalLink } from 'lucide-react'
+import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 
 /* ─── BlurReveal ─────────────────────────────────────────── */
 function BlurReveal({ children, delay = 0, direction = 'up', style = {}, once = true }) {
@@ -133,7 +134,7 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 }
 
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS } from '@/lib/data'
 
@@ -620,7 +621,7 @@ export default function AboutPage() {
       {/* 1 */ }<HeroAbout />
       {/* 2 */}<StatsFounderSection />
       {/* 3 */}<TimelineSection />
-      <MarqueeStrip />
+      <TrustStacksMarquee />
       {/* 4 */}<ValuesSection />
       {/* 5 */}<SkillsSection />
       {/* 6 */}<RayonSection />

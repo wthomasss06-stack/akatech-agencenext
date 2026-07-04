@@ -328,8 +328,18 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
 
       <aside id="sm-panel" ref={panelRef} className="sm-panel" aria-hidden={!open} aria-label="Navigation">
         <div className="sm-panel-inner">
-          <div className="sm-panel-logo">
-            <Logo size={26} showTag={false} animate={false} />
+          <div className="sm-panel-head">
+            <TransitionLink href="/" className="sm-panel-logo-link" onClick={closeMenu} aria-label="Retour à l'accueil">
+              <Logo size={26} showTag={false} animate={false} />
+            </TransitionLink>
+            <button
+              type="button"
+              className="sm-panel-close"
+              onClick={closeMenu}
+              aria-label="Fermer le menu"
+            >
+              ×
+            </button>
           </div>
 
           <ul className="sm-panel-list" role="list" data-numbering="true">

@@ -4,7 +4,8 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Users, Monitor, Code, Heart, Zap, Star, Target, MessageCircle, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
+import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS } from '@/lib/data'
 
@@ -386,7 +387,7 @@ export default function AboutPageMobile() {
       {/* 1 */}<HeroAbout />
       {/* 2 */}<StatsSection />
       {/* 3 */}<FounderSection />
-      <MarqueeStrip />
+      <TrustStacksMarquee />
       {/* 4 */}<TimelineSection />
       {/* 5 */}<ValuesSection />
       {/* 6 */}<SkillsSection />

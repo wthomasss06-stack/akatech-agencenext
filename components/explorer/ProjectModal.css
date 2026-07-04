@@ -1,0 +1,155 @@
+/* ═══════════════════════════════════════════════
+   ProjectGlobeModal.css
+   Modal projet du globe Explorer — adapté du
+   .tunnel-modal (elvis-portfolio / App.jsx) : image
+   fixe à gauche, infos scrollables à droite.
+   ═══════════════════════════════════════════════ */
+
+.pgm-backdrop {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(3, 8, 6, 0.82);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 4vh 4vw;
+  animation: pgmFadeIn .35s ease both;
+}
+@keyframes pgmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.pgm-modal {
+  position: relative;
+  width: 100%; max-width: 980px; max-height: 88vh;
+  display: grid; grid-template-columns: 1.25fr 1fr;
+  background: #060e09;
+  border: 1px solid rgba(136, 202, 83, 0.22);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
+  animation: pgmPopIn .45s cubic-bezier(.16,1,.3,1) both;
+}
+@keyframes pgmPopIn {
+  from { opacity: 0; transform: scale(.94) translateY(14px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.pgm-close {
+  position: absolute; top: 1rem; right: 1rem; z-index: 5;
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff; cursor: pointer;
+  transition: background .25s ease, transform .35s cubic-bezier(.22,1,.36,1), border-color .25s ease;
+}
+.pgm-close:hover { background: #88ca53; border-color: #88ca53; color: #04140a; transform: rotate(90deg); }
+
+.pgm-image {
+  position: relative; background: #0a1710;
+  min-height: 260px;
+}
+.pgm-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pgm-image-fade {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(6,14,9,.5), transparent 30%);
+  pointer-events: none;
+}
+
+.pgm-info {
+  padding: 2.2rem 2.1rem;
+  overflow-y: auto;
+  display: flex; flex-direction: column; gap: 1.1rem;
+  color: #f2ede8;
+}
+.pgm-info::-webkit-scrollbar { width: 6px; }
+.pgm-info::-webkit-scrollbar-thumb { background: rgba(136,202,83,.3); border-radius: 3px; }
+
+.pgm-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
+  color: #88ca53;
+}
+.pgm-name {
+  font-family: 'Anton', sans-serif; text-transform: uppercase;
+  font-size: 1.9rem; line-height: 1; letter-spacing: -.01em;
+  color: #fff; margin: 0;
+}
+.pgm-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: .82rem;
+  color: rgba(255,255,255,.5); margin: 0;
+}
+
+.pgm-meta {
+  display: flex; flex-wrap: wrap; gap: 1.1rem;
+  padding-left: .9rem;
+  border-left: 2px solid rgba(136, 202, 83, 0.35);
+}
+.pgm-meta-item { display: flex; flex-direction: column; gap: 2px; }
+.pgm-meta-item span:first-child {
+  font-family: 'JetBrains Mono', monospace; font-size: .58rem; text-transform: uppercase;
+  letter-spacing: .1em; color: rgba(255,255,255,.4);
+}
+.pgm-meta-item span:last-child {
+  font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 700; color: #f2ede8;
+  display: inline-flex; align-items: center; gap: .4rem;
+}
+
+.pgm-result {
+  display: inline-flex; align-items: center; gap: .5rem;
+  align-self: flex-start;
+  font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 700;
+  color: #88ca53; background: rgba(136,202,83,.1);
+  border: 1px solid rgba(136,202,83,.3); border-radius: 999px;
+  padding: .4rem .85rem;
+}
+
+.pgm-desc {
+  font-size: .92rem; line-height: 1.65; color: rgba(242,237,232,.78);
+  max-width: 46ch;
+}
+
+.pgm-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
+.pgm-tag {
+  font-family: 'JetBrains Mono', monospace; font-size: .68rem; font-weight: 600;
+  color: rgba(255,255,255,.75);
+  border: 1px solid rgba(136,202,83,.28);
+  border-radius: 999px; padding: .35rem .8rem;
+  background: rgba(136,202,83,.04);
+}
+
+.pgm-actions {
+  display: flex; flex-wrap: wrap; gap: .8rem;
+  margin-top: auto; padding-top: .6rem;
+}
+.pgm-cta {
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .85rem 1.5rem; border-radius: 999px;
+  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  color: #04140a; font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: .78rem; letter-spacing: .02em; text-transform: uppercase;
+  text-decoration: none; transition: transform .25s ease, box-shadow .25s ease;
+  box-shadow: 0 4px 16px rgba(136,202,83,.22);
+}
+.pgm-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(136,202,83,.38); }
+.pgm-cta svg { transition: transform .3s cubic-bezier(.22,1,.36,1); }
+.pgm-cta:hover svg { transform: translateX(3px) rotate(-45deg); }
+
+.pgm-cta-muted {
+  display: inline-flex; align-items: center; gap: .55rem;
+  padding: .85rem 1.5rem; border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.15);
+  color: rgba(255,255,255,.45);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700; font-size: .78rem; letter-spacing: .02em; text-transform: uppercase;
+  cursor: default;
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .pgm-backdrop { padding: 0; }
+  .pgm-modal {
+    grid-template-columns: 1fr; grid-template-rows: 34vh 1fr;
+    max-height: 100vh; height: 100vh; border-radius: 0; max-width: 100%;
+  }
+  .pgm-image { min-height: 0; }
+  .pgm-info { padding: 1.6rem 1.4rem 2.2rem; }
+  .pgm-name { font-size: 1.6rem; }
+}

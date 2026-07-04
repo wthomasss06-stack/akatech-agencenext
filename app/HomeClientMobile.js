@@ -8,7 +8,9 @@ import {
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, MarqueeStrip, PageCTA, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
+import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
+import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { PROJECTS, TESTIMONIALS } from '@/lib/data'
 
 // ── HERO avec carrousel images auto ──────────────────────────
@@ -1040,9 +1042,9 @@ export default function HomePageMobile() {
       <StatsSection />
       <ServicesPreview />
       <ProjectsSection />
-      <MarqueeStrip />
+      <TrustStacksMarquee />
       <Process />
-      <MarqueeStrip />
+      <ConversionMarquee />
       <AboutSection />
       <Testimonials />
       <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />

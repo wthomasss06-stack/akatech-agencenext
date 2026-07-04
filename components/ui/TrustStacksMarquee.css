@@ -1,0 +1,167 @@
+/* ═══════════════════════════════════════════════
+   TrustStacksMarquee.css
+   Remplace le MarqueeStrip après ArchiveTunnelSection /
+   ProjectsSection. Deux bandes "sticker" tournées en 2D
+   (façon ticker-slanted), qui défilent en sens opposé —
+   Ligne 1 (stack, fond sombre) et Ligne 2 (avantages, fond
+   vert plein). Ligne 3 (métriques) reste une bande plate et
+   statique en dessous, calée sur la même taille de texte.
+   ═══════════════════════════════════════════════ */
+
+.ts-section {
+  position: relative;
+  overflow: hidden;
+  padding: 3.6rem 0 3.2rem;
+}
+
+.ts-glow {
+  position: absolute; top: 50%; left: 50%;
+  width: 700px; height: 300px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(136, 202, 83, 0.06), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Eyebrow ─────────────────────────────────────── */
+.ts-eyebrow {
+  position: relative; z-index: 2;
+  display: block;
+  text-align: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem; letter-spacing: .38em; text-transform: uppercase;
+  color: rgba(136, 202, 83, 0.65);
+  margin-bottom: 2rem;
+}
+
+/* ── Bandes obliques (façon sticker, rotate 2D) ──── */
+.ts-band {
+  position: relative;
+  width: 108%;
+  margin-left: -4%;
+  overflow: hidden;
+  padding: 1.05rem 0;
+}
+.ts-band-track { display: flex; width: max-content; gap: 2.6rem; will-change: transform; }
+.ts-band-set { display: flex; align-items: center; gap: 2.6rem; flex-shrink: 0; }
+
+.ts-band--stack {
+  background: var(--bg-dark);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  transform: rotate(-1.6deg);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
+  margin-bottom: 1.3rem;
+  z-index: 2;
+}
+.ts-band--badges {
+  background: linear-gradient(135deg, var(--g1), var(--g3));
+  transform: rotate(1.3deg);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.ts-band-track--left  { animation: tsScrollLeft 36s linear infinite; }
+.ts-band-track--right { animation: tsScrollRight 30s linear infinite; }
+.ts-band:hover .ts-band-track { animation-play-state: paused; }
+
+@keyframes tsScrollLeft  { from { transform: translateX(0); }    to { transform: translateX(-50%); } }
+@keyframes tsScrollRight { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+/* ── Ligne 1 : Stack technique (fond sombre) ─────── */
+.ts-stack-item {
+  position: relative;
+  display: inline-flex; align-items: center; gap: .7rem;
+  white-space: nowrap; cursor: default;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(1.05rem, 1.7vw, 1.5rem);
+  letter-spacing: -0.01em;
+  color: rgba(255, 255, 255, 0.28);
+  transition: color .35s ease;
+}
+.ts-stack-item:hover { color: #fdfdfd; }
+
+.ts-stack-icon { position: relative; width: 24px; height: 24px; flex-shrink: 0; }
+.ts-dot {
+  position: absolute; inset: 0; margin: auto;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #88ca53;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.ts-icon-chip {
+  position: absolute; inset: 0; margin: auto;
+  width: 24px; height: 24px; border-radius: 50%;
+  background: #f7f7f5;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(.35);
+  box-shadow: 0 0 0 0 rgba(136, 202, 83, 0);
+  transition: opacity .3s ease, transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s ease;
+}
+.ts-stack-item:hover .ts-dot { opacity: 0; transform: scale(.2); }
+.ts-stack-item:hover .ts-icon-chip { opacity: 1; transform: scale(1); box-shadow: 0 0 16px 2px rgba(136, 202, 83, 0.5); }
+.ts-icon-img { width: 14px; height: 14px; object-fit: contain; }
+
+/* ── Ligne 2 : Avantages clés (fond vert plein) ──── */
+.ts-badge-item {
+  display: inline-flex; align-items: center; gap: .6rem;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(1.05rem, 1.7vw, 1.5rem); font-weight: 700; letter-spacing: -0.01em;
+  color: #04140a;
+}
+.ts-badge-item svg { color: #04140a; flex-shrink: 0; opacity: .82; }
+.ts-badge-sep { color: rgba(4, 20, 10, 0.35); font-weight: 700; }
+
+/* ── Ligne 3 : Métriques (bande défilante) ─ */
+.ts-band--metrics {
+  background: var(--bg-dark-card);
+  transform: rotate(-1.2deg);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  z-index: 1;
+}
+
+.ts-metric {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(.92rem, 1.3vw, 1.15rem); font-weight: 600; letter-spacing: .01em;
+  color: rgba(255, 255, 255, 0.6);
+  white-space: nowrap;
+  display: inline-flex; align-items: center;
+}
+.ts-metric strong {
+  color: var(--g1);
+  font-size: clamp(1.05rem, 1.55vw, 1.4rem);
+  font-weight: 700;
+  font-style: italic;
+  margin-right: .4rem;
+  animation: metricPulse 8s ease-in-out infinite;
+}
+.ts-metric-sep {
+  color: rgba(136, 202, 83, 0.3); font-style: normal;
+  margin: 0 1rem;
+}
+
+@keyframes metricPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: .92; }
+}
+
+/* ── Responsive ──────────────────────────────────── */
+@media (max-width: 900px) {
+  .ts-band--stack { transform: rotate(-1.1deg); }
+  .ts-band--badges { transform: rotate(.9deg); }
+}
+@media (max-width: 640px) {
+  .ts-section { padding: 2.6rem 0 2.2rem; }
+  .ts-band { width: 114%; margin-left: -7%; padding: .85rem 0; }
+  .ts-band--stack { transform: rotate(-1deg); margin-bottom: 1rem; }
+  .ts-band--badges { transform: rotate(.8deg); }
+  .ts-stack-item, .ts-badge-item { font-size: 1.05rem; gap: .55rem; }
+  .ts-band-track { gap: 1.8rem; }
+  .ts-band-set { gap: 1.8rem; }
+  .ts-metric-sep { margin: 0 .6rem; }
+  .ts-band--metrics { margin-bottom: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ts-band-track--left, .ts-band-track--right { animation-duration: 90s; }
+}
