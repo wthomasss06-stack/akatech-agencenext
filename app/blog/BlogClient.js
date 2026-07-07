@@ -34,23 +34,6 @@ function BlurReveal({ children, delay = 0, direction = 'up', style = {}, classNa
   )
 }
 
-function LetterReveal({ text, style = {}, stagger = 0.028 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
-  return (
-    <span ref={ref} style={{ display: 'inline', ...style }}>
-      {[...text].map((char, i) => (
-        <motion.span key={i}
-          initial={{ opacity: 0, filter: 'blur(4px)', y: 10 }}
-          animate={inView ? { opacity: 1, filter: 'blur(0px)', y: 0 } : {}}
-          transition={{ duration: 0.42, ease: 'easeOut', delay: i * stagger }}
-          style={{ display: 'inline-block', whiteSpace: 'pre' }}>
-          {char}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
 
 /* ─── WordRevealP — scroll-reveal mot par mot + tilt ────── */
 function useWordReveal(sectionRef, textRef, wordsRef) {
@@ -302,7 +285,7 @@ function HeroBlog() {
 
 
 // ═══════════════════════════════════════════════════════════════
-// ── FEATURED POST — BlurReveal + TiltCard + LetterReveal ─────
+// ── FEATURED POST — BlurReveal + TiltCard ─────────────────────
 // ═══════════════════════════════════════════════════════════════
 function FeaturedPost() {
   const T = useTheme()
@@ -416,7 +399,6 @@ function FeaturedPost() {
               </span>
             </motion.div>
 
-            {/* Titre — NO LetterReveal pour éviter le découpage de mots */}
             <motion.h2
               initial={{ opacity: 0, x: 20 }}
               animate={inView ? { opacity: 1, x: 0 } : {}}
@@ -575,7 +557,7 @@ function BlogGrid() {
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
               <GhostTitle text="EXPLOREZ NOS RESSOURCES DIGITALES" />
               Explorez nos <GreenUnderline>
-                <span className="text-gradient"><LetterReveal text="ressources digitales" stagger={0.025} /></span>
+                <span className="text-gradient">ressources digitales</span>
               </GreenUnderline>
             </h2>
           </BlurReveal>
@@ -699,7 +681,7 @@ function BlogGrid() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// ── NEWSLETTER — BlurReveal + LetterReveal ───────────────────
+// ── NEWSLETTER — BlurReveal ────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
 function Newsletter() {
   const T = useTheme()
@@ -716,7 +698,7 @@ function Newsletter() {
           </div>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem', textAlign: 'left' }}>
             <GhostTitle text="RESTEZ INFORMÉ DES DERNIÈRES TENDANCES" />
-            Restez informé des <GreenUnderline><span className="text-gradient"><LetterReveal text="dernières tendances" stagger={0.02} /></span></GreenUnderline>
+            Restez informé des <GreenUnderline><span className="text-gradient">dernières tendances</span></GreenUnderline>
           </h2>
         </BlurReveal>
         <WordRevealP
@@ -794,7 +776,7 @@ function ProcessBlog() {
             Du blog au{' '}
             <GreenUnderline>
               <span className="text-gradient">
-                <LetterReveal text="projet concret" stagger={0.04} />
+                projet concret
               </span>
             </GreenUnderline>
           </h2>
@@ -824,7 +806,7 @@ function ProcessBlog() {
               </div>
               <div>
                 <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
-                  <LetterReveal text={title} stagger={0.035} />
+                  {title}
                 </h3>
                 <p style={{ fontSize: '1.05rem', color: T.textSub, lineHeight: 1.8, maxWidth: 480 }}>{desc}</p>
                 <div style={{ marginTop: '1.5rem', display: 'flex', gap: '.4rem' }}>

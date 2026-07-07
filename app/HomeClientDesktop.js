@@ -6,14 +6,15 @@ import {
   ArrowRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   TrendingUp, Users, Clock, Award,
-  MessageCircle, Target, Code, Rocket, Timer, ChevronLeft, ChevronRight,
+  MessageCircle, Target, Code, Timer, ChevronLeft, ChevronRight,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
+  Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown, AlertTriangle
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
-import { SERVICES, PROJECTS, TESTIMONIALS } from '@/lib/data'
+import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
 
@@ -335,26 +336,62 @@ function BlurReveal({ children, delay = 0, direction = 'up', style = {}, classNa
 
 // Letter-by-letter reveal (hentat.html)
 // once: false → rejoue dans les deux sens (scroll down ET scroll up)
-function LetterReveal({ text, style = {}, className = '', stagger = 0.028 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: false, margin: '-50px' })
+
+/* ─── WordRevealP — scroll-reveal mot par mot + tilt ────── */
+function useWordReveal(sectionRef, textRef, wordsRef) {
+  useEffect(() => {
+    const container = sectionRef.current
+    const textEl    = textRef.current
+    if (!container || !textEl) return
+    const onScroll = () => {
+      const rect     = container.getBoundingClientRect()
+      const winH     = window.innerHeight
+      const progress = Math.max(0, Math.min(1, (winH - rect.top) / (winH + container.offsetHeight)))
+      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
+      textEl.style.opacity   = String(Math.min(1, 0.35 + progress * 1.4))
+      const words = wordsRef.current
+      if (!words.length) return
+      const wProg = Math.max(0, Math.min(1, (progress - 0.05) / (0.50 - 0.05)))
+      words.forEach((span, i) => {
+        if (!span) return
+        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.76) / 0.26))
+        span.style.opacity = String(0.08 + local * 0.92)
+        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+}
+
+function WordRevealP({ text, greenWords = [], sectionRef, extraStyle = {} }) {
+  const textRef  = useRef(null)
+  const wordsRef = useRef([])
+  const green    = new Set(greenWords)
+  useWordReveal(sectionRef, textRef, wordsRef)
   return (
-    <span ref={ref} className={className} style={{ display: 'inline', ...style }}>
-      {[...text].map((char, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, filter: 'blur(4px)', y: 10 }}
-          animate={inView
-            ? { opacity: 1, filter: 'blur(0px)', y: 0 }
-            : { opacity: 0, filter: 'blur(4px)', y: 10 }
-          }
-          transition={{ duration: 0.42, ease: 'easeOut', delay: i * stagger }}
-          style={{ display: 'inline-block', whiteSpace: 'pre' }}
-        >
-          {char}
-        </motion.span>
+    <p ref={textRef} style={{
+      fontFamily: "'JetBrains Mono',monospace",
+      fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
+      fontWeight: 700,
+      lineHeight: 1.32,
+      paddingLeft: 'var(--body-indent)',
+      paddingRight: 'var(--body-indent)',
+      transformOrigin: '0% 50%',
+      transition: 'transform .05s linear',
+      margin: 0,
+      ...extraStyle,
+    }}>
+      {text.split(' ').map((word, i) => (
+        <span key={i} ref={el => { wordsRef.current[i] = el }}
+          style={{ display: 'inline-block', marginRight: '0.28em', opacity: 0.08,
+            filter: 'blur(9px)', willChange: 'opacity, filter',
+            color: green.has(word) ? '#88ca53' : 'inherit' }}>
+          {word}
+        </span>
       ))}
-    </span>
+    </p>
   )
 }
 
@@ -597,7 +634,7 @@ function ServicesPreview() {
               NOS{' '}
               <GreenUnderline>
                 <span className="text-gradient">
-                  <LetterReveal text="PRESTATIONS." stagger={0.03} />
+                  PRESTATIONS.
                 </span>
               </GreenUnderline>
             </h2>
@@ -912,7 +949,7 @@ function DomainesSection() {
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
-  // Scroll-reveal mot par mot + tilt — même mécanique que ScrollRevealText
+  // Scroll-reveal mot par mot + tilt — même mécanique que WordRevealP
   const sectionRef  = useRef(null)
   const domTextRef  = useRef(null)
   const domWordsRef = useRef([])
@@ -1043,134 +1080,7 @@ function DomainesSection() {
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ── SCROLL REVEAL TEXT — effet entree.html (blur par mot + tilt) ─
-// ═══════════════════════════════════════════════════════════════
-function ScrollRevealText() {
-  const T = useTheme()
-  const containerRef = useRef(null)
-  const textRef      = useRef(null)
-  const wordsRef     = useRef([])
-
-  const TEXT = "AKATech conçoit des sites et applications sur mesure pour les PME ambitieuses d'Abidjan et d'Afrique de l'Ouest. Design premium, performance optimisée et SEO pensé pour convertir : chaque projet est construit pour renforcer votre image et générer de nouvelles opportunités d'affaires."
-
-  useEffect(() => {
-    const container = containerRef.current
-    const textEl    = textRef.current
-    if (!container || !textEl) return
-
-    const onScroll = () => {
-      const rect        = container.getBoundingClientRect()
-      const winH        = window.innerHeight
-      const sectionH    = container.offsetHeight
-      const totalTravel = winH + sectionH
-      const traveled    = winH - rect.top
-      const progress    = Math.max(0, Math.min(1, traveled / totalTravel))
-
-      // Tilt : 3deg → 0deg, fini à progress 0.35
-      const rotDeg = 3 * (1 - Math.min(progress / 0.35, 1))
-      textEl.style.transform = `rotate(${rotDeg}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.6 + progress * 0.8))
-
-      // Mots : démarre à 0.10, tous révélés à 0.65 max
-      const words  = wordsRef.current
-      if (!words.length) return
-      const wStart = 0.10
-      const wEnd   = 0.65
-      const wProg  = Math.max(0, Math.min(1, (progress - wStart) / (wEnd - wStart)))
-
-      words.forEach((span, i) => {
-        if (!span) return
-        const threshold = i / (words.length - 1)
-        const local     = Math.max(0, Math.min(1, (wProg - threshold * 0.82) / 0.22))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  return (
-    <section
-      ref={containerRef}
-      style={{
-        padding: '12rem 5%',
-        minHeight: '120vh',
-        display: 'flex',
-        alignItems: 'center',
-        background: T.bg,
-        position: 'relative',
-      }}
-    >
-      {/* Décoration lumineuse subtile */}
-      <div style={{
-        position: 'absolute',
-        top: '50%', left: '50%',
-        transform: 'translate(-50%,-50%)',
-        width: '60vw', height: '60vw',
-        maxWidth: 700, maxHeight: 700,
-        borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(136,202,83,.045) 0%, transparent 65%)',
-        pointerEvents: 'none',
-      }} />
-
-      <div style={{ maxWidth: 1200, width: '100%', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        {/* Titre de section */}
-        <h2 className="section-title-big" style={{
-          position: 'relative',
-          fontSize: 'clamp(2.8rem,5.5vw,4.4rem)',
-          color: T.textMain,
-          marginBottom: '2.5rem',
-        }}>
-          <GhostTitle text="À PROPOS DE AKATECH" />
-          À propos de <GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
-        </h2>
-
-        {/* Texte principal avec effet blur-reveal */}
-        <p
-          ref={textRef}
-          style={{
-            fontFamily: "'JetBrains Mono',monospace",
-            fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-            fontWeight: 700,
-            lineHeight: 1.32,
-            color: T.textMain,
-            transformOrigin: '0% 50%',
-            transition: 'transform .05s linear',
-            margin: 0,
-            paddingLeft: 'var(--body-indent)',
-            paddingRight: 'var(--body-indent)',
-          }}
-        >
-          {(() => {
-          const greenWords = new Set(['PME', 'ambitieuses', 'premium,', 'optimisée', 'SEO', 'convertir', "d'affaires."])
-          return TEXT.split(' ').map((word, i) => (
-            <span
-              key={i}
-              ref={el => { wordsRef.current[i] = el }}
-              style={{
-                display: 'inline-block',
-                marginRight: '0.28em',
-                opacity: 0.08,
-                filter: 'blur(9px)',
-                willChange: 'opacity, filter',
-                color: greenWords.has(word) ? '#88ca53' : 'inherit',
-              }}
-            >
-              {word}
-            </span>
-          ))
-        })()}
-        </p>
-      </div>
-    </section>
-  )
-}
-
-// ── TUNNEL ARCHIVE 3D (transition À propos → Stats) ───────────
+// ── TUNNEL ARCHIVE 3D ──────────────────────────────────────────
 // Port de l'effet "15 / LE TUNNEL ARCHIVE 3D" (5haut_niveay.html) :
 // grille pinnée en perspective 3D, qui avance vers la caméra au scroll.
 function ArchiveTunnelSection() {
@@ -1213,11 +1123,14 @@ function ArchiveTunnelSection() {
 
       {/* Titre de section — statique, même système d'alignement que les autres titres (maxWidth 1200) */}
       <div style={{ padding: '5rem 5% 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, margin: 0 }}>
             <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
             Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
           </h2>
+          <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
+            Voir tous les projets <ArrowRight size={15} />
+          </Link>
         </div>
       </div>
 
@@ -1377,19 +1290,370 @@ function StatsSection() {
 }
 
 // ── HOME PAGE ────────────────────────────────────────────────
+
+// --- Sections moved from Contact + FAQ / Pricing callout ---
+const GEO_PAYS = [
+  { code: 'CI', name: "Côte d'Ivoire", note: 'Siège — Abidjan', primary: true },
+  { code: 'SN', name: 'Sénégal', note: 'WhatsApp & Zoom' },
+  { code: 'CM', name: 'Cameroun', note: 'WhatsApp & Zoom' },
+  { code: 'BJ', name: 'Bénin', note: 'WhatsApp & Zoom' },
+  { code: 'BF', name: 'Burkina Faso', note: 'WhatsApp & Zoom' },
+  { code: 'FR', name: 'France', note: 'Diaspora africaine' },
+]
+
+function FlagBadge({ code, primary }) {
+  const colors = {
+    CI: ['#f77f00','#fff','#009a44'],
+    SN: ['#00853f','#fdef42','#e31b23'],
+    CM: ['#007a5e','#ce1126','#fcd116'],
+    BJ: ['#008751','#fcd116','#e8112d'],
+    BF: ['#ef2b2d','#009a44','#fcd116'],
+    FR: ['#002395','#fff','#ed2939'],
+  }
+  const [c1, c2, c3] = colors[code] || ['#88ca53','#fff','#88ca53']
+  return (
+    <div style={{ width: 36, height: 36, borderRadius: 10, overflow: 'hidden', flexShrink: 0, border: primary ? '1.5px solid rgba(136,202,83,.5)' : '1px solid rgba(255,255,255,.1)', display: 'flex', flexDirection: 'column', boxShadow: primary ? '0 0 10px rgba(136,202,83,.2)' : 'none' }}>
+      <div style={{ flex: 1, background: c1 }} />
+      <div style={{ flex: 1, background: c2 }} />
+      <div style={{ flex: 1, background: c3 }} />
+    </div>
+  )
+}
+
+function PricingCallout() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true })
+  const [tab, setTab] = useState('vitrine')
+  const d = PRICING[tab]
+
+  return (
+    <section ref={ref} style={{ padding: '6rem 5% 7rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
+        {/* Section Header */}
+        <div style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
+          <BlurReveal>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', marginBottom: '.6rem', color: T.textMain }}>
+              <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
+              Choisissez votre <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
+            </h2>
+          </BlurReveal>
+          <BlurReveal delay={0.12}>
+            <p style={{ color: T.textSub, maxWidth: 760, marginBottom: 0 }}>Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.</p>
+          </BlurReveal>
+        </div>
+
+        {/* Tabs */}
+        <BlurReveal delay={0.15} style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
+          {Object.entries(PRICING).map(([k, v]) => (
+            <motion.button key={k} onClick={() => setTab(k)}
+              whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
+              style={{ padding: '.55rem 1.4rem', borderRadius: 100, border: '1px solid', borderColor: tab === k ? T.green : T.border, background: tab === k ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: tab === k ? '#fff' : T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 700, cursor: 'pointer', transition: 'all .22s' }}>
+              {v.label}
+            </motion.button>
+          ))}
+        </BlurReveal>
+
+        {/* Glass Cards */}
+        <AnimatePresence mode="wait">
+          <motion.div key={tab}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: .3 }}
+            className="pricing-grid">
+            {d.plans.map((plan, i) => {
+              const wa = encodeURIComponent(`Bonjour AKATech, je suis intéressé par l'offre ${plan.badge} à ${plan.price}`)
+              return (
+                <BlurReveal key={plan.badge} delay={i * 0.1} direction={['left', 'up', 'right'][i] || 'up'}>
+                  <motion.div
+                    whileHover={{ y: -8, transition: { duration: .25 } }}
+                    style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', background: plan.popular ? 'linear-gradient(145deg,rgba(136,202,83,.18),rgba(136,202,83,.06))' : T.light ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: plan.popular ? '1px solid rgba(136,202,83,.5)' : `1px solid ${T.light ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.1)'}`, boxShadow: plan.popular ? '0 8px 40px rgba(136,202,83,.2),inset 0 1px 0 rgba(255,255,255,.15)' : T.light ? '0 4px 24px rgba(0,0,0,.08)' : '0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)', padding: plan.popular ? '0 0 2rem' : '2rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    {plan.popular && (
+                      <div style={{ padding: '.5rem', background: 'linear-gradient(90deg,#5f9137,#88ca53)', textAlign: 'center', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#fff', letterSpacing: '.1em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem', borderRadius: '19px 19px 0 0' }}>
+                        <Zap size={10} />LE PLUS POPULAIRE
+                      </div>
+                    )}
+                    <div style={{ padding: plan.popular ? '1.8rem 2rem 0' : 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(180deg,rgba(255,255,255,.07) 0%,transparent 100%)', borderRadius: '20px 20px 0 0', pointerEvents: 'none' }} />
+                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: plan.popular ? '#88ca53' : T.textMuted, textTransform: 'uppercase', marginBottom: '.6rem' }}>{plan.badge}</div>
+                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.4rem,2.5vw,1.7rem)', fontWeight: 900, color: T.textMain, marginBottom: '.2rem', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{plan.price}</div>
+                      <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, marginBottom: '1.6rem', display: 'flex', alignItems: 'center', gap: 4 }}>
+                        <Timer size={11} style={{ color: T.green }} />{plan.del}
+                      </div>
+                      <div style={{ height: 1, background: plan.popular ? 'rgba(136,202,83,.25)' : 'rgba(255,255,255,.08)', marginBottom: '1.4rem' }} />
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '.65rem', marginBottom: '1.8rem', flex: 1 }}>
+                        {plan.features.map(f => (
+                          <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '.6rem', fontSize: '.83rem', color: T.textSub, lineHeight: 1.5 }}>
+                            <div style={{ width: 18, height: 18, borderRadius: '50%', flexShrink: 0, marginTop: 1, background: plan.popular ? 'rgba(136,202,83,.2)' : 'rgba(255,255,255,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                              <Check size={11} style={{ color: '#88ca53' }} />
+                            </div>
+                            {f}
+                          </div>
+                        ))}
+                      </div>
+                      {plan.popular
+                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}>Commander →</a>
+                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}>Commander →</a>
+                      }
+                    </div>
+                  </motion.div>
+                </BlurReveal>
+              )
+            })}
+          </motion.div>
+        </AnimatePresence>
+
+        {/* Urgency bar */}
+        <BlurReveal delay={0.5}>
+          <div style={{ marginTop: '2.5rem', padding: '1rem 1.6rem', borderRadius: 14, background: 'rgba(136,202,83,.04)', border: '1px solid rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem' }}>
+              <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#88ca53', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
+              <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: T.textSub, letterSpacing: '.04em', margin: 0 }}>
+                <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
+                  <AlertTriangle size={12} /> 2 créneaux disponibles
+                </span>
+                {' '}ce mois-ci — les projets sont traités dans l'ordre d'arrivée.
+              </p>
+            </div>
+            <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
+              className="btn-raised" style={{ padding: '.55rem 1.2rem', fontSize: '.78rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
+              Réserver ma place →
+            </a>
+          </div>
+        </BlurReveal>
+      </div>
+    </section>
+  )
+}
+
+function FAQSectionHome() {
+  const T = useTheme()
+  const [open, setOpen] = useState(null)
+  return (
+    <section style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
+        <BlurReveal delay={0.1}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="QUESTIONS FRÉQUENTES" />
+            Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
+          </h2>
+        </BlurReveal>
+      </div>
+      <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
+          {FAQ_ITEMS.slice(0, 6).map(({ q, a }, i) => (
+            <BlurReveal key={q} delay={i * 0.06} direction={i % 2 === 0 ? 'left' : 'right'}>
+              <motion.div className="sku-card" whileHover={{ borderColor: 'rgba(136,202,83,.25)' }} style={{ overflow: 'hidden' }}>
+                <button onClick={() => setOpen(open === i ? null : i)}
+                  style={{ width: '100%', padding: '1.2rem 1.5rem', background: 'none', border: 'none', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', textAlign: 'left' }}>
+                  <span style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+                    <HelpCircle size={14} style={{ color: T.green, flexShrink: 0 }} />{q}
+                  </span>
+                  <motion.div animate={{ rotate: open === i ? 180 : 0 }} transition={{ duration: .25 }}>
+                    <ChevronDown size={16} style={{ color: open === i ? T.green : T.textMuted, flexShrink: 0 }} />
+                  </motion.div>
+                </button>
+                <AnimatePresence>
+                  {open === i && (
+                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: .3 }} style={{ overflow: 'hidden' }}>
+                      <div style={{ padding: '0 1.5rem 1.2rem', fontSize: '.85rem', color: T.textSub, lineHeight: 1.7, borderTop: `1px solid ${T.border}`, paddingTop: '1rem' }}>
+                        {a}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            </BlurReveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+function GeoSectionHome() {
+  const T = useTheme()
+  const sectionRef = useRef(null)
+  return (
+    <section ref={sectionRef} style={{ padding: '5rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .16 }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '2.5rem' }}>
+          <BlurReveal>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+              <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
+              Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
+            </h2>
+          </BlurReveal>
+          <WordRevealP
+            sectionRef={sectionRef}
+            text="Basés à Abidjan, on travaille 100% remote avec des clients partout en Afrique de l'Ouest et la diaspora."
+            greenWords={['Abidjan,', 'remote', "l'Afrique", "l'Ouest", 'diaspora.']}
+            extraStyle={{ color: T.textSub, marginTop: '.75rem' }}
+          />
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '.85rem', marginBottom: '2rem' }}>
+          {GEO_PAYS.map(({ code, name, note, primary }, i) => (
+            <motion.div key={name} initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * .06 }} whileHover={{ y: -4 }} style={{ padding: '1rem 1.2rem', borderRadius: 14, background: primary ? 'linear-gradient(135deg,rgba(136,202,83,.12),rgba(136,202,83,.04))' : (T.light ? 'rgba(0,0,0,.03)' : 'rgba(255,255,255,.03)'), border: `1px solid ${primary ? 'rgba(136,202,83,.3)' : T.border}`, display: 'flex', alignItems: 'center', gap: '.75rem' }}>
+              <FlagBadge code={code} primary={primary} />
+              <div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.82rem', color: primary ? '#88ca53' : T.textMain }}>{name}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted }}>{note}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+      </div>
+    </section>
+  )
+}
+
+function ProjectFormHome() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const sectionRef = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
+  const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const inputStyle = { width: '100%', padding: '.8rem .95rem', borderRadius: 10, background: T.light ? '#ffffff' : 'rgba(136,202,83,.04)', border: `1px solid ${T.light ? 'rgba(0,0,0,.15)' : T.border}`, color: T.light ? '#111111' : 'rgba(255,255,255,.85)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', outline: 'none', transition: 'border-color .2s, box-shadow .2s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark' }
+  const [error, setError] = useState('')
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || !form.message) return
+    setSending(true)
+    setError('')
+    try {
+      const res = await fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, projectType: form.service }) })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || "Erreur lors de l'envoi")
+      setSent(true)
+    } catch (err) {
+      setError(err.message || "Une erreur est survenue. Réessayez ou contactez-nous sur WhatsApp.")
+    } finally { setSending(false) }
+  }
+
+  return (
+    <section ref={el => { ref.current = el; sectionRef.current = el }} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
+      <div style={{ maxWidth: 760, margin: '0 auto' }}>
+        <BlurReveal style={{ marginBottom: '2rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
+            Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
+          </h2>
+        </BlurReveal>
+        <WordRevealP sectionRef={sectionRef} text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit." greenWords={['formulaire', 'email', '24h', 'gratuit.']} extraStyle={{ color: T.textSub, marginBottom: '2rem' }} />
+
+        <BlurReveal delay={0.15}>
+          <TiltCard intensity={6} perspective={1400} style={{ borderRadius: 20, background: T.light ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: `1px solid ${T.light ? 'rgba(0,0,0,.08)' : 'rgba(255,255,255,.1)'}`, boxShadow: T.light ? '0 4px 32px rgba(0,0,0,.08)' : '0 8px 48px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.07)', padding: 'clamp(1.2rem,4vw,2.5rem)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent)', pointerEvents: 'none' }} />
+
+            <AnimatePresence mode="wait">
+              {sent ? (
+                <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: 'clamp(2rem,6vw,3rem) 1rem' }}>
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: '2px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <Check size={36} style={{ color: '#88ca53' }} />
+                  </motion.div>
+                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
+                  <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
+                </motion.div>
+              ) : (
+                <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Votre nom *</label>
+                      <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                        onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
+                        onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Email *</label>
+                      <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                        onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
+                        onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem', marginBottom: '1rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                      <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                        onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
+                        onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Type de projet</label>
+                      <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))}
+                        onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
+                        onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
+                        <option value="">Choisir...</option>
+                        <option value="site-vitrine">Conception de Site Web</option>
+                        <option value="e-commerce">E-commerce</option>
+                        <option value="application-web">Application Web / SaaS</option>
+                        <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
+                        <option value="api-backend">API & Backend</option>
+                        <option value="google-my-business">Fiche Google My Business</option>
+                        <option value="maintenance">Maintenance & Support</option>
+                        <option value="autre">Autre</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div style={{ marginBottom: '1.8rem' }}>
+                    <label style={{ display: 'block', fontSize: '.72rem', color: T.textSub, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.06em', textTransform: 'uppercase' }}>Votre besoin en une phrase *</label>
+                    <input style={inputStyle}
+                      placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
+                      value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))}
+                      onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
+                      onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }} />
+                  </div>
+
+                  <motion.button whileTap={{ scale: .97 }} onClick={handleSubmit}
+                    className="btn-raised" style={{ width: '100%', justifyContent: 'center', fontSize: '.95rem', padding: '1rem', opacity: sending ? .7 : 1 }}>
+                    {sending ? (
+                      <><span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> Envoi en cours...</>
+                    ) : (
+                      <><Send size={16} /> Recevoir mon devis en 24h</>
+                    )}
+                  </motion.button>
+
+                  {error && (
+                    <p style={{ textAlign: 'center', fontSize: '.78rem', color: '#ff6b6b', marginTop: '.8rem' }}>
+                      {error}
+                    </p>
+                  )}
+
+                  <p style={{ textAlign: 'center', fontSize: '.72rem', color: T.textMuted, marginTop: '.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.35rem' }}>
+                    <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
+                  </p>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </TiltCard>
+        </BlurReveal>
+      </div>
+    </section>
+  )
+}
+
 export default function HomePageDesktop() {
   return (
     <div style={{ paddingTop: 0 }}>
       <Hero />
       <StatsSection />
-      <ServicesPreview />
-      <ArchiveTunnelSection />
       <TrustStacksMarquee />
+      <ServicesPreview />
       <DomainesSection />
+      <PricingCallout />
       <WhyUs />
-      <ConversionMarquee />
-      <ScrollRevealText />
+      <ArchiveTunnelSection />
       <Testimonials />
+      <GeoSectionHome />
+
+      <ProjectFormHome />
+      <FAQSectionHome />
+      <ConversionMarquee />
 
       <PageCTA
         message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite."

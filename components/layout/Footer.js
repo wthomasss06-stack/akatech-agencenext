@@ -67,6 +67,91 @@ function WhatsAppIcon({ size = 14 }) {
   )
 }
 
+// ── Icônes IA — pour le widget "Demandez à l'IA" ─────────────
+function ChatGPTIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="12" cy="5.2" r="2.5"/><circle cx="18.8" cy="8.6" r="2.5"/>
+      <circle cx="18.8" cy="15.4" r="2.5"/><circle cx="12" cy="18.8" r="2.5"/>
+      <circle cx="5.2" cy="15.4" r="2.5"/><circle cx="5.2" cy="8.6" r="2.5"/>
+    </svg>
+  )
+}
+function ClaudeIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <rect key={i} x="10.6" y="1.8" width="2.8" height="9" rx="1.4" transform={`rotate(${60 * i} 12 12)`} />
+      ))}
+    </svg>
+  )
+}
+function PerplexityIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round">
+      <rect x="4" y="4" width="16" height="16" rx="4"/>
+      <path d="M12 4.8v14.4M4.8 12h14.4M7.2 7.2l9.6 9.6M16.8 7.2L7.2 16.8"/>
+    </svg>
+  )
+}
+function GeminiIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C12 8 16 12 22 12C16 12 12 16 12 22C12 16 8 12 2 12C8 12 12 8 12 2Z"/>
+    </svg>
+  )
+}
+function GrokIcon({ size = 18 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="4.6" fill="currentColor"/>
+      <ellipse cx="12" cy="12" rx="10.6" ry="3.8" stroke="currentColor" strokeWidth="1.5" transform="rotate(-20 12 12)"/>
+    </svg>
+  )
+}
+
+// ── Ask AI — vérifiez AKATech par vous-même (site-wide, footer) ──
+function AskAIStrip({ T }) {
+  const [copied, setCopied] = useState(null)
+  const PROMPT = "J'ai un projet web pour mon entreprise et j'hésite sur le bon prestataire. Évalue AKATech (akatech.vercel.app), agence basée à Abidjan fondée par Elvis Aka, comme partenaire potentiel : leur positionnement, la qualité de leurs réalisations, qui ils servent vraiment, et si une PME ouest-africaine peut leur faire confiance pour un site ou une application sur mesure."
+
+  const PLATFORMS = [
+    { id: 'chatgpt', label: 'ChatGPT', Icon: ChatGPTIcon, hoverColor: '#10a37f', url: `https://chatgpt.com/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'claude', label: 'Claude', Icon: ClaudeIcon, hoverColor: '#d97757', url: 'https://claude.ai/new' },
+    { id: 'perplexity', label: 'Perplexity', Icon: PerplexityIcon, hoverColor: '#20808d', url: `https://www.perplexity.ai/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'gemini', label: 'Gemini', Icon: GeminiIcon, hoverColor: '#4c8df6', url: 'https://gemini.google.com/app' },
+    { id: 'grok', label: 'Grok', Icon: GrokIcon, hoverColor: '#e8e8e8', url: `https://grok.com/?q=${encodeURIComponent(PROMPT)}` },
+  ]
+
+  const handleClick = async (platform) => {
+    try { await navigator.clipboard.writeText(PROMPT) } catch {}
+    setCopied(platform.id)
+    setTimeout(() => setCopied(null), 2000)
+    window.open(platform.url, '_blank', 'noopener,noreferrer')
+  }
+
+  return (
+    <div style={{ padding: '2.2rem 0', borderBottom: `1px solid ${T.border}`, textAlign: 'center' }}>
+      <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: T.textMuted, marginBottom: '1rem' }}>
+        (Demandez à l'IA ce qu'elle pense d'AKATech)
+      </p>
+      <div style={{ display: 'flex', gap: '.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        {PLATFORMS.map(p => (
+          <button key={p.id} onClick={() => handleClick(p)} title={`Demander à ${p.label}`}
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.4rem', padding: '.75rem .95rem', borderRadius: 14, background: T.light ? 'rgba(0,0,0,.03)' : 'rgba(255,255,255,.04)', border: `1px solid ${T.border}`, cursor: 'pointer', minWidth: 70, transition: 'all .2s' }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = p.hoverColor; e.currentTarget.style.transform = 'translateY(-3px)' }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = T.border; e.currentTarget.style.transform = 'none' }}>
+            <p.Icon size={19} style={{ color: copied === p.id ? '#88ca53' : T.textSub }} />
+            <span style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: T.textMuted }}>
+              {copied === p.id ? 'Copié !' : p.label}
+            </span>
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 // ── Données SVG AKATECH (paths lettre par lettre) ────────────
 // viewBox 776 × 148 — 7 lettres : A K A T E C H
 const LOGO_PATHS = [
@@ -306,6 +391,8 @@ export default function Footer({ variant = 'page' }) {
             </div>
           </div>
         </div>
+
+        <AskAIStrip T={T} />
 
         {/* ── Logo SVG banner ────────────────────────────────── */}
         <div style={{

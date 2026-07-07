@@ -48,14 +48,14 @@
   background: var(--bg-dark);
   border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
-  transform: rotate(-1.6deg);
+  transform: rotate(-2.4deg);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.5);
   margin-bottom: 1.3rem;
   z-index: 2;
 }
 .ts-band--badges {
   background: linear-gradient(135deg, var(--g1), var(--g3));
-  transform: rotate(1.3deg);
+  transform: rotate(2deg);
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.35);
   z-index: 1;
 }
@@ -115,7 +115,7 @@
 /* ── Ligne 3 : Métriques (bande défilante) ─ */
 .ts-band--metrics {
   background: var(--bg-dark-card);
-  transform: rotate(-1.2deg);
+  transform: rotate(-1.8deg);
   box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
   z-index: 1;
 }
@@ -147,14 +147,14 @@
 
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 900px) {
-  .ts-band--stack { transform: rotate(-1.1deg); }
-  .ts-band--badges { transform: rotate(.9deg); }
+  .ts-band--stack { transform: rotate(-1.7deg); }
+  .ts-band--badges { transform: rotate(1.4deg); }
 }
 @media (max-width: 640px) {
   .ts-section { padding: 2.6rem 0 2.2rem; }
   .ts-band { width: 114%; margin-left: -7%; padding: .85rem 0; }
-  .ts-band--stack { transform: rotate(-1deg); margin-bottom: 1rem; }
-  .ts-band--badges { transform: rotate(.8deg); }
+  .ts-band--stack { transform: rotate(-1.6deg); margin-bottom: 1rem; }
+  .ts-band--badges { transform: rotate(1.3deg); }
   .ts-stack-item, .ts-badge-item { font-size: 1.05rem; gap: .55rem; }
   .ts-band-track { gap: 1.8rem; }
   .ts-band-set { gap: 1.8rem; }

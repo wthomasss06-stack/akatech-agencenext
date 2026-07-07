@@ -5,7 +5,7 @@ import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDow
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
-import { TESTIMONIALS, FAQ_ITEMS } from '@/lib/data'
+import { TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 
 /* ─── BlurReveal ─────────────────────────────────────────── */
 function BlurReveal({ children, delay = 0, direction = 'up', style = {}, once = true }) {
@@ -23,131 +23,12 @@ function BlurReveal({ children, delay = 0, direction = 'up', style = {}, once = 
   )
 }
 
-/* ─── LetterReveal ───────────────────────────────────────── */
-function LetterReveal({ text, stagger = 0.028 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
-  return (
-    <span ref={ref} style={{ display: 'inline' }}>
-      {[...text].map((char, i) => (
-        <motion.span key={i}
-          initial={{ opacity: 0, filter: 'blur(4px)', y: 10 }}
-          animate={inView ? { opacity: 1, filter: 'blur(0px)', y: 0 } : {}}
-          transition={{ duration: 0.42, ease: 'easeOut', delay: i * stagger }}
-          style={{ display: 'inline-block', whiteSpace: 'pre' }}>
-          {char}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
 
 /* ─────────────────────────────────────────────────────────
    PRICING — synchronisé depuis PRICING_TABS dans App.jsx
    Champs : badge, price, del (livraison), features, popular
 ───────────────────────────────────────────────────────── */
-const PRICING = {
-  portfolio: {
-    label: 'Portfolio',
-    plans: [
-      {
-        badge: 'STARTER', price: '100 000 FCFA', del: '3 à 5 jours',
-        features: ['3 pages', 'Design responsive', 'Section projets', 'Formulaire contact',
-          'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)'],
-      },
-      {
-        badge: 'STANDARD', price: '175 000 FCFA', del: '5 à 7 jours', popular: true,
-        features: ['5 pages', 'Animations modernes', 'Projets détaillés', 'SEO de base',
-          'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)'],
-      },
-      {
-        badge: 'PREMIUM', price: '275 000 FCFA', del: '7 à 10 jours',
-        features: ['Design personnalisé', 'Animations avancées', 'Blog intégré',
-          'Optimisation performance (SXO)', 'Nom de domaine offert (1 an)',
-          'Hébergement inclus (1 an)', '1 mois support'],
-      },
-    ],
-  },
-  vitrine: {
-    label: 'Site Vitrine',
-    plans: [
-      {
-        badge: 'STARTER', price: '220 000 FCFA', del: '5 à 7 jours',
-        features: ['5 pages', 'Design responsive', 'Formulaire contact', 'SEO de base',
-          'Nom de domaine offert (1 an)', '1 mois support'],
-      },
-      {
-        badge: 'PRO', price: '350 000 FCFA', del: '7 à 10 jours', popular: true,
-        features: ['10 pages', 'Design premium', 'Blog intégré', 'SEO avancé (SEO + AEO)',
-          'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
-          '3 mois support', 'Formation 2h'],
-      },
-      {
-        badge: 'ELITE', price: '550 000 FCFA', del: '10 à 14 jours',
-        features: ['15 à 20 pages', 'Design sur mesure', 'CMS complet', 'SEO + AEO + GEO + Analytics',
-          'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
-          '6 mois support', 'Formation complète', 'Page supp. : 15 000 à 25 000 FCFA'],
-      },
-    ],
-  },
-  ecommerce: {
-    label: 'E-commerce',
-    plans: [
-      {
-        badge: 'STARTER', price: '450 000 FCFA', del: '14 jours',
-        features: ["Jusqu'à 50 produits", 'Paiement Mobile Money', 'Gestion commandes',
-          'Tableau de bord', 'Nom de domaine offert (1 an)',
-          'Hébergement inclus (1 an)', '1 mois support'],
-      },
-      {
-        badge: 'PRO', price: '750 000 FCFA', del: '21 jours', popular: true,
-        features: ['200 à 500 produits', 'Multi-paiement', 'Gestion stock temps réel',
-          'SEO produits + CRO + Analytics', 'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
-          '3 mois support', 'Formation admin'],
-      },
-      {
-        badge: 'ELITE', price: '1 200 000 FCFA', del: '30 jours',
-        features: ['Produits illimités', 'API paiement personnalisée',
-          'Optimisation IA (GEO)', 'Automatisations + Rapports avancés',
-          'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
-          '6 mois support', 'Formation équipe'],
-      },
-    ],
-  },
-  saas: {
-    label: 'App Web / SaaS',
-    plans: [
-      {
-        badge: 'SUR DEVIS', price: 'Étude personnalisée', del: 'Après diagnostic gratuit',
-        features: ['Diagnostic gratuit de votre besoin', 'Authentification + rôles', 'API REST',
-          'Dashboard sur mesure', 'Intégrations tierces (paiement, email…)', 'Multi-tenant (si besoin)',
-          'Onboarding optimisé (CRO)', 'Déploiement cloud', 'Devis détaillé sous 48h',
-          'Accompagnement post-lancement'],
-      },
-    ],
-  },
-  gbp: {
-    label: 'Fiche Google',
-    plans: [
-      {
-        badge: 'CRÉATION', price: '20 000 FCFA', del: '1 à 2 jours', popular: true,
-        features: ['Création complète de zéro', 'Vérification infos (NAP)', 'Horaires + zone de service',
-          'Catégorie + attributs', 'Lien vers le site web', 'Photos (logo, local, produits)',
-          'Description optimisée SEO local', 'Mots-clés locaux ciblés', 'Intégration carte sur le site'],
-      },
-      {
-        badge: 'OPTIMISATION', price: '12 000 FCFA', del: '1 jour',
-        features: ['Correction fiche existante', 'Vérification infos (NAP)', 'Horaires + zone de service',
-          'Catégorie + attributs', 'Photos (logo, local, produits)', 'Description optimisée SEO local',
-          'Mots-clés locaux ciblés'],
-      },
-      {
-        badge: 'SUIVI MENSUEL', price: '10 000 FCFA/mois', del: 'Continu',
-        features: ['Réponse aux avis clients', 'Posts Google réguliers', 'Suivi statistiques de fiche'],
-      },
-    ],
-  },
-}
+/* PRICING importé depuis @/lib/data (source unique, partagée avec la home) */
 
 
 /* ────────────────────────────────────────────────
@@ -261,7 +142,7 @@ function PricingTabs() {
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
               <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
               Choisissez votre{' '}
-              <GreenUnderline><span className="text-gradient"><LetterReveal text="formule idéale" stagger={0.035} /></span></GreenUnderline>
+              <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -477,7 +358,7 @@ function TrustedBy() {
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
               <GhostTitle text="CE QU'ILS DISENT DE L'INVESTISSEMENT" />
               Ce qu'ils disent de{' '}
-              <GreenUnderline><span className="text-gradient"><LetterReveal text="l'investissement" stagger={0.04} /></span></GreenUnderline>
+              <GreenUnderline><span className="text-gradient">l'investissement</span></GreenUnderline>
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.2}>
@@ -583,7 +464,7 @@ function FAQSection() {
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="QUESTIONS FRÉQUENTES" />
             Questions{' '}
-            <GreenUnderline><span className="text-gradient"><LetterReveal text="fréquentes" stagger={0.05} /></span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
           </h2>
         </BlurReveal>
       </div>

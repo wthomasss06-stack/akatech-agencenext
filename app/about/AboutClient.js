@@ -21,24 +21,6 @@ function BlurReveal({ children, delay = 0, direction = 'up', style = {}, once = 
   )
 }
 
-/* ─── LetterReveal ───────────────────────────────────────── */
-function LetterReveal({ text, style = {}, stagger = 0.028 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
-  return (
-    <span ref={ref} style={{ display: 'inline', ...style }}>
-      {[...text].map((char, i) => (
-        <motion.span key={i}
-          initial={{ opacity: 0, filter: 'blur(4px)', y: 10 }}
-          animate={inView ? { opacity: 1, filter: 'blur(0px)', y: 0 } : {}}
-          transition={{ duration: 0.42, ease: 'easeOut', delay: i * stagger }}
-          style={{ display: 'inline-block', whiteSpace: 'pre' }}>
-          {char}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
 
 /* ─── WordRevealP — scroll-reveal mot par mot + tilt ────── */
 function useWordReveal(sectionRef, textRef, wordsRef) {
@@ -349,7 +331,7 @@ function StatsFounderSection() {
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
               <GhostTitle text="MISSION & VISION" />
-              Mission & <GreenUnderline><span className="text-gradient"><LetterReveal text="vision" stagger={0.05} /></span></GreenUnderline>
+              Mission & <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -423,7 +405,7 @@ function TimelineSection() {
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
               <GhostTitle text="L'ÉVOLUTION D'AKATECH" />
-              L'évolution d'<GreenUnderline><span className="text-gradient"><LetterReveal text="AKATech" stagger={0.05} /></span></GreenUnderline>
+              L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -436,7 +418,7 @@ function TimelineSection() {
                 <motion.div className="sku-card" whileHover={{ y: -4, scale: 1.01 }} style={{ width: '44%', padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: 'radial-gradient(circle at 100% 0%,rgba(136,202,83,.1),transparent 70%)', pointerEvents: 'none' }} />
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>
-                  <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}><LetterReveal text={title} stagger={0.03} /></h3>
+                  <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}>{title}</h3>
                   <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
                 </motion.div>
               </div>
@@ -461,7 +443,7 @@ function ValuesSection() {
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
               <GhostTitle text="CE QUI NOUS DISTINGUE" />
-              Ce qui nous <GreenUnderline><span className="text-gradient"><LetterReveal text="distingue" stagger={0.04} /></span></GreenUnderline>
+              Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -473,7 +455,7 @@ function ValuesSection() {
                 <div style={{ width: 52, height: 52, borderRadius: 14, background: 'rgba(136,202,83,.1)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.2rem' }}>
                   <Icon size={24} style={{ color: T.green }} />
                 </div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.5rem' }}><LetterReveal text={title} stagger={0.025} /></h3>
+                <h3 style={{ fontSize: '1rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.5rem' }}>{title}</h3>
                 <p style={{ fontSize: '.82rem', color: T.textSub, lineHeight: 1.65 }}>{desc}</p>
               </motion.div>
             </BlurReveal>
@@ -499,7 +481,7 @@ function SkillsSection() {
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
             <GhostTitle text="LES TECHNOLOGIES QUI FONT LA DIFFÉRENCE" />
             Les technologies qui font{' '}
-            <GreenUnderline><span className="text-gradient"><LetterReveal text="la différence" stagger={0.035} /></span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
           </h2>
         </BlurReveal>
       </div>

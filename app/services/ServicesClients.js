@@ -9,23 +9,6 @@ import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { SERVICES } from '@/lib/data'
 
-function LetterReveal({ text, stagger = 0.028 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-50px' })
-  return (
-    <span ref={ref} style={{ display: 'inline' }}>
-      {[...text].map((char, i) => (
-        <motion.span key={i}
-          initial={{ opacity: 0, filter: 'blur(4px)', y: 10 }}
-          animate={inView ? { opacity: 1, filter: 'blur(0px)', y: 0 } : {}}
-          transition={{ duration: 0.42, ease: 'easeOut', delay: i * stagger }}
-          style={{ display: 'inline-block', whiteSpace: 'pre' }}>
-          {char}
-        </motion.span>
-      ))}
-    </span>
-  )
-}
 
 
 
@@ -151,7 +134,7 @@ function ServicesList() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'left', marginBottom: '3rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
             <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
-            Choisissez votre <GreenUnderline><span className="text-gradient"><LetterReveal text="solution" stagger={0.04} /></span></GreenUnderline>
+            Choisissez votre <GreenUnderline><span className="text-gradient">solution</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -241,7 +224,7 @@ function TechSection() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
             <GhostTitle text="DES TECHNOLOGIES ÉPROUVÉES" />
-            Des technologies <GreenUnderline><span className="text-gradient"><LetterReveal text="éprouvées" stagger={0.04} /></span></GreenUnderline>
+            Des technologies <GreenUnderline><span className="text-gradient">éprouvées</span></GreenUnderline>
           </h2>
         </motion.div>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '1rem' }}>
