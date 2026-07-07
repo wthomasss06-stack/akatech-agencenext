@@ -637,9 +637,9 @@ function WhyUs() {
         {/* Header — titre sur trait rouge */}
         <BlurReveal delay={0.1} direction="left">
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '3rem' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE." />
+            <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
             DE L'IDÉE À LA MISE{' '}
-            <GreenUnderline><span className="text-gradient">EN LIGNE.</span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">en ligne</span></GreenUnderline>
           </h2>
         </BlurReveal>
 
