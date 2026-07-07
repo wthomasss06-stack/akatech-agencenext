@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
   --g1: #88ca53;
@@ -201,10 +201,10 @@ body.light-mode .ghost-title-wrap {
   max-width: 720px;          /* évite que la ligne file trop loin à droite */
 }
 
-/* Titres de section — police condensée bold style "Niki Studio" */
+/* Titres de section — Space Grotesk */
 .section-title-big {
-  font-family: 'Anton', sans-serif;
-  font-weight: 400;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: -.01em;
   line-height: 0.95;

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="public/images/logo.png" alt="AKATECH AGENCE" width="150" />
+<img src="public/images/logo.webp" alt="AKATECH AGENCE" width="150" />
 
 # AKATech — Agence Web & Solutions Digitales
 
