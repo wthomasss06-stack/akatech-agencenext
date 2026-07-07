@@ -578,11 +578,11 @@ function ServicesPreview() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1} direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="NOS PRESTATIONS." />
+              <GhostTitle text="NOS prestations." />
               NOS{' '}
               <GreenUnderline>
                 <span className="text-gradient">
-                  PRESTATIONS.
+                  prestations.
                 </span>
               </GreenUnderline>
             </h2>
