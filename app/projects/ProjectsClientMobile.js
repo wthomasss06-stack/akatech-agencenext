@@ -173,7 +173,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                 {project.live && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                    EN LIGNE
+                    en ligne
                   </div>
                 )}
               </div>

@@ -102,6 +102,39 @@ function CircularProjectsGallery() {
   )
 }
 
+const HERO_SLOGANS = [
+  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
+  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
+  { before: 'Développez votre activité ', highlight: 'sereinement' },
+]
+
+// ── Slogan Hero — cycle auto entre 3 accroches, même traitement
+// Neo-Brutalism (bloc vert + box-shadow blanc dur) sur le mot-clé ──
+function HeroSloganCycle() {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
+    return () => clearInterval(id)
+  }, [])
+  const { before, highlight } = HERO_SLOGANS[index]
+
+  return (
+    <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <AnimatePresence mode="wait">
+        <motion.p key={index}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: .45, ease: 'easeOut' }}
+          style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+          {before}
+          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
+            {highlight}
+          </span>
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  )
+}
+
 function Hero() {
   const T = useTheme()
   const wrapRef     = useRef(null)
@@ -193,14 +226,7 @@ function Hero() {
 
         
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .45, delay: .12 }}
-          style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', textAlign: 'center' }}>
-          Un site qui travaille pour vous 24h/24 — attirez des clients, gagnez en crédibilité et{' '}
-          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
-            développez votre activité.
-          </span>
-        </motion.p>
+        <HeroSloganCycle />
 
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
@@ -209,7 +235,7 @@ function Hero() {
             initial={{ boxShadow: '6px 6px 0px #fff' }}
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem' }}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
             Démarrer mon projet <ArrowRight size={16} />
           </motion.a>
           <motion.div
@@ -217,7 +243,7 @@ function Hero() {
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
             style={{ display: 'inline-block' }}>
-            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
+            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
               Prenez RDV
             </Link>
           </motion.div>
@@ -553,7 +579,7 @@ function HoverImageReveal({ items }) {
       }}>
         {hovered !== null && items[hovered]?.img && (
           <img src={items[hovered].img} alt={items[hovered].label}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'grayscale(100%) brightness(.75)' }} />
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         )}
       </div>
     </div>
@@ -637,9 +663,9 @@ function WhyUs() {
         {/* Header — titre sur trait rouge */}
         <BlurReveal delay={0.1} direction="left">
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '3rem' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
+            <GhostTitle text="DE L'IDÉE À LA MISE en ligne." />
             DE L'IDÉE À LA MISE{' '}
-            <GreenUnderline><span className="text-gradient">en ligne</span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">en ligne.</span></GreenUnderline>
           </h2>
         </BlurReveal>
 

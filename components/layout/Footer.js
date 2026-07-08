@@ -200,8 +200,28 @@ export default function Footer({ variant = 'page' }) {
       background: T.light ? '#f3f3f3' : '#020504',
       paddingTop: isPage ? '5rem' : '4rem',
       borderTop: `1px solid ${T.border}`,
+      position: 'relative',
+      overflow: 'hidden',
     }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%' }}>
+      {!T.light && (
+        <motion.div
+          style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
+          animate={{ background: [
+            'radial-gradient(900px circle at 20% 15%, rgba(136,202,83,.07) 0%, transparent 60%)',
+            'radial-gradient(900px circle at 80% 55%, rgba(136,202,83,.09) 0%, transparent 60%)',
+            'radial-gradient(900px circle at 20% 15%, rgba(136,202,83,.07) 0%, transparent 60%)',
+          ]}}
+          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      )}
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', position: 'relative', zIndex: 1 }}>
+
+        {/* ── Grand titre éditorial ──────────────────────────── */}
+        <div style={{ marginBottom: 'clamp(2.5rem,5vw,3.5rem)' }}>
+          <h2 className="section-title-big" style={{ fontSize: 'clamp(2.6rem,7vw,5.5rem)', color: '#88ca53', lineHeight: .92, margin: 0 }}>
+            Parlons de<br />votre projet.
+          </h2>
+        </div>
 
         {/* ── Colonnes principales ───────────────────────────── */}
         <div style={{
@@ -255,7 +275,7 @@ export default function Footer({ variant = 'page' }) {
           {/* Services */}
           <div>
             <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>
-              Services
+              [ Services ]
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
               {[
@@ -282,7 +302,7 @@ export default function Footer({ variant = 'page' }) {
           {/* Navigation */}
           <div>
             <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>
-              Navigation
+              [ Navigation ]
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.15rem' }}>
               {[
@@ -319,7 +339,7 @@ export default function Footer({ variant = 'page' }) {
           {/* Contact */}
           <div>
             <div style={{ fontSize: '.68rem', fontWeight: 700, color: T.textSub, textTransform: 'uppercase', letterSpacing: '.12em', marginBottom: '1.1rem', fontFamily: "'JetBrains Mono',monospace" }}>
-              Contact
+              [ Contact ]
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '.5rem' }}>
               {[

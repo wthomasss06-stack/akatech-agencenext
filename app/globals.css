@@ -94,22 +94,24 @@ body.light-mode .sku-card:hover {
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   font-size: .88rem;
-  border-radius: 6px;
-  border: none;
+  border-radius: 999px;
+  border: 2px solid #fff;
   cursor: pointer;
-  box-shadow: none;
-  transition: background .2s, transform .22s, box-shadow .22s;
+  box-shadow: 4px 4px 0px #fff;
+  transition: transform .15s ease, box-shadow .15s ease;
   position: relative;
   text-decoration: none;
   letter-spacing: .01em;
 }
 .btn-raised::after { display: none; }
 .btn-raised:hover {
-  background: var(--g2);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(136,202,83,.22);
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0px #fff;
 }
-.btn-raised:active { transform: translateY(0); }
+.btn-raised:active {
+  transform: translate(2px,2px);
+  box-shadow: 1px 1px 0px #fff;
+}
 
 .btn-ghost {
   display: inline-flex;
@@ -117,39 +119,112 @@ body.light-mode .sku-card:hover {
   gap: .55rem;
   padding: .82rem 1.85rem;
   background: transparent;
-  color: var(--g1);
+  color: #fff;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   font-size: .88rem;
-  border-radius: 6px;
-  border: 1px solid var(--border2);
-  box-shadow: none;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  box-shadow: 4px 4px 0px #fff;
   cursor: pointer;
-  transition: border-color .22s, color .22s, background .22s, transform .22s;
+  transition: transform .15s ease, box-shadow .15s ease, background .2s;
   text-decoration: none;
   letter-spacing: .01em;
 }
 .btn-ghost:hover {
-  background: rgba(136,202,83,.07);
-  border-color: var(--g1);
-  transform: translateY(-2px);
+  background: rgba(255,255,255,.08);
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0px #fff;
+}
+.btn-ghost:active {
+  transform: translate(2px,2px);
+  box-shadow: 1px 1px 0px #fff;
 }
 
 body.light-mode .btn-raised {
   background: #5f9137;
   color: #ffffff;
+  border-color: #08130a;
+  box-shadow: 4px 4px 0px #08130a;
 }
 body.light-mode .btn-raised:hover {
-  background: #4e7a2c;
-  box-shadow: 0 8px 22px rgba(95,145,55,.18);
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0px #08130a;
+}
+body.light-mode .btn-raised:active {
+  transform: translate(2px,2px);
+  box-shadow: 1px 1px 0px #08130a;
 }
 body.light-mode .btn-ghost {
-  color: #5f9137;
-  border-color: rgba(95,145,55,.35);
+  color: #08130a;
+  border-color: #08130a;
+  box-shadow: 4px 4px 0px #08130a;
 }
 body.light-mode .btn-ghost:hover {
-  background: rgba(95,145,55,.07);
-  border-color: #5f9137;
+  background: rgba(0,0,0,.05);
+  transform: translate(-3px,-3px);
+  box-shadow: 7px 7px 0px #08130a;
+}
+body.light-mode .btn-ghost:active {
+  transform: translate(2px,2px);
+  box-shadow: 1px 1px 0px #08130a;
+}
+
+/* Neo-Brutalism réservé au desktop — sous 1024px (seuil du switch
+   Desktop/Mobile), les boutons gardent le style doux d'origine. */
+@media (max-width: 1023px) {
+  .btn-raised {
+    border-radius: 6px;
+    border: none;
+    box-shadow: none;
+    transition: background .2s, transform .22s, box-shadow .22s;
+  }
+  .btn-raised:hover {
+    background: var(--g2);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(136,202,83,.22);
+  }
+  .btn-raised:active { transform: translateY(0); box-shadow: none; }
+
+  .btn-ghost {
+    border-radius: 6px;
+    border: 1px solid var(--border2);
+    box-shadow: none;
+    color: var(--g1);
+    transition: border-color .22s, color .22s, background .22s, transform .22s;
+  }
+  .btn-ghost:hover {
+    background: rgba(136,202,83,.07);
+    border-color: var(--g1);
+    transform: translateY(-2px);
+    box-shadow: none;
+  }
+  .btn-ghost:active { transform: translateY(0); box-shadow: none; }
+
+  body.light-mode .btn-raised {
+    background: #5f9137;
+    color: #ffffff;
+    border: none;
+    box-shadow: none;
+  }
+  body.light-mode .btn-raised:hover {
+    background: #4e7a2c;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px rgba(95,145,55,.18);
+  }
+  body.light-mode .btn-raised:active { box-shadow: none; }
+  body.light-mode .btn-ghost {
+    color: #5f9137;
+    border: 1px solid rgba(95,145,55,.35);
+    box-shadow: none;
+  }
+  body.light-mode .btn-ghost:hover {
+    background: rgba(95,145,55,.07);
+    border-color: #5f9137;
+    transform: translateY(-2px);
+    box-shadow: none;
+  }
+  body.light-mode .btn-ghost:active { box-shadow: none; }
 }
 
 /* Ghost Title — texte fantôme en contour superposé au h2/h1.

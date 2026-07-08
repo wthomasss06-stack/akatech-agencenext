@@ -6,12 +6,13 @@ import {
   ArrowRight, Star, ExternalLink, ChevronDown,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
+  Zap, Timer, Check, AlertTriangle, HelpCircle, Send, Lock,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
-import { PROJECTS, TESTIMONIALS } from '@/lib/data'
+import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 
 // ── HERO avec carrousel images auto ──────────────────────────
 const HERO_SLIDES = [
@@ -737,7 +738,7 @@ function Process() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE" />
+            <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
             De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -974,8 +975,6 @@ function ProjectsSection() {
   )
 }
 
-// Domaines section removed for mobile (kept desktop-only)
-
 // ── TESTIMONIALS ─────────────────────────────────────────────
 function Testimonials() {
   const T = useTheme()
@@ -1034,19 +1033,459 @@ function Testimonials() {
   )
 }
 
+// ── PARAGRAPHE mot-à-mot (statique, remplace WordRevealP desktop — pas de scroll-tilt sur mobile) ──
+function RevealParagraph({ text, greenWords = [], extraStyle = {}, inView }) {
+  const green = new Set(greenWords)
+  return (
+    <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+      style={{
+        fontFamily: "'JetBrains Mono',monospace",
+        fontSize: 'clamp(1.05rem,4vw,1.3rem)',
+        fontWeight: 700,
+        lineHeight: 1.42,
+        margin: '.75rem 0 0',
+        ...extraStyle,
+      }}>
+      {text.split(' ').map((word, i) => (
+        <span key={i} style={{ color: green.has(word) ? '#88ca53' : 'inherit' }}>
+          {word}{' '}
+        </span>
+      ))}
+    </motion.p>
+  )
+}
+
+// ── DOMAINES D'INTERVENTION — grille éditoriale statique (miroir desktop, sans hover-image souris) ──
+const DOMAINES = [
+  { n: '01', Icon: Monitor,         title: 'Sites Vitrine & Landing Pages',    tag: 'Site Vitrine',   desc: "Votre présence digitale professionnelle, optimisée pour convertir vos visiteurs en clients. Design sur mesure, SEO intégré, livré en 7 à 14 jours." },
+  { n: '02', Icon: ShoppingBag,     title: 'E-Commerce & Boutiques en ligne',  tag: 'E-Commerce',     desc: "Boutiques complètes avec paiement Mobile Money (Orange Money, Wave), gestion des stocks, tableau de bord admin et notifications commandes." },
+  { n: '03', Icon: LayoutDashboard, title: 'Applications SaaS & Métier',       tag: 'SaaS',           desc: "Des outils web sur mesure pour automatiser vos processus, gérer vos équipes et économiser des heures de travail chaque semaine." },
+  { n: '04', Icon: Cog,             title: 'Digitalisation de processus',      tag: 'Digitalisation', desc: "Remplacez vos fichiers Excel et WhatsApp par des applications robustes. Suivi en temps réel, rôles utilisateurs, reporting intégré." },
+  { n: '05', Icon: Image,           title: 'Portfolios & Identités créatives', tag: 'Portfolio',      desc: "Des vitrines animées et percutantes pour créatifs, photographes, graphistes et freelances qui veulent décrocher plus de clients." },
+  { n: '06', Icon: Wrench,          title: 'Maintenance & Évolutions',         tag: 'Support',        desc: "Votre investissement sur la durée. Mises à jour, nouvelles fonctionnalités, corrections et support technique réactif sous 48h." },
+]
+
+function DomaineCard({ n, Icon, title, desc, tag, index, inView }) {
+  const T = useTheme()
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: .5, delay: index * .07, ease: [.22,1,.36,1] }}
+      style={{ background: T.card, padding: '1.5rem 1.4rem', position: 'relative' }}
+    >
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '2rem', fontWeight: 900, color: T.light ? 'rgba(136,202,83,.18)' : 'rgba(136,202,83,.15)', lineHeight: 1, letterSpacing: '-.05em' }}>
+          {n}
+        </span>
+        <span style={{ padding: '.2rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.56rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase' }}>
+          {tag}
+        </span>
+      </div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', marginBottom: '.8rem' }}>
+        <div style={{ width: 38, height: 38, borderRadius: 10, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <Icon size={18} style={{ color: '#88ca53' }} />
+        </div>
+        <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.86rem,3.6vw,.95rem)', fontWeight: 800, color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em' }}>
+          {title}
+        </h3>
+      </div>
+      <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65 }}>
+        {desc}
+      </p>
+    </motion.div>
+  )
+}
+
+function DomainesSection() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  const DOM_TEXT = "De la vitrine au SaaS, de la boutique au portfolio — nous intervenons sur l'ensemble de la chaîne digitale pour concrétiser votre vision."
+  const DOM_GREEN = ['SaaS,', 'portfolio', 'chaîne', 'digitale', 'concrétiser', 'vision.']
+
+  return (
+    <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="DANS QUEL AXE DE CRÉATION S'INSCRIT VOTRE PROJET ?" />
+            Dans quel axe de création{' '}
+            <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
+          </h2>
+          <RevealParagraph text={DOM_TEXT} greenWords={DOM_GREEN} extraStyle={{ color: T.textSub }} inView={inView} />
+        </motion.div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1px', background: T.border, borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.border}` }}>
+          {DOMAINES.map((domaine, i) => (
+            <DomaineCard key={domaine.n} {...domaine} index={i} inView={inView} />
+          ))}
+        </div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 }} style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', color: T.textMuted, marginBottom: '1rem' }}>
+            Votre projet ne rentre dans aucune case ? On s'adapte.
+          </p>
+          <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.85rem', padding: '.8rem 1.6rem' }}>
+            Discuter de mon projet <ArrowRight size={13} />
+          </a>
+        </motion.div>
+
+      </div>
+    </section>
+  )
+}
+
+// ── CHOISISSEZ VOTRE FORMULE — pricing callout à onglets (miroir desktop) ──
+function PricingCallout() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true })
+  const [tab, setTab] = useState('vitrine')
+  const d = PRICING[tab]
+
+  return (
+    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
+            Choisissez votre <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
+          </h2>
+          <p style={{ color: T.textSub, fontSize: '.85rem', marginTop: '.6rem' }}>
+            Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.
+          </p>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
+          style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', marginBottom: '1.8rem', flexWrap: 'wrap' }}>
+          {Object.entries(PRICING).map(([k, v]) => (
+            <motion.button key={k} onClick={() => setTab(k)}
+              whileTap={{ scale: 0.96 }}
+              style={{ padding: '.5rem 1.2rem', borderRadius: 100, border: '1px solid', borderColor: tab === k ? T.green : T.border, background: tab === k ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: tab === k ? '#fff' : T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, cursor: 'pointer', WebkitTapHighlightColor: 'transparent' }}>
+              {v.label}
+            </motion.button>
+          ))}
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          <motion.div key={tab}
+            initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: .3 }}
+            className="pricing-grid">
+            {d.plans.map((plan) => {
+              const wa = encodeURIComponent(`Bonjour AKATech, je suis intéressé par l'offre ${plan.badge} à ${plan.price}`)
+              return (
+                <motion.div key={plan.badge}
+                  style={{ position: 'relative', borderRadius: 18, overflow: 'hidden', background: plan.popular ? 'linear-gradient(145deg,rgba(136,202,83,.18),rgba(136,202,83,.06))' : T.light ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: plan.popular ? '1px solid rgba(136,202,83,.5)' : `1px solid ${T.light ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.1)'}`, boxShadow: plan.popular ? '0 8px 40px rgba(136,202,83,.2),inset 0 1px 0 rgba(255,255,255,.15)' : T.light ? '0 4px 24px rgba(0,0,0,.08)' : '0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)', padding: plan.popular ? '0 0 1.8rem' : '1.8rem' }}>
+                  {plan.popular && (
+                    <div style={{ padding: '.45rem', background: 'linear-gradient(90deg,#5f9137,#88ca53)', textAlign: 'center', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#fff', letterSpacing: '.1em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem' }}>
+                      <Zap size={10} />LE PLUS POPULAIRE
+                    </div>
+                  )}
+                  <div style={{ padding: plan.popular ? '1.6rem 1.8rem 0' : 0, position: 'relative' }}>
+                    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: '50%', background: 'linear-gradient(180deg,rgba(255,255,255,.07) 0%,transparent 100%)', pointerEvents: 'none' }} />
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', fontWeight: 600, color: plan.popular ? '#88ca53' : T.textMuted, textTransform: 'uppercase', marginBottom: '.5rem' }}>{plan.badge}</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.3rem,6vw,1.6rem)', fontWeight: 900, color: T.textMain, marginBottom: '.2rem', letterSpacing: '-0.02em', lineHeight: 1.1 }}>{plan.price}</div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, marginBottom: '1.4rem', display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <Timer size={11} style={{ color: T.green }} />{plan.del}
+                    </div>
+                    <div style={{ height: 1, background: plan.popular ? 'rgba(136,202,83,.25)' : 'rgba(255,255,255,.08)', marginBottom: '1.2rem' }} />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem', marginBottom: '1.6rem' }}>
+                      {plan.features.map(f => (
+                        <div key={f} style={{ display: 'flex', alignItems: 'flex-start', gap: '.55rem', fontSize: '.8rem', color: T.textSub, lineHeight: 1.5 }}>
+                          <div style={{ width: 16, height: 16, borderRadius: '50%', flexShrink: 0, marginTop: 1, background: plan.popular ? 'rgba(136,202,83,.2)' : 'rgba(255,255,255,.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <Check size={10} style={{ color: '#88ca53' }} />
+                          </div>
+                          {f}
+                        </div>
+                      ))}
+                    </div>
+                    {plan.popular
+                      ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Commander →</a>
+                      : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>Commander →</a>
+                    }
+                  </div>
+                </motion.div>
+              )
+            })}
+          </motion.div>
+        </AnimatePresence>
+
+        <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .25 }}
+          style={{ marginTop: '2rem', padding: '1rem 1.2rem', borderRadius: 14, background: 'rgba(136,202,83,.04)', border: '1px solid rgba(136,202,83,.15)', display: 'flex', flexDirection: 'column', alignItems: 'stretch', gap: '.8rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '.6rem' }}>
+            <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#88ca53', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: T.textSub, letterSpacing: '.03em', margin: 0 }}>
+              <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
+                <AlertTriangle size={11} /> 2 créneaux disponibles
+              </span>
+              {' '}ce mois-ci — les projets sont traités dans l'ordre d'arrivée.
+            </p>
+          </div>
+          <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
+            className="btn-raised" style={{ padding: '.7rem 1.2rem', fontSize: '.8rem', justifyContent: 'center', display: 'flex' }}>
+            Réserver ma place →
+          </a>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+// ── OÙ INTERVENONS-NOUS — badges pays (miroir desktop) ──
+const GEO_PAYS = [
+  { code: 'CI', name: "Côte d'Ivoire", note: 'Siège — Abidjan', primary: true },
+  { code: 'SN', name: 'Sénégal', note: 'WhatsApp & Zoom' },
+  { code: 'CM', name: 'Cameroun', note: 'WhatsApp & Zoom' },
+  { code: 'BJ', name: 'Bénin', note: 'WhatsApp & Zoom' },
+  { code: 'BF', name: 'Burkina Faso', note: 'WhatsApp & Zoom' },
+  { code: 'FR', name: 'France', note: 'Diaspora africaine' },
+]
+
+function FlagBadge({ code, primary }) {
+  const colors = {
+    CI: ['#f77f00','#fff','#009a44'],
+    SN: ['#00853f','#fdef42','#e31b23'],
+    CM: ['#007a5e','#ce1126','#fcd116'],
+    BJ: ['#008751','#fcd116','#e8112d'],
+    BF: ['#ef2b2d','#009a44','#fcd116'],
+    FR: ['#002395','#fff','#ed2939'],
+  }
+  const [c1, c2, c3] = colors[code] || ['#88ca53','#fff','#88ca53']
+  return (
+    <div style={{ width: 34, height: 34, borderRadius: 9, overflow: 'hidden', flexShrink: 0, border: primary ? '1.5px solid rgba(136,202,83,.5)' : '1px solid rgba(255,255,255,.1)', display: 'flex', flexDirection: 'column', boxShadow: primary ? '0 0 10px rgba(136,202,83,.2)' : 'none' }}>
+      <div style={{ flex: 1, background: c1 }} />
+      <div style={{ flex: 1, background: c2 }} />
+      <div style={{ flex: 1, background: c3 }} />
+    </div>
+  )
+}
+
+function GeoSectionHome() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  return (
+    <section ref={ref} style={{ padding: '5rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
+      <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
+            Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
+          </h2>
+          <RevealParagraph
+            text="Basés à Abidjan, on travaille 100% remote avec des clients partout en Afrique de l'Ouest et la diaspora."
+            greenWords={['Abidjan,', 'remote', "l'Afrique", "l'Ouest", 'diaspora.']}
+            extraStyle={{ color: T.textSub }}
+            inView={inView}
+          />
+        </motion.div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))', gap: '.7rem' }}>
+          {GEO_PAYS.map(({ code, name, note, primary }, i) => (
+            <motion.div key={name} initial={{ opacity: 0, y: 14 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .06 }}
+              style={{ padding: '.85rem 1rem', borderRadius: 13, background: primary ? 'linear-gradient(135deg,rgba(136,202,83,.12),rgba(136,202,83,.04))' : (T.light ? 'rgba(0,0,0,.03)' : 'rgba(255,255,255,.03)'), border: `1px solid ${primary ? 'rgba(136,202,83,.3)' : T.border}`, display: 'flex', alignItems: 'center', gap: '.65rem' }}>
+              <FlagBadge code={code} primary={primary} />
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.78rem', color: primary ? '#88ca53' : T.textMain }}>{name}</div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted }}>{note}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ── DÉCRIVEZ VOTRE PROJET — formulaire de contact (miroir desktop) ──
+function ProjectFormHome() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
+  const [sent, setSent] = useState(false)
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+  const inputStyle = { width: '100%', padding: '.6rem 0', background: 'transparent', border: 'none', borderBottom: `1px solid ${T.border}`, borderRadius: 0, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', outline: 'none', transition: 'border-color .25s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark' }
+  const focusOn = e => { e.target.style.borderBottomColor = '#88ca53' }
+  const focusOff = e => { e.target.style.borderBottomColor = T.border }
+
+  const handleSubmit = async () => {
+    if (!form.name || !form.email || !form.message) return
+    setSending(true)
+    setError('')
+    try {
+      const res = await fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, projectType: form.service }) })
+      const data = await res.json()
+      if (!res.ok) throw new Error(data?.error || "Erreur lors de l'envoi")
+      setSent(true)
+    } catch (err) {
+      setError(err.message || "Une erreur est survenue. Réessayez ou contactez-nous sur WhatsApp.")
+    } finally { setSending(false) }
+  }
+
+  return (
+    <section ref={ref} style={{ padding: 'clamp(2.5rem,7vw,3.5rem) 5% 5rem', background: T.bgAlt }}>
+      <div style={{ maxWidth: 600, margin: '0 auto' }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '1.6rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
+            Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
+          </h2>
+          <RevealParagraph
+            text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit."
+            greenWords={['formulaire', 'email', '24h', 'gratuit.']}
+            extraStyle={{ color: T.textSub }}
+            inView={inView}
+          />
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}>
+          <AnimatePresence mode="wait">
+            {sent ? (
+              <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '2.5rem 1rem' }}>
+                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 58, height: 58, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.4rem' }}>
+                  <Check size={26} style={{ color: '#88ca53' }} />
+                </motion.div>
+                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.15rem', color: T.textMain, marginBottom: '.7rem' }}>Message envoyé !</h3>
+                <p style={{ color: T.textSub, fontSize: '.85rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
+              </motion.div>
+            ) : (
+              <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.3rem', marginBottom: '1.3rem' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
+                    <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
+                    <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                    <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
+                    <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
+                      <option value="">Choisir...</option>
+                      <option value="site-vitrine">Conception de Site Web</option>
+                      <option value="e-commerce">E-commerce</option>
+                      <option value="application-web">Application Web / SaaS</option>
+                      <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
+                      <option value="api-backend">API & Backend</option>
+                      <option value="google-my-business">Fiche Google My Business</option>
+                      <option value="maintenance">Maintenance & Support</option>
+                      <option value="autre">Autre</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '2rem' }}>
+                  <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
+                  <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
+                    value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                </div>
+
+                <motion.button whileTap={{ scale: .97 }} onClick={handleSubmit}
+                  className="btn-raised" style={{ width: '100%', justifyContent: 'center', fontSize: '.92rem', padding: '.95rem', opacity: sending ? .7 : 1 }}>
+                  {sending ? (
+                    <><span style={{ width: 15, height: 15, border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> Envoi en cours...</>
+                  ) : (
+                    <><Send size={15} /> Recevoir mon devis en 24h</>
+                  )}
+                </motion.button>
+
+                {error && (
+                  <p style={{ textAlign: 'center', fontSize: '.76rem', color: '#ff6b6b', marginTop: '.8rem' }}>
+                    {error}
+                  </p>
+                )}
+
+                <p style={{ textAlign: 'center', fontSize: '.7rem', color: T.textMuted, marginTop: '.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.35rem' }}>
+                  <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+// ── QUESTIONS FRÉQUENTES — accordéon (réutilise Accordion générique) ──
+function FAQSectionHome() {
+  const T = useTheme()
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: '-60px' })
+
+  return (
+    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
+      <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.6rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <GhostTitle text="QUESTIONS FRÉQUENTES" />
+            Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
+          </h2>
+        </motion.div>
+
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}>
+          <Accordion
+            items={FAQ_ITEMS.slice(0, 6)}
+            renderHeader={(f, isOpen) => (
+              <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: '.65rem', minWidth: 0 }}>
+                <span style={{
+                  width: 32, height: 32, flexShrink: 0, borderRadius: 9,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  background: isOpen ? 'rgba(136,202,83,.16)' : 'rgba(136,202,83,.08)',
+                  border: `1px solid ${isOpen ? 'rgba(136,202,83,.45)' : 'rgba(136,202,83,.2)'}`,
+                  color: '#88ca53', transition: 'background .25s, border-color .25s',
+                }}>
+                  <HelpCircle size={15} />
+                </span>
+                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: 'clamp(.8rem,3.4vw,.9rem)', color: T.textMain, lineHeight: 1.35 }}>
+                  {f.q}
+                </span>
+              </div>
+            )}
+            renderBody={f => (
+              <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', lineHeight: 1.7, color: T.textMuted, paddingLeft: 46, paddingRight: '.5rem' }}>
+                {f.a}
+              </p>
+            )}
+          />
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
 // ── HOME PAGE ────────────────────────────────────────────────
 export default function HomePageMobile() {
   return (
     <div style={{ paddingTop: 0 }}>
       <Hero />
       <StatsSection />
-      <ServicesPreview />
-      <ProjectsSection />
       <TrustStacksMarquee />
+      <ServicesPreview />
+      <DomainesSection />
+      <PricingCallout />
       <Process />
-      <ConversionMarquee />
+      <ProjectsSection />
       <AboutSection />
       <Testimonials />
+      <GeoSectionHome />
+      <ProjectFormHome />
+      <FAQSectionHome />
+      <ConversionMarquee />
       <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />
     </div>
   )

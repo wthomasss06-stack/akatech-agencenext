@@ -99,7 +99,7 @@ function HeroRealisations() {
 /* ────────────────────────────────────────────────
    HELPERS — mêmes utilitaires que App.jsx
 ──────────────────────────────────────────────── */
-const PROJECT_TYPE_BADGE = (type, live) => live ? `${type} — En ligne` : `${type} — En cours`
+const PROJECT_TYPE_BADGE = (type, live) => live ? `${type} — en ligne` : `${type} — En cours`
 
 function getDisplayUrl(url) {
   const m = /^https?:\/\/([^/]+)/.exec(url || '')
@@ -367,10 +367,12 @@ function StackedRealisations() {
           display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
           background: #88ca53; color: #04140a;
           font-family: 'JetBrains Mono',monospace; font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
-          text-decoration: none; border: 2.5px solid #88ca53; border-radius: 6px;
-          transition: background .2s, color .2s, transform .15s; align-self: flex-start;
+          text-decoration: none; border: 2.5px solid #04140a; border-radius: 999px;
+          box-shadow: 4px 4px 0 #04140a;
+          transition: background .15s, color .15s, border-color .15s, transform .15s, box-shadow .15s; align-self: flex-start;
         }
-        .fc-cta:hover { background: transparent; color: #88ca53; transform: translate(-2px,-2px); box-shadow: 4px 4px 0 #88ca53; }
+        .fc-cta:hover { background: transparent; color: #88ca53; border-color: #88ca53; transform: translate(-3px,-3px); box-shadow: 7px 7px 0 #88ca53; }
+        .fc-cta:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #88ca53; }
 
         @media (max-width: 1100px) {
           .fc-grid { grid-template-columns: 1fr; gap: 5rem; }
