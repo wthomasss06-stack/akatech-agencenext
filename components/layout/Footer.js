@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Mail, MapPin, Phone, ChevronRight, ExternalLink } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
+import AuroraHero from '@/components/ui/AuroraHero'
 import { useTheme } from '@/lib/theme'
 import TransitionLink from './TransitionLink'
 
@@ -197,23 +198,21 @@ export default function Footer({ variant = 'page' }) {
 
   return (
     <footer id="site-footer" style={{
-      background: T.light ? '#f3f3f3' : '#020504',
+      background: '#020504',
       paddingTop: isPage ? '5rem' : '4rem',
       borderTop: `1px solid ${T.border}`,
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {!T.light && (
-        <motion.div
-          style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0 }}
-          animate={{ background: [
-            'radial-gradient(900px circle at 20% 15%, rgba(136,202,83,.07) 0%, transparent 60%)',
-            'radial-gradient(900px circle at 80% 55%, rgba(136,202,83,.09) 0%, transparent 60%)',
-            'radial-gradient(900px circle at 20% 15%, rgba(136,202,83,.07) 0%, transparent 60%)',
-          ]}}
-          transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      )}
+      <div style={{ position: 'absolute', inset: 0, zIndex: 0, overflow: 'hidden' }}>
+        <AuroraHero labels={[]} overlay={0.85} />
+        {/* Scrim supplémentaire — le footer porte du contenu dense
+            (liens, colonnes) sur toute sa hauteur, contrairement aux
+            autres pages où AuroraHero n'habille qu'un bandeau hero.
+            Actif en clair comme en sombre : le shader ne change plus
+            selon le thème, seul le contenu au-dessus reste thémable. */}
+        <div style={{ position: 'absolute', inset: 0, background: 'rgba(2,5,4,.6)', zIndex: 1 }} />
+      </div>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', position: 'relative', zIndex: 1 }}>
 
         {/* ── Grand titre éditorial ──────────────────────────── */}

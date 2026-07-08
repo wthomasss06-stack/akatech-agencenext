@@ -14,39 +14,6 @@ import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 
-// ── HERO avec carrousel images auto ──────────────────────────
-const HERO_SLIDES = [
-  {
-    tag: '// Site Vitrine',
-    title: 'Votre présence digitale,',
-    accent: 'professionnelle & rentable.',
-    sub: "Un site qui travaille pour vous 24h/24 — attirez des clients, gagnez en crédibilité et développez votre activité.",
-    img: '/images/hero-bg.webp',
-  },
-  {
-    tag: '// E-Commerce',
-    title: 'Vendez en ligne,',
-    accent: 'même quand vous dormez.',
-    sub: "Boutique complète avec paiement Mobile Money, gestion stocks et tableau de bord admin. Livrée en 14 jours.",
-    img: '/images/about-2.webp',
-  },
-  {
-    tag: '// Application SaaS',
-    title: 'Automatisez vos tâches,',
-    accent: 'scalez votre activité.',
-    sub: "Des applications web sur-mesure pour digitaliser vos processus et économiser des heures de travail chaque semaine.",
-    img: '/images/about-1.webp',
-  },
-  {
-    tag: '// Portfolio Créatif',
-    title: 'Votre talent mérite',
-    accent: 'une vitrine digitale.',
-    sub: "Portfolios animés, modernes et percutants pour créatifs, graphistes et freelances qui veulent décrocher plus de clients.",
-    img: '/images/about-4.webp',
-  },
-]
-
-
 // ── TILT 3D CARD — parallaxe souris native ──────────────────
 function TiltCard({ children, style = {}, className = '', intensity = 14, perspective = 900 }) {
   const ref = useRef(null)
@@ -188,183 +155,181 @@ function CircularProjectsGallery() {
   )
 }
 
+const HERO_SLOGANS = [
+  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
+  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
+  { before: 'Développez votre activité ', highlight: 'sereinement' },
+]
+
+// ── Slogan Hero — cycle auto entre 3 accroches, même traitement
+// Neo-Brutalism (bloc vert + box-shadow blanc dur) sur le mot-clé ──
+function HeroSloganCycle() {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
+    return () => clearInterval(id)
+  }, [])
+  const { before, highlight } = HERO_SLOGANS[index]
+
+  return (
+    <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <AnimatePresence mode="wait">
+        <motion.p key={index}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: .45, ease: 'easeOut' }}
+          style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+          {before}
+          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
+            {highlight}
+          </span>
+        </motion.p>
+      </AnimatePresence>
+    </div>
+  )
+}
+
+// ── HERO (identique au desktop — pin scroll 200vh + parallaxe souris) ──
 function Hero() {
   const T = useTheme()
-  const [idx, setIdx] = useState(0)
-  const [imgIdx, setImgIdx] = useState(0)
-  const timerRef = useRef(null)
-  const layerBgRef   = useRef(null)
-  const layerMidRef  = useRef(null)
+  const wrapRef     = useRef(null)
+  const layerBgRef  = useRef(null)
+  const layerMidRef = useRef(null)
   const layerForeRef = useRef(null)
 
-  const next = useCallback(() => {
-    setIdx(i => (i + 1) % HERO_SLIDES.length)
-    setImgIdx(i => (i + 1) % HERO_SLIDES.length)
+  useEffect(() => {
+    const onMouse = (e) => {
+      const x = (e.clientX - window.innerWidth  / 2) / (window.innerWidth  / 2)
+      const y = (e.clientY - window.innerHeight / 2) / (window.innerHeight / 2)
+      const rotX = y * -5
+      const rotY = x *  5
+      const apply = (el, speed, noRotate = false) => {
+        if (!el) return
+        const mx = x * 50 * speed
+        const my = y * 50 * speed
+        if (noRotate) {
+          el.style.transform = `translate3d(${mx}px,${my}px,0)`
+        } else {
+          el.style.transform = `translate3d(${mx}px,${my}px,0) rotateX(${rotX}deg) rotateY(${rotY}deg)`
+        }
+      }
+      apply(layerBgRef.current,   0.2)
+      apply(layerMidRef.current,  0.5, true)
+      apply(layerForeRef.current, 0.8)
+    }
+    window.addEventListener('mousemove', onMouse)
+    return () => window.removeEventListener('mousemove', onMouse)
   }, [])
 
   useEffect(() => {
-    timerRef.current = setInterval(next, 5000)
-    return () => clearInterval(timerRef.current)
-  }, [next])
-
-  // ── SCROLL : zoom bg + fade mid + fore (adapté mobile — pas de sticky) ──
-  useEffect(() => {
+    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200vh ci-dessous) :
+    // on calcule une progression 0→1 sur la distance pinnée, et on l'utilise
+    // pour zoomer + flouter + faire disparaître le Hero, comme la section
+    // pinnée "zoom-title" de 1.html — pour laisser émerger la suite de la page.
     const onScroll = () => {
-      const s = window.pageYOffset
+      const wrap = wrapRef.current
+      const winH = window.innerHeight
+      let progress = 0
+      if (wrap) {
+        const top = wrap.getBoundingClientRect().top
+        const pinDistance = wrap.offsetHeight - winH
+        progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+      }
+
       if (layerBgRef.current) {
-        const zoom = 1 + s * 0.0005
-        layerBgRef.current.style.transform = `scale(${zoom}) translateY(${s * 0.18}px)`
-        layerBgRef.current.style.filter = `blur(${Math.min(s / 65, 10)}px)`
+        const zoom = 1 + progress * 0.4
+        layerBgRef.current.style.transform = `scale(${zoom})`
+        layerBgRef.current.style.filter = `blur(${progress * 16}px)`
       }
       if (layerMidRef.current) {
-        layerMidRef.current.style.opacity  = Math.max(0, 1 - s / 650)
-        layerMidRef.current.style.transform = `translateY(${s * 0.38}px)`
-        layerMidRef.current.style.filter   = `blur(${s / 110}px)`
+        const scale = 1 + progress * 1.7
+        layerMidRef.current.style.opacity  = String(Math.max(0, 1 - progress * 1.25))
+        layerMidRef.current.style.transform = `scale(${scale})`
+        layerMidRef.current.style.filter   = `blur(${progress * 7}px)`
       }
       if (layerForeRef.current) {
-        layerForeRef.current.style.transform = `translateY(${s * 0.9}px)`
-        layerForeRef.current.style.opacity = Math.max(0, 1 - s / 380)
+        layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
       }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const slide = HERO_SLIDES[idx]
-
   return (
-    <section id="home-hero" style={{ minHeight: '100svh', width: '100%', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'flex-start', justifyContent: 'center', background: '#030806' }}>
+    <div ref={wrapRef} style={{ position: 'relative', height: '200vh' }}>
+    <section id="home-hero" style={{ height: '100vh', maxHeight: '100vh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
-      {/* ── LAYER BG ── */}
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <AnimatePresence mode="sync">
-          <motion.div key={imgIdx}
-            initial={{ opacity: 0, scale: 1.06 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: [.4,0,.2,1] }}
-            style={{ position: 'absolute', inset: 0 }}>
-            <img src={HERO_SLIDES[imgIdx].img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-          </motion.div>
-        </AnimatePresence>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(170deg, rgba(3,8,6,.97) 0%, rgba(3,8,6,.82) 50%, rgba(3,8,6,.55) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(3,8,6,.96) 100%)' }} />
+        <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
         <motion.div
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
           animate={{ background: [
-            'radial-gradient(500px circle at 20% 40%, rgba(136,202,83,.055) 0%, transparent 62%)',
-            'radial-gradient(500px circle at 75% 55%, rgba(136,202,83,.075) 0%, transparent 62%)',
-            'radial-gradient(500px circle at 20% 40%, rgba(136,202,83,.055) 0%, transparent 62%)',
+            'radial-gradient(700px circle at 25% 38%, rgba(136,202,83,.055) 0%, transparent 62%)',
+            'radial-gradient(700px circle at 72% 58%, rgba(136,202,83,.075) 0%, transparent 62%)',
+            'radial-gradient(700px circle at 25% 38%, rgba(136,202,83,.055) 0%, transparent 62%)',
           ]}}
           transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
         />
         <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .13, pointerEvents: 'none' }} />
-        <motion.div
-          animate={{ top: ['-5%', '105%'] }}
-          transition={{ duration: 7, repeat: Infinity, ease: 'linear', repeatDelay: 2 }}
-          style={{ position: 'absolute', left: 0, right: 0, height: 1, background: 'linear-gradient(90deg,transparent,rgba(136,202,83,.32),transparent)', pointerEvents: 'none' }}
-        />
       </div>
 
-      {/* ── LAYER MID — contenu ── */}
-      <div
-        ref={layerMidRef}
-        style={{ position: 'relative', zIndex: 10, width: '100%', padding: '0 5%', paddingTop: 'calc(env(safe-area-inset-top, 0px) + 80px)', paddingBottom: '5rem', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}
-      >
-        {/* Tag + titre + accent + sub */}
-        <AnimatePresence mode="wait">
-          <motion.div key={`slide-${idx}`}
-            initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
-            animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, y: -10, filter: 'blur(2px)' }}
-            transition={{ duration: .5, ease: [.22,1,.36,1] }}>
+      <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '4rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
-            {/* Tag */}
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', marginBottom: '1.4rem', backdropFilter: 'blur(8px)' }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#88ca53', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-              <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', fontWeight: 600, color: '#88ca53' }}>{slide.tag}</span>
-            </div>
+        <HeroSloganCycle />
 
-            {/* H1 + accent cursif */}
-            <h1 style={{ fontSize: 'clamp(2rem,9vw,3.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.92)', letterSpacing: '-.04em', lineHeight: 1.08, marginBottom: '.4rem' }}>
-              {slide.title}
-              <span style={{ display: 'block', fontFamily: "'Dancing Script',cursive", color: '#88ca53', letterSpacing: '-.02em', marginTop: '.1em', marginBottom: '1.2rem' }}>
-                <GreenUnderline>{slide.accent}</GreenUnderline>
-              </span>
-            </h1>
-
-            {/* Sub */}
-            <p style={{ fontSize: 'clamp(.85rem,3.5vw,.97rem)', color: 'rgba(255,255,255,.58)', lineHeight: 1.7, maxWidth: 480, margin: '0 auto 2rem' }}>
-              {slide.sub}
-            </p>
-          </motion.div>
-        </AnimatePresence>
-
-        {/* CTAs */}
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
-          style={{ display: 'flex', flexDirection: 'column', gap: '.75rem', alignItems: 'center', marginBottom: '1.8rem' }}>
-          <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.95rem', padding: '.95rem 2rem', width: '100%', maxWidth: 340, justifyContent: 'center' }}>
-            Démarrer mon projet <ArrowRight size={15} />
-          </a>
-          <Link href="/projects" className="btn-ghost" style={{ fontSize: '.9rem', padding: '.9rem 2rem', width: '100%', maxWidth: 340, justifyContent: 'center' }}>
-            Voir les réalisations
-          </Link>
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.8rem', justifyContent: 'center' }}>
+          <motion.a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+            initial={{ boxShadow: '6px 6px 0px #fff' }}
+            whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
+            whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
+            Démarrer mon projet <ArrowRight size={16} />
+          </motion.a>
+          <motion.div
+            initial={{ boxShadow: '6px 6px 0px #fff' }}
+            whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
+            whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
+            style={{ display: 'inline-block', borderRadius: 999 }}>
+            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
+              Prenez RDV
+            </Link>
+          </motion.div>
         </motion.div>
 
-        {/* Trust badges */}
-        <motion.div
-          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: .6, delay: .6 }}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '.45rem', justifyContent: 'center', marginBottom: '1.8rem' }}>
-          {['✓ Devis gratuit', '✓ Livraison garantie', '✓ Support 48h'].map((b, bi) => (
-            <motion.span key={b}
-              initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .65 + bi * .07 }}
-              style={{ padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.18)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.72rem', color: '#b3ee85', backdropFilter: 'blur(6px)' }}>
-              {b}
-            </motion.span>
-          ))}
-        </motion.div>
-
-        {/* Galerie circulaire projets — hero desktop signature */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
           <CircularProjectsGallery />
         </motion.div>
-
-        {/* Dots de slide */}
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: .75 }}
-          style={{ display: 'flex', justifyContent: 'center', gap: '.45rem', marginTop: '1.4rem' }}>
-          {HERO_SLIDES.map((_, i) => (
-            <button key={i} onClick={() => { setIdx(i); setImgIdx(i); clearInterval(timerRef.current); timerRef.current = setInterval(next, 5000) }}
-              style={{ width: i === idx ? 24 : 8, height: 8, borderRadius: 4, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.25)', border: 'none', cursor: 'pointer', transition: 'all .35s', padding: 0 }} />
-          ))}
-        </motion.div>
       </div>
 
-      {/* ── LAYER FORE — particules ── */}
       <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
         {[
-          { left: '8%',  top: '18%', s: 3, op: .18, dur: 3.8, dy: 0 },
-          { left: '88%', top: '28%', s: 4, op: .22, dur: 4.4, dy: .6 },
-          { left: '15%', top: '72%', s: 3, op: .12, dur: 5.1, dy: 1.2 },
-          { left: '80%', top: '68%', s: 3, op: .10, dur: 6.2, dy: 1.8 },
-          { left: '50%', top: '14%', s: 4, op: .14, dur: 3.2, dy: .3 },
+          { left: '12%', top: '22%', s: 4, op: .22, dur: 3.8, dy: 0 },
+          { left: '28%', top: '65%', s: 3, op: .12, dur: 5.1, dy: 1.2 },
+          { left: '55%', top: '28%', s: 4, op: .26, dur: 4.4, dy: 0.6 },
+          { left: '70%', top: '72%', s: 3, op: .10, dur: 6.2, dy: 1.8 },
+          { left: '83%', top: '18%', s: 4, op: .18, dur: 3.2, dy: 0.3 },
+          { left: '92%', top: '52%', s: 3, op: .14, dur: 4.9, dy: 2.1 },
         ].map((p, i) => (
           <motion.div key={i}
             style={{ position: 'absolute', width: p.s, height: p.s, borderRadius: '50%', background: '#88ca53', left: p.left, top: p.top, opacity: p.op }}
-            animate={{ y: [0, -18, 0] }}
+            animate={{ y: [0, -20, 0] }}
             transition={{ duration: p.dur, repeat: Infinity, ease: 'easeInOut', delay: p.dy }}
           />
         ))}
       </div>
 
-      {/* Scroll indicator */}
-      <div style={{ position: 'absolute', bottom: '1.4rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .24, zIndex: 15, pointerEvents: 'none' }}>
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.35rem', color: '#fff' }}>Scroll</span>
+      <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
-          style={{ width: 1, height: 30, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
+          style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
 
     </section>
+    </div>
   )
 }
 
@@ -443,54 +408,6 @@ const PROCESS_ITEMS = [
   { n: '06', title: 'Solde payé', badge: 'Fichiers transmis', desc: "Une fois le solde réglé, je vous transmets les fichiers sources, les accès à l'hébergement et au nom de domaine, ainsi que le mot de passe d'administration." },
   { n: '07', title: 'Mise en ligne & support', badge: 'Projet livré', desc: "Votre site est en ligne. Selon le pack, vous bénéficiez d'un mois de support, et je vous accompagne pour le renouvellement après la première année." },
 ]
-
-// ── À PROPOS ──────────────────────────────────────────────────
-function AboutSection() {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-
-  const TEXT = "AKATech conçoit des sites et applications sur mesure pour les PME ambitieuses d'Abidjan et d'Afrique de l'Ouest. Design premium, performance optimisée et SEO pensé pour convertir : chaque projet est construit pour renforcer votre image et générer de nouvelles opportunités d'affaires."
-  const greenWords = new Set(['PME', 'ambitieuses', 'premium,', 'optimisée', 'SEO', 'convertir', "d'affaires."])
-
-  return (
-    <section ref={ref} style={{ padding: '4rem 5%', background: T.bg, position: 'relative' }}>
-      <div style={{
-        position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)',
-        width: '80vw', height: '80vw', maxWidth: 500, maxHeight: 500, borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(136,202,83,.045) 0%, transparent 65%)',
-        pointerEvents: 'none',
-      }} />
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <motion.h2 className="section-title-big" initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}}
-          style={{
-            position: 'relative',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 'clamp(1.4rem,5vw,1.9rem)', fontWeight: 800,
-            color: T.textMain, letterSpacing: '-.03em',
-            marginBottom: '1.5rem',
-          }}>
-          <GhostTitle text="À PROPOS DE AKATECH" />
-          À propos de <span className="text-gradient">AKATech</span>
-        </motion.h2>
-
-        <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
-          style={{
-            fontFamily: "'JetBrains Mono',monospace",
-            fontSize: 'clamp(1rem,3.6vw,1.2rem)',
-            fontWeight: 700, lineHeight: 1.5,
-            color: T.textMain, margin: 0,
-          }}>
-          {TEXT.split(' ').map((word, i) => (
-            <span key={i} style={{ color: greenWords.has(word) ? '#88ca53' : 'inherit' }}>
-              {word}{' '}
-            </span>
-          ))}
-        </motion.p>
-      </div>
-    </section>
-  )
-}
 
 // ── STATS — chiffres géants éditoriaux (miroir desktop), responsive 2-col mobile ──
 const HOME_STATS = [
@@ -656,9 +573,9 @@ function ServicesPreview() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
-            <GhostTitle text="NOS prestations, " />
+            <GhostTitle text="NOS PRESTATIONS, " />
             NOS,<br />
-            <GreenUnderline><span className="text-gradient">prestations</span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">PRESTATIONS</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -738,7 +655,7 @@ function Process() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
+            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE" />
             De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -1480,12 +1397,11 @@ export default function HomePageMobile() {
       <PricingCallout />
       <Process />
       <ProjectsSection />
-      <AboutSection />
-      <Testimonials />
       <GeoSectionHome />
       <ProjectFormHome />
       <FAQSectionHome />
       <ConversionMarquee />
+      <Testimonials />
       <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />
     </div>
   )

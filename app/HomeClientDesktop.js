@@ -242,7 +242,7 @@ function Hero() {
             initial={{ boxShadow: '6px 6px 0px #fff' }}
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
-            style={{ display: 'inline-block' }}>
+            style={{ display: 'inline-block', borderRadius: 999 }}>
             <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
               Prenez RDV
             </Link>
@@ -579,7 +579,7 @@ function HoverImageReveal({ items }) {
       }}>
         {hovered !== null && items[hovered]?.img && (
           <img src={items[hovered].img} alt={items[hovered].label}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(.92)' }} />
         )}
       </div>
     </div>
@@ -604,11 +604,11 @@ function ServicesPreview() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1} direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain }}>
-              <GhostTitle text="NOS prestations." />
+              <GhostTitle text="NOS PRESTATIONS." />
               NOS{' '}
               <GreenUnderline>
                 <span className="text-gradient">
-                  prestations.
+                  PRESTATIONS.
                 </span>
               </GreenUnderline>
             </h2>
@@ -663,9 +663,9 @@ function WhyUs() {
         {/* Header — titre sur trait rouge */}
         <BlurReveal delay={0.1} direction="left">
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', color: T.textMain, marginBottom: '3rem' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE en ligne." />
+            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE." />
             DE L'IDÉE À LA MISE{' '}
-            <GreenUnderline><span className="text-gradient">en ligne.</span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">EN LIGNE.</span></GreenUnderline>
           </h2>
         </BlurReveal>
 
@@ -1609,12 +1609,12 @@ export default function HomePageDesktop() {
       <PricingCallout />
       <WhyUs />
       <ArchiveTunnelSection />
-      <Testimonials />
       <GeoSectionHome />
 
       <ProjectFormHome />
       <FAQSectionHome />
       <ConversionMarquee />
+      <Testimonials />
 
       <PageCTA
         message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite."
