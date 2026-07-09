@@ -84,6 +84,7 @@ function CircularProjectsGallery() {
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12),
+    ...PROJECTS.filter(p => p.id === 19),
   ]
   const [active, setActive] = useState(0)
 
@@ -709,9 +710,10 @@ function ProjectsSection() {
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
+    ...PROJECTS.filter(p => p.id === 19),
   ]
   // Profondeurs par carte — même principe que ArchiveTunnelSection desktop, amplitude réduite pour mobile
-  const DEPTHS = [0, -90, -30, -140, -60, -110]
+  const DEPTHS = [0, -90, -30, -140, -60, -110, -75]
 
   // ── Pin + tunnel 3D + colorisation au scroll (miroir de ArchiveTunnelSection desktop) ──
   useEffect(() => {

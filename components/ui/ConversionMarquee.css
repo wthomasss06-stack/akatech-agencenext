@@ -94,6 +94,28 @@
   50%      { box-shadow: 0 4px 20px rgba(136, 202, 83, 0.5), 0 0 0 9px rgba(136, 202, 83, 0); }
 }
 
+/* ── Mode clair ───────────────────────────────────
+   Même bande, palette inversée : fond clair + carte
+   blanche + texte foncé. Le CTA (fond vert dégradé)
+   reste inchangé, il est déjà lisible dans les deux
+   modes. ──────────────────────────────────────── */
+body.light-mode .ccta-section { background: var(--bg-light); }
+
+body.light-mode .ccta-track-wrap {
+  background: var(--bg-light-card);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.12);
+}
+
+body.light-mode .ccta-item { color: rgba(0, 0, 0, 0.75); }
+
+body.light-mode .ccta-fixed {
+  background: linear-gradient(90deg, rgba(248,248,248,0) 0%, var(--bg-light) 28%);
+}
+
+@media (max-width: 760px) {
+  body.light-mode .ccta-fixed { background: rgba(95, 145, 55, 0.05); }
+}
+
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 900px) {
   .ccta-track-wrap { transform: rotate(-1.8deg); }

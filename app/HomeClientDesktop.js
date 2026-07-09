@@ -26,6 +26,7 @@ function CircularProjectsGallery() {
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12),
+    ...PROJECTS.filter(p => p.id === 19),
   ]
   const [active, setActive] = useState(0)
 
@@ -1065,9 +1066,10 @@ function ArchiveTunnelSection() {
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
+    ...PROJECTS.filter(p => p.id === 19),
   ]
-  const DEPTHS = [0, -220, -60, -340, -120, -260]
-  const SPANS  = [1, 1, 1, 1, 2, 1]
+  const DEPTHS = [0, -220, -60, -340, -120, -260, -180]
+  const SPANS  = [1, 1, 1, 1, 2, 1, 1]
 
   useEffect(() => {
     const onScroll = () => {
