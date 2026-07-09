@@ -1153,7 +1153,7 @@ function ArchiveTunnelSection() {
 
 // ── STATS — chiffres géants éditoriaux, quinconce (ref web_design_result) ──
 const HOME_STATS = [
-  { target: 18,  suffix: '',  label: 'Projets livrés',                  sub: 'Du concept au déploiement', col: 1, row: 1 },
+  { target: PROJECTS.length,  suffix: '',  label: 'Projets livrés',                  sub: 'Du concept au déploiement', col: 1, row: 1 },
   { target: 99,  suffix: '%', label: 'Clients satisfaits',              sub: 'Livrés dans les délais',    col: 3, row: 1 },
   { target: 10,  suffix: '+', label: 'Clients accompagnés',             sub: 'Startups, PME, créatifs',   col: 5, row: 1 },
   { target: 3,   suffix: '+', label: "Années d'expérience",             sub: 'En développement web',      col: 2, row: 2 },

@@ -57,7 +57,7 @@ function HeroRealisations() {
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">+18 réalisations livrées · 99% satisfaits</p>
+            <p className="hr-kicker">+{PROJECTS.length} réalisations livrées · 99% satisfaits</p>
             <p className="hr-desc">Sites vitrines, e-commerces, SaaS, portfolios… Chaque réalisation est une histoire de transformation digitale réussie.</p>
           </motion.div>
         </div>

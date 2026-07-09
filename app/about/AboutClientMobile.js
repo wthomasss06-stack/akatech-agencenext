@@ -7,7 +7,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
-import { STATS } from '@/lib/data'
+import { STATS, PROJECTS } from '@/lib/data'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
 
@@ -22,7 +22,7 @@ const TIMELINE = [
   { year: '2022', title: 'Les débuts', desc: "Premier projet freelance livré : un site vitrine pour un commerçant abidjanais. Le début d'une aventure." },
   { year: '2023', title: 'Premières applications métier', desc: "Développement de LivreurTrack Pro et MonCashJour, des outils de gestion pensés pour les commerçants et livreurs locaux." },
   { year: '2024', title: 'AKATech Agence', desc: "Transformation en agence officielle. Lancement de services structurés et premiers clients récurrents." },
-  { year: '2025', title: "Aujourd'hui", desc: "+18 projets livrés, 100% de clients satisfaits. L'agence continue de grandir et d'innover." },
+  { year: '2025', title: "Aujourd'hui", desc: `+${PROJECTS.length} projets livrés, 100% de clients satisfaits. L'agence continue de grandir et d'innover.` },
 ]
 
 const PAYS = [
@@ -94,7 +94,7 @@ function HeroAbout() {
 
 // ── 2. STATS — chiffres géants éditoriaux (miroir HomeClientMobile) ──
 const ABOUT_STATS = [
-  { target: 18,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
+  { target: PROJECTS.length,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
   { target: 99,  suffix: '%', label: 'Clients satisfaits',  sub: 'Livrés dans les délais'    },
   { target: 10,  suffix: '+', label: 'Clients accompagnés', sub: 'Startups, PME, créatifs'   },
   { target: 3,   suffix: '+', label: "Années d'expérience", sub: 'En développement web'       },

@@ -3,7 +3,7 @@
  * ProjectsTunnel — mode Explorer AKATech
  * ─────────────────────────────────────────────────────────
  * Port du tunnel WebGL "Mes projets" (App.jsx / elvis-portfolio) :
- * débris texturés avec les images des 18 projets AKATech, poussière
+ * débris texturés avec les images des projets AKATech (PROJECTS), poussière
  * d'étoiles + étoiles filantes, raycasting pour le survol/clic.
  * Reskinné en vert AKATech (#88ca53), données 100% lib/data.js.
  *
@@ -17,7 +17,7 @@
  *    main dans la boucle d'animation.
  * 2. Boucle réellement infinie : la profondeur de la caméra est
  *    calculée en continu puis "wrappée" (modulo) sur la longueur
- *    d'un cycle — le tunnel des 18 projets se répète en boucle
+ *    d'un cycle — le tunnel des projets se répète en boucle
  *    tant qu'on scrolle, sans jamais s'arrêter.
  * 3. Particules réduites à 9 000 (au lieu de 22 000) pour rester
  *    fluide sur un plus large éventail de machines.
@@ -80,7 +80,7 @@ export default function ProjectsTunnel() {
     movingLight.position.set(0, 0, -200)
     scene.add(movingLight)
 
-    /* ── Textures : les captures des 18 projets AKATech ── */
+    /* ── Textures : les captures des projets AKATech (PROJECTS) ── */
     const textureLoader = new THREE.TextureLoader()
     const projectTextures = PROJECTS.map(p => {
       const tex = textureLoader.load(p.img)
@@ -132,7 +132,7 @@ export default function ProjectsTunnel() {
     const SPACING = 52
     const LOOP_LENGTH = ITEMS_PER_LOOP * SPACING
 
-    // Construit une boucle complète de la séquence des 18 projets.
+    // Construit une boucle complète de la séquence des projets (PROJECTS.length).
     // Appelée deux fois (loopIndex 0 et 1) : la caméra "wrappe" ensuite
     // entre les deux pour un tunnel qui semble infini.
     function buildLoop(loopIndex) {
@@ -478,9 +478,7 @@ export default function ProjectsTunnel() {
   return (
     <div ref={outerRef} className="pt-outer" style={{ height: `${SECTION_VH}vh` }}>
       <section ref={sectionRef} className="pt-section">
-        <button className="pt-back-btn" onClick={handleBack} type="button">
-          <ArrowLeft size={13} /> Retour au site
-        </button>
+        
 
         <div className="pt-section-label">
           <span className="pt-eyebrow">Mode Explorer</span>

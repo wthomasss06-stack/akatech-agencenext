@@ -411,7 +411,7 @@ const PROCESS_ITEMS = [
 
 // ── STATS — chiffres géants éditoriaux (miroir desktop), responsive 2-col mobile ──
 const HOME_STATS = [
-  { target: 18,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
+  { target: PROJECTS.length,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
   { target: 99,  suffix: '%', label: 'Clients satisfaits',  sub: 'Livrés dans les délais'    },
   { target: 10,  suffix: '+', label: 'Clients accompagnés', sub: 'Startups, PME, créatifs'   },
   { target: 3,   suffix: '+', label: "Années d'expérience", sub: 'En développement web'       },

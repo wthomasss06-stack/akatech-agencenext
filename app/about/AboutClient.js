@@ -118,7 +118,7 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
-import { STATS } from '@/lib/data'
+import { STATS, PROJECTS } from '@/lib/data'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
 
@@ -133,7 +133,7 @@ const TIMELINE = [
   { year: '2022', title: 'Les débuts', desc: "Premier projet freelance livré : un site vitrine pour un commerçant abidjanais. Le début d'une aventure." },
   { year: '2023', title: 'Premières applications métier', desc: "Développement de LivreurTrack Pro et MonCashJour, des outils de gestion pensés pour les commerçants et livreurs locaux." },
   { year: '2024', title: 'AKATech Agence', desc: "Transformation en agence officielle. Lancement de services structurés et premiers clients récurrents." },
-  { year: '2025', title: "Aujourd'hui", desc: "+18 projets livrés, 100% de clients satisfaits. L'agence continue de grandir et d'innover." },
+  { year: '2025', title: "Aujourd'hui", desc: `+${PROJECTS.length} projets livrés, 100% de clients satisfaits. L'agence continue de grandir et d'innover.` },
 ]
 
 
@@ -228,7 +228,7 @@ function HeroAbout() {
 
 // ── ABOUT STATS SLIDE AUTO (miroir exact de App.jsx) ─────────
 const ABOUT_STATS = [
-  { target: 18,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
+  { target: PROJECTS.length,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
   { target: 10,  suffix: '+', label: 'Clients',    sub: 'Particuliers, startups et PME accompagnés' },
   { target: 100, suffix: '%', label: 'Satisfaits', sub: 'Clients livrés dans les délais convenus' },
   { target: 12,  suffix: '',  label: 'En prod.',   sub: 'Applications actuellement en ligne' },
