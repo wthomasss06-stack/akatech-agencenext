@@ -33,10 +33,12 @@ function TickerSet({ hidden }) {
 export default function ConversionMarquee() {
   return (
     <section className="ccta-section" aria-label="Créneaux disponibles — démarrer un projet">
-      <div className="ccta-track-wrap">
-        <div className="ccta-track">
-          <TickerSet hidden={false} />
-          <TickerSet hidden={true} />
+      <div className="ccta-band">
+        <div className="ccta-track-wrap">
+          <div className="ccta-track">
+            <TickerSet hidden={false} />
+            <TickerSet hidden={true} />
+          </div>
         </div>
       </div>
 
