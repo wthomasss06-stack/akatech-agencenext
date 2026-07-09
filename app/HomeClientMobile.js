@@ -573,9 +573,9 @@ function ServicesPreview() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
-            <GhostTitle text="NOS PRESTATIONS, " />
+            <GhostTitle text="NOS prestations, " />
             NOS,<br />
-            <GreenUnderline><span className="text-gradient">PRESTATIONS</span></GreenUnderline>
+            <GreenUnderline><span className="text-gradient">prestations</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -655,7 +655,7 @@ function Process() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,3.5vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE EN LIGNE" />
+            <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
             De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
         </motion.div>
