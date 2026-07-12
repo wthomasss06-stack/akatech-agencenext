@@ -246,6 +246,14 @@ function HeroBlog() {
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
             <p className="hr-kicker">Stratégie digitale, développement web, SEO et e-commerce</p>
             <p className="hr-desc">—des contenus concrets pour les entrepreneurs ivoiriens.</p>
+            <a
+              href="https://www.linkedin.com/in/m-bollo-aka"
+              target="_blank"
+              rel="noreferrer"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', marginTop: '1rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.green, textDecoration: 'none' }}
+            >
+              Suivez le founder sur LinkedIn ↗
+            </a>
           </motion.div>
         </div>
       </div>
@@ -453,13 +461,25 @@ function FeaturedPost() {
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: .48, duration: .4 }}
             >
-              <Link
-                href={`/blog/${post.slug}`}
-                className="btn-raised"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.7rem 1.5rem', fontSize: '.82rem', width: 'fit-content' }}
-              >
-                Lire l'article <ArrowRight size={13} />
-              </Link>
+              {post.linkedinUrl ? (
+                <a
+                  href={post.linkedinUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-raised"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.7rem 1.5rem', fontSize: '.82rem', width: 'fit-content' }}
+                >
+                  Voir sur LinkedIn <ArrowRight size={13} />
+                </a>
+              ) : (
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="btn-raised"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.7rem 1.5rem', fontSize: '.82rem', width: 'fit-content' }}
+                >
+                  Lire l'article <ArrowRight size={13} />
+                </Link>
+              )}
             </motion.div>
           </div>
 
@@ -662,12 +682,23 @@ function BlogGrid() {
                       <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65, flex: 1, marginBottom: '1.4rem' }}>
                         {post.excerpt.length > 120 ? post.excerpt.slice(0, 120) + '…' : post.excerpt}
                       </p>
-                      <Link href={`/blog/${post.slug}`}
-                        style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
-                        onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
-                        onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
-                        Lire l'article <ArrowRight size={13} />
-                      </Link>
+                      {post.linkedinUrl ? (
+                        <a href={post.linkedinUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                          onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
+                          onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
+                          Voir sur LinkedIn <ArrowRight size={13} />
+                        </a>
+                      ) : (
+                        <Link href={`/blog/${post.slug}`}
+                          style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                          onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
+                          onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
+                          Lire l'article <ArrowRight size={13} />
+                        </Link>
+                      )}
                     </div>
                   </TiltCard>
                 </BlurReveal>

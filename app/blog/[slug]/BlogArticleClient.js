@@ -30,6 +30,60 @@ const FULL_ARTICLES = {
     { type: 'p', text: "On utilise des APIs officielles et des passerelles de paiement locales (CinetPay, Kkiapay) pour intégrer ces systèmes de manière sécurisée et conforme. Les transactions sont tracées, remboursables et auditables." },
     { type: 'cta', text: 'Créer votre boutique avec Mobile Money', href: '/contact' },
   ],
+  'vibe-coding-nouvelle-abstraction-developpement': [
+    { type: 'lead', text: 'Le vibe coding dérange certaines personnes parce qu\'il touche à leur ego.' },
+    { type: 'h2', text: "L'histoire se répète à chaque nouvelle abstraction" },
+    { type: 'p', text: "À une époque, utiliser un compilateur au lieu d'écrire directement en assembleur était mal vu par certains puristes. Plus tard, adopter un framework plutôt que du JavaScript pur a suscité les mêmes réticences. Pourtant, ces outils sont devenus des standards incontournables du développement." },
+    { type: 'h2', text: "Ce n'est pas l'outil qui compte, c'est ce qu'on en fait" },
+    { type: 'p', text: "Chaque nouvelle abstraction — du compilateur au framework, et aujourd'hui à l'IA générative — suscite de la méfiance avant d'être adoptée. C'est un cycle qui se répète depuis les débuts de l'informatique. L'important n'a jamais été l'outil utilisé, mais la valeur que l'on est capable de créer avec." },
+    { type: 'p', text: "Chez AKATech, on utilise l'IA comme un accélérateur, pas comme un raccourci pour éviter de comprendre le code. La différence se voit dans le résultat livré, pas dans la méthode." },
+    { type: 'cta', text: 'Envie d\'un site pensé avec les bons outils, pas juste les plus récents ?', href: '/contact' },
+  ],
+  'erreurs-de-code-dun-junior-et-comment-progresser': [
+    { type: 'lead', text: "Le premier Pull Request d'un développeur junior, c'est souvent un mélange de variables inutilisées, de console.log() oubliés, de secrets ou clés API laissés en dur dans le code, et de setInterval() qui tournent à vie." },
+    { type: 'h2', text: "C'est normal, et ça ne dit rien de votre potentiel" },
+    { type: 'p', text: "On est tous passés par là. Un code qui marche mais que personne ne veut maintenir, ce n'est pas un manque de talent — c'est simplement l'étape avant d'apprendre les bonnes pratiques. Personne ne naît en écrivant du code propre et sécurisé du premier coup." },
+    { type: 'h2', text: "Le rôle d'un senior n'est pas de juger" },
+    { type: 'p', text: "Le rôle d'un développeur senior n'est pas de se moquer des erreurs d'un junior, mais d'expliquer pourquoi certaines pratiques sont dangereuses — un secret API laissé en dur dans le code peut coûter cher — et comment écrire un code plus propre, plus maintenable et plus sécurisé." },
+    { type: 'p', text: "Les meilleurs développeurs ne sont pas ceux qui n'ont jamais fait d'erreur. Ce sont ceux qui ont eu des code reviews qui les ont fait progresser. C'est aussi comme ça qu'on travaille chez AKATech : chaque ligne de code livrée passe par une relecture avant de partir en production." },
+    { type: 'cta', text: 'Besoin d\'un code propre et sécurisé pour votre projet ?', href: '/contact' },
+  ],
+  'ia-ne-remplace-pas-la-competence-technique': [
+    { type: 'lead', text: "Un outil ne dépassera jamais une compétence technique. L'IA est puissante, oui — mais entre les mains de quelqu'un qui ne comprend pas le code, ça reste du copier-coller." },
+    { type: 'h2', text: 'Le vibe coding a ses limites' },
+    { type: 'p', text: "Le \"vibe coding\" donne l'illusion d'être développeur… jusqu'au moment où il faut corriger un bug, optimiser une requête ou sécuriser une faille. Un développeur expérimenté utilise l'IA pour aller plus vite. Un débutant l'utilise pour éviter de réfléchir. Les résultats n'ont rien à voir." },
+    { type: 'h2', text: 'Mon propre site en est la preuve' },
+    { type: 'p', text: "J'ai refait mon portfolio personnel en passant de Vite + React à Next.js, avec l'IA comme assistant. La différence est claire : meilleure performance, meilleur SEO, meilleure structure. Mais ce n'est pas juste un outil qui a fait ça — ce sont les choix techniques faits à chaque étape." },
+    { type: 'p', text: "C'est exactement la même approche qu'on applique chez AKATech pour chaque projet client : l'IA accélère l'exécution, mais l'architecture, les choix de stack et la sécurité restent une question de compétence, pas d'automatisation." },
+    { type: 'cta', text: 'Discutons des choix techniques de votre projet', href: '/contact' },
+  ],
+  'les-vibes-vont-detruire-securite-frontend-backend': [
+    { type: 'lead', text: '"Frontend = sécurité"… j\'ai vu ça sur internet et j\'ai souri. Le fait d\'avoir dans un menu déroulant ADMIN, ANNONCEUR, DIFFUSEUR n\'est PAS un problème en soi. Le vrai problème est ailleurs.' },
+    { type: 'h2', text: 'Les vraies questions à se poser' },
+    { type: 'p', text: "Est-ce qu'un utilisateur peut s'auto-attribuer le rôle ADMIN ? Est-ce que le backend vérifie réellement les permissions à chaque requête ? Est-ce que les routes sensibles sont protégées côté serveur, et pas seulement cachées côté client ?" },
+    { type: 'h2', text: 'Le frontend affiche, le backend autorise' },
+    { type: 'p', text: 'On peut cacher "ADMIN" dans l\'interface autant qu\'on veut — si le backend ne vérifie rien, n\'importe qui peut se créer un royaume avec un outil comme Postman en appelant directement l\'API. Cette différence entre affichage et autorisation, c\'est littéralement la sécurité d\'une application.' },
+    { type: 'p', text: "C'est un principe qu'on applique sur chaque projet chez AKATech : les permissions sont toujours vérifiées côté serveur, jamais seulement masquées côté interface. La sécurité ne vit jamais dans l'UI." },
+    { type: 'cta', text: 'Un doute sur la sécurité de votre application ?', href: '/contact' },
+  ],
+  'plus-gros-mensonge-ia-responsabilite-developpeur': [
+    { type: 'lead', text: '"Tu n\'as plus besoin d\'apprendre à coder grâce à l\'IA." Le plus gros mensonge qu\'on a vendu aux développeurs récemment. Oui, tu peux générer une UI, une API, même une application entière. Mais le problème commence quand ça ne marche plus.' },
+    { type: 'h2', text: "Copier du code n'est pas comprendre un système" },
+    { type: 'p', text: "Ça devient lent, ça casse en production, l'IA invente parfois du code absurde. Et là, on réalise un truc brutal : copier du code n'est pas la même chose que comprendre le système qu'on construit. L'IA peut générer du code, mais elle ne porte jamais la responsabilité du résultat." },
+    { type: 'h2', text: 'Quand le backend tombe à 3h du matin' },
+    { type: 'p', text: "Ce n'est pas l'IA qui vient corriger les logs en production. C'est le développeur. Le vrai développeur aujourd'hui n'est pas celui qui utilise le plus d'IA — c'est celui qui sait quoi générer, quoi garder, quoi refactorer, et surtout quoi ne pas accepter." },
+    { type: 'p', text: "Le vibe coding donne de la vitesse. La compréhension donne le contrôle. Chez AKATech, l'IA fait partie de nos outils, mais chaque ligne livrée est comprise et validée avant de partir en production — pas juste générée et copiée." },
+    { type: 'cta', text: 'Besoin d\'un développeur qui comprend ce qu\'il livre ?', href: '/contact' },
+  ],
+  'lancer-projet-imparfait-plutot-que-jamais': [
+    { type: 'lead', text: "Cette ancienne page Facebook ne paierait probablement même pas un designer aujourd'hui. Pourtant, elle a donné naissance à l'une des plus grandes plateformes du monde." },
+    { type: 'h2', text: 'La perfection est l\'ennemie du lancement' },
+    { type: 'p', text: 'Beaucoup de développeurs et d\'entrepreneurs abandonnent leurs projets parce qu\'ils ne sont pas encore "parfaits". Ils peaufinent, repoussent, recommencent — et ne sortent jamais rien. La vérité, c\'est que mieux vaut lancer une version imparfaite que garder une idée parfaite enfermée dans sa tête.' },
+    { type: 'h2', text: 'Le vrai cimetière de projets' },
+    { type: 'p', text: "Le plus grand cimetière de projets ne se trouve pas dans des dossiers abandonnés sur un disque dur. Il se trouve dans l'esprit des développeurs qui attendent le moment parfait pour lancer. Une première version, même imparfaite, peut évoluer. Une idée jamais lancée ne devient jamais rien." },
+    { type: 'p', text: "C'est exactement l'approche qu'on recommande à nos clients chez AKATech : lancer une V1 solide et fonctionnelle, puis itérer avec de vrais retours utilisateurs — plutôt que d'attendre 6 mois pour une version \"parfaite\" que personne n'aura testée." },
+    { type: 'cta', text: 'Prêt à lancer votre V1 ?', href: '/contact' },
+  ],
 }
 
 const defaultContent = (post) => [
@@ -76,9 +130,32 @@ export default function BlogArticleClient({ slug }) {
               </span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.15, marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.15, marginBottom: '1.5rem' }}>
               {post.title}
             </h1>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '2rem' }}>
+              <img
+                src="/images/founder.webp"
+                alt="M'Bollo Aka Elvis"
+                style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${T.border}`, flexShrink: 0 }}
+              />
+              <div>
+                <div style={{ fontSize: '.85rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>
+                  M'Bollo Aka Elvis
+                </div>
+                <a
+                  href="https://www.linkedin.com/in/m-bollo-aka"
+                  target="_blank"
+                  rel="noreferrer"
+                  style={{ fontSize: '.72rem', color: T.textMuted, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '.3rem', transition: 'color .2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = T.green}
+                  onMouseLeave={e => e.currentTarget.style.color = T.textMuted}
+                >
+                  Founder, AKATech · Suivre sur LinkedIn ↗
+                </a>
+              </div>
+            </div>
 
             <div style={{ borderRadius: 16, overflow: 'hidden', marginBottom: '3rem', border: `1px solid ${T.border}` }}>
               <img src={post.img} alt={post.title} style={{ width: '100%', height: 340, objectFit: 'cover', display: 'block' }} />
@@ -123,23 +200,7 @@ export default function BlogArticleClient({ slug }) {
             </motion.div>
           ))}
 
-          {/* Author card */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .5 }}
-            style={{ marginTop: '3rem', padding: '1.5rem', borderRadius: 14, background: T.light ? 'rgba(22,163,74,.04)' : 'rgba(136,202,83,.04)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: '1.2rem', flexWrap: 'wrap' }}>
-            <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: `2px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, color: T.green, fontSize: '1.1rem' }}>
-              E
-            </div>
-            <div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, color: T.textMain, fontSize: '.9rem' }}>M'Bollo Aka Elvis</div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.06em' }}>Fondateur · AKATech · Développeur Full-Stack</div>
-            </div>
-            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
-              className="btn-raised"
-              style={{ marginLeft: 'auto', padding: '.55rem 1.1rem', fontSize: '.78rem', flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-              <MessageCircle size={13} /> Contacter
-            </a>
-          </motion.div>
+          
         </div>
       </section>
 

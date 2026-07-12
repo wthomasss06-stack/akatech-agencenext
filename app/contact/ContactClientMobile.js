@@ -7,7 +7,8 @@ import {
   ArrowRight, Shield
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 
 
@@ -369,7 +370,7 @@ export default function ContactPage() {
       <HeroContact />
       <ProjectForm />
       <ContactChannels />
-      <MarqueeStrip />
+      <ConversionMarquee />
       <PageCTA message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant." cta="Démarrer sur WhatsApp" />
     </div>
   )

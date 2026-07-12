@@ -8,7 +8,8 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, MarqueeStrip, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, GreenUnderline, PageCTA } from '@/components/ui/index'
+import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 
 // ═══════════════════════════════════════════════════════════════
@@ -498,7 +499,7 @@ export default function ContactPage() {
     <div>
       <HeroContact />
       <ContactChannels />
-      <MarqueeStrip />
+      <ConversionMarquee />
 
       <PageCTA
         message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."

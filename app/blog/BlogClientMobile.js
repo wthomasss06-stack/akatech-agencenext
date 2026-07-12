@@ -61,6 +61,14 @@ function HeroBlog() {
           <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
             Stratégie digitale, développement web, SEO et e-commerce — des contenus concrets pour les entrepreneurs ivoiriens.
           </p>
+          <a
+            href="https://www.linkedin.com/in/m-bollo-aka"
+            target="_blank"
+            rel="noreferrer"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', marginTop: '1.1rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 600, color: T.green, textDecoration: 'none' }}
+          >
+            Suivez le founder sur LinkedIn ↗
+          </a>
         </motion.div>
       </div>
       {/* Layer FORE — particules */}
@@ -108,9 +116,15 @@ function FeaturedPost() {
               {post.title}
             </h2>
             <p style={{ fontSize: '.85rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.8rem' }}>{post.excerpt}</p>
-            <Link href={`/blog/${post.slug}`} className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
-              Lire l'article <ArrowRight size={14} />
-            </Link>
+            {post.linkedinUrl ? (
+              <a href={post.linkedinUrl} target="_blank" rel="noreferrer" className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
+                Voir sur LinkedIn <ArrowRight size={14} />
+              </a>
+            ) : (
+              <Link href={`/blog/${post.slug}`} className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
+                Lire l'article <ArrowRight size={14} />
+              </Link>
+            )}
           </div>
         </motion.div>
       </div>
@@ -215,12 +229,23 @@ function BlogGrid() {
                     <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65, flex: 1, marginBottom: '1.4rem' }}>
                       {post.excerpt.length > 120 ? post.excerpt.slice(0, 120) + '…' : post.excerpt}
                     </p>
-                    <Link href={`/blog/${post.slug}`}
-                      style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
-                      onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
-                      onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
-                      Lire l'article <ArrowRight size={13} />
-                    </Link>
+                    {post.linkedinUrl ? (
+                      <a href={post.linkedinUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                        onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
+                        onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
+                        Voir sur LinkedIn <ArrowRight size={13} />
+                      </a>
+                    ) : (
+                      <Link href={`/blog/${post.slug}`}
+                        style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
+                        onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
+                        onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
+                        Lire l'article <ArrowRight size={13} />
+                      </Link>
+                    )}
                   </div>
                 </motion.article>
               )
