@@ -1,17 +1,23 @@
+// app/api/assistant/route.js
 import { GoogleGenAI } from '@google/genai'
 import { Resend } from 'resend'
+import Groq from 'groq-sdk'
 import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK } from '@/lib/assistant'
 import { PROJECT_TYPE_LABELS } from '@/lib/data'
 
 export const runtime = 'nodejs'
 
-/* Lazy singletons — jamais instanciés au chargement du module,
-   seulement à la première requête (évite un crash au build si
-   les clés ne sont pas encore configurées en local). */
+/* ── Lazy Singletons — évite les crashes au build/chargement si les clés manquent ── */
 let _genAI = null
 function getGenAI() {
   if (!_genAI) _genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'placeholder' })
   return _genAI
+}
+
+let _groq = null
+function getGroq() {
+  if (!_groq) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'placeholder' })
+  return _groq
 }
 
 let _resend = null
@@ -20,53 +26,48 @@ function getResend() {
   return _resend
 }
 
-/* gemini-2.5-flash a été coupé pour les nouvelles clés API (juil. 2026 —
-   Google pousse vers la gen 3.x, cf. aistudio.google.com/app/apikey pour
-   l'état du palier gratuit). Vu que c'est la 2e fois que Google tue le
-   modèle pin­né ici (2.0 → 2.5 en juin, 2.5 → 3.x maintenant), on essaie
-   une liste dans l'ordre plutôt qu'un seul nom : si le premier tombe,
-   l'assistant bascule sur le suivant au lieu de rester mort en prod. */
-const MODEL_CANDIDATES = ['gemini-3.5-flash', 'gemini-3.1-flash-lite']
+/* Modèles Gemini candidats et modèle Groq de rechange */
+const GEMINI_MODELS = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-1.5-flash']
+const GROQ_MODEL = 'llama-3.1-8b-instant'
 const MAX_TOKENS = 1024
 
-/* Une fois qu'un modèle a répondu avec succès, on le retient pour la
-   durée de vie de l'instance serveur (évite de re-tester les modèles
-   morts à chaque requête). S'il retombe en panne plus tard, on retente
-   quand même toute la liste avant d'abandonner. */
-let _workingModel = null
+let _workingGeminiModel = null
 
 function isModelUnavailableError(err) {
   const msg = String(err?.message ?? err ?? '')
-  return /"code"\s*:\s*404/.test(msg) || /not found|no longer available/i.test(msg)
+  return (
+    /"code"\s*:\s*404/.test(msg) || 
+    /not found|no longer available/i.test(msg) ||
+    /"code"\s*:\s*429/.test(msg) ||
+    /quota/i.test(msg)
+  );
 }
 
-async function generateWithFallback(client, params) {
-  const order = _workingModel
-    ? [_workingModel, ...MODEL_CANDIDATES.filter((m) => m !== _workingModel)]
-    : MODEL_CANDIDATES
+/* Génération de contenu Gemini avec gestion de repli intelligente */
+async function generateGeminiStream(client, params) {
+  const order = _workingGeminiModel
+    ? [_workingGeminiModel, ...GEMINI_MODELS.filter((m) => m !== _workingGeminiModel)]
+    : GEMINI_MODELS
 
   let lastErr
   for (const model of order) {
     try {
+      console.log(`[Assistant] Tentative avec Gemini (${model})...`)
       const stream = await client.models.generateContentStream({ ...params, model })
-      _workingModel = model
+      _workingGeminiModel = model
       return stream
     } catch (err) {
       lastErr = err
-      if (!isModelUnavailableError(err)) throw err // autre erreur (quota, réseau...) : on ne masque pas
-      console.error(`[Assistant] Modèle ${model} indisponible, tentative suivante...`, err?.message ?? err)
+      if (!isModelUnavailableError(err)) throw err 
+      console.warn(`[Assistant] Modèle ${model} indisponible ou quota épuisé, tentative suivante...`)
     }
   }
   throw lastErr
 }
 
-/* ════════════════════════════════════════════
-   Anti-spam / anti-abus — même approche que /api/contact
-   (best-effort en mémoire ; suffisant pour un trafic normal
-   d'agence, pas conçu pour encaisser un DDoS volontaire).
-   ════════════════════════════════════════════ */
+/* ── Rate Limiting en mémoire ── */
 const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX = 15 // plus permissif que /contact : une conversation = plusieurs requêtes
+const RATE_LIMIT_MAX = 15 
 const hits = new Map()
 
 function isRateLimited(ip) {
@@ -93,8 +94,7 @@ function getClientIp(request) {
   return request.headers.get('x-real-ip') || 'unknown'
 }
 
-/* ── Limites de payload — évite qu'une requête énorme fasse
-   exploser le coût d'un appel ou serve de vecteur d'abus. ── */
+/* ── Validation & Nettoyage ── */
 const MAX_MESSAGES = 40
 const MAX_MESSAGE_LENGTH = 4000
 
@@ -107,7 +107,6 @@ function escapeHtml(str = '') {
     .replace(/'/g, '&#39;')
 }
 
-/* ── Validation + normalisation des messages reçus du widget ── */
 function sanitizeMessages(input) {
   if (!Array.isArray(input)) return null
   if (input.length === 0 || input.length > MAX_MESSAGES) return null
@@ -123,8 +122,6 @@ function sanitizeMessages(input) {
   return cleaned
 }
 
-/* Convertit le format {role:'user'|'assistant', content} du widget
-   vers le format Gemini {role:'user'|'model', parts:[{text}]}. */
 function toGeminiContents(messages) {
   return messages.map(m => ({
     role: m.role === 'assistant' ? 'model' : 'user',
@@ -132,7 +129,14 @@ function toGeminiContents(messages) {
   }))
 }
 
-/* ── Envoi de l'email de lead via Resend (même style que /api/contact) ── */
+function toGroqMessages(messages) {
+  return messages.map(m => ({
+    role: m.role === 'assistant' ? 'assistant' : 'user',
+    content: m.content,
+  }))
+}
+
+/* ── Envoi de l'email de lead (Resend) ── */
 async function sendLeadEmail(lead) {
   const safeName = escapeHtml(lead.name)
   const safeContact = escapeHtml(lead.contact)
@@ -197,66 +201,101 @@ async function sendLeadEmail(lead) {
   })
 }
 
-/* ── Boucle d'appel au modèle avec gestion du tool use, écrite
-   directement dans le ReadableStream renvoyé au client. ── */
-function runAssistant(messages, controller, encoder) {
-  const client = getGenAI()
-  const systemInstruction = buildSystemPrompt()
+/* ── Moteur d'exécution principal de l'Assistant ── */
+async function runAssistant(messages, controller, encoder) {
   const write = (text) => controller.enqueue(encoder.encode(text))
+  const systemInstruction = buildSystemPrompt()
 
-  async function turn(contents, depth = 0) {
-    const stream = await generateWithFallback(client, {
-      contents,
-      config: {
-        systemInstruction,
-        tools: ASSISTANT_TOOLS,
-        maxOutputTokens: MAX_TOKENS,
-      },
-    })
+  // 1. TENTATIVE NATIVE GEMINI
+  if (process.env.GEMINI_API_KEY) {
+    try {
+      const client = getGenAI()
 
-    /* On garde le PART brut {functionCall, thoughtSignature?} tel que renvoyé
-       par le modèle, jamais un {name, args} reconstruit à la main : Gemini 3
-       attache un thoughtSignature à côté de functionCall (obligatoire à
-       repasser tel quel, cf. ai.google.dev/gemini-api/docs/thought-signatures),
-       et .functionCalls (le getter pratique du SDK) ne le préserve pas. */
-    let functionCallPart = null
-    for await (const chunk of stream) {
-      if (chunk.text) write(chunk.text)
-      const part = chunk.candidates?.[0]?.content?.parts?.find((p) => p.functionCall)
-      if (part) functionCallPart = part
-    }
+      async function turn(contents, depth = 0) {
+        const stream = await generateGeminiStream(client, {
+          contents,
+          config: {
+            systemInstruction,
+            tools: ASSISTANT_TOOLS,
+            maxOutputTokens: MAX_TOKENS,
+          },
+        })
 
-    const functionCall = functionCallPart?.functionCall
+        let functionCallPart = null
+        for await (const chunk of stream) {
+          if (chunk.text) write(chunk.text)
+          const part = chunk.candidates?.[0]?.content?.parts?.find((p) => p.functionCall)
+          if (part) functionCallPart = part
+        }
 
-    if (functionCall?.name === 'capture_lead' && depth === 0) {
-      let toolResultText = 'Lead enregistré et email envoyé.'
-      try {
-        await sendLeadEmail(functionCall.args)
-      } catch (err) {
-        console.error('[Assistant] Échec envoi email lead:', err?.message ?? err)
-        toolResultText = "L'email n'a pas pu être envoyé automatiquement, mais informe quand même le visiteur que sa demande est notée et qu'il peut aussi écrire directement sur WhatsApp."
+        const functionCall = functionCallPart?.functionCall
+
+        // Exécution de l'outil capture_lead si demandé
+        if (functionCall?.name === 'capture_lead' && depth === 0) {
+          let toolResultText = 'Lead enregistré et email envoyé.'
+          try {
+            await sendLeadEmail(functionCall.args)
+          } catch (err) {
+            console.error('[Assistant] Échec envoi email lead:', err?.message ?? err)
+            toolResultText = "L'email n'a pas pu être envoyé automatiquement, mais informe quand même le visiteur que sa demande est notée."
+          }
+
+          const nextContents = [
+            ...contents,
+            { role: 'model', parts: [functionCallPart] },
+            {
+              role: 'user',
+              parts: [{
+                functionResponse: {
+                  name: functionCall.name,
+                  id: functionCall.id,
+                  response: { result: toolResultText },
+                },
+              }],
+            },
+          ]
+          await turn(nextContents, depth + 1)
+        }
       }
 
-      const nextContents = [
-        ...contents,
-        { role: 'model', parts: [functionCallPart] }, // part brut, signature incluse si présente
-        {
-          role: 'user',
-          parts: [{
-            functionResponse: {
-              name: functionCall.name,
-              id: functionCall.id, // requis par Gemini 3 pour mapper la réponse au bon appel
-              response: { result: toolResultText },
-            },
-          }],
-        },
-      ]
-      // Un seul aller-retour d'outil par tour de conversation (depth=1 empêche une boucle).
-      await turn(nextContents, depth + 1)
+      await turn(toGeminiContents(messages))
+      return // Fin de l'exécution avec succès sur Gemini
+    } catch (geminiGlobalError) {
+      console.warn('[Assistant] Gemini totalement hors service ou quotas vides. Bascule de secours vers Groq...', geminiGlobalError?.message ?? geminiGlobalError)
     }
   }
 
-  return turn(toGeminiContents(messages))
+  // 2. FALLBACK DE SECOURS : GROQ (Llama 3.1 8B)
+  if (process.env.GROQ_API_KEY) {
+    try {
+      console.log('[Assistant] Génération de secours via Groq...')
+      const groqClient = getGroq()
+
+      const groqMessages = [
+        { role: 'system', content: systemInstruction },
+        ...toGroqMessages(messages)
+      ]
+
+      const responseStream = await groqClient.chat.completions.create({
+        model: GROQ_MODEL,
+        messages: groqMessages,
+        temperature: 0.7,
+        max_tokens: MAX_TOKENS,
+        stream: true,
+      })
+
+      for await (const chunk of responseStream) {
+        const content = chunk.choices[0]?.delta?.content || ''
+        if (content) write(content)
+      }
+      return
+    } catch (groqError) {
+      console.error('[Assistant] Échec critique absolu de Groq :', groqError?.message ?? groqError)
+    }
+  }
+
+  // Si tout a échoué
+  throw new Error("Tous les fournisseurs d'intelligence artificielle (Gemini + Groq) sont saturés.")
 }
 
 export async function POST(request) {
@@ -281,11 +320,6 @@ export async function POST(request) {
     return Response.json({ error: 'Requête invalide.' }, { status: 400 })
   }
 
-  if (!process.env.GEMINI_API_KEY) {
-    console.error('[Assistant] GEMINI_API_KEY manquante')
-    return Response.json({ error: 'Configuration serveur incorrecte' }, { status: 500 })
-  }
-
   const encoder = new TextEncoder()
 
   const readable = new ReadableStream({
@@ -293,10 +327,9 @@ export async function POST(request) {
       try {
         await runAssistant(messages, controller, encoder)
       } catch (err) {
-        console.error('[Assistant] Erreur:', err?.message ?? err)
-        // Message de repli lisible plutôt qu'un flux coupé sans explication.
+        console.error('[Assistant Global POST] Erreur fatale de flux :', err?.message ?? err)
         controller.enqueue(encoder.encode(
-          `Désolé, une erreur est survenue de mon côté. Vous pouvez réessayer, ou écrire directement sur WhatsApp : ${WHATSAPP_LINK}`
+          `Désolé, les serveurs d'IA sont surchargés pour le moment. Vous pouvez réessayer, ou m'écrire directement sur WhatsApp : ${WHATSAPP_LINK}`
         ))
       } finally {
         controller.close()

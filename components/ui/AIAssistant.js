@@ -8,9 +8,7 @@ const GREETING = "Salut 👋 Je suis l'assistant IA d'AKATech. Dites-moi ce que 
 const WA_REGEX = /https:\/\/wa\.me\/\S+/g
 
 /* Détecte un lien wa.me dans un texte terminé et le remplace par un
-   bouton stylé plutôt qu'une URL brute. Ne traite jamais le HTML —
-   uniquement du texte + un tableau de segments React, pour ne jamais
-   avoir besoin de dangerouslySetInnerHTML sur du contenu généré par le modèle. */
+   bouton stylé plutôt qu'une URL brute. */
 function renderMessageContent(text) {
   const parts = text.split(WA_REGEX)
   const links = text.match(WA_REGEX) || []
@@ -46,13 +44,64 @@ export default function AIAssistant() {
   const [errorMsg, setErrorMsg] = useState(null)
   const listRef = useRef(null)
   const abortRef = useRef(null)
+  
+  // Utilisation d'une ref pour toujours accéder à l'état le plus récent des messages dans les callbacks d'effets de fermeture
+  const messagesRef = useRef(messages)
+  useEffect(() => {
+    messagesRef.current = messages
+  }, [messages])
+
+  // Fonction d'envoi du rapport de conversation à l'API de rapport Resend
+  const sendConversationReport = useCallback((messagesList) => {
+    // On n'envoie rien s'il n'y a pas d'échange réel (seulement le message de bienvenue)
+    if (!messagesList || messagesList.length < 2) return
+
+    const payload = JSON.stringify({ messages: messagesList })
+
+    if (navigator.sendBeacon) {
+      const blob = new Blob([payload], { type: 'application/json' })
+      navigator.sendBeacon('/api/assistant/report', blob)
+    } else {
+      fetch('/api/assistant/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: payload,
+      }).catch((err) => console.error("[Rapport] Échec envoi:", err))
+    }
+  }, [])
+
+  // Écouteur d'événement pour envoyer le rapport si l'onglet est fermé ou rafraîchi
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      sendConversationReport(messagesRef.current)
+    }
+
+    window.addEventListener('beforeunload', handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload)
+      abortRef.current?.abort()
+      // Envoi du rapport lors du démontage du composant (changement de page SPA)
+      sendConversationReport(messagesRef.current)
+    }
+  }, [sendConversationReport])
+
+  // Déclencheur manuel lors du clic sur le bouton Ouvrir/Fermer l'assistant
+  const toggleOpen = () => {
+    setOpen((prev) => {
+      const nextOpen = !prev
+      // Si on est en train de fermer le widget, on génère et envoie le rapport de la discussion en cours
+      if (!nextOpen) {
+        sendConversationReport(messages)
+      }
+      return nextOpen
+    })
+  }
 
   useEffect(() => {
     if (!listRef.current) return
     listRef.current.scrollTop = listRef.current.scrollHeight
   }, [messages, streaming])
-
-  useEffect(() => () => abortRef.current?.abort(), [])
 
   const send = useCallback(async () => {
     const text = input.trim()
@@ -112,7 +161,7 @@ export default function AIAssistant() {
     <>
       <motion.button
         type="button"
-        onClick={() => setOpen(o => !o)}
+        onClick={toggleOpen}
         aria-label={open ? "Fermer l'assistant AKATech" : "Ouvrir l'assistant AKATech"}
         initial={reduceMotion ? false : { scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
