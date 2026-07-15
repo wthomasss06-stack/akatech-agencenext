@@ -324,6 +324,19 @@ body.light-mode .text-gradient {
 @keyframes proc-rotate { to{transform:rotate(360deg)} }
 @keyframes proc-ping { 0%{transform:scale(1);opacity:.8} 100%{transform:scale(2.5);opacity:0} }
 
+/* ── Assistant IA — bouton WhatsApp inline dans une réponse ── */
+.ai-assistant-wa-btn {
+  display: inline-block;
+  margin-top: .5rem;
+  padding: .5rem .9rem;
+  border-radius: 100px;
+  background: linear-gradient(145deg,#25d366,#128c7e);
+  color: #ffffff !important;
+  font-size: .78rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 /* Page transition */
 .page-enter { animation: fadeUp .5s ease forwards; }
 

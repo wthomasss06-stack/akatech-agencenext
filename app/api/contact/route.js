@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { PROJECT_TYPE_LABELS } from '@/lib/data'
 
 let _resend = null
 function getResend() {
@@ -54,17 +55,6 @@ function getClientIp(request) {
   const fwd = request.headers.get('x-forwarded-for')
   if (fwd) return fwd.split(',')[0].trim()
   return request.headers.get('x-real-ip') || 'unknown'
-}
-
-const PROJECT_TYPE_LABELS = {
-  'site-vitrine': 'Conception de Site Web',
-  'e-commerce': 'E-commerce',
-  'application-web': 'Application Web / SaaS',
-  'cartes-dashboards': 'Cartes Interactives & Dashboards',
-  'api-backend': 'API & Backend',
-  'google-my-business': 'Fiche Google My Business',
-  'maintenance': 'Maintenance & Support',
-  'autre': 'Autre',
 }
 
 /* ── CORS preflight ── */
