@@ -1,0 +1,137 @@
+// prisma/schema.prisma
+// Schéma manquant du zip original — reconstruit à partir de l'usage
+// réel dans lib/db.js et les routes API (app/api/leads, /conversations,
+// /stats), plus les modèles Visitor/VisitSession/PageView pour le
+// tracking de visiteurs (cookies) demandé en plus.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+// ═══════════════════════════════════════════
+// ASSISTANT IA — conversations, leads, rapports
+// ═══════════════════════════════════════════
+
+enum ConversationStatus {
+  ACTIVE
+  ENDED
+  CONVERTED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  CONTACTED
+  CONVERTED
+  LOST
+}
+
+model Conversation {
+  id           String             @id @default(cuid())
+  sessionId    String             @unique
+  ipHash       String?
+  status       ConversationStatus @default(ACTIVE)
+  leadScore    Int                @default(0)
+  messageCount Int                @default(0)
+  createdAt    DateTime           @default(now())
+  endedAt      DateTime?
+
+  messages Message[]
+  lead     Lead?
+  report   Report?
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           MessageRole
+  content        String
+  modelUsed      String?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}
+
+model Lead {
+  id             String       @id @default(cuid())
+  conversationId String       @unique
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  name           String
+  contact        String
+  projectType    String?
+  budgetRange    String?
+  timeline       String?
+  summary        String
+  score          Int          @default(0)
+  status         LeadStatus   @default(NEW)
+  notes          String?
+  createdAt      DateTime     @default(now())
+
+  @@index([status])
+  @@index([score])
+}
+
+model Report {
+  id             String       @id @default(cuid())
+  conversationId String       @unique
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  aiSummary      String
+  fullHistory    Json
+  createdAt      DateTime     @default(now())
+}
+
+// ═══════════════════════════════════════════
+// ANALYTICS — visiteurs, sessions, pages vues
+// (posé par le middleware via cookies, jamais par le visiteur lui-même)
+// ═══════════════════════════════════════════
+
+model Visitor {
+  id         String   @id @default(cuid())
+  visitorId  String   @unique // valeur du cookie akatech_visitor
+  firstSeenAt DateTime @default(now())
+  lastSeenAt DateTime @updatedAt
+  visitCount Int      @default(1)
+
+  sessions VisitSession[]
+}
+
+model VisitSession {
+  id             String    @id @default(cuid())
+  sessionId      String    @unique // valeur du cookie akatech_session
+  visitorId      String
+  visitor        Visitor   @relation(fields: [visitorId], references: [id], onDelete: Cascade)
+  startedAt      DateTime  @default(now())
+  lastActivityAt DateTime  @updatedAt
+  device         String? // mobile | desktop | tablet
+  referrer       String?
+  userAgent      String?
+
+  pageViews PageView[]
+
+  @@index([startedAt])
+}
+
+model PageView {
+  id        String       @id @default(cuid())
+  sessionId String
+  session   VisitSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  path      String
+  viewedAt  DateTime     @default(now())
+
+  @@index([sessionId])
+  @@index([viewedAt])
+}

@@ -44,36 +44,45 @@ export default function AIAssistant() {
   const [errorMsg, setErrorMsg] = useState(null)
   const listRef = useRef(null)
   const abortRef = useRef(null)
-  
+
+  // Un seul id par session de widget (pas un cookie : la conversation
+  // suit la durée de vie du composant, pas une fenêtre de 30 min comme
+  // le tracking analytics). Sert à relier chat + rapport à la même
+  // conversation côté serveur.
+  const sessionIdRef = useRef(null)
+  if (!sessionIdRef.current) sessionIdRef.current = crypto.randomUUID()
+
   // Utilisation d'une ref pour toujours accéder à l'état le plus récent des messages dans les callbacks d'effets de fermeture
   const messagesRef = useRef(messages)
   useEffect(() => {
     messagesRef.current = messages
   }, [messages])
 
-  // Fonction d'envoi du rapport de conversation à l'API de rapport Resend
-  const sendConversationReport = useCallback((messagesList) => {
-    // On n'envoie rien s'il n'y a pas d'échange réel (seulement le message de bienvenue)
+  // Signale la fin de la conversation en base (pas de résumé IA, pas
+  // d'email — juste un marquage "terminée", gratuit et instantané).
+  const endConversation = useCallback((messagesList) => {
+    // Rien à clôturer si le visiteur n'a jamais vraiment écrit (index 0 = message d'accueil statique).
     if (!messagesList || messagesList.length < 2) return
 
-    const payload = JSON.stringify({ messages: messagesList })
+    const payload = JSON.stringify({ sessionId: sessionIdRef.current })
 
     if (navigator.sendBeacon) {
       const blob = new Blob([payload], { type: 'application/json' })
-      navigator.sendBeacon('/api/assistant/report', blob)
+      navigator.sendBeacon('/api/assistant/end', blob)
     } else {
-      fetch('/api/assistant/report', {
+      fetch('/api/assistant/end', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: payload,
-      }).catch((err) => console.error("[Rapport] Échec envoi:", err))
+        keepalive: true,
+      }).catch(() => {})
     }
   }, [])
 
-  // Écouteur d'événement pour envoyer le rapport si l'onglet est fermé ou rafraîchi
+  // Écouteur d'événement pour clôturer si l'onglet est fermé ou rafraîchi
   useEffect(() => {
     const handleBeforeUnload = () => {
-      sendConversationReport(messagesRef.current)
+      endConversation(messagesRef.current)
     }
 
     window.addEventListener('beforeunload', handleBeforeUnload)
@@ -81,18 +90,18 @@ export default function AIAssistant() {
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
       abortRef.current?.abort()
-      // Envoi du rapport lors du démontage du composant (changement de page SPA)
-      sendConversationReport(messagesRef.current)
+      // Clôture lors du démontage du composant (changement de page SPA)
+      endConversation(messagesRef.current)
     }
-  }, [sendConversationReport])
+  }, [endConversation])
 
   // Déclencheur manuel lors du clic sur le bouton Ouvrir/Fermer l'assistant
   const toggleOpen = () => {
     setOpen((prev) => {
       const nextOpen = !prev
-      // Si on est en train de fermer le widget, on génère et envoie le rapport de la discussion en cours
+      // Si on est en train de fermer le widget, on clôture la conversation en cours
       if (!nextOpen) {
-        sendConversationReport(messages)
+        endConversation(messages)
       }
       return nextOpen
     })
@@ -120,7 +129,7 @@ export default function AIAssistant() {
       const res = await fetch('/api/assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: nextMessages }),
+        body: JSON.stringify({ messages: nextMessages, sessionId: sessionIdRef.current }),
         signal: controller.signal,
       })
 

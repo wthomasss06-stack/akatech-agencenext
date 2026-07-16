@@ -1316,7 +1316,7 @@ function PricingCallout() {
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <p style={{ color: T.textSub, maxWidth: 760, marginBottom: 0 }}>Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.</p>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.6rem,3.2vw,2.6rem)', fontWeight: 700, lineHeight: 1.32, color: T.textSub, maxWidth: 760, marginBottom: 0 }}>Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.</p>
           </BlurReveal>
         </div>
 

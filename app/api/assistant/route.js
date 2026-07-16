@@ -1,139 +1,20 @@
 // app/api/assistant/route.js
-import { GoogleGenAI } from '@google/genai'
-import { Resend } from 'resend'
-import Groq from 'groq-sdk'
+import { createHash } from 'crypto'
 import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK } from '@/lib/assistant'
 import { PROJECT_TYPE_LABELS } from '@/lib/data'
+import {
+  getGenAI, getGroq, getResend, generateGeminiStream,
+  GROQ_MODEL, MAX_TOKENS, createRateLimiter, getClientIp,
+  sanitizeMessages, toGeminiContents, toGroqMessages, escapeHtml,
+} from '@/lib/ai-providers'
+import { getOrCreateConversation, saveMessage, saveLead } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
-/* ── Lazy Singletons — évite les crashes au build/chargement si les clés manquent ── */
-let _genAI = null
-function getGenAI() {
-  if (!_genAI) _genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || 'placeholder' })
-  return _genAI
-}
+const { isRateLimited, pruneOldEntries } = createRateLimiter(60_000, 15)
 
-let _groq = null
-function getGroq() {
-  if (!_groq) _groq = new Groq({ apiKey: process.env.GROQ_API_KEY || 'placeholder' })
-  return _groq
-}
-
-let _resend = null
-function getResend() {
-  if (!_resend) _resend = new Resend(process.env.RESEND_API_KEY || 're_placeholder')
-  return _resend
-}
-
-/* Modèles Gemini candidats et modèle Groq de rechange */
-const GEMINI_MODELS = ['gemini-3.5-flash', 'gemini-3.1-flash-lite', 'gemini-1.5-flash']
-const GROQ_MODEL = 'llama-3.1-8b-instant'
-const MAX_TOKENS = 1024
-
-let _workingGeminiModel = null
-
-function isModelUnavailableError(err) {
-  const msg = String(err?.message ?? err ?? '')
-  return (
-    /"code"\s*:\s*404/.test(msg) || 
-    /not found|no longer available/i.test(msg) ||
-    /"code"\s*:\s*429/.test(msg) ||
-    /quota/i.test(msg)
-  );
-}
-
-/* Génération de contenu Gemini avec gestion de repli intelligente */
-async function generateGeminiStream(client, params) {
-  const order = _workingGeminiModel
-    ? [_workingGeminiModel, ...GEMINI_MODELS.filter((m) => m !== _workingGeminiModel)]
-    : GEMINI_MODELS
-
-  let lastErr
-  for (const model of order) {
-    try {
-      console.log(`[Assistant] Tentative avec Gemini (${model})...`)
-      const stream = await client.models.generateContentStream({ ...params, model })
-      _workingGeminiModel = model
-      return stream
-    } catch (err) {
-      lastErr = err
-      if (!isModelUnavailableError(err)) throw err 
-      console.warn(`[Assistant] Modèle ${model} indisponible ou quota épuisé, tentative suivante...`)
-    }
-  }
-  throw lastErr
-}
-
-/* ── Rate Limiting en mémoire ── */
-const RATE_LIMIT_WINDOW_MS = 60_000
-const RATE_LIMIT_MAX = 15 
-const hits = new Map()
-
-function isRateLimited(ip) {
-  const now = Date.now()
-  const entry = hits.get(ip)
-  if (!entry || now - entry.start > RATE_LIMIT_WINDOW_MS) {
-    hits.set(ip, { start: now, count: 1 })
-    return false
-  }
-  entry.count += 1
-  return entry.count > RATE_LIMIT_MAX
-}
-
-function pruneOldEntries() {
-  const now = Date.now()
-  for (const [ip, entry] of hits) {
-    if (now - entry.start > RATE_LIMIT_WINDOW_MS) hits.delete(ip)
-  }
-}
-
-function getClientIp(request) {
-  const fwd = request.headers.get('x-forwarded-for')
-  if (fwd) return fwd.split(',')[0].trim()
-  return request.headers.get('x-real-ip') || 'unknown'
-}
-
-/* ── Validation & Nettoyage ── */
-const MAX_MESSAGES = 40
-const MAX_MESSAGE_LENGTH = 4000
-
-function escapeHtml(str = '') {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
-
-function sanitizeMessages(input) {
-  if (!Array.isArray(input)) return null
-  if (input.length === 0 || input.length > MAX_MESSAGES) return null
-
-  const cleaned = []
-  for (const m of input) {
-    if (!m || (m.role !== 'user' && m.role !== 'assistant')) return null
-    if (typeof m.content !== 'string') return null
-    const text = m.content.trim()
-    if (!text || text.length > MAX_MESSAGE_LENGTH) return null
-    cleaned.push({ role: m.role, content: text })
-  }
-  return cleaned
-}
-
-function toGeminiContents(messages) {
-  return messages.map(m => ({
-    role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }],
-  }))
-}
-
-function toGroqMessages(messages) {
-  return messages.map(m => ({
-    role: m.role === 'assistant' ? 'assistant' : 'user',
-    content: m.content,
-  }))
+function hashIp(ip) {
+  return createHash('sha256').update(ip).digest('hex').slice(0, 32)
 }
 
 /* ── Envoi de l'email de lead (Resend) ── */
@@ -201,12 +82,25 @@ async function sendLeadEmail(lead) {
   })
 }
 
-/* ── Moteur d'exécution principal de l'Assistant ── */
-async function runAssistant(messages, controller, encoder) {
+/* ── Moteur d'exécution : Gemini (cascade) → Groq (secours) ──
+   Accumule aussi le texte complet de la réponse pour pouvoir la
+   sauvegarder en base une fois le flux terminé (le stream n'écrit
+   que vers le client, il ne conserve rien par défaut). */
+async function runAssistant(messages, conversationDbId, controller, encoder) {
   const write = (text) => controller.enqueue(encoder.encode(text))
   const systemInstruction = buildSystemPrompt()
+  let fullText = ''
+  let modelUsed = null
 
-  // 1. TENTATIVE NATIVE GEMINI
+  async function persistAssistantReply() {
+    if (conversationDbId && fullText.trim()) {
+      await saveMessage(conversationDbId, 'ASSISTANT', fullText, modelUsed).catch((err) =>
+        console.error('[Assistant] Échec sauvegarde message assistant:', err?.message ?? err)
+      )
+    }
+  }
+
+  // 1. GEMINI (cascade de modèles)
   if (process.env.GEMINI_API_KEY) {
     try {
       const client = getGenAI()
@@ -214,88 +108,68 @@ async function runAssistant(messages, controller, encoder) {
       async function turn(contents, depth = 0) {
         const stream = await generateGeminiStream(client, {
           contents,
-          config: {
-            systemInstruction,
-            tools: ASSISTANT_TOOLS,
-            maxOutputTokens: MAX_TOKENS,
-          },
+          config: { systemInstruction, tools: ASSISTANT_TOOLS, maxOutputTokens: MAX_TOKENS },
         })
 
         let functionCallPart = null
         for await (const chunk of stream) {
-          if (chunk.text) write(chunk.text)
+          if (chunk.text) { write(chunk.text); fullText += chunk.text }
           const part = chunk.candidates?.[0]?.content?.parts?.find((p) => p.functionCall)
           if (part) functionCallPart = part
         }
+        modelUsed = 'gemini'
 
         const functionCall = functionCallPart?.functionCall
-
-        // Exécution de l'outil capture_lead si demandé
         if (functionCall?.name === 'capture_lead' && depth === 0) {
           let toolResultText = 'Lead enregistré et email envoyé.'
           try {
+            if (conversationDbId) await saveLead(conversationDbId, functionCall.args)
             await sendLeadEmail(functionCall.args)
           } catch (err) {
-            console.error('[Assistant] Échec envoi email lead:', err?.message ?? err)
-            toolResultText = "L'email n'a pas pu être envoyé automatiquement, mais informe quand même le visiteur que sa demande est notée."
+            console.error('[Assistant] Échec traitement lead:', err?.message ?? err)
+            toolResultText = "Le lead n'a pas pu être enregistré automatiquement, mais informe quand même le visiteur que sa demande est notée."
           }
 
           const nextContents = [
             ...contents,
             { role: 'model', parts: [functionCallPart] },
-            {
-              role: 'user',
-              parts: [{
-                functionResponse: {
-                  name: functionCall.name,
-                  id: functionCall.id,
-                  response: { result: toolResultText },
-                },
-              }],
-            },
+            { role: 'user', parts: [{ functionResponse: { name: functionCall.name, id: functionCall.id, response: { result: toolResultText } } }] },
           ]
           await turn(nextContents, depth + 1)
         }
       }
 
       await turn(toGeminiContents(messages))
-      return // Fin de l'exécution avec succès sur Gemini
+      await persistAssistantReply()
+      return
     } catch (geminiGlobalError) {
-      console.warn('[Assistant] Gemini totalement hors service ou quotas vides. Bascule de secours vers Groq...', geminiGlobalError?.message ?? geminiGlobalError)
+      console.warn('[Assistant] Gemini hors service, bascule vers Groq...', geminiGlobalError?.message ?? geminiGlobalError)
     }
   }
 
-  // 2. FALLBACK DE SECOURS : GROQ (Llama 3.1 8B)
+  // 2. GROQ (secours)
   if (process.env.GROQ_API_KEY) {
     try {
-      console.log('[Assistant] Génération de secours via Groq...')
       const groqClient = getGroq()
-
-      const groqMessages = [
-        { role: 'system', content: systemInstruction },
-        ...toGroqMessages(messages)
-      ]
+      const groqMessages = [{ role: 'system', content: systemInstruction }, ...toGroqMessages(messages)]
 
       const responseStream = await groqClient.chat.completions.create({
-        model: GROQ_MODEL,
-        messages: groqMessages,
-        temperature: 0.7,
-        max_tokens: MAX_TOKENS,
-        stream: true,
+        model: GROQ_MODEL, messages: groqMessages, temperature: 0.7, max_tokens: MAX_TOKENS, stream: true,
       })
 
       for await (const chunk of responseStream) {
         const content = chunk.choices[0]?.delta?.content || ''
-        if (content) write(content)
+        if (content) { write(content); fullText += content }
       }
+      modelUsed = 'groq'
+      await persistAssistantReply()
       return
     } catch (groqError) {
-      console.error('[Assistant] Échec critique absolu de Groq :', groqError?.message ?? groqError)
+      console.error('[Assistant] Échec critique de Groq :', groqError?.message ?? groqError)
     }
   }
 
-  // Si tout a échoué
-  throw new Error("Tous les fournisseurs d'intelligence artificielle (Gemini + Groq) sont saturés.")
+  throw new Error("Tous les fournisseurs d'IA (Gemini + Groq) sont indisponibles.")
 }
 
 export async function POST(request) {
@@ -309,10 +183,7 @@ export async function POST(request) {
   pruneOldEntries()
   const ip = getClientIp(request)
   if (isRateLimited(ip)) {
-    return Response.json(
-      { error: 'Trop de messages envoyés. Réessayez dans une minute.' },
-      { status: 429 }
-    )
+    return Response.json({ error: 'Trop de messages envoyés. Réessayez dans une minute.' }, { status: 429 })
   }
 
   const messages = sanitizeMessages(body.messages)
@@ -320,14 +191,33 @@ export async function POST(request) {
     return Response.json({ error: 'Requête invalide.' }, { status: 400 })
   }
 
+  const sessionId = typeof body.sessionId === 'string' && body.sessionId.length <= 100 ? body.sessionId : null
+
   const encoder = new TextEncoder()
 
   const readable = new ReadableStream({
     async start(controller) {
       try {
-        await runAssistant(messages, controller, encoder)
+        // La persistance DB est facultative : si DATABASE_URL n'est pas
+        // encore configurée, le chat continue de fonctionner (juste sans
+        // historique ni dashboard) plutôt que de planter.
+        let conversationDbId = null
+        if (sessionId && process.env.DATABASE_URL) {
+          try {
+            const conversation = await getOrCreateConversation(sessionId, hashIp(ip))
+            conversationDbId = conversation.id
+            const lastUserMessage = messages[messages.length - 1]
+            if (lastUserMessage?.role === 'user') {
+              await saveMessage(conversationDbId, 'USER', lastUserMessage.content)
+            }
+          } catch (dbErr) {
+            console.error('[Assistant] DB indisponible, poursuite sans persistance:', dbErr?.message ?? dbErr)
+          }
+        }
+
+        await runAssistant(messages, conversationDbId, controller, encoder)
       } catch (err) {
-        console.error('[Assistant Global POST] Erreur fatale de flux :', err?.message ?? err)
+        console.error('[Assistant] Erreur:', err?.message ?? err)
         controller.enqueue(encoder.encode(
           `Désolé, les serveurs d'IA sont surchargés pour le moment. Vous pouvez réessayer, ou m'écrire directement sur WhatsApp : ${WHATSAPP_LINK}`
         ))
@@ -338,9 +228,6 @@ export async function POST(request) {
   })
 
   return new Response(readable, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Cache-Control': 'no-cache, no-transform',
-    },
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-cache, no-transform' },
   })
 }

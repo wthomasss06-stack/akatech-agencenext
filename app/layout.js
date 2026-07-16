@@ -6,6 +6,7 @@ import { BackToTop, FloatingWA } from '@/components/ui/index'
 import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
 import AIAssistant from '@/components/ui/AIAssistant'
+import VisitorTracker from '@/components/ui/VisitorTracker'
 import { PageTransitionProvider } from '@/components/layout/PageTransition'
 import { BlobTransitionProvider } from '@/components/layout/BlobTransition'
 
@@ -143,6 +144,7 @@ export default function RootLayout({ children }) {
               <FloatingWA />
               <BackToTop />
               <AIAssistant />
+              <VisitorTracker />
             </BlobTransitionProvider>
           </PageTransitionProvider>
         </ThemeProvider>
