@@ -48,7 +48,6 @@ model Conversation {
 
   messages Message[]
   lead     Lead?
-  report   Report?
 
   @@index([status])
   @@index([createdAt])
@@ -83,15 +82,6 @@ model Lead {
 
   @@index([status])
   @@index([score])
-}
-
-model Report {
-  id             String       @id @default(cuid())
-  conversationId String       @unique
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
-  aiSummary      String
-  fullHistory    Json
-  createdAt      DateTime     @default(now())
 }
 
 // ═══════════════════════════════════════════

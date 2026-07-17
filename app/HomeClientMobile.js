@@ -1074,7 +1074,7 @@ function PricingCallout() {
             <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
             Choisissez votre <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
           </h2>
-          <RevealParagraph text="Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez." extraStyle={{ color: T.textSub, textAlign: 'center' }} inView={inView} />
+          <RevealParagraph text="Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez." greenWords={['claires,', 'structures', 'freelances', 'choisissez.']} extraStyle={{ color: T.textSub, textAlign: 'center' }} inView={inView} />
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}

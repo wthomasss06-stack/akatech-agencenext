@@ -14,7 +14,6 @@ export async function GET(request, { params }) {
       include: {
         messages: { orderBy: { createdAt: 'asc' } },
         lead: true,
-        report: true,
       },
     })
 

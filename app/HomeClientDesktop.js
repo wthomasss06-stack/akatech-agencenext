@@ -1302,6 +1302,7 @@ function PricingCallout() {
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
   const d = PRICING[tab]
+  const PRICING_LEAD_GREEN = new Set(['claires,', 'structures', 'freelances', 'choisissez.'])
 
   return (
     <section ref={ref} style={{ padding: '6rem 5% 7rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
@@ -1316,7 +1317,13 @@ function PricingCallout() {
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.6rem,3.2vw,2.6rem)', fontWeight: 700, lineHeight: 1.32, color: T.textSub, maxWidth: 760, marginBottom: 0 }}>Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.</p>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.6rem,3.2vw,2.6rem)', fontWeight: 700, lineHeight: 1.32, color: T.textSub, maxWidth: 760, margin: '0 auto', textAlign: 'center' }}>
+              {"Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.".split(' ').map((word, i) => (
+                <span key={i} style={{ color: PRICING_LEAD_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
+                  {word}{' '}
+                </span>
+              ))}
+            </p>
           </BlurReveal>
         </div>
 
