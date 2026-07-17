@@ -335,12 +335,12 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Tunnel 3D WebGL** (`/explorer`) — Three.js + GSAP ScrollTrigger, parcourt les 19 projets, textures = vraies captures d'écran
 - **Thème clair/sombre** en transition circulaire via **View Transitions API** (repli instantané si non supporté)
 - **SEO structuré JSON-LD** (`ProfessionalService`) pensé SEO + AEO + GEO — citable par Google AI Overviews et les LLM
+- **`public/llms.txt`** — résumé structuré du site (services, tarifs, pages, contact) au format markdown conventionnel, pour que les LLM (ChatGPT, Perplexity, Claude…) décrivent l'agence avec des informations à jour plutôt que des suppositions
 - **Footer "Demander à l'IA"** — liens pré-remplis vers ChatGPT, Claude, Perplexity, Gemini, Grok
 - **Formulaire de contact** → Resend, avec limite anti-spam basique en mémoire
 - **Marquees de confiance** (`TrustStacksMarquee`, `ConversionMarquee`) sur Accueil / À propos / Services
 - **Assistant IA** conversationnel, double fournisseur (Gemini → Groq), capture de leads — voir section dédiée plus haut
 - **Dashboard admin** (`/dashboard`) — leads, conversations, analytics visiteurs, usage IA, protégé par Basic Auth
-
 
 ---
 
