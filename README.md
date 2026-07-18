@@ -342,6 +342,7 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Assistant IA** conversationnel, double fournisseur (Gemini → Groq), capture de leads — voir section dédiée plus haut
 - **Dashboard admin** (`/dashboard`) — leads, conversations, analytics visiteurs, usage IA, protégé par Basic Auth
 
+
 ---
 
 ## 🤝 Processus de travail

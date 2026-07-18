@@ -1317,7 +1317,7 @@ function PricingCallout() {
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.12}>
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.6rem,3.2vw,2.6rem)', fontWeight: 700, lineHeight: 1.32, color: T.textSub, maxWidth: 760 }}>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.6rem,3.2vw,2.6rem)', fontWeight: 700, lineHeight: 1.32, color: T.textSub, maxWidth: 760, paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
               {"Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.".split(' ').map((word, i) => (
                 <span key={i} style={{ color: PRICING_LEAD_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
                   {word}{' '}
