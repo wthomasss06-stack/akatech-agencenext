@@ -344,7 +344,7 @@ function ContactChannels() {
         {/* ── Header ── */}
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
               <GhostTitle text="COMMENT NOUS CONTACTER" />
               Comment nous <GreenUnderline><span className="text-gradient">contacter</span></GreenUnderline>
             </h2>

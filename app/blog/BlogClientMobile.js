@@ -53,7 +53,7 @@ function HeroBlog() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             <GhostTitle text="INSIGHTS & CONSEILS POUR VOTRE BUSINESS DIGITAL" />
             Insights & conseils<br />
             <GreenUnderline><span className="text-gradient">pour votre business digital</span></GreenUnderline>
@@ -105,14 +105,14 @@ function FeaturedPost() {
           {/* Content */}
           <div style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1rem' }}>
-              <span style={{ padding: '.25rem .8rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
+              <span style={{ padding: '.25rem .8rem', borderRadius: 100, background: T.light ? 'rgba(95,145,55,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                 {post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
                 <Clock size={11} />{post.readTime}
               </span>
             </div>
-            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1.4rem', color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '.9rem' }}>
+            <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.4rem', color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.3, marginBottom: '.9rem' }}>
               {post.title}
             </h2>
             <p style={{ fontSize: '.85rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.8rem' }}>{post.excerpt}</p>
@@ -151,7 +151,7 @@ function BlogGrid() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Section header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
             <GhostTitle text="TOUS LES ARTICLES" />
             Tous les <GreenUnderline><span className="text-gradient">articles</span></GreenUnderline>
           </h2>
@@ -216,7 +216,7 @@ function BlogGrid() {
                   {/* Content */}
                   <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', marginBottom: '.9rem' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(95,145,55,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                         <CatIcon size={10} />{post.category}
                       </span>
                       <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.7rem', color: T.textMuted }}>
@@ -272,7 +272,7 @@ function Newsletter() {
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
             <Zap size={24} style={{ color: T.green }} />
           </div>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
             <GhostTitle text="RESTEZ INFORMÉ DES DERNIÈRES TENDANCES" />
             Restez informé des dernières tendances
           </h2>

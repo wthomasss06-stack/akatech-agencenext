@@ -244,9 +244,10 @@ export default function Footer() {
       {/* ── Wordmark géant — clôture, façon référence ──────────── */}
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{
-          fontFamily: "'Space Grotesk',sans-serif",
+          fontFamily: "'Barlow Condensed',sans-serif",
           fontSize: 'clamp(4.5rem,21vw,15rem)',
-          fontWeight: 700,
+          fontWeight: 900,
+          fontStyle: 'italic',
           letterSpacing: '-.03em',
           lineHeight: 0.8,
           transform: 'translateY(18%)',

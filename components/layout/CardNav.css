@@ -63,7 +63,7 @@ nav.aka-card-nav {
   border: var(--nav-btn-border);
   background: var(--nav-btn-bg);
   color: var(--nav-btn-color);
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Barlow Condensed', sans-serif;
   font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
   cursor: pointer; transition: all .25s;
 }
@@ -89,7 +89,7 @@ nav.aka-card-nav {
 .aka-nav-cta {
   background: linear-gradient(135deg, #88ca53, #5a9e34);
   color: #04140a; border: none; padding: 7px 16px;
-  border-radius: 999px; font-family: 'Space Grotesk', sans-serif;
+  border-radius: 999px; font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em;
   text-transform: uppercase; cursor: pointer;
   box-shadow: 0 4px 16px rgba(136,202,83,0.22);
@@ -128,7 +128,7 @@ nav.aka-card-nav {
 }
 
 .aka-card-label {
-  font-family: 'Space Grotesk', sans-serif; font-style: italic;
+  font-family: 'Barlow Condensed', sans-serif; font-style: italic;
   font-size: 0.78rem; font-weight: 400; letter-spacing: 0.05em; opacity: 0.55;
 }
 .aka-card-1 .aka-card-label { color: var(--card-text); }
@@ -152,7 +152,7 @@ nav.aka-card-nav {
 }
 .aka-card-logo-link:hover { transform: scale(1.05); }
 .aka-card-slogan {
-  font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
   font-size: 1.05rem; line-height: 1.25; letter-spacing: -0.01em;
   color: var(--card-text); margin: 0;
 }
@@ -163,7 +163,7 @@ nav.aka-card-nav {
 /* ── Texte du lien + ghost-cycle (même mécanique que sm-panel-item) ── */
 .aka-card-link-textWrap { position: relative; display: flex; flex-direction: column; }
 .aka-card-link-label {
-  font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700;
   letter-spacing: -0.01em; position: relative; text-transform: uppercase;
 }
 .aka-card-link-ghost {
@@ -176,12 +176,12 @@ nav.aka-card-nav {
 .aka-card-ghost-inner { display: block; }
 .aka-card-ghost-line {
   display: block;
-  font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 700;
   letter-spacing: -0.01em; white-space: nowrap; text-transform: uppercase;
 }
 
 .aka-link-sub {
-  font-family: 'Space Grotesk', sans-serif; font-style: italic;
+  font-family: 'Barlow Condensed', sans-serif; font-style: italic;
   font-size: 0.68rem; opacity: 0.5; display: block;
   margin-top: -2px; font-weight: 400;
 }

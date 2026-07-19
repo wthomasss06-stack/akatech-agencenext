@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --g1: #88ca53;
@@ -60,7 +60,7 @@ body.light-mode .sku-card {
   border-color: rgba(0,0,0,.08) !important;
 }
 body.light-mode .sku-card:hover {
-  border-color: rgba(22,163,74,.3) !important;
+  border-color: rgba(95,145,55,.3) !important;
 }
 
 /* ══════════════════════════════════════════════
@@ -276,24 +276,18 @@ body.light-mode .ghost-title-wrap {
   max-width: 720px;          /* évite que la ligne file trop loin à droite */
 }
 
-/* Titres de section — Space Grotesk */
+/* Titres de section — Barlow Condensed */
 .section-title-big {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
   text-transform: uppercase;
   letter-spacing: -.01em;
   line-height: 0.95;
 }
-.section-title-big .text-gradient {
-  text-transform: none;
-}
-
-/* Text gradient — Scripte style (couleur solide, compatible cursive) */
+/* Text gradient — accent coloré, même police que le reste du titre */
 .text-gradient {
-  font-family: 'Dancing Script', 'Scripte', cursive;
-  font-weight: 700;
   color: var(--g1);
-  letter-spacing: -.01em;
 }
 
 /* Mode light */
@@ -606,7 +600,7 @@ body.light-mode .cta-circle-label { color: #111111; }
     transform .4s cubic-bezier(.175,.885,.32,1.275);
 }
 body.light-mode .cta-circle-arrow {
-  border-color: rgba(22,163,74,.3);
+  border-color: rgba(95,145,55,.3);
   color: #5f9137;
 }
 .cta-circle-arrow {
@@ -626,16 +620,6 @@ body.light-mode .cta-circle-btn:hover .cta-circle-arrow {
 }
 .cta-circle-btn:hover .cta-circle-label { color: var(--g1); }
 body.light-mode .cta-circle-btn:hover .cta-circle-label { color: #5f9137; }
-
-/* ══════════════════════════════════════
-   SCRIPTE — uniquement pour les mots accentués dans h1/h2
-   Usage : <span className="text-gradient">mot vert</span>
-══════════════════════════════════════ */
-@font-face {
-  font-family: 'Scripte';
-  src: local('Dancing Script');
-  font-weight: 700;
-}
 
 /* ══════════════════════════════════════
    TRAIN UNDERLINE — animation SVG vert

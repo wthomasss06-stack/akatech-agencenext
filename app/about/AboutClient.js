@@ -329,7 +329,7 @@ function StatsFounderSection() {
         {/* h2 — au-dessus des 2 colonnes, aligné à gauche, même style que les autres sections */}
         <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
               <GhostTitle text="MISSION & VISION" />
               Mission & <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
             </h2>
@@ -375,7 +375,7 @@ function StatsFounderSection() {
               />
             </div>
             <div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '.95rem', color: T.textMain, marginBottom: '.2rem' }}>M'Bollo Aka Elvis</div>
+              <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.95rem', color: T.textMain, marginBottom: '.2rem' }}>M'Bollo Aka Elvis</div>
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '.55rem' }}>Développeur Full-Stack · Fondateur, AKATech</div>
               <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer"
                 style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', textDecoration: 'none', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)', transition: 'all .2s' }}
@@ -403,7 +403,7 @@ function TimelineSection() {
         {/* h2 — trait rouge, aligné à gauche */}
         <div style={{ textAlign: 'left', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
               <GhostTitle text="L'ÉVOLUTION D'AKATECH" />
               L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
             </h2>
@@ -441,7 +441,7 @@ function ValuesSection() {
         {/* h2 — trait rouge, aligné à gauche */}
         <div style={{ textAlign: 'left', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
               <GhostTitle text="CE QUI NOUS DISTINGUE" />
               Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
             </h2>
@@ -478,7 +478,7 @@ function SkillsSection() {
       {/* h2 — au-dessus des 2 colonnes, aligné à gauche, même style que les autres sections */}
       <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.12}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
             <GhostTitle text="LES TECHNOLOGIES QUI FONT LA DIFFÉRENCE" />
             Les technologies qui font{' '}
             <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
@@ -555,7 +555,7 @@ function RayonSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
           <BlurReveal direction="left">
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, marginBottom: '1.2rem' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, marginBottom: '1.2rem' }}>
               <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
               Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
             </h2>

@@ -467,10 +467,11 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
 // Usage : <GreenUnderline>Votre texte vert</GreenUnderline>
 export function GreenUnderline({ children, style = {}, color = '#88ca53' }) {
   const uid = useRef(`gu${Math.random().toString(36).slice(2,6)}`).current
-  const totalLen = 220 // longueur approximative du path
+  const totalLen = 380 // longueur approximative du nouveau path (02 / Original Path B)
+  const pathD = "M5 24.2592C26.233 20.2879 47.7083 16.9968 69.135 13.8421C98.0469 9.5853 128.407 4.02322 158.059 5.14674C172.583 5.69708 187.686 8.66104 201.598 11.9696C207.232 13.3093 215.437 14.9471 220.137 18.3619C224.401 21.4596 220.737 25.6575 217.184 27.6168C208.309 32.5097 197.199 34.281 186.698 34.8486C183.159 35.0399 147.197 36.2657 155.105 26.5837C158.11 22.9053 162.993 20.6229 167.764 18.7924C178.386 14.7164 190.115 12.1115 201.624 10.3984C218.367 7.90626 235.528 7.06127 252.521 7.49276C258.455 7.64343 264.389 7.92791 270.295 8.41825C280.321 9.25056 296 10.8932 305 13.0242"
 
   return (
-    <span style={{ position: 'relative', display: 'inline-block', paddingBottom: '10px', ...style }}>
+    <span style={{ position: 'relative', display: 'inline-block', paddingBottom: '18px', ...style }}>
       {children}
       <svg
         aria-hidden
@@ -480,11 +481,11 @@ export function GreenUnderline({ children, style = {}, color = '#88ca53' }) {
           left: '-2px',
           right: '-2px',
           width: 'calc(100% + 4px)',
-          height: '10px',
+          height: '20px',
           overflow: 'visible',
           pointerEvents: 'none',
         }}
-        viewBox="0 0 200 10"
+        viewBox="0 0 310 40"
         preserveAspectRatio="none"
       >
         <defs>
@@ -497,20 +498,21 @@ export function GreenUnderline({ children, style = {}, color = '#88ca53' }) {
 
         {/* Trait fantôme fixe — base discrète */}
         <path
-          d="M1,6 C30,2 70,9 100,5 C130,1 170,8 199,5"
+          d={pathD}
           fill="none"
           stroke={color}
-          strokeWidth="1.5"
+          strokeWidth="3"
           strokeOpacity="0.15"
           strokeLinecap="round"
         />
 
         {/* Trait principal animé — se dessine puis pulse */}
         <path
-          d="M1,6 C30,2 70,9 100,5 C130,1 170,8 199,5"
+          id={`stroke-path-${uid}`}
+          d={pathD}
           fill="none"
           stroke={color}
-          strokeWidth="2"
+          strokeWidth="4"
           strokeLinecap="round"
           strokeLinejoin="round"
           filter={`url(#gf-${uid})`}

@@ -501,10 +501,10 @@ function FeaturedPost() {
 // ═══════════════════════════════════════════════════════════════
 const BLOG_NODES = [
   { id: 'blog-n-0', Icon: TrendingUp,  label: 'Stratégie',  color: '#88ca53' },
-  { id: 'blog-n-1', Icon: ShoppingCart,label: 'E-Commerce', color: '#4ade80' },
+  { id: 'blog-n-1', Icon: ShoppingCart,label: 'E-Commerce', color: '#7db94c' },
   { id: 'blog-n-2', Icon: Code,        label: 'Dev Web',    color: '#88ca53' },
   { id: 'blog-n-3', Icon: Globe,       label: 'SEO',        color: '#86efac' },
-  { id: 'blog-n-4', Icon: Zap,         label: 'Growth',     color: '#4ade80' },
+  { id: 'blog-n-4', Icon: Zap,         label: 'Growth',     color: '#7db94c' },
   { id: 'blog-n-5', Icon: BookOpen,    label: 'Ressources', color: '#88ca53' },
 ]
 
@@ -574,7 +574,7 @@ function BlogGrid() {
         {/* ── Section header ── */}
         <div style={{ textAlign: 'left', marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
               <GhostTitle text="EXPLOREZ NOS RESSOURCES DIGITALES" />
               Explorez nos <GreenUnderline>
                 <span className="text-gradient">ressources digitales</span>
@@ -669,7 +669,7 @@ function BlogGrid() {
                     {/* Content */}
                     <div style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem', marginBottom: '.9rem' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.22rem .75rem', borderRadius: 100, background: T.light ? 'rgba(95,145,55,.07)' : 'rgba(136,202,83,.07)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
                           <CatIcon size={10} />{post.category}
                         </span>
                         <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.7rem', color: T.textMuted }}>
@@ -727,7 +727,7 @@ function Newsletter() {
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <Zap size={24} style={{ color: T.green }} />
           </div>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem', textAlign: 'left' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem', textAlign: 'left' }}>
             <GhostTitle text="RESTEZ INFORMÉ DES DERNIÈRES TENDANCES" />
             Restez informé des <GreenUnderline><span className="text-gradient">dernières tendances</span></GreenUnderline>
           </h2>
@@ -802,7 +802,7 @@ function ProcessBlog() {
       {/* Sticky header */}
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'left', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
         <BlurReveal delay={0.1}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
             <GhostTitle text="DU BLOG AU PROJET CONCRET" />
             Du blog au{' '}
             <GreenUnderline>
@@ -836,7 +836,7 @@ function ProcessBlog() {
                 <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '3.5rem', fontWeight: 900, color: 'rgba(136,202,83,.12)', lineHeight: 1, letterSpacing: '-.04em' }}>{n}</span>
               </div>
               <div>
-                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+                <h3 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
                   {title}
                 </h3>
                 <p style={{ fontSize: '1.05rem', color: T.textSub, lineHeight: 1.8, maxWidth: 480 }}>{desc}</p>

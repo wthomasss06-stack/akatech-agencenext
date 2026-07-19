@@ -139,7 +139,7 @@ function PricingTabs() {
         {/* Section Header */}
         <div style={{ textAlign: 'left', marginBottom: '1.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
               <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
               Choisissez votre{' '}
               <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
@@ -249,7 +249,7 @@ function GuaranteeStrip() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ textAlign: 'left', marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
               <GhostTitle text="ZÉRO SURPRISE, ZÉRO JARGON." />
               Zéro surprise, <GreenUnderline><span className="text-gradient">zéro jargon.</span></GreenUnderline>
             </h2>
@@ -355,7 +355,7 @@ function TrustedBy() {
       <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3.5rem', paddingLeft: '5%', paddingRight: '5%' }}>
         <div style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
               <GhostTitle text="CE QU'ILS DISENT DE L'INVESTISSEMENT" />
               Ce qu'ils disent de{' '}
               <GreenUnderline><span className="text-gradient">l'investissement</span></GreenUnderline>
@@ -461,7 +461,7 @@ function FAQSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="QUESTIONS FRÉQUENTES" />
             Questions{' '}
             <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>

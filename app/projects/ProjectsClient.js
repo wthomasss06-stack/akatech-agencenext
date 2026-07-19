@@ -270,7 +270,7 @@ function StackedRealisations() {
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.45em', textTransform: 'uppercase', marginBottom: '.6rem' }}>
             // Scroll pour parcourir
           </p>
-          <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.1rem,1.8vw,1.6rem)', color: T.textMain, letterSpacing: '-.02em', margin: 0 }}>
+          <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.1rem,1.8vw,1.6rem)', color: T.textMain, letterSpacing: '-.02em', margin: 0 }}>
             {total} réalisations, une par une.
           </h2>
         </div>

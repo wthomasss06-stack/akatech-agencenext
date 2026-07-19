@@ -119,7 +119,7 @@ export default function BlogArticleClient({ slug }) {
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
-              <span style={{ padding: '.25rem .85rem', borderRadius: 100, background: T.light ? 'rgba(22,163,74,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+              <span style={{ padding: '.25rem .85rem', borderRadius: 100, background: T.light ? 'rgba(95,145,55,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
                 <Tag size={10} />{post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
@@ -130,7 +130,7 @@ export default function BlogArticleClient({ slug }) {
               </span>
             </div>
 
-            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.15, marginBottom: '1.5rem' }}>
+            <h1 style={{ fontSize: 'clamp(1.8rem,4vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.15, marginBottom: '1.5rem' }}>
               {post.title}
             </h1>
 
@@ -190,7 +190,7 @@ export default function BlogArticleClient({ slug }) {
                 </p>
               )}
               {block.type === 'cta' && (
-                <div style={{ margin: '2.5rem 0', padding: '2rem', borderRadius: 16, background: T.light ? 'rgba(22,163,74,.05)' : 'rgba(136,202,83,.05)', border: `1px solid ${T.border}`, textAlign: 'center' }}>
+                <div style={{ margin: '2.5rem 0', padding: '2rem', borderRadius: 16, background: T.light ? 'rgba(95,145,55,.05)' : 'rgba(136,202,83,.05)', border: `1px solid ${T.border}`, textAlign: 'center' }}>
                   <p style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, color: T.textMain, marginBottom: '1.2rem', fontSize: '1.05rem' }}>{block.text}</p>
                   <Link href={block.href} className="btn-raised" style={{ display: 'inline-flex', padding: '.8rem 2rem' }}>
                     Nous contacter <ArrowRight size={14} />
@@ -208,7 +208,7 @@ export default function BlogArticleClient({ slug }) {
       {related.length > 0 && (
         <section style={{ padding: '4rem 5%', background: T.bgAlt }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-            <h2 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: '1.4rem', color: T.textMain, marginBottom: '2rem' }}>
+            <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.4rem', color: T.textMain, marginBottom: '2rem' }}>
               Articles similaires
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: '1.5rem' }}>

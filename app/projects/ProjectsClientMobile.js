@@ -58,7 +58,7 @@ function HeroRealisations() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 900, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             <GhostTitle text={`+${PROJECTS.length} RÉALISATIONS LIVRÉES, 99% SATISFAITS.`} />
             +{PROJECTS.length} réalisations livrées,<br /><GreenUnderline><span className="text-gradient">99% satisfaits.</span></GreenUnderline>
           </h1>

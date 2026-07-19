@@ -178,7 +178,7 @@ function HeroSloganCycle() {
         <motion.p key={index}
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
           transition={{ duration: .45, ease: 'easeOut' }}
-          style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+          style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
           {before}
           <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
             {highlight}
@@ -287,7 +287,7 @@ function Hero() {
             initial={{ boxShadow: '6px 6px 0px #fff' }}
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
             Démarrer mon projet <ArrowRight size={16} />
           </motion.a>
           <motion.div
@@ -295,7 +295,7 @@ function Hero() {
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
             style={{ display: 'inline-block', borderRadius: 999 }}>
-            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Space Grotesk',sans-serif", fontWeight: 700, fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
+            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
               Prenez RDV
             </Link>
           </motion.div>
@@ -573,7 +573,7 @@ function ServicesPreview() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
             <GhostTitle text="NOS prestations, " />
             NOS,<br />
             <GreenUnderline><span className="text-gradient">prestations</span></GreenUnderline>
@@ -600,7 +600,7 @@ function ServicesPreview() {
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: '.5rem' }}>
                       <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.56rem', fontWeight: 700, color: 'rgba(136,202,83,.55)', letterSpacing: '.2em' }}>{s.n}</span>
                     </div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(.82rem,3.4vw,.92rem)', color: T.textMain, letterSpacing: '-.01em', lineHeight: 1.25 }}>
+                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(.82rem,3.4vw,.92rem)', color: T.textMain, letterSpacing: '-.01em', lineHeight: 1.25 }}>
                       {s.title}
                     </div>
                     <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', marginTop: '.15rem' }}>
@@ -655,7 +655,7 @@ function Process() {
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bg }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
             De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
           </h2>
@@ -670,7 +670,7 @@ function Process() {
                   <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.66rem', fontWeight: 700, color: isOpen ? '#88ca53' : 'rgba(136,202,83,.5)', letterSpacing: '.1em', flexShrink: 0 }}>
                     {s.n}
                   </span>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(.84rem,3.4vw,.94rem)', color: T.textMain, letterSpacing: '-.01em', lineHeight: 1.3 }}>
+                  <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(.84rem,3.4vw,.94rem)', color: T.textMain, letterSpacing: '-.01em', lineHeight: 1.3 }}>
                     {s.title}
                   </span>
                 </div>
@@ -762,7 +762,7 @@ function ProjectsSection() {
         {/* Titre — au-dessus du pin, défile normalement */}
         <div style={{ padding: '7rem 5% 0', position: 'relative', zIndex: 1 }}>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
               <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
               Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
             </h2>
@@ -912,7 +912,7 @@ function Testimonials() {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="CE QUE DISENT NOS CLIENTS" />
             Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
           </h2>
@@ -1029,7 +1029,7 @@ function DomainesSection() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="DANS QUEL AXE DE CRÉATION S'INSCRIT VOTRE PROJET ?" />
             Dans quel axe de création{' '}
             <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
@@ -1070,7 +1070,7 @@ function PricingCallout() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
             Choisissez votre <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
           </h2>
@@ -1191,7 +1191,7 @@ function GeoSectionHome() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
             Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
           </h2>
@@ -1251,7 +1251,7 @@ function ProjectFormHome() {
     <section ref={ref} style={{ padding: 'clamp(2.5rem,7vw,3.5rem) 5% 5rem', background: T.bgAlt }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '1.6rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
             Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h2>
@@ -1348,7 +1348,7 @@ function FAQSectionHome() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="QUESTIONS FRÉQUENTES" />
             Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
           </h2>

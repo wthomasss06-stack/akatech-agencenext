@@ -70,7 +70,7 @@ function HeroContact() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
             <GhostTitle text="PARLONS DE VOTRE PROJET" />
             Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h1>
@@ -107,7 +107,7 @@ function ContactChannels() {
     <section ref={ref} style={{ padding: 'clamp(3rem,6vw,5rem) 5% clamp(2rem,4vw,3rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
             <GhostTitle text="COMMENT NOUS CONTACTER" />
             Comment nous contacter
           </h2>
@@ -236,7 +236,7 @@ function ProjectForm() {
     <section ref={ref} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
             <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
             Décrivez votre projet
           </h2>
@@ -264,7 +264,7 @@ function ProjectForm() {
                     style={{ width: 72, height: 72, borderRadius: '50%', background: 'rgba(136,202,83,.15)', border: '2px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                     <CheckCircle size={36} style={{ color: '#88ca53' }} />
                   </motion.div>
-                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 800, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
+                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
                   <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>
                     Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !
                   </p>
