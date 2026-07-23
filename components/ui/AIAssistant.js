@@ -1,37 +1,294 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
-import { Bot, X, Send, MessageCircleWarning } from 'lucide-react'
+import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 
-const GREETING = "Salut 👋 Je suis l'assistant IA d'AKATech. Dites-moi ce que vous voulez construire — je vous donne une fourchette de prix et les prochaines étapes."
+const HOUR = new Date().getHours()
+
+const GREETINGS_DAY = [
+  "Yo ! 👋 Bienvenue chez AKATech. Aka est en train de coder quelque chose de fou en ce moment, mais je suis là pour toi. Tu cherches un site, une app, ou tu explores juste ?",
+  "Hey ! 👋 Tu es tombé au bon endroit. Ici on construit des sites et des apps qui convertissent — pas des templates tout pourris. Tu as un projet en tête ou tu fais juste un tour ?",
+  "Bienvenue ! 🚀 Aka a déjà livré 19+ projets pour des entrepreneurs et PME en Côte d'Ivoire. Si tu as une idée à concrétiser, je suis ton premier contact. Sinon, je peux te montrer ce qu'on fait.",
+  "Salut ! 👋 Je suis le bras droit numérique d'Aka chez AKATech. Il est occupé à développer un projet client, mais je peux déjà te renseigner sur les tarifs, les délais, ou capturer ton besoin. Qu'est-ce qui t'amène ?",
+  "Hello ! 👋 Tu sais ce qui est cool ici ? On ne te vend pas du rêve. On te dit combien ça coûte, combien de temps ça prend, et ce que tu reçois exactement. Tu veux un site vitrine, un e-commerce, ou autre chose ?",
+]
+
+const GREETINGS_NIGHT = [
+  "Mec… il est 3h du mat' et tu cherches un site web ? 😅 Respect. Aka ronfle probablement à côté de son clavier, mais moi je suis branché 24/7. Tu veux qu'on discute de ton projet ou c'est juste une visite nocturne ?",
+  "Haha, t'es un vrai ! 👀 Il fait nuit noire, tout le monde dort, et toi tu traines sur AKATech. Tu cherches un site, une app, ou t'es juste en mode 'je vais tout réussir avant le lever du soleil' ? Je suis là de toute façon.",
+  "Wesh, insomniaque ! 🌙 Aka est en mode DND jusqu'à 8h, mais moi je ne dors jamais. Si tu as une idée de site ou d'app qui te trotte dans la tête à cette heure-ci, c'est sûrement une bonne idée. Raconte-moi tout.",
+  "3h du mat', le cerveau tourne à 200%, et tu atterris ici… je connais ça. 😏 Aka est en pleine sieste de codeur, mais moi je capte tout. Tu veux un site vitrine, un e-commerce, ou juste quelqu'un qui écoute ton idée de génie ?",
+  "Tu dors pas, toi ? 😂 Moi non plus, c'est mon job. Aka par contre, il a crashé depuis belle lurette. Si tu es là à cette heure pour un site ou une app, c'est que c'est sérieux. Je t'écoute, chef.",
+]
+
+const GREETINGS_LUNCH = [
+  "Il est midi, tu cherches une solution web au lieu de manger ? 😂 Respect, l'entrepreneur ne s'arrête jamais. Aka est probablement en train d'engloutir un attiéké, mais moi je suis là. Quel est ton besoin ?",
+  "Wesh, tu n'as pas faim ? 🍛 Tout le monde est à table et toi tu traines sur AKATech. Si tu es prêt à sacrifier ton déjeuner pour ton projet, c'est que ça vaut le coup. Raconte-moi ce que tu veux construire.",
+  "Midi pile ! ⏰ Aka est en mode pause-déj', mais moi je ne mange pas — je discute. Tu cherches un site vitrine, une app mobile, ou tu veux juste savoir combien ça coûte avant de reprendre ton plat ?",
+  "Haha, l'heure du déjeuner et toi tu es sur un site tech… 😅 Je connais ça, l'idée qui te trotte dans la tête et qui te coupe l'appétit. Aka est en train de manger, mais moi je suis tout ouïe. Qu'est-ce qui te ramène ici ?",
+  "Bon appétit… ou pas ? 🍽️ Parce que visiblement, ton projet te passionne plus que ton plat du jour. Aka est à table, mais moi je suis branché. Tu veux un site, une app, ou juste discuter de ton idée ?",
+]
+
+const GREETING = (HOUR >= 23 || HOUR < 6)
+  ? GREETINGS_NIGHT[Math.floor(Math.random() * GREETINGS_NIGHT.length)]
+  : (HOUR >= 12 && HOUR < 14)
+    ? GREETINGS_LUNCH[Math.floor(Math.random() * GREETINGS_LUNCH.length)]
+    : GREETINGS_DAY[Math.floor(Math.random() * GREETINGS_DAY.length)]
+    
+/* Regex pour détecter les liens dans les messages */
+const URL_REGEX = /(https?:\/\/[^\s]+)/g
 const WA_REGEX = /https:\/\/wa\.me\/\S+/g
+const PORTFOLIO_REGEX = /https:\/\/mbolloaka-dev\.vercel\.app\/?/g
+const SITE_REGEX = /https:\/\/akatech\.vercel\.app\/?/g
+const LINKEDIN_REGEX = /https:\/\/www\.linkedin\.com\/in\/[^\s]+/g
+const GITHUB_REGEX = /https:\/\/github\.com\/[^\s]+/g
 
-/* Détecte un lien wa.me dans un texte terminé et le remplace par un
-   bouton stylé plutôt qu'une URL brute. */
+/* Détecte et transforme les liens en boutons cliquables */
 function renderMessageContent(text) {
-  const parts = text.split(WA_REGEX)
-  const links = text.match(WA_REGEX) || []
-  if (links.length === 0) return text
+  if (!text) return text
 
-  const nodes = []
-  parts.forEach((part, i) => {
-    if (part) nodes.push(<span key={`t${i}`}>{part}</span>)
-    if (links[i]) {
-      nodes.push(
-        <a
-          key={`l${i}`}
-          href={links[i]}
-          target="_blank"
-          rel="noreferrer"
-          className="ai-assistant-wa-btn"
-        >
-          Continuer sur WhatsApp →
-        </a>
-      )
-    }
+  // D'abord, remplace les liens spécifiques par des boutons stylés
+  let processed = text
+
+  // WhatsApp
+  processed = processed.replace(WA_REGEX, (match) => {
+    return `\n[BUTTON_WA:${match}]\n`
   })
-  return nodes
+
+  // Portfolio
+  processed = processed.replace(PORTFOLIO_REGEX, (match) => {
+    return `\n[BUTTON_PORTFOLIO:${match}]\n`
+  })
+
+  // Site AKATech
+  processed = processed.replace(SITE_REGEX, (match) => {
+    return `\n[BUTTON_SITE:${match}]\n`
+  })
+
+  // LinkedIn
+  processed = processed.replace(LINKEDIN_REGEX, (match) => {
+    return `\n[BUTTON_LINKEDIN:${match}]\n`
+  })
+
+  // GitHub
+  processed = processed.replace(GITHUB_REGEX, (match) => {
+    return `\n[BUTTON_GITHUB:${match}]\n`
+  })
+
+  // Autres liens génériques
+  processed = processed.replace(URL_REGEX, (match) => {
+    if (match.includes('wa.me') || match.includes('mbolloaka-dev') || 
+        match.includes('akatech.vercel') || match.includes('linkedin.com') ||
+        match.includes('github.com')) {
+      return match // Déjà traité
+    }
+    return `\n[BUTTON_LINK:${match}]\n`
+  })
+
+  // Maintenant, on split et on rend chaque partie
+  const parts = processed.split(/\n/)
+
+  return parts.map((part, i) => {
+    // Bouton WhatsApp
+    if (part.startsWith('[BUTTON_WA:')) {
+      const url = part.replace('[BUTTON_WA:', '').replace(']', '')
+      return <WhatsAppButton key={i} url={url} />
+    }
+
+    // Bouton Portfolio
+    if (part.startsWith('[BUTTON_PORTFOLIO:')) {
+      const url = part.replace('[BUTTON_PORTFOLIO:', '').replace(']', '')
+      return <PortfolioButton key={i} url={url} />
+    }
+
+    // Bouton Site
+    if (part.startsWith('[BUTTON_SITE:')) {
+      const url = part.replace('[BUTTON_SITE:', '').replace(']', '')
+      return <SiteButton key={i} url={url} />
+    }
+
+    // Bouton LinkedIn
+    if (part.startsWith('[BUTTON_LINKEDIN:')) {
+      const url = part.replace('[BUTTON_LINKEDIN:', '').replace(']', '')
+      return <LinkedInButton key={i} url={url} />
+    }
+
+    // Bouton GitHub
+    if (part.startsWith('[BUTTON_GITHUB:')) {
+      const url = part.replace('[BUTTON_GITHUB:', '').replace(']', '')
+      return <GitHubButton key={i} url={url} />
+    }
+
+    // Bouton lien générique
+    if (part.startsWith('[BUTTON_LINK:')) {
+      const url = part.replace('[BUTTON_LINK:', '').replace(']', '')
+      return <LinkButton key={i} url={url} label="Voir le lien" />
+    }
+
+    // Texte normal
+    if (part.trim()) {
+      return <span key={i}>{part}</span>
+    }
+
+    return <br key={i} />
+  })
+}
+
+/* ── Boutons stylés ── */
+function WhatsAppButton({ url }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-wa"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'linear-gradient(135deg, #25d366, #128c7e)',
+        color: '#fff', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        boxShadow: '0 2px 8px rgba(37,211,102,.3)',
+        transition: 'transform .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(37,211,102,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(37,211,102,.3)' }}
+    >
+      <Phone size={15} />
+      Continuer sur WhatsApp
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
+}
+
+function PortfolioButton({ url }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-portfolio"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'linear-gradient(135deg, #88ca53, #5f9137)',
+        color: '#fff', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        boxShadow: '0 2px 8px rgba(136,202,83,.3)',
+        transition: 'transform .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(136,202,83,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(136,202,83,.3)' }}
+    >
+      <Globe size={15} />
+      Voir le portfolio d'Aka
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
+}
+
+function SiteButton({ url }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-site"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+        color: '#fff', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        boxShadow: '0 2px 8px rgba(102,126,234,.3)',
+        transition: 'transform .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(102,126,234,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(102,126,234,.3)' }}
+    >
+      <Globe size={15} />
+      Visiter le site AKATech
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
+}
+
+function LinkedInButton({ url }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-linkedin"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'linear-gradient(135deg, #0077b5, #005885)',
+        color: '#fff', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        boxShadow: '0 2px 8px rgba(0,119,181,.3)',
+        transition: 'transform .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,119,181,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,119,181,.3)' }}
+    >
+      <ExternalLink size={15} />
+      LinkedIn d'Aka
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
+}
+
+function GitHubButton({ url }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-github"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'linear-gradient(135deg, #333, #1a1a1a)',
+        color: '#fff', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        boxShadow: '0 2px 8px rgba(0,0,0,.3)',
+        transition: 'transform .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,.3)' }}
+    >
+      <ExternalLink size={15} />
+      GitHub d'Aka
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
+}
+
+function LinkButton({ url, label }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-link"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'rgba(136,202,83,.15)', border: '1px solid rgba(136,202,83,.3)',
+        color: '#88ca53', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        transition: 'transform .15s, background .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.background = 'rgba(136,202,83,.25)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.background = 'rgba(136,202,83,.15)' }}
+    >
+      <ExternalLink size={15} />
+      {label}
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
 }
 
 export default function AIAssistant() {
@@ -45,27 +302,17 @@ export default function AIAssistant() {
   const listRef = useRef(null)
   const abortRef = useRef(null)
 
-  // Un seul id par session de widget (pas un cookie : la conversation
-  // suit la durée de vie du composant, pas une fenêtre de 30 min comme
-  // le tracking analytics). Sert à relier chat + rapport à la même
-  // conversation côté serveur.
   const sessionIdRef = useRef(null)
   if (!sessionIdRef.current) sessionIdRef.current = crypto.randomUUID()
 
-  // Utilisation d'une ref pour toujours accéder à l'état le plus récent des messages dans les callbacks d'effets de fermeture
   const messagesRef = useRef(messages)
   useEffect(() => {
     messagesRef.current = messages
   }, [messages])
 
-  // Signale la fin de la conversation en base (pas de résumé IA, pas
-  // d'email — juste un marquage "terminée", gratuit et instantané).
   const endConversation = useCallback((messagesList) => {
-    // Rien à clôturer si le visiteur n'a jamais vraiment écrit (index 0 = message d'accueil statique).
     if (!messagesList || messagesList.length < 2) return
-
     const payload = JSON.stringify({ sessionId: sessionIdRef.current })
-
     if (navigator.sendBeacon) {
       const blob = new Blob([payload], { type: 'application/json' })
       navigator.sendBeacon('/api/assistant/end', blob)
@@ -79,27 +326,21 @@ export default function AIAssistant() {
     }
   }, [])
 
-  // Écouteur d'événement pour clôturer si l'onglet est fermé ou rafraîchi
   useEffect(() => {
     const handleBeforeUnload = () => {
       endConversation(messagesRef.current)
     }
-
     window.addEventListener('beforeunload', handleBeforeUnload)
-
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload)
       abortRef.current?.abort()
-      // Clôture lors du démontage du composant (changement de page SPA)
       endConversation(messagesRef.current)
     }
   }, [endConversation])
 
-  // Déclencheur manuel lors du clic sur le bouton Ouvrir/Fermer l'assistant
   const toggleOpen = () => {
     setOpen((prev) => {
       const nextOpen = !prev
-      // Si on est en train de fermer le widget, on clôture la conversation en cours
       if (!nextOpen) {
         endConversation(messages)
       }

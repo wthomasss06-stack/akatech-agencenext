@@ -77,3 +77,39 @@ export async function PATCH(request) {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
+
+// DELETE /api/leads — Supprimer un ou plusieurs leads
+// ?id=xxx pour un seul, ou body { ids: [...] } pour plusieurs. Supprime
+// uniquement le Lead — la Conversation associée reste (elle peut rester
+// utile pour les stats même si le lead n'était pas pertinent).
+export async function DELETE(request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (id) {
+      await prisma.lead.delete({ where: { id } })
+      return NextResponse.json({ ok: true, deleted: 1 })
+    }
+
+    const body = await request.json().catch(() => ({}))
+    const ids = body.ids
+
+    if (Array.isArray(ids) && ids.length > 0) {
+      const result = await prisma.lead.deleteMany({
+        where: { id: { in: ids } },
+      })
+      return NextResponse.json({ ok: true, deleted: result.count })
+    }
+
+    return NextResponse.json({ error: "ID ou liste d'IDs requis" }, { status: 400 })
+  } catch (error) {
+    // P2025 = déjà supprimé (double-clic, ou auto-refresh 30s qui se
+    // chevauche avec la suppression) — pas une vraie erreur serveur.
+    if (error.code === 'P2025') {
+      return NextResponse.json({ ok: true, deleted: 0 })
+    }
+    console.error('[API Leads DELETE] Erreur:', error)
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+  }
+}

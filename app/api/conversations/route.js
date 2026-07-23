@@ -49,3 +49,40 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }
+
+// DELETE /api/conversations — Supprimer une ou plusieurs conversations
+// ?id=xxx pour une seule, ou body { ids: [...] } pour plusieurs (le
+// dashboard utilise toujours la forme { ids } même pour une suppression
+// unique, afin de ne garder qu'un seul chemin de code côté frontend).
+export async function DELETE(request) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+
+    if (id) {
+      // Supprimer une conversation spécifique (avec ses messages et lead en cascade)
+      await prisma.conversation.delete({ where: { id } })
+      return NextResponse.json({ ok: true, deleted: 1 })
+    }
+
+    const body = await request.json().catch(() => ({}))
+    const ids = body.ids
+
+    if (Array.isArray(ids) && ids.length > 0) {
+      const result = await prisma.conversation.deleteMany({
+        where: { id: { in: ids } },
+      })
+      return NextResponse.json({ ok: true, deleted: result.count })
+    }
+
+    return NextResponse.json({ error: 'ID ou liste d\'IDs requis' }, { status: 400 })
+  } catch (error) {
+    // P2025 = déjà supprimée (double-clic, ou auto-refresh 30s qui se
+    // chevauche avec la suppression) — pas une vraie erreur serveur.
+    if (error.code === 'P2025') {
+      return NextResponse.json({ ok: true, deleted: 0 })
+    }
+    console.error('[API Conversations DELETE] Erreur:', error)
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+  }
+}

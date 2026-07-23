@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { gsap } from 'gsap'
@@ -156,8 +156,7 @@ export default function CardNav() {
       <nav ref={navRef} className={'aka-card-nav' + (open ? ' is-open' : '')} style={{
         '--nav-bg': open ? (T.light ? 'rgba(248,248,248,0.88)' : 'rgba(6,14,9,0.85)') : 'transparent',
         '--nav-blur': open ? 'blur(20px) saturate(160%)' : 'none',
-        '--nav-border': open ? (T.light ? '1px solid rgba(95,145,55,0.18)' : '1px solid rgba(136,202,83,0.15)') : '1px solid transparent',
-        '--nav-shadow': open ? '0 8px 32px rgba(0,0,0,0.22)' : 'none',
+
         '--nav-hline': '#88ca53',
         '--nav-btn-border': !open ? 'rgba(255,255,255,0.3)' : 'rgba(242,237,232,.15)',
         '--nav-btn-bg': !open ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,.05)',
@@ -166,9 +165,10 @@ export default function CardNav() {
         '--card2-bg': T.light ? '#eaf5e2' : '#0a1f10',
         '--card3-bg': T.light ? '#ffffff' : '#060e09',
         '--card-text': T.light ? '#0a0c16' : '#f2ede8',
-        '--card1-border': T.light ? '1px solid rgba(10,20,10,0.06)' : '1px solid rgba(136,202,83,0.16)',
-        '--card2-border': T.light ? '1px solid rgba(95,145,55,0.18)' : '1px solid rgba(136,202,83,0.22)',
-        '--card3-border': T.light ? '1px solid rgba(10,20,10,0.08)' : '1px solid rgba(255,255,255,0.06)',
+        '--card1-border': T.light ? '2px solid #08130a' : '2px solid #fff',
+        '--card2-border': T.light ? '2px solid #08130a' : '2px solid #fff',
+        '--card3-border': T.light ? '2px solid #08130a' : '2px solid #fff',
+        '--card-shadow': T.light ? '4px 4px 0px #08130a' : '4px 4px 0px #fff',
         '--card3-label': T.light ? 'rgba(10,20,10,0.5)' : 'rgba(242,237,232,0.5)',
         '--card1-link-hover': T.light ? '#2f6a17' : '#88ca53',
         '--theme-green': T.green,
@@ -205,7 +205,7 @@ export default function CardNav() {
 
         <div className="aka-nav-content" ref={contentRef}>
           <div className="aka-nav-card aka-card-1" ref={el => cardsRef.current[0] = el}>
-            <div className="aka-card-label">Ce qu'on fait</div>
+            <div className="aka-card-label">AKATECH</div>
             <div className="aka-card-brand">
               <TransitionLink href="/" onClick={closeNav} className="aka-card-logo-link" aria-label="Retour à l'accueil">
                 <Image src="/images/logo.webp" alt="AKATech" width={138} height={92} style={{ objectFit: 'contain' }} />

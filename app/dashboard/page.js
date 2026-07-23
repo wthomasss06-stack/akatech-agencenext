@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useTheme } from '@/lib/theme'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
-  X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet,
+  X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Trash2,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -121,6 +121,35 @@ function Pagination({ pagination, onPage, T }) {
   )
 }
 
+function SelectionBar({ count, onDelete, onClear, T, extra }) {
+  if (count === 0) return null
+  return (
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10, flexWrap: 'wrap',
+      background: 'rgba(224,94,94,.08)', border: '1px solid rgba(224,94,94,.3)',
+      borderRadius: 10, padding: '.6rem .9rem',
+    }}>
+      <span style={{ fontSize: '.8rem', fontWeight: 700, color: T.textMain }}>
+        {count} sélectionné{count > 1 ? 's' : ''}
+      </span>
+      {extra}
+      <button onClick={onClear} style={{
+        background: 'none', border: 'none', color: T.textMuted, fontSize: '.75rem',
+        cursor: 'pointer', padding: '.4rem .5rem', minHeight: 32,
+      }}>
+        Désélectionner
+      </button>
+      <button onClick={onDelete} style={{
+        marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 6,
+        background: '#e05e5e', border: 'none', borderRadius: 8, padding: '.55rem .9rem',
+        color: '#fff', fontSize: '.78rem', fontWeight: 700, cursor: 'pointer', minHeight: 40,
+      }}>
+        <Trash2 size={14} /> Supprimer
+      </button>
+    </div>
+  )
+}
+
 function DetailModal({ conversation, onClose, T }) {
   if (!conversation) return null
   return (
@@ -174,12 +203,14 @@ export default function DashboardPage() {
   const [convPagination, setConvPagination] = useState(null)
   const [convSearch, setConvSearch] = useState('')
   const [selectedConversation, setSelectedConversation] = useState(null)
+  const [selectedConvIds, setSelectedConvIds] = useState(new Set())
 
   const [leads, setLeads] = useState([])
   const [leadPage, setLeadPage] = useState(1)
   const [leadPagination, setLeadPagination] = useState(null)
   const [leadSearch, setLeadSearch] = useState('')
   const [leadStatusFilter, setLeadStatusFilter] = useState('')
+  const [selectedLeadIds, setSelectedLeadIds] = useState(new Set())
 
   const loadStats = useCallback(() => {
     setLoading(true)
@@ -222,6 +253,12 @@ export default function DashboardPage() {
     return () => clearInterval(interval)
   }, [tab, loadStats, loadConversations, loadLeads])
 
+  // Ne vider la sélection que sur une navigation volontaire (page,
+  // recherche, filtre) — pas à chaque rafraîchissement auto de 30s,
+  // sinon une sélection en cours de constitution disparaît sans prévenir.
+  useEffect(() => { setSelectedConvIds(new Set()) }, [convPage, convSearch])
+  useEffect(() => { setSelectedLeadIds(new Set()) }, [leadPage, leadSearch, leadStatusFilter])
+
   async function openConversation(id) {
     const res = await fetch(`/api/conversations/${id}`)
     const d = await res.json()
@@ -235,6 +272,64 @@ export default function DashboardPage() {
       body: JSON.stringify({ id, status }),
     })
     loadLeads()
+  }
+
+  function toggleConvId(id) {
+    setSelectedConvIds((prev) => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  function toggleLeadId(id) {
+    setSelectedLeadIds((prev) => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  // Repère utile pour le nettoyage : conversations sans aucun message
+  // (session ouverte puis fermée sans échange) — souvent le gros du
+  // "pas pertinent" à supprimer. Limité à la page actuellement chargée.
+  function selectEmptyConversations() {
+    const emptyIds = conversations.filter((c) => (c._count?.messages ?? 0) === 0).map((c) => c.id)
+    setSelectedConvIds(new Set(emptyIds))
+  }
+
+  async function deleteConversations(ids) {
+    if (!ids.length) return
+    const msg = ids.length === 1
+      ? 'Supprimer cette conversation ? Ses messages et son lead éventuel seront aussi supprimés. Action irréversible.'
+      : `Supprimer ces ${ids.length} conversations ? Leurs messages et leads éventuels seront aussi supprimés. Action irréversible.`
+    if (!window.confirm(msg)) return
+
+    await fetch('/api/conversations', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    })
+    setSelectedConvIds(new Set())
+    loadConversations()
+    loadStats()
+  }
+
+  async function deleteLeads(ids) {
+    if (!ids.length) return
+    const msg = ids.length === 1
+      ? 'Supprimer ce lead ? La conversation associée est conservée. Action irréversible.'
+      : `Supprimer ces ${ids.length} leads ? Les conversations associées sont conservées. Action irréversible.`
+    if (!window.confirm(msg)) return
+
+    await fetch('/api/leads', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ids }),
+    })
+    setSelectedLeadIds(new Set())
+    loadLeads()
+    loadStats()
   }
 
   const v = stats?.visitors
@@ -423,8 +518,8 @@ export default function DashboardPage() {
 
             {tab === 'conversations' && (
               <div>
-                <div style={{ display: 'flex', gap: 8, marginBottom: 14 }}>
-                  <div style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 8, background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: '.5rem .8rem' }}>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+                  <div style={{ flex: 1, minWidth: 180, display: 'flex', alignItems: 'center', gap: 8, background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: '.5rem .8rem' }}>
                     <Search size={15} color={T.textMuted} />
                     <input
                       value={convSearch}
@@ -433,26 +528,71 @@ export default function DashboardPage() {
                       style={{ flex: 1, background: 'none', border: 'none', outline: 'none', color: T.textMain, fontSize: '.82rem' }}
                     />
                   </div>
+                  <button
+                    onClick={selectEmptyConversations}
+                    title="Sélectionner les conversations sans aucun message, sur cette page"
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 6, background: 'none', border: `1px solid ${T.border}`,
+                      borderRadius: 10, padding: '.5rem .8rem', color: T.textSub, fontSize: '.78rem', cursor: 'pointer',
+                      whiteSpace: 'nowrap', minHeight: 40,
+                    }}
+                  >
+                    Sélectionner les vides
+                  </button>
                 </div>
+
+                <SelectionBar
+                  count={selectedConvIds.size}
+                  onDelete={() => deleteConversations([...selectedConvIds])}
+                  onClear={() => setSelectedConvIds(new Set())}
+                  T={T}
+                />
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {conversations.length === 0 && <div style={{ color: T.textMuted, fontSize: '.82rem', padding: '1rem 0' }}>Aucune conversation.</div>}
                   {conversations.map((c) => (
-                    <button key={c.id} onClick={() => openConversation(c.id)} style={{
-                      textAlign: 'left', background: T.card, border: `1px solid ${T.border}`, borderRadius: 12,
-                      padding: '.9rem 1rem', cursor: 'pointer', color: T.textMain,
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10,
+                    <div key={c.id} style={{
+                      background: T.card, border: `1px solid ${selectedConvIds.has(c.id) ? T.green : T.border}`, borderRadius: 12,
+                      padding: '.9rem 1rem', display: 'flex', alignItems: 'center', gap: 10,
                     }}>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: '.82rem', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                          {c.messages?.[0]?.content || '(vide)'}
+                      <input
+                        type="checkbox"
+                        checked={selectedConvIds.has(c.id)}
+                        onChange={() => toggleConvId(c.id)}
+                        aria-label="Sélectionner cette conversation"
+                        style={{ width: 18, height: 18, accentColor: T.green, flexShrink: 0, cursor: 'pointer' }}
+                      />
+                      <div
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => openConversation(c.id)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') openConversation(c.id) }}
+                        style={{
+                          flex: 1, minWidth: 0, cursor: 'pointer', color: T.textMain,
+                          display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10,
+                        }}
+                      >
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: '.82rem', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {c.messages?.[0]?.content || '(vide)'}
+                          </div>
+                          <div style={{ fontSize: '.7rem', color: T.textMuted, marginTop: 3 }}>
+                            {new Date(c.createdAt).toLocaleString('fr-FR')} · {c._count?.messages ?? 0} messages
+                          </div>
                         </div>
-                        <div style={{ fontSize: '.7rem', color: T.textMuted, marginTop: 3 }}>
-                          {new Date(c.createdAt).toLocaleString('fr-FR')} · {c._count?.messages ?? 0} messages
-                        </div>
+                        <StatusPill status={c.status} T={T} />
                       </div>
-                      <StatusPill status={c.status} T={T} />
-                    </button>
+                      <button
+                        onClick={() => deleteConversations([c.id])}
+                        title="Supprimer cette conversation"
+                        style={{
+                          background: 'none', border: 'none', color: T.textMuted, cursor: 'pointer', flexShrink: 0,
+                          padding: 8, minWidth: 36, minHeight: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
                   ))}
                 </div>
                 <Pagination pagination={convPagination} onPage={setConvPage} T={T} />
@@ -483,13 +623,27 @@ export default function DashboardPage() {
                   </select>
                 </div>
 
+                <SelectionBar
+                  count={selectedLeadIds.size}
+                  onDelete={() => deleteLeads([...selectedLeadIds])}
+                  onClear={() => setSelectedLeadIds(new Set())}
+                  T={T}
+                />
+
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {leads.length === 0 && <div style={{ color: T.textMuted, fontSize: '.82rem', padding: '1rem 0' }}>Aucun lead pour l'instant.</div>}
                   {leads.map((lead) => (
                     <div key={lead.id} style={{
-                      background: T.card, border: `1px solid ${T.border}`, borderRadius: 12, padding: '.9rem 1rem',
+                      background: T.card, border: `1px solid ${selectedLeadIds.has(lead.id) ? T.green : T.border}`, borderRadius: 12, padding: '.9rem 1rem',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
                     }}>
+                      <input
+                        type="checkbox"
+                        checked={selectedLeadIds.has(lead.id)}
+                        onChange={() => toggleLeadId(lead.id)}
+                        aria-label="Sélectionner ce lead"
+                        style={{ width: 18, height: 18, accentColor: T.green, flexShrink: 0, cursor: 'pointer' }}
+                      />
                       <div style={{ minWidth: 0, flex: 1, cursor: 'pointer' }} onClick={() => lead.conversation?.id && openConversation(lead.conversation.id)}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                           <span style={{ fontSize: '.85rem', fontWeight: 700 }}>{lead.name}</span>
@@ -506,6 +660,16 @@ export default function DashboardPage() {
                           <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                         ))}
                       </select>
+                      <button
+                        onClick={() => deleteLeads([lead.id])}
+                        title="Supprimer ce lead"
+                        style={{
+                          background: 'none', border: 'none', color: T.textMuted, cursor: 'pointer', flexShrink: 0,
+                          padding: 8, minWidth: 36, minHeight: 36, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        }}
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   ))}
                 </div>

@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════
    ConversionMarquee.css
    Remplace le MarqueeStrip après WhyUs / Process.
    Bande d'urgence qui défile + CTA fixe et pulsant
@@ -54,8 +54,9 @@
 .ccta-item {
   display: inline-flex; align-items: center; gap: .6rem;
   white-space: nowrap;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .85rem; font-weight: 600; letter-spacing: .01em;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-style: italic;
+  font-size: .85rem; font-weight: 900; letter-spacing: .01em;
   color: rgba(255, 255, 255, 0.78);
 }
 .ccta-item strong { color: var(--g1); font-weight: 700; }
@@ -78,8 +79,8 @@
   border-radius: 999px;
   background: linear-gradient(135deg, var(--g1), var(--g3));
   color: #04140a;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; font-size: .78rem; letter-spacing: .02em;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-style: italic; font-size: .78rem; letter-spacing: .02em;
   white-space: nowrap;
   text-decoration: none;
   animation: cctaPulse 2.6s ease-in-out infinite;

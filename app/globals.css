@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@1,900&family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap');
 
 :root {
   --g1: #88ca53;
@@ -91,8 +91,9 @@ body.light-mode .sku-card:hover {
   padding: .82rem 1.85rem;
   background: var(--g1);
   color: #020a05;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
   font-size: .88rem;
   border-radius: 999px;
   border: 2px solid #fff;
@@ -120,8 +121,9 @@ body.light-mode .sku-card:hover {
   padding: .82rem 1.85rem;
   background: transparent;
   color: #fff;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
   font-size: .88rem;
   border-radius: 999px;
   border: 2px solid #fff;
@@ -574,8 +576,9 @@ section[style*="9rem 5%"][style*="#060e09"] {
   text-decoration: none;
 }
 .cta-circle-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
   font-size: .95rem;
   letter-spacing: -.01em;
   color: var(--text-main);

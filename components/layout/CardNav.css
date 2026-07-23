@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════
    CardNav.css — styles du nav desktop AKATech.
    Extrait du <style>{`...`}</style> inline vers un
    fichier statique pour éliminer tout risque de
@@ -60,43 +60,61 @@ nav.aka-card-nav {
 .aka-explorer-btn {
   display: flex; align-items: center; gap: 6px;
   height: 28px; padding: 0 12px; border-radius: 999px;
-  border: var(--nav-btn-border);
+  border: 2px solid #fff;
   background: var(--nav-btn-bg);
   color: var(--nav-btn-color);
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .65rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-  cursor: pointer; transition: all .25s;
+  font-size: .65rem; font-weight: 900; font-style: italic; letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .25s;
+  box-shadow: 2px 2px 0px #fff;
 }
-.aka-explorer-btn:hover { color: #88ca53; border-color: rgba(136,202,83,.4); }
+.aka-explorer-btn:hover { color: #88ca53; transform: translate(-2px,-2px); box-shadow: 4px 4px 0px #fff; }
+.aka-explorer-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
 .aka-explorer-btn.is-active {
   background: linear-gradient(135deg, #88ca53, #5a9e34);
-  border-color: transparent; color: #04140a;
-  box-shadow: 0 0 0 3px rgba(136,202,83,.18);
+  border-color: #fff; color: #04140a;
+  box-shadow: 2px 2px 0px #fff;
 }
 .aka-explorer-btn.is-active:hover { color: #04140a; }
 .aka-explorer-btn svg { flex-shrink: 0; }
 
+.light-mode .aka-explorer-btn { border-color: #08130a; box-shadow: 2px 2px 0px #08130a; }
+.light-mode .aka-explorer-btn:hover { box-shadow: 4px 4px 0px #08130a; }
+.light-mode .aka-explorer-btn:active { box-shadow: 1px 1px 0px #08130a; }
+.light-mode .aka-explorer-btn.is-active { border-color: #08130a; box-shadow: 2px 2px 0px #08130a; }
+
 .aka-theme-btn {
   width: 28px; height: 28px; border-radius: 8px;
-  border: var(--nav-btn-border);
+  border: 2px solid #fff;
   background: var(--nav-btn-bg);
   color: var(--nav-btn-color);
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all .2s;
+  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .2s;
+  box-shadow: 2px 2px 0px #fff;
 }
-.aka-theme-btn:hover { color: #88ca53; border-color: rgba(136,202,83,.4); }
+.aka-theme-btn:hover { color: #88ca53; transform: translate(-2px,-2px); box-shadow: 4px 4px 0px #fff; }
+.aka-theme-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
+
+.light-mode .aka-theme-btn { border-color: #08130a; box-shadow: 2px 2px 0px #08130a; }
+.light-mode .aka-theme-btn:hover { box-shadow: 4px 4px 0px #08130a; }
+.light-mode .aka-theme-btn:active { box-shadow: 1px 1px 0px #08130a; }
 
 .aka-nav-cta {
   background: linear-gradient(135deg, #88ca53, #5a9e34);
-  color: #04140a; border: none; padding: 7px 16px;
+  color: #04140a; border: 2px solid #fff; padding: 7px 16px;
   border-radius: 999px; font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700; font-size: 0.7rem; letter-spacing: 0.08em;
+  font-weight: 900; font-style: italic; font-size: 0.7rem; letter-spacing: 0.08em;
   text-transform: uppercase; cursor: pointer;
-  box-shadow: 0 4px 16px rgba(136,202,83,0.22);
-  transition: transform 0.25s, box-shadow 0.25s;
+  box-shadow: 3px 3px 0px #fff;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
   text-decoration: none; display: inline-block;
 }
-.aka-nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(136,202,83,0.38); }
+.aka-nav-cta:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0px #fff; }
+.aka-nav-cta:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
+
+.light-mode .aka-nav-cta { border-color: #08130a; box-shadow: 3px 3px 0px #08130a; }
+.light-mode .aka-nav-cta:hover { box-shadow: 5px 5px 0px #08130a; }
+.light-mode .aka-nav-cta:active { box-shadow: 1px 1px 0px #08130a; }
 
 .aka-nav-content {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -107,9 +125,11 @@ nav.aka-card-nav {
   border-radius: 18px; padding: 24px 22px; min-height: 230px;
   display: flex; flex-direction: column; justify-content: space-between;
   transform: translateY(45px); opacity: 0;
+  box-shadow: var(--card-shadow);
   transition: box-shadow 0.3s, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
-.aka-nav-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+.aka-nav-card:hover { box-shadow: 7px 7px 0px #fff; }
+.light-mode .aka-nav-card:hover { box-shadow: 7px 7px 0px #08130a; }
 
 .aka-card-1 {
   background: var(--card1-bg);

@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════
    TrustStacksMarquee.css
    Remplace le MarqueeStrip après ArchiveTunnelSection /
    ProjectsSection. Deux bandes "sticker" tournées en 2D
@@ -72,8 +72,9 @@
   position: relative;
   display: inline-flex; align-items: center; gap: .7rem;
   white-space: nowrap; cursor: default;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
   font-size: clamp(1.05rem, 1.7vw, 1.5rem);
   letter-spacing: -0.01em;
   color: rgba(255, 255, 255, 0.28);
@@ -105,8 +106,8 @@
 .ts-badge-item {
   display: inline-flex; align-items: center; gap: .6rem;
   white-space: nowrap;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(1.05rem, 1.7vw, 1.5rem); font-weight: 700; letter-spacing: -0.01em;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(1.05rem, 1.7vw, 1.5rem); font-weight: 900; font-style: italic; letter-spacing: -0.01em;
   color: #04140a;
 }
 .ts-badge-item svg { color: #04140a; flex-shrink: 0; opacity: .82; }
@@ -121,8 +122,8 @@
 }
 
 .ts-metric {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: clamp(.92rem, 1.3vw, 1.15rem); font-weight: 600; letter-spacing: .01em;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(.92rem, 1.3vw, 1.15rem); font-weight: 900; font-style: italic; letter-spacing: .01em;
   color: rgba(255, 255, 255, 0.6);
   white-space: nowrap;
   display: inline-flex; align-items: center;
@@ -130,7 +131,7 @@
 .ts-metric strong {
   color: var(--g1);
   font-size: clamp(1.05rem, 1.55vw, 1.4rem);
-  font-weight: 700;
+  font-weight: 900;
   font-style: italic;
   margin-right: .4rem;
   animation: metricPulse 8s ease-in-out infinite;

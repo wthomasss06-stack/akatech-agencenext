@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Phone, Send } from 'lucide-react'
@@ -245,10 +245,10 @@ export default function Footer() {
       <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', overflow: 'hidden', pointerEvents: 'none' }}>
         <div style={{
           fontFamily: "'Barlow Condensed',sans-serif",
-          fontSize: 'clamp(4.5rem,21vw,15rem)',
+          fontSize: 'clamp(4.5rem,21vw,26rem)',
           fontWeight: 900,
           fontStyle: 'italic',
-          letterSpacing: '-.03em',
+          letterSpacing: '-.01em',
           lineHeight: 0.8,
           transform: 'translateY(18%)',
           background: 'linear-gradient(to bottom, rgba(255,255,255,.7) 0%, rgba(255,255,255,.04) 80%)',

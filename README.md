@@ -183,6 +183,8 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 
 > **Note Prisma** : la CLI (`prisma db push`, `prisma generate`) lit `.env`, **pas** `.env.local` — contrairement à Next.js qui lit les deux. Il faut un `.env` classique à la racine avec au moins `DATABASE_URL` pour que les commandes Prisma fonctionnent en local (`.env.local` reste le fichier principal pour tout le reste).
 
+> **Séparation dev / prod** : comme la CLI Prisma ne lit que `.env`, ce fichier doit toujours pointer vers une branche Neon **de développement** (Neon Console → Branches → Create branch), jamais la prod — sinon un `db push` local risque de modifier le schéma en prod par erreur. La branche prod ne vit que sur Vercel (Environment Variables, scope "Production"), jamais dans un fichier local. Le terminal affiche l'hôte connecté au démarrage (`[DB] Connecté à : ...`) pour vérifier en un coup d'œil qu'on est bien sur la branche dev.
+
 > **Prisma 6.x, pas 7.x** — la version 7 a changé la façon de déclarer `datasource.url` dans le schéma (système d'adaptateurs). `package.json` est volontairement figé sur `^6.19.3`.
 
 ---
@@ -280,17 +282,18 @@ FROM_EMAIL=onboarding@resend.dev
 ADMIN_EMAIL=ton-email@example.com
 GEMINI_API_KEY=xxxxxxxx
 GROQ_API_KEY=xxxxxxxx
-DATABASE_URL=postgresql://...
+DATABASE_URL=postgresql://...   # branche Neon "development"
 ADMIN_USER=xxxxxxxx
 ADMIN_PASSWORD=xxxxxxxx
 
 # .env — lu par la CLI Prisma uniquement
-DATABASE_URL=postgresql://...   # même valeur que ci-dessus
+DATABASE_URL=postgresql://...   # même branche "development" que ci-dessus,
+                                 # jamais la branche prod (voir note plus haut)
 ```
 
 Puis, si tu utilises la base de données :
 ```bash
-npx prisma db push   # crée les tables dans Neon
+npx prisma db push   # crée les tables dans la branche dev de Neon
 ```
 
 ```bash
@@ -325,6 +328,8 @@ vercel --prod
 ```
 
 Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD` — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface.
+
+`DATABASE_URL` doit être scopée différemment par environnement (menu déroulant à côté de chaque variable) : branche Neon **prod** pour "Production", branche **dev** pour "Preview" et "Development" — sinon les preview deployments (ou `vercel dev`) touchent la même base que le site en ligne.
 
 `next.config.js` actuel : `trailingSlash: true`, `images.unoptimized: true`.
 

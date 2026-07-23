@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -278,7 +278,7 @@ export default function Loader() {
               <motion.div
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 transition={{ delay: .5 }}
-                style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: 'rgba(136,202,83,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
+                style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.85rem', color: 'rgba(136,202,83,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
               >
                 Agence Digitale 
               </motion.div>
@@ -291,13 +291,13 @@ export default function Loader() {
               style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}
             >
               <span style={{
-                fontFamily: "'JetBrains Mono',monospace", fontWeight: 800,
+                fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic',
                 fontSize: '2.6rem', lineHeight: 1, color: '#88ca53',
                 letterSpacing: '.02em', textShadow: '0 0 24px rgba(136,202,83,.5)',
               }}>
                 {progress}<span style={{ fontSize: '1.2rem', opacity: .6, marginLeft: 2 }}>%</span>
               </span>
-              <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(255,255,255,.3)', letterSpacing: '.08em' }}>
+              <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.65rem', color: 'rgba(255,255,255,.3)', letterSpacing: '.08em' }}>
                 {(phase === 1 || homePhase === 'done') ? '// Prêt ✓' : '// Chargement...'}
               </span>
             </motion.div>

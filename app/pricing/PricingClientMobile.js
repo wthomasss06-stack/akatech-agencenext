@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
@@ -230,7 +230,7 @@ function PricingTabs() {
               borderColor: tab === k ? T.green : T.border,
               background: tab === k ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent',
               color: tab === k ? '#fff' : T.textSub,
-              fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 700,
+              fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.82rem', fontWeight: 900,
               cursor: 'pointer', transition: 'all .22s',
             }}>
               {v.label}

@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════
    StaggeredMenu — AKATech (mobile)
    Port du composant portfolio, accent #88ca53,
    fond fixe dark (cohérent avec le thème mobile AKATech)
@@ -44,50 +44,52 @@
   align-items: center;
   gap: 8px;
   background: rgba(255,255,255,.12);
-  border: 1px solid rgba(255,255,255,.35);
+  border: 2px solid #fff;
   border-radius: 999px;
   padding: 8px 16px 8px 14px;
   cursor: pointer;
   color: #ffffff;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: .68rem;
-  font-weight: 700;
+  font-weight: 900;
+  font-style: italic;
   letter-spacing: .08em;
   text-transform: uppercase;
   line-height: 1;
-  transition: background .2s, border-color .2s, transform .18s, color .2s;
+  box-shadow: 3px 3px 0px #fff;
+  transition: background .2s, color .2s, transform .15s ease, box-shadow .15s ease;
   z-index: 10010;
 }
 .sm-toggle:hover {
   background: rgba(255,255,255,.20);
-  border-color: rgba(255,255,255,.55);
+  transform: translate(-2px,-2px);
+  box-shadow: 5px 5px 0px #fff;
 }
-.sm-toggle:active { transform: scale(.95); }
+.sm-toggle:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
 
-/* Une fois scrollé (header non transparent) → repasse au style vert */
+/* Une fois scrollé (header non transparent) → repasse au style vert (bordure/ombre restent neo-brutalist) */
 .sm-header--scrolled .sm-toggle {
   background: rgba(136,202,83,.08);
-  border-color: rgba(136,202,83,.28);
   color: #f2ede8;
 }
 .sm-header--scrolled .sm-toggle:hover {
   background: rgba(136,202,83,.16);
-  border-color: rgba(136,202,83,.5);
 }
 
 /* Light mode : le bouton passe vert foncé, lisible sur fond clair */
 .light-mode .sm-toggle {
   background: rgba(255,255,255,.75);
-  border-color: rgba(95,145,55,0.35);
+  border-color: #08130a;
+  box-shadow: 3px 3px 0px #08130a;
   color: #2d5a14;
 }
 .light-mode .sm-toggle:hover {
   background: rgba(255,255,255,.95);
-  border-color: rgba(95,145,55,0.55);
+  box-shadow: 5px 5px 0px #08130a;
 }
+.light-mode .sm-toggle:active { box-shadow: 1px 1px 0px #08130a; }
 .light-mode .sm-header--scrolled .sm-toggle {
   background: rgba(95,145,55,0.10);
-  border-color: rgba(95,145,55,0.30);
   color: #2d5a14;
 }
 
@@ -139,17 +141,19 @@
   width: 100%;
   height: 100vh;
   background: #020a05;
-  border-left: 2px solid #88ca53;
+  border-left: 3px solid #fff;
+  box-shadow: -6px 0 0 #fff;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   z-index: 9999;
   pointer-events: auto;
 }
-/* Light mode : fond clair, border verte foncée */
+/* Light mode : fond clair, bordure/ombre foncées */
 .light-mode .sm-panel {
   background: #f0f5ec;
-  border-left-color: #5f9137;
+  border-left-color: #08130a;
+  box-shadow: -6px 0 0 #08130a;
 }
 .sm-panel::-webkit-scrollbar { width: 3px; }
 .sm-panel::-webkit-scrollbar-thumb { background: #88ca53; border-radius: 999px; }
@@ -189,27 +193,32 @@
   width: 44px;
   height: 44px;
   border-radius: 999px;
-  border: 1px solid rgba(136,202,83,.35);
+  border: 2px solid #fff;
   background: rgba(136,202,83,.08);
   color: #88ca53;
   font-size: 1.1rem;
   line-height: 1;
   cursor: pointer;
-  transition: background .2s, border-color .2s, color .2s, transform .2s;
+  box-shadow: 2px 2px 0px #fff;
+  transition: background .2s, color .2s, transform .15s ease, box-shadow .15s ease;
 }
 .sm-panel-close:hover {
   background: rgba(136,202,83,.18);
-  border-color: #88ca53;
-  transform: translateY(-1px);
+  transform: translate(-2px,-2px);
+  box-shadow: 4px 4px 0px #fff;
 }
+.sm-panel-close:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
 .light-mode .sm-panel-close {
-  border-color: rgba(95,145,55,.25);
+  border-color: #08130a;
   background: rgba(95,145,55,.08);
   color: #5f9137;
+  box-shadow: 2px 2px 0px #08130a;
 }
 .light-mode .sm-panel-close:hover {
   background: rgba(95,145,55,.16);
+  box-shadow: 4px 4px 0px #08130a;
 }
+.light-mode .sm-panel-close:active { box-shadow: 1px 1px 0px #08130a; }
 
 /* ════════════════════════════════════
    NAV LIST
@@ -310,35 +319,40 @@
   width: clamp(30px, 8vw, 38px);
   height: clamp(30px, 8vw, 38px);
   border-radius: 50%;
-  border: 1.5px solid rgba(242,237,232,.2);
+  border: 2px solid #fff;
   color: #f2ede8;
   opacity: .4;
   transform: rotate(25deg);
+  box-shadow: 2px 2px 0px #fff;
   transition:
     border-color .25s,
     color .25s,
     opacity .25s,
     transform .35s cubic-bezier(.175,.885,.32,1.275),
-    background .25s;
+    background .25s,
+    box-shadow .25s;
 }
 .light-mode .sm-panel-item-arrow {
-  border-color: rgba(26,58,10,.2);
+  border-color: #08130a;
   color: #1a3a0a;
+  box-shadow: 2px 2px 0px #08130a;
 }
 .sm-panel-item:hover .sm-panel-item-arrow,
 .sm-panel-item--active .sm-panel-item-arrow {
-  border-color: #88ca53;
+  border-color: #fff;
   color: #020a05;
   background: #88ca53;
   opacity: 1;
   transform: rotate(50deg);
+  box-shadow: 3px 3px 0px #fff;
 }
 .light-mode .sm-panel-item:hover .sm-panel-item-arrow,
 .light-mode .sm-panel-item--active .sm-panel-item-arrow {
-  border-color: #5f9137;
+  border-color: #08130a;
   background: #5f9137;
   color: #f0f5ec;
   transform: rotate(50deg);
+  box-shadow: 3px 3px 0px #08130a;
 }
 
 /* Numéros ordinaux */
@@ -373,13 +387,22 @@
   width: 100%;
   padding: 1rem;
   border-radius: 999px;
+  border: 2px solid #fff;
   background: linear-gradient(135deg, #88ca53, #5a9e34);
   color: #04140a;
   font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
+  font-weight: 900;
+  font-style: italic;
   font-size: .9rem;
   text-decoration: none;
+  box-shadow: 4px 4px 0px #fff;
+  transition: transform .15s ease, box-shadow .15s ease;
 }
+.sm-panel-cta:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px #fff; }
+.sm-panel-cta:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
+.light-mode .sm-panel-cta { border-color: #08130a; box-shadow: 4px 4px 0px #08130a; }
+.light-mode .sm-panel-cta:hover { box-shadow: 6px 6px 0px #08130a; }
+.light-mode .sm-panel-cta:active { box-shadow: 1px 1px 0px #08130a; }
 .sm-panel-footer-sub {
   text-align: center;
   margin-top: .7rem;
@@ -418,13 +441,14 @@
   background: rgba(2, 10, 5, 0.92);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-bottom: 1px solid rgba(136, 202, 83, 0.12);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  border-bottom: 3px solid #fff;
+  box-shadow: 0 4px 0px #fff;
 }
 
 .light-mode .sm-header--scrolled {
   background: rgba(248, 248, 248, 0.94);
-  border-bottom-color: rgba(95, 145, 55, 0.14);
+  border-bottom-color: #08130a;
+  box-shadow: 0 4px 0px #08130a;
 }
 
 .sm-header-logo {
@@ -444,40 +468,43 @@
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  border: 1px solid rgba(255,255,255,.35);
+  border: 2px solid #fff;
   background: rgba(255,255,255,.12);
   color: #88ca53;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  box-shadow: 2px 2px 0px #fff;
+  transition: color 0.2s, background 0.2s, transform .15s ease, box-shadow .15s ease;
   flex-shrink: 0;
 }
 .sm-header-theme:hover {
   color: #88ca53;
-  border-color: rgba(255,255,255,.6);
   background: rgba(255,255,255,.22);
+  transform: translate(-2px,-2px);
+  box-shadow: 4px 4px 0px #fff;
 }
+.sm-header-theme:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
 
-/* Scrolled → style vert */
+/* Scrolled → style vert (bordure/ombre restent neo-brutalist) */
 .sm-header--scrolled .sm-header-theme {
-  border-color: rgba(136, 202, 83, 0.22);
   background: rgba(136, 202, 83, 0.07);
   color: #88ca53;
 }
 .sm-header--scrolled .sm-header-theme:hover {
   color: #88ca53;
-  border-color: rgba(136, 202, 83, 0.5);
   background: rgba(136, 202, 83, 0.12);
 }
 
 .light-mode .sm-header-theme {
   color: #88ca53;
-  border-color: rgba(95, 145, 55, 0.25);
+  border-color: #08130a;
+  box-shadow: 2px 2px 0px #08130a;
   background: rgba(95, 145, 55, 0.07);
 }
-.light-mode .sm-header-theme:hover { color: #88ca53; }
+.light-mode .sm-header-theme:hover { color: #88ca53; box-shadow: 4px 4px 0px #08130a; }
+.light-mode .sm-header-theme:active { box-shadow: 1px 1px 0px #08130a; }
 
 @media (max-width: 480px) {
   .sm-panel-item   { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
