@@ -48,7 +48,7 @@
   border-radius: 999px;
   padding: 8px 16px 8px 14px;
   cursor: pointer;
-  color: #ffffff;
+  color:#88ca53;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: .68rem;
   font-weight: 900;
@@ -70,7 +70,7 @@
 /* Une fois scrollé (header non transparent) → repasse au style vert (bordure/ombre restent neo-brutalist) */
 .sm-header--scrolled .sm-toggle {
   background: rgba(136,202,83,.08);
-  color: #f2ede8;
+  color: #88ca53;
 }
 .sm-header--scrolled .sm-toggle:hover {
   background: rgba(136,202,83,.16);
@@ -78,10 +78,26 @@
 
 /* Light mode : le bouton passe vert foncé, lisible sur fond clair */
 .light-mode .sm-toggle {
-  background: rgba(255,255,255,.75);
-  border-color: #08130a;
-  box-shadow: 3px 3px 0px #08130a;
-  color: #2d5a14;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,.12);
+  border: 2px solid  #08130a;
+  border-radius: 999px;
+  padding: 8px 16px 8px 14px;
+  cursor: pointer;
+  color: #88ca53;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: .68rem;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  line-height: 1;
+  box-shadow: 3px 3px 0px  #08130a;
+  transition: background .2s, color .2s, transform .15s ease, box-shadow .15s ease;
+  z-index: 10010;
 }
 .light-mode .sm-toggle:hover {
   background: rgba(255,255,255,.95);

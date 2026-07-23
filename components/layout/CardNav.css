@@ -61,8 +61,8 @@ nav.aka-card-nav {
   display: flex; align-items: center; gap: 6px;
   height: 28px; padding: 0 12px; border-radius: 999px;
   border: 2px solid #fff;
-  background: var(--nav-btn-bg);
-  color: var(--nav-btn-color);
+  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  color: #04140a;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: .65rem; font-weight: 900; font-style: italic; letter-spacing: .06em; text-transform: uppercase;
   cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .25s;
@@ -86,8 +86,8 @@ nav.aka-card-nav {
 .aka-theme-btn {
   width: 28px; height: 28px; border-radius: 8px;
   border: 2px solid #fff;
-  background: var(--nav-btn-bg);
-  color: var(--nav-btn-color);
+  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  color: #04140a;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .2s;
   box-shadow: 2px 2px 0px #fff;

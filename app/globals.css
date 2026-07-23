@@ -158,14 +158,14 @@ body.light-mode .btn-raised:active {
   box-shadow: 1px 1px 0px #08130a;
 }
 body.light-mode .btn-ghost {
-  color: #08130a;
-  border-color: #08130a;
-  box-shadow: 4px 4px 0px #08130a;
+  color: #ffffff;
+  border-color: #ffffff;
+  box-shadow: 4px 4px 0px #ffffff;
 }
 body.light-mode .btn-ghost:hover {
   background: rgba(0,0,0,.05);
   transform: translate(-3px,-3px);
-  box-shadow: 7px 7px 0px #08130a;
+  box-shadow: 7px 7px 0px #ffffff;
 }
 body.light-mode .btn-ghost:active {
   transform: translate(2px,2px);
