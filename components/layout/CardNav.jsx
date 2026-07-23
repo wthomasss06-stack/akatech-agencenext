@@ -198,7 +198,7 @@ export default function CardNav() {
               {T.light ? <Moon size={13} /> : <Sun size={13} />}
             </button>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="aka-nav-cta">
-              Démarrer
+              DEMARRER MON PROJET
             </a>
           </div>
         </div>
