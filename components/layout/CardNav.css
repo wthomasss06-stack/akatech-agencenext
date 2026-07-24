@@ -68,7 +68,7 @@ nav.aka-card-nav {
   cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .25s;
   box-shadow: 2px 2px 0px #fff;
 }
-.aka-explorer-btn:hover { color: #88ca53; transform: translate(-2px,-2px); box-shadow: 4px 4px 0px #fff; }
+
 .aka-explorer-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
 .aka-explorer-btn.is-active {
   background: linear-gradient(135deg, #88ca53, #5a9e34);
@@ -92,7 +92,7 @@ nav.aka-card-nav {
   cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .2s;
   box-shadow: 2px 2px 0px #fff;
 }
-.aka-theme-btn:hover { color: #88ca53; transform: translate(-2px,-2px); box-shadow: 4px 4px 0px #fff; }
+
 .aka-theme-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
 
 .light-mode .aka-theme-btn { border-color: #08130a; box-shadow: 2px 2px 0px #08130a; }

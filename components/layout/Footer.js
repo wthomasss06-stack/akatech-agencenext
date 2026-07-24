@@ -268,7 +268,7 @@ export default function Footer() {
       <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '1.2rem 5% 1.6rem', fontSize: '.7rem', color: muted }}>
         © {year}{' '}
         <TransitionLink href="/" style={{ color: 'rgba(136,202,83,.8)' }}><HoverSlideText text="AKATech" /></TransitionLink>
-        {' '}· Agence Digitale · Abidjan
+        {' '}· AKATech Studio. · Abidjan
       </div>
     </footer>
   )

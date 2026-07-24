@@ -280,7 +280,7 @@ export default function Loader() {
                 transition={{ delay: .5 }}
                 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.85rem', color: 'rgba(136,202,83,.7)', letterSpacing: '.15em', textTransform: 'uppercase', marginTop: 4 }}
               >
-                Agence Digitale 
+                AKATech Studio. 
               </motion.div>
             </motion.div>
 
