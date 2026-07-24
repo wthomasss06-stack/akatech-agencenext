@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Phone, Send } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import AuroraHero from '@/components/ui/AuroraHero'
+import { HoverSlideText } from '@/components/ui/index'
 import { useTheme } from '@/lib/theme'
 import TransitionLink from './TransitionLink'
 
@@ -70,7 +71,7 @@ function AskAIStrip({ T }) {
         .aka-ask-btn:hover { border-color: #88ca53 !important; transform: translateY(-3px); background: rgba(136,202,83,.06); }
       `}</style>
       <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: '1rem' }}>
-        (Demandez à l'IA ce qu'elle pense d'AKATech)
+        (<HoverSlideText text="Demandez à l'IA ce qu'elle pense d'AKATech" />)
       </p>
       <div style={{ display: 'flex', gap: '.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         {PLATFORMS.map(p => (
@@ -79,7 +80,7 @@ function AskAIStrip({ T }) {
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'rgba(255,255,255,.04)', border: `1px solid ${copied === p.id ? '#88ca53' : 'rgba(255,255,255,.16)'}`, cursor: 'pointer', minWidth: 70 }}>
             <img src={p.icon} alt={p.label} width={22} height={22} style={{ borderRadius: 6, display: 'block' }} />
             <span style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.5)' }}>
-              {copied === p.id ? 'Copié !' : p.label}
+              <HoverSlideText text={copied === p.id ? 'Copié !' : p.label} />
             </span>
           </button>
         ))}
@@ -175,7 +176,7 @@ export default function Footer() {
                 <TransitionLink key={label} href={href} style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                  {label}
+                  <HoverSlideText text={label} />
                 </TransitionLink>
               ))}
             </div>
@@ -191,7 +192,7 @@ export default function Footer() {
                 <TransitionLink key={label} href={href} style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                  {label}
+                  <HoverSlideText text={label} />
                 </TransitionLink>
               ))}
             </div>
@@ -207,13 +208,13 @@ export default function Footer() {
                 <a key={label} href={href} target="_blank" rel="noreferrer" style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                  {label}
+                  <HoverSlideText text={label} />
                 </a>
               ))}
               <a href="mailto:wthomasss06@gmail.com" style={lk}
                 onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                 onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                Email
+                <HoverSlideText text="Email" />
               </a>
             </div>
           </div>
@@ -228,7 +229,7 @@ export default function Footer() {
                 <a href="tel:+2250142507750" style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                  <Phone size={12} style={{ flexShrink: 0 }} />+225 01 42 50 77 50
+                  <Phone size={12} style={{ flexShrink: 0 }} /><HoverSlideText text="+225 01 42 50 77 50" />
                 </a>
                 <span style={{ ...lk, cursor: 'default' }}>
                   <MapPin size={12} style={{ flexShrink: 0 }} />Abidjan, Côte d'Ivoire
@@ -236,7 +237,7 @@ export default function Footer() {
               </div>
             </div>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-ghost" style={{ fontSize: '.8rem', padding: '.7rem 1.6rem' }}>
-              <Send size={14} /> Envoyer un message
+              <Send size={14} /> <HoverSlideText text="Envoyer un message" />
             </a>
           </div>
         </div>
@@ -266,7 +267,7 @@ export default function Footer() {
       {/* ── Copyright bar ──────────────────────────────────────── */}
       <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '1.2rem 5% 1.6rem', fontSize: '.7rem', color: muted }}>
         © {year}{' '}
-        <TransitionLink href="/" style={{ color: 'rgba(136,202,83,.8)' }}>AKATech</TransitionLink>
+        <TransitionLink href="/" style={{ color: 'rgba(136,202,83,.8)' }}><HoverSlideText text="AKATech" /></TransitionLink>
         {' '}· Agence Digitale · Abidjan
       </div>
     </footer>

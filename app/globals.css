@@ -25,6 +25,23 @@
 
 html { scroll-behavior: smooth; overscroll-behavior-y: none; }
 
+/* ── Hover Slide Text — micro-interaction V-Slide ── */
+.hst-wrap {
+  display: inline-grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  overflow: hidden;
+  vertical-align: bottom;
+  cursor: pointer;
+}
+.hst-word {
+  grid-area: 1 / 1 / 2 / 2;
+  display: inline-flex;
+  white-space: nowrap;
+}
+.hst-char { display: inline-block; will-change: transform, opacity; }
+.hst-b { pointer-events: none; }
+
 body {
   background: var(--bg-dark);
   color: var(--text-main);

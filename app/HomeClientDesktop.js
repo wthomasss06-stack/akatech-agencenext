@@ -11,7 +11,7 @@ import {
   Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown, AlertTriangle
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
@@ -470,23 +470,60 @@ const SERVICES_SKEW = [
 // Flèche ↗ pivote 45° au hover + titre large + séparateur + image curseur 1:1
 function HoverImageReveal({ items }) {
   const [hovered, setHovered] = useState(null)
-  const [pos, setPos]         = useState({ x: 0, y: 0 })
-  const [rot, setRot]         = useState(0)
+  const hoveredRef            = useRef(null)
+  const rotRef                = useRef(0)
   const containerRef          = useRef(null)
-  const rafRef                = useRef(null)
+  const floatRef               = useRef(null)
+  const sliceRefs              = useRef([])
+  const targetRef              = useRef({ x: 0, y: 0 })
+  const currentRef             = useRef({ x: 0, y: 0 })
   const T = useTheme()
 
   const onMouseMove = (e) => {
-    cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(() => {
-      const rect = containerRef.current?.getBoundingClientRect()
-      if (!rect) return
-      setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+    const rect = containerRef.current?.getBoundingClientRect()
+    if (!rect) return
+    targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top }
+  }
+
+  const applySlices = (i) => {
+    sliceRefs.current.forEach((el, idx) => {
+      if (!el) return
+      el.style.transform = idx === i ? 'translateY(0%)' : idx < i ? 'translateY(-100%)' : 'translateY(100%)'
     })
   }
 
-  const onEnter = (i) => { setHovered(i); setRot((Math.random() - 0.5) * 10) }
-  const onLeave = () => setHovered(null)
+  const onEnter = (i) => {
+    hoveredRef.current = i
+    rotRef.current = (Math.random() - 0.5) * 10
+    setHovered(i)
+    applySlices(i)
+  }
+  const onLeave = () => {
+    hoveredRef.current = null
+    setHovered(null)
+    sliceRefs.current.forEach(el => { if (el) el.style.transform = 'translateY(100%)' })
+  }
+
+  // Boucle spring/lerp — la fenêtre suit le curseur avec un amorti (comme
+  // hover_video.html), mutation directe du style (pas de state React à
+  // 60fps) pour rester fluide et éviter les re-renders inutiles.
+  useEffect(() => {
+    let raf
+    const ease = 0.1
+    const tick = () => {
+      const c = currentRef.current, t = targetRef.current
+      c.x += (t.x - c.x) * ease
+      c.y += (t.y - c.y) * ease
+      if (floatRef.current) {
+        const active = hoveredRef.current !== null
+        floatRef.current.style.transform = `translate(${c.x + 24}px,${c.y - 130}px) rotate(${rotRef.current}deg) scale(${active ? 1 : 0.75})`
+        floatRef.current.style.opacity = active ? '1' : '0'
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   return (
     <div ref={containerRef} onMouseMove={onMouseMove} style={{ position: 'relative', userSelect: 'none' }}>
@@ -573,23 +610,29 @@ function HoverImageReveal({ items }) {
         )
       })}
 
-      {/* ── Image curseur 1:1 — 260×260 ── */}
-      <div style={{
+      {/* ── Fenêtre image curseur — 260×260, slices empilées ── */}
+      <div ref={floatRef} style={{
         position: 'absolute', top: 0, left: 0,
         width: 260, height: 260,
         borderRadius: 16, overflow: 'hidden',
         pointerEvents: 'none', zIndex: 20,
-        transform: `translate(${pos.x + 24}px,${pos.y - 130}px) rotate(${rot}deg) scale(${hovered !== null ? 1 : 0.75})`,
-        opacity: hovered !== null ? 1 : 0,
-        transition: 'opacity .22s ease, transform .16s cubic-bezier(.22,1,.36,1)',
+        opacity: 0,
         boxShadow: '0 24px 70px rgba(0,0,0,.55)',
         border: '1.5px solid rgba(136,202,83,.35)',
         willChange: 'transform, opacity',
       }}>
-        {hovered !== null && items[hovered]?.img && (
-          <img src={items[hovered].img} alt={items[hovered].label}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(.92)' }} />
-        )}
+        {items.map((item, i) => (
+          <div key={i} ref={el => sliceRefs.current[i] = el} style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden',
+            transform: 'translateY(100%)',
+            transition: 'transform .6s cubic-bezier(0.16,1,0.3,1)',
+          }}>
+            {item.img && (
+              <img src={item.img} alt={item.label}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(.92)' }} />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   )
@@ -1055,7 +1098,7 @@ function DomainesSection() {
             className="btn-raised"
             style={{ fontSize: '.9rem', padding: '.85rem 2rem' }}
           >
-            Discuter de mon projet <ArrowRight size={14} />
+            <HoverSlideText text="Discuter de mon projet" /> <ArrowRight size={14} />
           </a>
         </BlurReveal>
       </div>
@@ -1121,7 +1164,7 @@ function ArchiveTunnelSection() {
             Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
           </h2>
           <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-            Voir tous les projets <ArrowRight size={15} />
+            <HoverSlideText text="Voir tous les projets" /> <ArrowRight size={15} />
           </Link>
         </div>
       </div>
@@ -1390,8 +1433,8 @@ function PricingCallout() {
                         ))}
                       </div>
                       {plan.popular
-                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}>Commander →</a>
-                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}>Commander →</a>
+                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
+                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
                       }
                     </div>
                   </motion.div>
@@ -1415,7 +1458,7 @@ function PricingCallout() {
             </div>
             <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
               className="btn-raised" style={{ padding: '.55rem 1.2rem', fontSize: '.78rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
-              Réserver ma place →
+              <HoverSlideText text="Réserver ma place →" />
             </a>
           </div>
         </BlurReveal>
@@ -1601,7 +1644,7 @@ function ProjectFormHome() {
                   {sending ? (
                     <><span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> Envoi en cours...</>
                   ) : (
-                    <><Send size={16} /> Recevoir mon devis en 24h</>
+                    <><Send size={16} /> <HoverSlideText text="Recevoir mon devis en 24h" /></>
                   )}
                 </motion.button>
 

@@ -245,7 +245,7 @@ function HeroBlog() {
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
             <p className="hr-kicker">Stratégie digitale, développement web, SEO et e-commerce</p>
-            <p className="hr-desc">—des contenus concrets pour les entrepreneurs ivoiriens.</p>
+            <p className="hr-desc">Des contenus concrets pour les entrepreneurs ivoiriens.</p>
             <a
               href="https://www.linkedin.com/in/m-bollo-aka"
               target="_blank"

@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { usePathname } from 'next/navigation'
@@ -446,7 +446,7 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
           {message}
         </h2>
         <a href={href} target="_blank" rel="noreferrer" className="cta-circle-btn">
-          <span className="cta-circle-label">{cta}</span>
+          <span className="cta-circle-label"><HoverSlideText text={cta} /></span>
           <span className="cta-circle-arrow" aria-hidden="true">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" strokeWidth="2.2"
@@ -610,3 +610,55 @@ export function PageWatermark({ text, style = {} }) {
     </div>
   )
 }
+
+// ── HOVER SLIDE TEXT — micro-interaction "01 // V-SLIDE" ─────
+// Reprend le variant Vertical Slide du lab typographique : au
+// survol, le texte glisse vers le haut en s'effaçant pendant
+// qu'une copie identique remonte depuis le bas (timeline GSAP à
+// 2 phases, play/reverse, split par caractère). Pensé pour
+// habiller un simple libellé texte à l'intérieur d'un bouton/lien
+// existant — ne touche pas aux icônes ou au reste du contenu.
+export function HoverSlideText({ text, className = '', style = {} }) {
+  const wrapRef = useRef(null)
+  const tlRef = useRef(null)
+
+  useEffect(() => {
+    const wrap = wrapRef.current
+    if (!wrap) return
+    const wordA = wrap.querySelector('.hst-a')
+    const wordB = wrap.querySelector('.hst-b')
+    if (!wordA || !wordB) return
+
+    const split = (el) => {
+      const t = el.textContent
+      el.innerHTML = ''
+      return t.split('').map(ch => {
+        const s = document.createElement('span')
+        s.className = 'hst-char'
+        s.innerHTML = ch === ' ' ? '&nbsp;' : ch
+        el.appendChild(s)
+        return s
+      })
+    }
+    const charsA = split(wordA)
+    const charsB = split(wordB)
+    gsap.set(charsB, { autoAlpha: 0 })
+
+    const dur = 0.32
+    const tl = gsap.timeline({ paused: true })
+    tl.to(charsA, { yPercent: -100, autoAlpha: 0, duration: dur, stagger: { amount: 0.16, from: 'start' }, ease: 'power2.in' }, 0)
+      .fromTo(charsB, { yPercent: 100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: dur, stagger: { amount: 0.16, from: 'start' }, ease: 'back.out(1.5)' }, dur * 0.4)
+    tlRef.current = tl
+    return () => tl.kill()
+  }, [text])
+
+  return (
+    <span ref={wrapRef} className={`hst-wrap ${className}`} style={style}
+      onMouseEnter={() => tlRef.current?.play()}
+      onMouseLeave={() => tlRef.current?.reverse()}>
+      <span className="hst-word hst-a">{text}</span>
+      <span className="hst-word hst-b" aria-hidden="true">{text}</span>
+    </span>
+  )
+}
+

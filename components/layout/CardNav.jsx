@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import { Moon, Sun, Orbit } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { HoverSlideText } from '@/components/ui/index'
 import { useGhostCycle } from './useGhostCycle'
 import TransitionLink from './TransitionLink'
 import { useBlobTransition } from './BlobTransition'
@@ -156,7 +157,7 @@ export default function CardNav() {
       <nav ref={navRef} className={'aka-card-nav' + (open ? ' is-open' : '')} style={{
         '--nav-bg': open ? (T.light ? 'rgba(248,248,248,0.88)' : 'rgba(6,14,9,0.85)') : 'transparent',
         '--nav-blur': open ? 'blur(20px) saturate(160%)' : 'none',
-
+        
         '--nav-hline': '#88ca53',
         '--nav-btn-border': !open ? 'rgba(255,255,255,0.3)' : 'rgba(242,237,232,.15)',
         '--nav-btn-bg': !open ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,.05)',
@@ -192,20 +193,20 @@ export default function CardNav() {
               type="button"
             >
               <Orbit size={13} />
-              <span>Explorer</span>
+              <span><HoverSlideText text="Explorer" /></span>
             </button>
             <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? 'Mode sombre' : 'Mode clair'} type="button">
               {T.light ? <Moon size={13} /> : <Sun size={13} />}
             </button>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="aka-nav-cta">
-              DEMARRER MON PROJET
+              <HoverSlideText text="DEMARRER MON PROJET" />
             </a>
           </div>
         </div>
 
         <div className="aka-nav-content" ref={contentRef}>
           <div className="aka-nav-card aka-card-1" ref={el => cardsRef.current[0] = el}>
-            <div className="aka-card-label">AKATECH</div>
+            <div className="aka-card-label">AKATech studio.</div>
             <div className="aka-card-brand">
               <TransitionLink href="/" onClick={closeNav} className="aka-card-logo-link" aria-label="Retour à l'accueil">
                 <Image src="/images/logo.webp" alt="AKATech" width={138} height={92} style={{ objectFit: 'contain' }} />
