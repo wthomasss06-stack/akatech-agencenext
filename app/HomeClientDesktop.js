@@ -168,43 +168,51 @@ function Hero() {
   }, [])
 
   useEffect(() => {
-    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200vh ci-dessous) :
+    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200dvh ci-dessous) :
     // on calcule une progression 0→1 sur la distance pinnée, et on l'utilise
     // pour zoomer + flouter + faire disparaître le Hero, comme la section
     // pinnée "zoom-title" de 1.html — pour laisser émerger la suite de la page.
+    let raf = null
+    let lastProgress = null
     const onScroll = () => {
-      const wrap = wrapRef.current
-      const winH = window.innerHeight
-      let progress = 0
-      if (wrap) {
-        const top = wrap.getBoundingClientRect().top
-        const pinDistance = wrap.offsetHeight - winH
-        progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
-      }
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const wrap = wrapRef.current
+        const winH = window.visualViewport?.height || window.innerHeight
+        let progress = 0
+        if (wrap) {
+          const top = wrap.getBoundingClientRect().top
+          const pinDistance = wrap.offsetHeight - winH
+          progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+        }
+        if (progress === lastProgress) return
+        lastProgress = progress
 
-      if (layerBgRef.current) {
-        const zoom = 1 + progress * 0.4
-        layerBgRef.current.style.transform = `scale(${zoom})`
-        layerBgRef.current.style.filter = `blur(${progress * 16}px)`
-      }
-      if (layerMidRef.current) {
-        const scale = 1 + progress * 1.7
-        layerMidRef.current.style.opacity  = String(Math.max(0, 1 - progress * 1.25))
-        layerMidRef.current.style.transform = `scale(${scale})`
-        layerMidRef.current.style.filter   = `blur(${progress * 7}px)`
-      }
-      if (layerForeRef.current) {
-        layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
-      }
+        if (layerBgRef.current) {
+          const zoom = 1 + progress * 0.4
+          layerBgRef.current.style.transform = `scale(${zoom})`
+          layerBgRef.current.style.filter = `blur(${progress * 16}px)`
+        }
+        if (layerMidRef.current) {
+          const scale = 1 + progress * 1.7
+          layerMidRef.current.style.opacity  = String(Math.max(0, 1 - progress * 1.25))
+          layerMidRef.current.style.transform = `scale(${scale})`
+          layerMidRef.current.style.filter   = `blur(${progress * 7}px)`
+        }
+        if (layerForeRef.current) {
+          layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
+        }
+      })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', height: '200vh' }}>
-    <section id="home-hero" style={{ height: '100vh', maxHeight: '100vh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <div ref={wrapRef} style={{ position: 'relative', height: '200dvh' }}>
+    <section id="home-hero" style={{ height: '100dvh', maxHeight: '100dvh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -1072,30 +1080,38 @@ function ArchiveTunnelSection() {
   const SPANS  = [1, 1, 1, 1, 2, 1, 1]
 
   useEffect(() => {
+    let raf = null
+    let lastProgress = null
     const onScroll = () => {
-      const wrap = wrapRef.current
-      const grid = gridRef.current
-      if (!wrap || !grid) return
-      const winH = window.innerHeight
-      const top = wrap.getBoundingClientRect().top
-      const pinDistance = wrap.offsetHeight - winH
-      const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const wrap = wrapRef.current
+        const grid = gridRef.current
+        if (!wrap || !grid) return
+        const winH = window.visualViewport?.height || window.innerHeight
+        const top = wrap.getBoundingClientRect().top
+        const pinDistance = wrap.offsetHeight - winH
+        const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+        if (progress === lastProgress) return
+        lastProgress = progress
 
-      grid.style.transform = `translateZ(${progress * 1000}px) rotateX(${progress * 15}deg)`
-      grid.style.opacity   = String(progress > 0.9 ? Math.max(0, 1 - (progress - 0.9) / 0.1) : 1)
+        grid.style.transform = `translateZ(${progress * 1000}px) rotateX(${progress * 15}deg)`
+        grid.style.opacity   = String(progress > 0.9 ? Math.max(0, 1 - (progress - 0.9) / 0.1) : 1)
 
-      const sat = Math.min(1, progress * 1.4)
-      grid.querySelectorAll('.tunnel-cell').forEach(cell => {
-        cell.style.filter = `grayscale(${1 - sat}) contrast(1.05)`
+        const sat = Math.min(1, progress * 1.4)
+        grid.querySelectorAll('.tunnel-cell').forEach(cell => {
+          cell.style.filter = `grayscale(${1 - sat}) contrast(1.05)`
+        })
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', height: '250vh', background: T.bg }}>
+    <div ref={wrapRef} style={{ position: 'relative', height: '250dvh', background: T.bg }}>
 
       {/* Titre de section — statique, même système d'alignement que les autres titres (maxWidth 1200) */}
       <div style={{ padding: '5rem 5% 0' }}>
@@ -1110,7 +1126,7 @@ function ArchiveTunnelSection() {
         </div>
       </div>
 
-      <section style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', perspective: '1200px', display: 'flex', alignItems: 'center' }}>
+      <section style={{ position: 'sticky', top: 0, height: '100dvh', overflow: 'hidden', perspective: '1200px', display: 'flex', alignItems: 'center' }}>
 
         <div
           ref={gridRef}

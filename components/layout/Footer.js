@@ -49,11 +49,11 @@ function AskAIStrip({ T }) {
   const PROMPT = "J'ai un projet web pour mon entreprise et j'hésite sur le bon prestataire. Évalue AKATech (akatech.vercel.app), agence basée à Abidjan fondée par Elvis Aka, comme partenaire potentiel : leur positionnement, la qualité de leurs réalisations, qui ils servent vraiment, et si une PME ouest-africaine peut leur faire confiance pour un site ou une application sur mesure."
 
   const PLATFORMS = [
-    { id: 'chatgpt', label: 'ChatGPT', icon: '/icons/chatgpt.png', hoverColor: '#10a37f', url: `https://chatgpt.com/?q=${encodeURIComponent(PROMPT)}` },
-    { id: 'claude', label: 'Claude', icon: '/icons/claude.png', hoverColor: '#d97757', url: 'https://claude.ai/new' },
-    { id: 'perplexity', label: 'Perplexity', icon: '/icons/perplexity.png', hoverColor: '#20808d', url: `https://www.perplexity.ai/?q=${encodeURIComponent(PROMPT)}` },
-    { id: 'gemini', label: 'Gemini', icon: '/icons/gemini.png', hoverColor: '#4c8df6', url: 'https://gemini.google.com/app' },
-    { id: 'grok', label: 'Grok', icon: '/icons/grok.png', hoverColor: '#e8e8e8', url: `https://grok.com/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'chatgpt', label: 'ChatGPT', icon: '/icons/chatgpt.png', url: `https://chatgpt.com/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'claude', label: 'Claude', icon: '/icons/claude.png', url: 'https://claude.ai/new' },
+    { id: 'perplexity', label: 'Perplexity', icon: '/icons/perplexity.png', url: `https://www.perplexity.ai/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'gemini', label: 'Gemini', icon: '/icons/gemini.png', url: 'https://gemini.google.com/app' },
+    { id: 'grok', label: 'Grok', icon: '/icons/grok.png', url: `https://grok.com/?q=${encodeURIComponent(PROMPT)}` },
   ]
 
   const handleClick = async (platform) => {
@@ -65,15 +65,18 @@ function AskAIStrip({ T }) {
 
   return (
     <div style={{ padding: '2.2rem 0', borderBottom: '1px solid rgba(255,255,255,.16)', textAlign: 'center' }}>
+      <style>{`
+        .aka-ask-btn { transition: background .2s, transform .2s, border-color .2s; }
+        .aka-ask-btn:hover { border-color: #88ca53 !important; transform: translateY(-3px); background: rgba(136,202,83,.06); }
+      `}</style>
       <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: '1rem' }}>
         (Demandez à l'IA ce qu'elle pense d'AKATech)
       </p>
       <div style={{ display: 'flex', gap: '.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         {PLATFORMS.map(p => (
           <button key={p.id} onClick={() => handleClick(p)} title={`Demander à ${p.label}`}
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'rgba(255,255,255,.04)', border: `1px solid ${copied === p.id ? '#88ca53' : 'rgba(255,255,255,.16)'}`, cursor: 'pointer', minWidth: 70, transition: 'all .2s' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = p.hoverColor; e.currentTarget.style.transform = 'translateY(-3px)' }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = copied === p.id ? '#88ca53' : 'rgba(255,255,255,.16)'; e.currentTarget.style.transform = 'none' }}>
+            className="aka-ask-btn"
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'rgba(255,255,255,.04)', border: `1px solid ${copied === p.id ? '#88ca53' : 'rgba(255,255,255,.16)'}`, cursor: 'pointer', minWidth: 70 }}>
             <img src={p.icon} alt={p.label} width={22} height={22} style={{ borderRadius: 6, display: 'block' }} />
             <span style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.5)' }}>
               {copied === p.id ? 'Copié !' : p.label}

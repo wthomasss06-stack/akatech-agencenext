@@ -222,43 +222,54 @@ function Hero() {
   }, [])
 
   useEffect(() => {
-    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200vh ci-dessous) :
+    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200dvh ci-dessous) :
     // on calcule une progression 0→1 sur la distance pinnée, et on l'utilise
     // pour zoomer + flouter + faire disparaître le Hero, comme la section
     // pinnée "zoom-title" de 1.html — pour laisser émerger la suite de la page.
+    let raf = null
+    let lastProgress = null
     const onScroll = () => {
-      const wrap = wrapRef.current
-      const winH = window.innerHeight
-      let progress = 0
-      if (wrap) {
-        const top = wrap.getBoundingClientRect().top
-        const pinDistance = wrap.offsetHeight - winH
-        progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
-      }
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = null
+        const wrap = wrapRef.current
+        // visualViewport reflète la hauteur réelle visible (barre d'adresse
+        // mobile qui show/hide) — plus stable que innerHeight seul, qui peut
+        // désynchroniser le calcul du pin et faire "sauter" le scroll.
+        const winH = window.visualViewport?.height || window.innerHeight
+        let progress = 0
+        if (wrap) {
+          const top = wrap.getBoundingClientRect().top
+          const pinDistance = wrap.offsetHeight - winH
+          progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+        }
+        if (progress === lastProgress) return
+        lastProgress = progress
 
-      if (layerBgRef.current) {
-        const zoom = 1 + progress * 0.4
-        layerBgRef.current.style.transform = `scale(${zoom})`
-        layerBgRef.current.style.filter = `blur(${progress * 16}px)`
-      }
-      if (layerMidRef.current) {
-        const scale = 1 + progress * 1.7
-        layerMidRef.current.style.opacity  = String(Math.max(0, 1 - progress * 1.25))
-        layerMidRef.current.style.transform = `scale(${scale})`
-        layerMidRef.current.style.filter   = `blur(${progress * 7}px)`
-      }
-      if (layerForeRef.current) {
-        layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
-      }
+        if (layerBgRef.current) {
+          const zoom = 1 + progress * 0.4
+          layerBgRef.current.style.transform = `scale(${zoom})`
+          layerBgRef.current.style.filter = `blur(${progress * 16}px)`
+        }
+        if (layerMidRef.current) {
+          const scale = 1 + progress * 1.7
+          layerMidRef.current.style.opacity  = String(Math.max(0, 1 - progress * 1.25))
+          layerMidRef.current.style.transform = `scale(${scale})`
+          layerMidRef.current.style.filter   = `blur(${progress * 7}px)`
+        }
+        if (layerForeRef.current) {
+          layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
+        }
+      })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
   }, [])
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', height: '200vh' }}>
-    <section id="home-hero" style={{ height: '100vh', maxHeight: '100vh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <div ref={wrapRef} style={{ position: 'relative', height: '200dvh' }}>
+    <section id="home-hero" style={{ height: '100dvh', maxHeight: '100dvh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -716,6 +727,8 @@ function ProjectsSection() {
   const DEPTHS = [0, -90, -30, -140, -60, -110, -75]
 
   // ── Pin + tunnel 3D + colorisation au scroll (miroir de ArchiveTunnelSection desktop) ──
+  const lastProgressRef = useRef(null)
+  const lastGrayRef = useRef([])
   useEffect(() => {
     let raf = null
     const onScroll = () => {
@@ -725,10 +738,14 @@ function ProjectsSection() {
         const wrap = wrapRef.current
         const grid = gridRef.current
         if (!wrap || !grid) return
-        const winH = window.innerHeight
+        const winH = window.visualViewport?.height || window.innerHeight
         const top  = wrap.getBoundingClientRect().top
         const pinDistance = wrap.offsetHeight - winH
         const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
+
+        // Rien n'a bougé (au repos avant/après le runway) → on ne touche à aucun style
+        if (progress === lastProgressRef.current) return
+        lastProgressRef.current = progress
 
         grid.style.transform = `translateZ(${progress * 340}px) rotateX(${progress * 8}deg)`
         grid.style.opacity   = String(progress > 0.92 ? Math.max(0, 1 - (progress - 0.92) / 0.08) : 1)
@@ -737,7 +754,11 @@ function ProjectsSection() {
           if (!cell) return
           const start = i * 0.05
           const local = Math.max(0, Math.min(1, (progress - start) / 0.4))
-          cell.style.filter = `grayscale(${(1 - local).toFixed(2)}) contrast(1.04)`
+          const gray = (1 - local).toFixed(2)
+          // Carte déjà 'posée' (100% couleur ou 100% grayscale) sur cette frame → on saute le repaint
+          if (lastGrayRef.current[i] === gray) return
+          lastGrayRef.current[i] = gray
+          cell.style.filter = `grayscale(${gray}) contrast(1.04)`
         })
       })
     }
@@ -757,7 +778,7 @@ function ProjectsSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
 
       {/* Runway de scroll pour le pin (hauteur réduite vs desktop : format mobile) */}
-      <div ref={wrapRef} style={{ position: 'relative', height: '190vh' }}>
+      <div ref={wrapRef} style={{ position: 'relative', height: '190dvh' }}>
 
         {/* Titre — au-dessus du pin, défile normalement */}
         <div style={{ padding: '7rem 5% 0', position: 'relative', zIndex: 1 }}>
@@ -773,7 +794,7 @@ function ProjectsSection() {
         </div>
 
         {/* Zone pinnée — tunnel 3D */}
-        <div style={{ position: 'sticky', top: 0, height: '100vh', overflow: 'hidden', perspective: 900, display: 'flex', alignItems: 'center', zIndex: 1 }}>
+        <div style={{ position: 'sticky', top: 0, height: '100dvh', overflow: 'hidden', perspective: 900, display: 'flex', alignItems: 'center', zIndex: 1 }}>
           <style>{`
             .archive-grid-mobile {
               display: grid;
@@ -806,7 +827,7 @@ function ProjectsSection() {
                     boxShadow: active === i ? '0 0 0 3px rgba(136,202,83,.12)' : 'none',
                     filter: 'grayscale(1) contrast(1.04)',
                     transform: `translateZ(${DEPTHS[i] || 0}px)`,
-                    transition: 'border-color .25s, box-shadow .25s, filter .12s linear',
+                    transition: 'border-color .25s, box-shadow .25s',
                     cursor: 'pointer',
                     willChange: 'filter, transform',
                   }}
@@ -867,7 +888,7 @@ function ProjectsSection() {
                           {p.url && (
                             <a href={p.url} target="_blank" rel="noreferrer"
                               onClick={e => e.stopPropagation()}
-                              style={{ display: 'flex', alignItems: 'center', gap: '.2rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 600, color: '#fff', textDecoration: 'none', padding: '.14rem .45rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.4)', background: 'rgba(136,202,83,.14)' }}>
+                              style={{ display: 'flex', alignItems: 'center', gap: '.2rem', fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.58rem', fontWeight: 900, color: '#fff', textDecoration: 'none', padding: '.14rem .45rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.4)', background: 'rgba(136,202,83,.14)' }}>
                               <ExternalLink size={8} /> Voir
                             </a>
                           )}

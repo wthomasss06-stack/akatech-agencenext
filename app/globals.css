@@ -23,13 +23,14 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overscroll-behavior-y: none; }
 
 body {
   background: var(--bg-dark);
   color: var(--text-main);
   font-family: 'JetBrains Mono', monospace;
   -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
 }
 
 body.light-mode { background: var(--bg-light); color: #111111; }
