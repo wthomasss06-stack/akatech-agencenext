@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRef, useEffect } from 'react'
 import {
   motion,
@@ -10,7 +10,7 @@ import {
 } from 'framer-motion'
 import { Code, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
 
@@ -192,13 +192,13 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                 </h3>
                 {project.url ? (
                   <a href={project.url} target="_blank" rel="noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.65rem', fontWeight: 900, color: '#88ca53', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
                     onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)'; e.currentTarget.style.borderColor = '#88ca53' }}
                     onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.08)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
-                    <ExternalLink size={11} /> Voir le site
+                    <ExternalLink size={11} /> <HoverSlideText text="Voir le site" />
                   </a>
                 ) : (
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, padding: '.32rem .85rem', borderRadius: 100, border: `1px solid ${T.border}`, whiteSpace: 'nowrap' }}>
+                  <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.6rem', color: T.textMuted, padding: '.32rem .85rem', borderRadius: 100, border: `1px solid ${T.border}`, whiteSpace: 'nowrap' }}>
                     Démo locale
                   </span>
                 )}
@@ -299,7 +299,7 @@ function ProjectsIntro() {
           style={{
             position: 'relative',
             fontFamily: "'JetBrains Mono', monospace",
-            fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 800,
+            fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 800,
             color: T.textMain, letterSpacing: '-.03em',
             marginBottom: '1.5rem',
           }}>

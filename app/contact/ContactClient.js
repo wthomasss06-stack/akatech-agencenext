@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { useRef, useState, useEffect, useCallback } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import {
@@ -344,7 +344,7 @@ function ContactChannels() {
         {/* ── Header ── */}
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
               <GhostTitle text="COMMENT NOUS CONTACTER" />
               Comment nous <GreenUnderline><span className="text-gradient">contacter</span></GreenUnderline>
             </h2>

@@ -48,7 +48,7 @@
   border-radius: 999px;
   padding: 8px 16px 8px 14px;
   cursor: pointer;
-  color:#88ca53;
+  color: #ffffff;
   font-family: 'Barlow Condensed', sans-serif;
   font-size: .68rem;
   font-weight: 900;
@@ -70,7 +70,7 @@
 /* Une fois scrollé (header non transparent) → repasse au style vert (bordure/ombre restent neo-brutalist) */
 .sm-header--scrolled .sm-toggle {
   background: rgba(136,202,83,.08);
-  color: #88ca53;
+  color: #f2ede8;
 }
 .sm-header--scrolled .sm-toggle:hover {
   background: rgba(136,202,83,.16);
@@ -78,26 +78,10 @@
 
 /* Light mode : le bouton passe vert foncé, lisible sur fond clair */
 .light-mode .sm-toggle {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,.12);
-  border: 2px solid  #08130a;
-  border-radius: 999px;
-  padding: 8px 16px 8px 14px;
-  cursor: pointer;
-  color: #88ca53;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: .68rem;
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  line-height: 1;
-  box-shadow: 3px 3px 0px  #08130a;
-  transition: background .2s, color .2s, transform .15s ease, box-shadow .15s ease;
-  z-index: 10010;
+  background: rgba(255,255,255,.75);
+  border-color: #08130a;
+  box-shadow: 3px 3px 0px #08130a;
+  color: #2d5a14;
 }
 .light-mode .sm-toggle:hover {
   background: rgba(255,255,255,.95);
@@ -287,43 +271,6 @@
   display: inline-block;
   will-change: transform;
   transform-origin: 50% 100%;
-}
-
-/* ── Ghost cycle text hover ── */
-.sm-panel-item-ghost {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  pointer-events: none;
-  overflow: hidden;
-  opacity: 0;
-  transition: opacity .18s;
-}
-.sm-panel-item:hover .sm-panel-item-ghost { opacity: 1; }
-
-.sm-ghost-cycle-wrap {
-  display: inline-block;
-  height: 0.95em;
-  overflow: hidden;
-  pointer-events: none;
-}
-.sm-ghost-cycle-inner {
-  display: flex;
-  flex-direction: column;
-  will-change: transform;
-}
-.sm-ghost-cycle-line {
-  display: block;
-  height: 0.95em;
-  line-height: 0.95em;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: inherit;
-  font-weight: 800;
-  letter-spacing: -.02em;
-  text-transform: uppercase;
-  -webkit-text-stroke: 1.2px #88ca53;
-  color: transparent;
 }
 
 /* ── Flèche ↗ ── */

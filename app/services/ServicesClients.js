@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { SERVICES } from '@/lib/data'
@@ -131,8 +131,8 @@ function ServicesList() {
   return (
     <section id="services-list" ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'left', marginBottom: '3rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
             <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
             Choisissez votre <GreenUnderline><span className="text-gradient">solution</span></GreenUnderline>
           </h2>
@@ -201,7 +201,7 @@ function ServicesList() {
                   </div>
                 </div>
                 <a href={`https://wa.me/2250142507750?text=Bonjour AKATech, je suis intéressé par ${svc.title}`} target="_blank" rel="noreferrer" className="btn-raised">
-                  Demander un devis <ArrowRight size={14} />
+                  <HoverSlideText text="Demander un devis" /> <ArrowRight size={14} />
                 </a>
               </div>
             </div>
@@ -221,8 +221,8 @@ function TechSection() {
   return (
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'left', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(2.8rem,5.5vw,4.4rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
             <GhostTitle text="DES TECHNOLOGIES ÉPROUVÉES" />
             Des technologies <GreenUnderline><span className="text-gradient">éprouvées</span></GreenUnderline>
           </h2>

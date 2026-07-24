@@ -1,9 +1,9 @@
-'use client'
+﻿'use client'
 import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Code, Check, Globe, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, LazyImg, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, LazyImg, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
 
@@ -201,12 +201,12 @@ function ProjectScrollSlide({ project, index, total, T }) {
 
           {project.url ? (
             <a href={project.url} target="_blank" rel="noreferrer" className="fc-cta">
-              <Globe size={15} /> Voir le projet
+              <Globe size={15} /> <HoverSlideText text="Voir le projet" />
               <ArrowUpRight size={14} />
             </a>
           ) : (
             <span className="fc-cta" style={{ opacity: .6, cursor: 'default', pointerEvents: 'none' }}>
-              <Code size={15} /> Démo locale
+              <Code size={15} /> <HoverSlideText text="Démo locale" />
             </span>
           )}
         </div>
@@ -366,7 +366,7 @@ function StackedRealisations() {
         .fc-cta {
           display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
           background: #88ca53; color: #04140a;
-          font-family: 'JetBrains Mono',monospace; font-size: .82rem; font-weight: 700; letter-spacing: .05em; text-transform: uppercase;
+          font-family: 'Barlow Condensed',sans-serif; font-style: italic; font-size: .82rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase;
           text-decoration: none; border: 2.5px solid #04140a; border-radius: 999px;
           box-shadow: 4px 4px 0 #04140a;
           transition: background .15s, color .15s, border-color .15s, transform .15s, box-shadow .15s; align-self: flex-start;
@@ -468,7 +468,7 @@ function ProjectsIntro() {
         {/* Titre de section */}
         <h2 className="section-title-big" style={{
           position: 'relative',
-          fontSize: 'clamp(2.8rem,5.5vw,4.4rem)',
+          fontSize: 'clamp(3.4rem,6.5vw,5.6rem)',
           color: T.textMain,
           marginBottom: '2.5rem',
         }}>

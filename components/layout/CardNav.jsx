@@ -7,7 +7,6 @@ import Image from 'next/image'
 import { Moon, Sun, Orbit } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { HoverSlideText } from '@/components/ui/index'
-import { useGhostCycle } from './useGhostCycle'
 import TransitionLink from './TransitionLink'
 import { useBlobTransition } from './BlobTransition'
 import './CardNav.css'
@@ -61,21 +60,13 @@ const ArrowIcon = () => (
   </svg>
 )
 
-/* ── Lien de carte avec ghost-cycle text au survol (même mécanique que StaggeredMenu) ── */
+/* ── Lien de carte, texte sous effet V-Slide au survol ── */
 function CardLinkWithGhost({ href, label, sub, onClick }) {
-  const ghost = useGhostCycle(label.toUpperCase())
   return (
-    <TransitionLink href={href} className="aka-card-link" onClick={onClick} onMouseEnter={ghost.play}>
+    <TransitionLink href={href} className="aka-card-link" onClick={onClick}>
       <ArrowIcon />
       <span className="aka-card-link-textWrap">
-        <span className="aka-card-link-label">{label}</span>
-        <span className="aka-card-link-ghost" aria-hidden="true">
-          <span className="aka-card-ghost-cycle">
-            <span className="aka-card-ghost-inner" ref={ghost.innerRef}>
-              {ghost.lines.map((l, i) => <span className="aka-card-ghost-line" key={i}>{l}</span>)}
-            </span>
-          </span>
-        </span>
+        <span className="aka-card-link-label"><HoverSlideText text={label} /></span>
         <em className="aka-link-sub">{sub}</em>
       </span>
     </TransitionLink>

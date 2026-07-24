@@ -1,10 +1,10 @@
-'use client'
+﻿'use client'
 import { useRef, useState, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { Clock, ArrowRight, Tag, Search, BookOpen, TrendingUp, Globe, ShoppingCart, Code, Zap } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline } from '@/components/ui/index'
+import { GhostTitle, MarqueeStrip, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
 
@@ -118,11 +118,11 @@ function FeaturedPost() {
             <p style={{ fontSize: '.85rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.8rem' }}>{post.excerpt}</p>
             {post.linkedinUrl ? (
               <a href={post.linkedinUrl} target="_blank" rel="noreferrer" className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
-                Voir sur LinkedIn <ArrowRight size={14} />
+                <HoverSlideText text="Voir sur LinkedIn" /> <ArrowRight size={14} />
               </a>
             ) : (
               <Link href={`/blog/${post.slug}`} className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
-                Lire l'article <ArrowRight size={14} />
+                <HoverSlideText text="Lire l'article" /> <ArrowRight size={14} />
               </Link>
             )}
           </div>
@@ -151,7 +151,7 @@ function BlogGrid() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         {/* Section header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
             <GhostTitle text="TOUS LES ARTICLES" />
             Tous les <GreenUnderline><span className="text-gradient">articles</span></GreenUnderline>
           </h2>
@@ -272,7 +272,7 @@ function Newsletter() {
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
             <Zap size={24} style={{ color: T.green }} />
           </div>
-          <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(1.9rem,7vw,2.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
             <GhostTitle text="RESTEZ INFORMÉ DES DERNIÈRES TENDANCES" />
             Restez informé des dernières tendances
           </h2>
@@ -292,7 +292,7 @@ function Newsletter() {
                 onBlur={e => e.target.style.borderColor = T.border}
               />
               <button className="btn-raised" onClick={() => email && setDone(true)} style={{ flexShrink: 0, padding: '.85rem 1.4rem', fontSize: '.84rem' }}>
-                S'abonner
+                <HoverSlideText text="S'abonner" />
               </button>
             </div>
           )}

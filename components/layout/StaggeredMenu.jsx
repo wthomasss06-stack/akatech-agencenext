@@ -5,7 +5,6 @@ import { Moon, Sun } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useTheme } from '@/lib/theme'
 import { HoverSlideText } from '@/components/ui/index'
-import { useGhostCycle } from './useGhostCycle'
 import TransitionLink from './TransitionLink'
 import './StaggeredMenu.css'
 
@@ -20,8 +19,6 @@ import './StaggeredMenu.css'
    ═══════════════════════════════════════════════ */
 
 function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
-  const ghost = useGhostCycle(it.label.toUpperCase())
-
   return (
     <li className="sm-panel-itemWrap" key={it.href + idx}>
       <TransitionLink
@@ -29,20 +26,9 @@ function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
         href={it.href}
         aria-label={it.label}
         data-index={idx + 1}
-        onMouseEnter={ghost.play}
         onClick={closeMenu}
       >
-        <span className="sm-panel-itemLabel">{it.label}</span>
-
-        <span className="sm-panel-item-ghost" aria-hidden="true">
-          <span className="sm-ghost-cycle-wrap">
-            <span className="sm-ghost-cycle-inner" ref={ghost.innerRef}>
-              {ghost.lines.map((l, i) => (
-                <span className="sm-ghost-cycle-line" key={i}>{l}</span>
-              ))}
-            </span>
-          </span>
-        </span>
+        <span className="sm-panel-itemLabel"><HoverSlideText text={it.label} /></span>
 
         <span className="sm-panel-item-arrow" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
