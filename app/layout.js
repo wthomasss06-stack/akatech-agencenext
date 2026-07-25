@@ -1,4 +1,4 @@
-import './globals.css'
+﻿import './globals.css'
 import { ThemeProvider } from '@/lib/theme'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -7,6 +7,7 @@ import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
 import AIAssistant from '@/components/ui/AIAssistant'
 import VisitorTracker from '@/components/ui/VisitorTracker'
+import { Analytics } from '@vercel/analytics/next'
 import { PageTransitionProvider } from '@/components/layout/PageTransition'
 import { BlobTransitionProvider } from '@/components/layout/BlobTransition'
 
@@ -145,6 +146,7 @@ export default function RootLayout({ children }) {
               <BackToTop />
               <AIAssistant />
               <VisitorTracker />
+              <Analytics />
             </BlobTransitionProvider>
           </PageTransitionProvider>
         </ThemeProvider>
