@@ -176,14 +176,15 @@ body.light-mode .btn-raised:active {
   box-shadow: 1px 1px 0px #08130a;
 }
 body.light-mode .btn-ghost {
-  color: #ffffff;
-  border-color: #ffffff;
-  box-shadow: 4px 4px 0px #ffffff;
+  color: #5f9137;
+    border: 1px solid rgba(95,145,55,.35);
+    box-shadow: none;
 }
 body.light-mode .btn-ghost:hover {
-  background: rgba(0,0,0,.05);
-  transform: translate(-3px,-3px);
-  box-shadow: 7px 7px 0px #ffffff;
+  background: rgba(95,145,55,.07);
+    border-color: #5f9137;
+    transform: translateY(-2px);
+    box-shadow: none;
 }
 body.light-mode .btn-ghost:active {
   transform: translate(2px,2px);
