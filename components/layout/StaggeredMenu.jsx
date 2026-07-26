@@ -346,7 +346,8 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
               href="https://wa.me/2250142507750"
               target="_blank"
               rel="noreferrer"
-              className="sm-panel-cta"
+              className="btn-raised"
+              style={{ width: '100%', justifyContent: 'center' }}
               onClick={closeMenu}
             >
               <HoverSlideText text="Démarrer un projet" />

@@ -178,7 +178,7 @@ export default function CardNav() {
           <div className="aka-nav-right">
             <button
               onClick={handleExplorerToggle}
-              className={'aka-explorer-btn' + (inExplorer ? ' is-active' : '')}
+              className={(inExplorer ? 'btn-raised btn-sm' : 'btn-ghost btn-sm')}
               title={inExplorer ? "Retour au site" : "Mode Explorer — globe des projets"}
               aria-pressed={inExplorer}
               type="button"
@@ -189,7 +189,7 @@ export default function CardNav() {
             <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? 'Mode sombre' : 'Mode clair'} type="button">
               {T.light ? <Moon size={13} /> : <Sun size={13} />}
             </button>
-            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="aka-nav-cta">
+            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised btn-sm">
               <HoverSlideText text="DEMARRER MON PROJET" />
             </a>
           </div>

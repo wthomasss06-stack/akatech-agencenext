@@ -342,30 +342,6 @@
   margin-top: 1.5rem;
   border-top: 1px solid rgba(136,202,83,.14);
 }
-.sm-panel-cta {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: .5rem;
-  width: 100%;
-  padding: 1rem;
-  border-radius: 999px;
-  border: 2px solid #fff;
-  background: linear-gradient(135deg, #88ca53, #5a9e34);
-  color: #04140a;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-style: italic;
-  font-size: .9rem;
-  text-decoration: none;
-  box-shadow: 4px 4px 0px #fff;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.sm-panel-cta:hover { transform: translate(-2px,-2px); box-shadow: 6px 6px 0px #fff; }
-.sm-panel-cta:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
-.light-mode .sm-panel-cta { border-color: #08130a; box-shadow: 4px 4px 0px #08130a; }
-.light-mode .sm-panel-cta:hover { box-shadow: 6px 6px 0px #08130a; }
-.light-mode .sm-panel-cta:active { box-shadow: 1px 1px 0px #08130a; }
 .sm-panel-footer-sub {
   text-align: center;
   margin-top: .7rem;
@@ -401,17 +377,17 @@
 
 /* Classe ajoutée via JS dès la sortie du hero */
 .sm-header--scrolled {
-  background: rgba(2, 10, 5, 0.92);
+  background: rgba(2, 10, 5, 0.35);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
-  border-bottom: 3px solid #fff;
-  box-shadow: 0 4px 0px #fff;
+  border-bottom: none;
+  box-shadow: none;
 }
 
 .light-mode .sm-header--scrolled {
-  background: rgba(248, 248, 248, 0.94);
-  border-bottom-color: #08130a;
-  box-shadow: 0 4px 0px #08130a;
+  background: rgba(248, 248, 248, 0.35);
+  border-bottom: none;
+  box-shadow: none;
 }
 
 .sm-header-logo {

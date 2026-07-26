@@ -191,15 +191,12 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                   {project.title}
                 </h3>
                 {project.url ? (
-                  <a href={project.url} target="_blank" rel="noreferrer"
-                    style={{ display: 'flex', alignItems: 'center', gap: '.35rem', fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.65rem', fontWeight: 900, color: '#88ca53', textDecoration: 'none', flexShrink: 0, padding: '.32rem .85rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', transition: 'all .2s', whiteSpace: 'nowrap' }}
-                    onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)'; e.currentTarget.style.borderColor = '#88ca53' }}
-                    onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.08)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
+                  <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm" style={{ flexShrink: 0 }}>
                     <ExternalLink size={11} /> <HoverSlideText text="Voir le site" />
                   </a>
                 ) : (
-                  <span style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.6rem', color: T.textMuted, padding: '.32rem .85rem', borderRadius: 100, border: `1px solid ${T.border}`, whiteSpace: 'nowrap' }}>
-                    Démo locale
+                  <span className="btn-ghost btn-sm" style={{ opacity: .5, cursor: 'default', pointerEvents: 'none', flexShrink: 0 }}>
+                    <HoverSlideText text="Démo locale" />
                   </span>
                 )}
               </div>

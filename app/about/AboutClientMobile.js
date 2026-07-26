@@ -227,8 +227,7 @@ function FounderSection() {
           <div>
             <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.9rem', color: T.textMain, marginBottom: '.15rem' }}>M'Bollo Aka Elvis</div>
             <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.05em', marginBottom: '.45rem' }}>Dev Full-Stack · Fondateur, AKATech</div>
-            <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '.3rem', fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.65rem', fontWeight: 900, color: '#88ca53', textDecoration: 'none', padding: '.22rem .65rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)' }}>
+            <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer" className="btn-ghost btn-sm">
               <ExternalLink size={10} /> <HoverSlideText text="Me contacter" />
             </a>
           </div>

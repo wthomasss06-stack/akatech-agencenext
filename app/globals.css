@@ -151,6 +151,21 @@ body.light-mode .sku-card:hover {
   text-decoration: none;
   letter-spacing: .01em;
 }
+
+/* Variante compacte — mêmes 2 types, même couleur, juste plus petits
+   (nav, marquee, liens secondaires en carte). À combiner :
+   className="btn-raised btn-sm" ou "btn-ghost btn-sm" */
+.btn-raised.btn-sm, .btn-ghost.btn-sm {
+  padding: .5rem 1.15rem;
+  font-size: .7rem;
+  gap: .4rem;
+  box-shadow: 2px 2px 0px #fff;
+}
+.btn-raised.btn-sm:hover, .btn-ghost.btn-sm:hover { box-shadow: 4px 4px 0px #fff; }
+.btn-raised.btn-sm:active, .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px #fff; }
+body.light-mode .btn-raised.btn-sm, body.light-mode .btn-ghost.btn-sm { box-shadow: 2px 2px 0px #08130a; }
+body.light-mode .btn-raised.btn-sm:hover, body.light-mode .btn-ghost.btn-sm:hover { box-shadow: 4px 4px 0px #08130a; }
+body.light-mode .btn-raised.btn-sm:active, body.light-mode .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px #08130a; }
 .btn-ghost:hover {
   background: rgba(255,255,255,.08);
   transform: translate(-3px,-3px);

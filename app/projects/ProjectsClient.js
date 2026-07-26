@@ -200,12 +200,12 @@ function ProjectScrollSlide({ project, index, total, T }) {
           <h3 className="fc-desc" style={{ color: T.textSub }}>{project.desc}</h3>
 
           {project.url ? (
-            <a href={project.url} target="_blank" rel="noreferrer" className="fc-cta">
+            <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm" style={{ alignSelf: 'flex-start' }}>
               <Globe size={15} /> <HoverSlideText text="Voir le projet" />
               <ArrowUpRight size={14} />
             </a>
           ) : (
-            <span className="fc-cta" style={{ opacity: .6, cursor: 'default', pointerEvents: 'none' }}>
+            <span className="btn-ghost btn-sm" style={{ opacity: .6, cursor: 'default', pointerEvents: 'none', alignSelf: 'flex-start' }}>
               <Code size={15} /> <HoverSlideText text="Démo locale" />
             </span>
           )}
@@ -363,16 +363,6 @@ function StackedRealisations() {
         }
         .fc-tag:hover { background: rgba(136,202,83,.16); border-color: rgba(136,202,83,.6); }
         .fc-desc { font-size: .9rem; line-height: 1.7; max-width: 44ch; font-weight: 400; }
-        .fc-cta {
-          display: inline-flex; align-items: center; gap: 8px; padding: 14px 28px;
-          background: #88ca53; color: #04140a;
-          font-family: 'Barlow Condensed',sans-serif; font-style: italic; font-size: .82rem; font-weight: 900; letter-spacing: .05em; text-transform: uppercase;
-          text-decoration: none; border: 2.5px solid #04140a; border-radius: 999px;
-          box-shadow: 4px 4px 0 #04140a;
-          transition: background .15s, color .15s, border-color .15s, transform .15s, box-shadow .15s; align-self: flex-start;
-        }
-        .fc-cta:hover { background: transparent; color: #88ca53; border-color: #88ca53; transform: translate(-3px,-3px); box-shadow: 7px 7px 0 #88ca53; }
-        .fc-cta:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 #88ca53; }
 
         @media (max-width: 1100px) {
           .fc-grid { grid-template-columns: 1fr; gap: 5rem; }

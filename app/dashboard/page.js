@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
+  Trash2, AlertTriangle,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -211,6 +212,64 @@ function DetailModal({ conversation, onClose, T }) {
   )
 }
 
+// Confirmation custom (remplace window.confirm natif, non stylable) —
+// affiche le libellé de l'élément visé pour éviter un mauvais clic,
+// et désactive le bouton pendant l'appel réseau pour éviter un double-submit.
+function ConfirmModal({ target, onCancel, onConfirm, deleting, T }) {
+  if (!target) return null
+  return (
+    <div onClick={onCancel} style={{
+      position: 'fixed', inset: 0, zIndex: 10100, display: 'flex', alignItems: 'center', justifyContent: 'center',
+      background: 'rgba(0,0,0,.4)', padding: '1.2rem',
+    }}>
+      <div onClick={e => e.stopPropagation()} style={{
+        background: T.card, border: `1px solid ${T.border}`, borderRadius: 18, width: 'min(400px, 100%)',
+        boxShadow: '0 8px 24px rgba(60,64,67,.18), 0 2px 6px rgba(60,64,67,.12)',
+        padding: '1.5rem',
+      }}>
+        <div style={{ display: 'flex', gap: 12, marginBottom: '1.1rem' }}>
+          <div style={{
+            width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
+            background: 'rgba(217,48,37,.1)', color: '#d93025',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <AlertTriangle size={18} />
+          </div>
+          <div>
+            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.1rem', color: T.textMain }}>
+              Supprimer {target.type === 'lead' ? 'ce lead' : 'cette conversation'} ?
+            </div>
+            <div style={{ fontSize: '.8rem', color: T.textSub, marginTop: 4 }}>
+              {target.label}
+            </div>
+          </div>
+        </div>
+        <div style={{ fontSize: '.78rem', color: T.textMuted, marginBottom: '1.3rem' }}>
+          {target.type === 'lead'
+            ? "Le lead sera supprimé définitivement. La conversation associée n'est pas touchée."
+            : 'La conversation et tous ses messages seront supprimés définitivement.'}
+          {' '}Cette action est irréversible.
+        </div>
+        <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
+          <button onClick={onCancel} disabled={deleting} style={{
+            background: 'none', border: `1px solid ${T.border}`, borderRadius: 100,
+            padding: '.55rem 1.1rem', color: T.textSub, cursor: 'pointer', fontSize: '.82rem', fontWeight: 700,
+          }}>
+            Annuler
+          </button>
+          <button onClick={onConfirm} disabled={deleting} style={{
+            background: '#d93025', border: '1px solid #d93025', borderRadius: 100,
+            padding: '.55rem 1.1rem', color: '#fff', cursor: deleting ? 'default' : 'pointer', fontSize: '.82rem', fontWeight: 700,
+            display: 'flex', alignItems: 'center', gap: 6, opacity: deleting ? .7 : 1,
+          }}>
+            <Trash2 size={13} /> {deleting ? 'Suppression…' : 'Supprimer'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Valeurs par défaut si /api/stats renvoie un objet où une section
 // manque (ex: la requête visiteurs échoue côté serveur pendant que le
 // reste réussit) : stats existe alors, mais stats.visitors non — d'où
@@ -257,6 +316,8 @@ export default function DashboardPage() {
   const [convPagination, setConvPagination] = useState(null)
   const [convSearch, setConvSearch] = useState('')
   const [selectedConversation, setSelectedConversation] = useState(null)
+  const [confirmTarget, setConfirmTarget] = useState(null)
+  const [deleting, setDeleting] = useState(false)
 
   const [leads, setLeads] = useState([])
   const [leadPage, setLeadPage] = useState(1)
@@ -322,6 +383,26 @@ export default function DashboardPage() {
       body: JSON.stringify({ id, status }),
     })
     loadLeads()
+  }
+
+  async function confirmDeletion() {
+    if (!confirmTarget) return
+    setDeleting(true)
+    try {
+      if (confirmTarget.type === 'lead') {
+        await fetch(`/api/leads?id=${confirmTarget.id}`, { method: 'DELETE' })
+        loadLeads()
+      } else {
+        await fetch(`/api/conversations/${confirmTarget.id}`, { method: 'DELETE' })
+        if (selectedConversation?.id === confirmTarget.id) setSelectedConversation(null)
+        loadConversations()
+      }
+    } catch (err) {
+      console.error('Erreur suppression:', err)
+    } finally {
+      setDeleting(false)
+      setConfirmTarget(null)
+    }
   }
 
   const v = stats?.visitors
@@ -536,21 +617,34 @@ export default function DashboardPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {conversations.length === 0 && <div style={{ color: T.textMuted, fontSize: '.82rem', padding: '1rem 0' }}>Aucune conversation.</div>}
                   {conversations.map((c) => (
-                    <button key={c.id} onClick={() => openConversation(c.id)} style={{
-                      textAlign: 'left', ...CARD, borderRadius: 14,
-                      padding: '.9rem 1rem', cursor: 'pointer', color: T.textMain,
+                    <div key={c.id} style={{
+                      ...CARD, borderRadius: 14,
+                      padding: '.9rem 1rem', color: T.textMain,
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 10,
                     }}>
-                      <div style={{ minWidth: 0 }}>
+                      <button onClick={() => openConversation(c.id)} style={{
+                        flex: 1, minWidth: 0, textAlign: 'left', background: 'none', border: 'none', padding: 0,
+                        cursor: 'pointer', color: T.textMain, font: 'inherit',
+                      }}>
                         <div style={{ fontSize: '.82rem', fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {c.messages?.[0]?.content || '(vide)'}
                         </div>
                         <div style={{ fontSize: '.7rem', color: T.textMuted, marginTop: 3 }}>
                           {new Date(c.createdAt).toLocaleString('fr-FR')} · {c._count?.messages ?? 0} messages
                         </div>
-                      </div>
+                      </button>
                       <StatusPill status={c.status} T={T} />
-                    </button>
+                      <button
+                        onClick={() => setConfirmTarget({ type: 'conversation', id: c.id, label: c.messages?.[0]?.content?.slice(0, 60) || '(vide)' })}
+                        title="Supprimer cette conversation"
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0,
+                          color: T.textMuted, padding: 6, display: 'flex', borderRadius: 8,
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
                   ))}
                 </div>
                 <Pagination pagination={convPagination} onPage={setConvPage} T={T} />
@@ -604,6 +698,16 @@ export default function DashboardPage() {
                           <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                         ))}
                       </select>
+                      <button
+                        onClick={() => setConfirmTarget({ type: 'lead', id: lead.id, label: `${lead.name} · ${lead.contact}` })}
+                        title="Supprimer ce lead"
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0,
+                          color: T.textMuted, padding: 6, display: 'flex', borderRadius: 8,
+                        }}
+                      >
+                        <Trash2 size={14} />
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -615,6 +719,7 @@ export default function DashboardPage() {
       </div>
 
       <DetailModal conversation={selectedConversation} onClose={() => setSelectedConversation(null)} T={T} />
+      <ConfirmModal target={confirmTarget} onCancel={() => !deleting && setConfirmTarget(null)} onConfirm={confirmDeletion} deleting={deleting} T={T} />
     </div>
   )
 }

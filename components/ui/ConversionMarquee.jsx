@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 /**
  * ConversionMarquee — "CONVERSION CTA"
  * Remplace le MarqueeStrip après WhyUs (desktop) / Process (mobile).
@@ -6,6 +6,7 @@
  * continu + CTA fixe et pulsant qui ne défile jamais.
  */
 import { ArrowRight, Bolt, Clock3, PhoneCall } from 'lucide-react'
+import { HoverSlideText } from '@/components/ui/index'
 import './ConversionMarquee.css'
 
 const ITEMS = [
@@ -43,8 +44,8 @@ export default function ConversionMarquee() {
       </div>
 
       <div className="ccta-fixed">
-        <a href={WA_HREF} target="_blank" rel="noreferrer" className="ccta-btn">
-          Démarrer mon projet
+        <a href={WA_HREF} target="_blank" rel="noreferrer" className="btn-raised btn-sm">
+          <HoverSlideText text="Démarrer mon projet" />
           <ArrowRight size={15} strokeWidth={2.4} />
         </a>
       </div>

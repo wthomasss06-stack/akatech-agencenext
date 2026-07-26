@@ -377,10 +377,7 @@ function StatsFounderSection() {
             <div>
               <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.95rem', color: T.textMain, marginBottom: '.2rem' }}>M'Bollo Aka Elvis</div>
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: '.55rem' }}>Développeur Full-Stack · Fondateur, AKATech</div>
-              <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '.35rem', fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.7rem', fontWeight: 900, color: '#88ca53', textDecoration: 'none', padding: '.25rem .7rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.3)', transition: 'all .2s' }}
-                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(136,202,83,.2)'; e.currentTarget.style.borderColor = '#88ca53' }}
-                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(136,202,83,.1)'; e.currentTarget.style.borderColor = 'rgba(136,202,83,.3)' }}>
+              <a href="https://mbolloaka-dev.vercel.app/" target="_blank" rel="noreferrer" className="btn-ghost btn-sm">
                 <ExternalLink size={11} /> <HoverSlideText text="Me contacter" />
               </a>
             </div>
