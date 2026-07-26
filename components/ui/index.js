@@ -256,6 +256,7 @@ export function MicroCursor() {
 // ── BACK TO TOP — visible uniquement à l'arrivée sur le Footer ─
 export function BackToTop() {
   const T = useTheme()
+  const pathname = usePathname()
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
@@ -269,7 +270,7 @@ export function BackToTop() {
     return () => observer.disconnect()
   }, [])
 
-  if (!visible) return null
+  if (!visible || pathname?.startsWith('/explorer')) return null
   return (
     <motion.button
       initial={{ opacity: 0, scale: .6, y: 20 }}
@@ -340,6 +341,8 @@ export function FloatingWA() {
       ctx.revert()
     }
   }, [pathname])
+
+  if (pathname?.startsWith('/explorer')) return null
 
   return (
     <div ref={wrapRef} style={{ position: 'fixed', bottom: '2rem', right: '2rem', zIndex: 9000 }}>

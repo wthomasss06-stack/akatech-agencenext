@@ -237,15 +237,21 @@ function Hero() {
 
         <HeroSloganCycle />
 
+        <motion.p
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.02rem', color: 'rgba(255,255,255,.68)', maxWidth: 560, margin: '0 auto 1.7rem', lineHeight: 1.55 }}>
+          Lancez un site professionnel qui inspire confiance et déclenche des demandes.
+        </motion.p>
+
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.8rem', justifyContent: 'center' }}>
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '-2.2rem', justifyContent: 'center', position: 'relative', zIndex: 30 }}>
           <motion.a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
             initial={{ boxShadow: '6px 6px 0px #fff' }}
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
-            Démarrer mon projet <ArrowRight size={16} />
+            <HoverSlideText text="Démarrer mon projet" /> <ArrowRight size={16} />
           </motion.a>
           <motion.div
             initial={{ boxShadow: '6px 6px 0px #fff' }}
@@ -253,12 +259,12 @@ function Hero() {
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
             style={{ display: 'inline-block', borderRadius: 999 }}>
             <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
-              Prenez RDV
+              <HoverSlideText text="Prenez RDV" />
             </Link>
           </motion.div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }} style={{ paddingTop: '3.4rem' }}>
           <CircularProjectsGallery />
         </motion.div>
 

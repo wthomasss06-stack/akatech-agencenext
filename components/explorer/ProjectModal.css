@@ -1,4 +1,4 @@
-/* ═══════════════════════════════════════════════
+﻿/* ═══════════════════════════════════════════════
    ProjectGlobeModal.css
    Modal projet du globe Explorer — adapté du
    .tunnel-modal (elvis-portfolio / App.jsx) : image
@@ -119,19 +119,6 @@
   display: flex; flex-wrap: wrap; gap: .8rem;
   margin-top: auto; padding-top: .6rem;
 }
-.pgm-cta {
-  display: inline-flex; align-items: center; gap: .55rem;
-  padding: .85rem 1.5rem; border-radius: 999px;
-  background: linear-gradient(135deg, #88ca53, #5a9e34);
-  color: #04140a; font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; font-size: .78rem; letter-spacing: .02em; text-transform: uppercase;
-  text-decoration: none; transition: transform .25s ease, box-shadow .25s ease;
-  box-shadow: 0 4px 16px rgba(136,202,83,.22);
-}
-.pgm-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(136,202,83,.38); }
-.pgm-cta svg { transition: transform .3s cubic-bezier(.22,1,.36,1); }
-.pgm-cta:hover svg { transform: translateX(3px) rotate(-45deg); }
-
 .pgm-cta-muted {
   display: inline-flex; align-items: center; gap: .55rem;
   padding: .85rem 1.5rem; border-radius: 999px;

@@ -78,20 +78,24 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
 }
 
 // ── CIRCULAR PROJECTS GALLERY — adapté mobile (ratio 16:9, largeur réduite) ──
-function CircularProjectsGallery() {
+function CircularProjectsGallery({ items, draggable = false, cardW = 220, intervalMs = 2800 }) {
   const T = useTheme()
-  const GALLERY_ITEMS = [
+  const DEFAULT_ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12),
     ...PROJECTS.filter(p => p.id === 19),
   ]
+  const GALLERY_ITEMS = items || DEFAULT_ITEMS
   const [active, setActive] = useState(0)
+  const pausedRef = useRef(false)
 
   useEffect(() => {
-    const id = setInterval(() => setActive(a => (a + 1) % GALLERY_ITEMS.length), 2800)
+    const id = setInterval(() => {
+      if (!pausedRef.current) setActive(a => (a + 1) % GALLERY_ITEMS.length)
+    }, intervalMs)
     return () => clearInterval(id)
-  }, [GALLERY_ITEMS.length])
+  }, [GALLERY_ITEMS.length, intervalMs])
 
   const order = GALLERY_ITEMS.map((_, i) => {
     let rel = i - active
@@ -101,12 +105,37 @@ function CircularProjectsGallery() {
   })
 
   // Dimensions mobiles : cartes plus petites, ratio natif 1600×815
-  const CARD_W = 220
-  const CARD_H = Math.round(220 * (815 / 1600))  // ≈ 112px
+  const CARD_W = cardW
+  const CARD_H = Math.round(CARD_W * (815 / 1600))
   const STEP   = CARD_W * 0.68
+
+  // Glissement manuel (mobile) — une seule poignée invisible plutôt que
+  // de rendre chaque carte draggable (elles ont déjà leur propre anim
+  // x/rotate scriptée par `active`, les deux entreraient en conflit).
+  // Relâchement : offset ou vitesse suffisants → avance/recule d'une carte,
+  // sinon ça "rebondit" élastiquement (dragElastic) et reprend l'auto-scroll.
+  const onDragEnd = (e, info) => {
+    pausedRef.current = false
+    const { offset, velocity } = info
+    if (offset.x < -40 || velocity.x < -400) {
+      setActive(a => (a + 1) % GALLERY_ITEMS.length)
+    } else if (offset.x > 40 || velocity.x > 400) {
+      setActive(a => (a - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length)
+    }
+  }
 
   return (
     <div style={{ position: 'relative', height: CARD_H + 48, display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 900, marginTop: '1.2rem' }}>
+      {draggable && (
+        <motion.div
+          drag="x"
+          dragElastic={0.5}
+          dragConstraints={{ left: 0, right: 0 }}
+          onDragStart={() => { pausedRef.current = true }}
+          onDragEnd={onDragEnd}
+          style={{ position: 'absolute', inset: 0, zIndex: 20, touchAction: 'pan-y' }}
+        />
+      )}
       {GALLERY_ITEMS.map((p, i) => {
         const rel    = order[i]
         const abs    = Math.abs(rel)
@@ -149,6 +178,17 @@ function CircularProjectsGallery() {
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}>{p.title}</div>
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: 'rgba(136,202,83,.9)', marginTop: '.05rem' }}>{p.type}</div>
             </div>
+            {draggable && isActive && p.url && (
+              <a href={p.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+                style={{
+                  position: 'absolute', top: '.5rem', right: '.5rem', zIndex: 21,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: 26, height: 26, borderRadius: '50%',
+                  background: 'rgba(136,202,83,.92)', color: '#04140a',
+                }}>
+                <ExternalLink size={12} />
+              </a>
+            )}
           </motion.div>
         )
       })}
@@ -291,15 +331,21 @@ function Hero() {
 
         <HeroSloganCycle />
 
+        <motion.p
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
+          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.92rem', color: 'rgba(255,255,255,.68)', maxWidth: 420, margin: '0 auto 1.4rem', lineHeight: 1.55 }}>
+          Lancez un site professionnel qui inspire confiance et déclenche des demandes.
+        </motion.p>
+
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '1.8rem', justifyContent: 'center' }}>
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '-1.6rem', justifyContent: 'center', position: 'relative', zIndex: 30 }}>
           <motion.a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
             initial={{ boxShadow: '6px 6px 0px #fff' }}
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
-            Démarrer mon projet <ArrowRight size={16} />
+            <HoverSlideText text="Démarrer mon projet" /> <ArrowRight size={16} />
           </motion.a>
           <motion.div
             initial={{ boxShadow: '6px 6px 0px #fff' }}
@@ -307,12 +353,12 @@ function Hero() {
             whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
             style={{ display: 'inline-block', borderRadius: 999 }}>
             <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
-              Prenez RDV
+              <HoverSlideText text="Prenez RDV" />
             </Link>
           </motion.div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }} style={{ paddingTop: '2.8rem' }}>
           <CircularProjectsGallery />
         </motion.div>
       </div>
@@ -713,9 +759,6 @@ function ProjectsSection() {
   const T = useTheme()
   const ref     = useRef(null)
   const inView  = useInView(ref, { once: true, margin: '-60px' })
-  const wrapRef = useRef(null)   // runway de scroll pour le pin
-  const gridRef = useRef(null)   // grille — reçoit la profondeur 3D scroll-driven
-  const cellRefs = useRef([])
 
   const ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
@@ -723,188 +766,27 @@ function ProjectsSection() {
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
     ...PROJECTS.filter(p => p.id === 19),
   ]
-  // Profondeurs par carte — même principe que ArchiveTunnelSection desktop, amplitude réduite pour mobile
-  const DEPTHS = [0, -90, -30, -140, -60, -110, -75]
-
-  // ── Pin + tunnel 3D + colorisation au scroll (miroir de ArchiveTunnelSection desktop) ──
-  const lastProgressRef = useRef(null)
-  const lastGrayRef = useRef([])
-  useEffect(() => {
-    let raf = null
-    const onScroll = () => {
-      if (raf) return
-      raf = requestAnimationFrame(() => {
-        raf = null
-        const wrap = wrapRef.current
-        const grid = gridRef.current
-        if (!wrap || !grid) return
-        const winH = window.visualViewport?.height || window.innerHeight
-        const top  = wrap.getBoundingClientRect().top
-        const pinDistance = wrap.offsetHeight - winH
-        const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
-
-        // Rien n'a bougé (au repos avant/après le runway) → on ne touche à aucun style
-        if (progress === lastProgressRef.current) return
-        lastProgressRef.current = progress
-
-        grid.style.transform = `translateZ(${progress * 340}px) rotateX(${progress * 8}deg)`
-        grid.style.opacity   = String(progress > 0.92 ? Math.max(0, 1 - (progress - 0.92) / 0.08) : 1)
-
-        cellRefs.current.forEach((cell, i) => {
-          if (!cell) return
-          const start = i * 0.05
-          const local = Math.max(0, Math.min(1, (progress - start) / 0.4))
-          const gray = (1 - local).toFixed(2)
-          // Carte déjà 'posée' (100% couleur ou 100% grayscale) sur cette frame → on saute le repaint
-          if (lastGrayRef.current[i] === gray) return
-          lastGrayRef.current[i] = gray
-          cell.style.filter = `grayscale(${gray}) contrast(1.04)`
-        })
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => {
-      window.removeEventListener('scroll', onScroll)
-      if (raf) cancelAnimationFrame(raf)
-    }
-  }, [])
-
-  // ── Tap pour dévoiler résultat + lien ──
-  const [active, setActive] = useState(null)
 
   return (
-    <section ref={ref} style={{ background: T.bg, position: 'relative' }}>
+    <section ref={ref} style={{ background: T.bg, position: 'relative', padding: '7rem 5% 5rem' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
 
-      {/* Runway de scroll pour le pin (hauteur réduite vs desktop : format mobile) */}
-      <div ref={wrapRef} style={{ position: 'relative', height: '190dvh' }}>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
+          <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
+          Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+        </h2>
+        <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
+          — glissez pour naviguer
+        </p>
+      </motion.div>
 
-        {/* Titre — au-dessus du pin, défile normalement */}
-        <div style={{ padding: '7rem 5% 0', position: 'relative', zIndex: 1 }}>
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
-              <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
-              Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
-            </h2>
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
-              — scroll pour révéler en couleur
-            </p>
-          </motion.div>
-        </div>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }} style={{ position: 'relative', zIndex: 1 }}>
+        <CircularProjectsGallery items={ITEMS} draggable cardW={260} intervalMs={3400} />
+      </motion.div>
 
-        {/* Zone pinnée — tunnel 3D */}
-        <div style={{ position: 'sticky', top: 0, height: '100dvh', overflow: 'hidden', perspective: 900, display: 'flex', alignItems: 'center', zIndex: 1 }}>
-          <style>{`
-            .archive-grid-mobile {
-              display: grid;
-              grid-template-columns: 1fr 1fr;
-              grid-template-rows: repeat(4, 1fr);
-              gap: clamp(.5rem, 2vw, .9rem);
-            }
-            /* La 5e carte prend 2 colonnes pour équilibrer */
-            .archive-grid-mobile > div:nth-child(5) { grid-column: span 2; }
-          `}</style>
-
-          <div ref={gridRef} className="archive-grid-mobile" style={{ width: '100%', height: '80vh', padding: '0 6vw', transformStyle: 'preserve-3d', willChange: 'transform' }}>
-            {ITEMS.map((p, i) => (
-              <motion.div
-                key={p.id}
-                initial={{ opacity: 0, y: 24 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: .5, delay: i * .06, ease: [.22,1,.36,1] }}
-                style={{ height: '100%' }}
-              >
-                <div
-                  ref={el => { cellRefs.current[i] = el }}
-                  onClick={() => setActive(active === i ? null : i)}
-                  style={{
-                    position: 'relative',
-                    width: '100%', height: '100%',
-                    borderRadius: 10,
-                    overflow: 'hidden',
-                    border: active === i ? '1.5px solid rgba(136,202,83,.6)' : '1px solid rgba(136,202,83,.25)',
-                    boxShadow: active === i ? '0 0 0 3px rgba(136,202,83,.12)' : 'none',
-                    filter: 'grayscale(1) contrast(1.04)',
-                    transform: `translateZ(${DEPTHS[i] || 0}px)`,
-                    transition: 'border-color .25s, box-shadow .25s',
-                    cursor: 'pointer',
-                    willChange: 'filter, transform',
-                  }}
-                >
-                  <LazyImg
-                    src={p.img}
-                    alt={p.title}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', transition: 'transform .5s', transform: active === i ? 'scale(1.04)' : 'scale(1)' }}
-                  />
-
-                  {/* Overlay gradient bas */}
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 40%, rgba(0,0,0,.82) 100%)' }} />
-
-                  {/* Type badge */}
-                  <div style={{
-                    position: 'absolute', top: '.55rem', left: '.55rem',
-                    padding: '.18rem .55rem', borderRadius: 100,
-                    background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(136,202,83,.3)',
-                    fontFamily: "'JetBrains Mono',monospace", fontSize: '.54rem', fontWeight: 700, color: '#88ca53',
-                  }}>
-                    {p.type}
-                  </div>
-
-                  {/* Live badge */}
-                  {p.live && (
-                    <div style={{
-                      position: 'absolute', top: '.55rem', right: '.55rem',
-                      display: 'flex', alignItems: 'center', gap: '.25rem',
-                      padding: '.16rem .5rem', borderRadius: 100,
-                      background: 'rgba(136,202,83,.88)',
-                      fontFamily: "'JetBrains Mono',monospace", fontSize: '.48rem', color: '#fff', fontWeight: 700,
-                    }}>
-                      <span style={{ width: 4, height: 4, borderRadius: '50%', background: '#fff', display: 'inline-block', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                      LIVE
-                    </div>
-                  )}
-
-                  {/* Info bas */}
-                  <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.65rem .75rem' }}>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.62rem,2.5vw,.75rem)', fontWeight: 700, color: '#fff', lineHeight: 1.2, marginBottom: '.2rem' }}>
-                      {p.title}
-                    </div>
-
-                    {/* Result + lien — visibles au tap */}
-                    <AnimatePresence>
-                      {active === i && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
-                          transition={{ duration: .2 }}
-                          style={{ display: 'flex', alignItems: 'center', gap: '.4rem', marginTop: '.2rem', flexWrap: 'wrap' }}
-                        >
-                          {p.result && (
-                            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53' }}>
-                              {p.result}
-                            </span>
-                          )}
-                          {p.url && (
-                            <a href={p.url} target="_blank" rel="noreferrer"
-                              onClick={e => e.stopPropagation()}
-                              style={{ display: 'flex', alignItems: 'center', gap: '.2rem', fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.58rem', fontWeight: 900, color: '#fff', textDecoration: 'none', padding: '.14rem .45rem', borderRadius: 100, border: '1px solid rgba(136,202,83,.4)', background: 'rgba(136,202,83,.14)' }}>
-                              <ExternalLink size={8} /> Voir
-                            </a>
-                          )}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* CTA — hors du pin, flow normal */}
-      <div style={{ padding: '2.5rem 5% 7rem', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+      {/* CTA */}
+      <div style={{ padding: '2.5rem 0 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 }}>
           <Link href="/projects" className="btn-ghost" style={{ fontSize: '.88rem', padding: '.8rem 1.8rem' }}>
             <HoverSlideText text="Toutes les réalisations" /> <ArrowRight size={13} />

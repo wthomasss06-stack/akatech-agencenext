@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 /**
  * ProjectModal — fiche projet ouverte depuis une carte du tunnel
  * Explorer. Structure reprise du modal du tunnel projet
@@ -9,6 +9,7 @@
  */
 import { useEffect } from 'react'
 import { X, ArrowUpRight } from 'lucide-react'
+import { HoverSlideText } from '@/components/ui/index'
 import './ProjectModal.css'
 
 function statusInfo(p) {
@@ -81,8 +82,8 @@ export default function ProjectModal({ project, onClose }) {
 
           <div className="pgm-actions">
             {project.live && project.url ? (
-              <a href={project.url} target="_blank" rel="noreferrer" className="pgm-cta">
-                Voir le site <ArrowUpRight size={15} />
+              <a href={project.url} target="_blank" rel="noreferrer" className="btn-raised">
+                <HoverSlideText text="Voir le site" /> <ArrowUpRight size={15} />
               </a>
             ) : (
               <span className="pgm-cta-muted">

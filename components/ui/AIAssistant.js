@@ -1,5 +1,6 @@
-'use client'
+﻿'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -293,6 +294,7 @@ function LinkButton({ url, label }) {
 
 export default function AIAssistant() {
   const T = useTheme()
+  const pathname = usePathname()
   const reduceMotion = useReducedMotion()
   const [open, setOpen] = useState(false)
   const [messages, setMessages] = useState([{ role: 'assistant', content: GREETING }])
@@ -406,6 +408,8 @@ export default function AIAssistant() {
       send()
     }
   }
+
+  if (pathname?.startsWith('/explorer')) return null
 
   return (
     <>

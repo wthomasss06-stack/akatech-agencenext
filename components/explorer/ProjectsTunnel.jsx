@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 /**
  * ProjectsTunnel — mode Explorer AKATech
  * ─────────────────────────────────────────────────────────
@@ -30,6 +30,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowLeft } from 'lucide-react'
 import { PROJECTS } from '@/lib/data'
 import { useBlobTransition } from '@/components/layout/BlobTransition'
+import Logo from '@/components/ui/Logo'
 import ProjectModal from './ProjectModal'
 import './ProjectsTunnel.css'
 
@@ -478,7 +479,9 @@ export default function ProjectsTunnel() {
   return (
     <div ref={outerRef} className="pt-outer" style={{ height: `${SECTION_VH}vh` }}>
       <section ref={sectionRef} className="pt-section">
-        
+        <button className="pt-logo" onClick={handleBack} aria-label="Retour au site">
+          <Logo size={11} animate={false} />
+        </button>
 
         <div className="pt-section-label">
           <span className="pt-eyebrow">Mode Explorer</span>
