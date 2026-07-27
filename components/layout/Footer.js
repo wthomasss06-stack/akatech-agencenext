@@ -1,5 +1,6 @@
 ﻿'use client'
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Phone, Send } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
@@ -94,9 +95,12 @@ function AskAIStrip({ T }) {
 // en fond plein écran, nav-grid + AskAI en bas, wordmark géant en clôture.
 export default function Footer() {
   const T = useTheme()
+  const pathname = usePathname()
   const year = new Date().getFullYear()
   const border = 'rgba(255,255,255,.16)'
   const muted = 'rgba(255,255,255,.5)'
+
+  if (pathname?.startsWith('/explorer')) return null
 
   const lk = {
     fontSize: '.92rem', color: muted, transition: 'color .2s, padding-left .2s',

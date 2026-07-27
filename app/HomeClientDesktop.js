@@ -15,6 +15,7 @@ import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline, HoverSli
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
+import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
 
@@ -49,7 +50,7 @@ function CircularProjectsGallery() {
   const STEP   = CARD_W * 0.72                    // espacement entre centres
 
   return (
-    <div style={{ position: 'relative', height: CARD_H + 60, display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 1200 }}>
+    <div style={{ position: 'relative', height: CARD_H + 60, width: '100%', maxWidth: '100vw', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 1200 }}>
       {GALLERY_ITEMS.map((p, i) => {
         const rel    = order[i]
         const abs    = Math.abs(rel)
@@ -242,6 +243,28 @@ function Hero() {
           style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.02rem', color: 'rgba(255,255,255,.68)', maxWidth: 560, margin: '0 auto 1.7rem', lineHeight: 1.55 }}>
           Lancez un site professionnel qui inspire confiance et déclenche des demandes.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .4 }}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.85rem', marginBottom: '1.9rem' }}>
+          <AvatarGroup spacing={-11}>
+            {TESTIMONIALS.map(c => (
+              <Avatar key={c.name}>
+                <AvatarImage src={c.img} alt={c.name} />
+                <AvatarFallback>{c.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                <AvatarGroupTooltip>{c.name} — {c.role}<AvatarGroupTooltipArrow /></AvatarGroupTooltip>
+              </Avatar>
+            ))}
+          </AvatarGroup>
+          <div style={{ textAlign: 'left' }}>
+            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.85rem', color: '#fff', lineHeight: 1.15 }}>
+              Ils nous ont fait confiance
+            </div>
+            <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', color: '#88ca53' }}>
+              {PROJECTS.length}+ projets livrés
+            </div>
+          </div>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
@@ -1558,6 +1581,15 @@ function GeoSectionHome() {
   )
 }
 
+const FORM_STIFFNESS = 0.18
+const FORM_FRICTION = 0.65
+const FORM_PANEL_W = 680
+const FORM_PANEL_H = 560
+const FORM_BTN_CLOSED_W = 300
+const FORM_BTN_CLOSED_H = 62
+const FORM_BTN_OPEN_SIZE = 52
+const FORM_CORNER_GAP = 18
+
 function ProjectFormHome() {
   const T = useTheme()
   const ref = useRef(null)
@@ -1566,10 +1598,48 @@ function ProjectFormHome() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
   const inputStyle = { width: '100%', padding: '.6rem 0', background: 'transparent', border: 'none', borderBottom: `1px solid ${T.border}`, borderRadius: 0, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', outline: 'none', transition: 'border-color .25s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark' }
   const focusOn = e => { e.target.style.borderBottomColor = '#88ca53' }
   const focusOff = e => { e.target.style.borderBottomColor = T.border }
-  const [error, setError] = useState('')
+
+  // ── Morph bouton → panneau (port de ContactMorphButton.tsx, sans le
+  // suivi magnétique du curseur — ça n'a pas de sens pour une section
+  // inline, contrairement au widget flottant d'origine) ──
+  const wrapRef = useRef(null)
+  const panelRef = useRef(null)
+  const btnRef = useRef(null)
+  const [isExpanded, setIsExpanded] = useState(false)
+  const isExpandedRef = useRef(false)
+  const panelAnim = useRef({ currentW: 0, currentH: FORM_BTN_CLOSED_H, currentOpacity: 0, targetW: 0, targetH: FORM_BTN_CLOSED_H, targetOpacity: 0, vxW: 0, vxH: 0, vxO: 0 })
+  const btnAnim = useRef({ currentW: FORM_BTN_CLOSED_W, currentH: FORM_BTN_CLOSED_H, currentX: 0, currentY: 0, targetX: 0, targetY: 0, targetW: FORM_BTN_CLOSED_W, targetH: FORM_BTN_CLOSED_H, vxW: 0, vxH: 0, vxX: 0, vxY: 0 })
+
+  const getPanelWidth = () => (typeof window === 'undefined' ? FORM_PANEL_W : Math.min(FORM_PANEL_W, window.innerWidth - 64))
+
+  const openPanel = () => {
+    const w = getPanelWidth()
+    panelAnim.current.targetW = w
+    panelAnim.current.targetH = FORM_PANEL_H
+    panelAnim.current.targetOpacity = 1
+    btnAnim.current.targetW = FORM_BTN_OPEN_SIZE
+    btnAnim.current.targetH = FORM_BTN_OPEN_SIZE
+    btnAnim.current.targetX = w - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
+    btnAnim.current.targetY = FORM_PANEL_H - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
+    setIsExpanded(true)
+    isExpandedRef.current = true
+  }
+  const closePanel = () => {
+    panelAnim.current.targetW = 0
+    panelAnim.current.targetH = FORM_BTN_CLOSED_H
+    panelAnim.current.targetOpacity = 0
+    btnAnim.current.targetW = FORM_BTN_CLOSED_W
+    btnAnim.current.targetH = FORM_BTN_CLOSED_H
+    btnAnim.current.targetX = 0
+    btnAnim.current.targetY = 0
+    setIsExpanded(false)
+    isExpandedRef.current = false
+  }
+
   const handleSubmit = async () => {
     if (!form.name || !form.email || !form.message) return
     setSending(true)
@@ -1584,6 +1654,51 @@ function ProjectFormHome() {
     } finally { setSending(false) }
   }
 
+  const onBtnClick = () => {
+    if (!isExpanded) { openPanel(); return }
+    if (sent) { closePanel(); setTimeout(() => { setSent(false); setError('') }, 400); return }
+    if (!sending) handleSubmit()
+  }
+
+  // Fermeture au clic extérieur (jamais pendant un envoi en cours)
+  useEffect(() => {
+    const onDocMouseDown = (e) => {
+      if (!isExpandedRef.current || sending) return
+      if (wrapRef.current && !wrapRef.current.contains(e.target)) closePanel()
+    }
+    document.addEventListener('mousedown', onDocMouseDown)
+    return () => document.removeEventListener('mousedown', onDocMouseDown)
+  }, [sending])
+
+  // Boucle à ressort — identique à ContactMorphButton.tsx
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      const p = panelAnim.current
+      const b = btnAnim.current
+      p.vxW += (p.targetW - p.currentW) * FORM_STIFFNESS; p.vxW *= FORM_FRICTION; p.currentW += p.vxW
+      p.vxH += (p.targetH - p.currentH) * FORM_STIFFNESS; p.vxH *= FORM_FRICTION; p.currentH += p.vxH
+      p.vxO += (p.targetOpacity - p.currentOpacity) * FORM_STIFFNESS; p.vxO *= FORM_FRICTION; p.currentOpacity += p.vxO
+      b.vxW += (b.targetW - b.currentW) * FORM_STIFFNESS; b.vxW *= FORM_FRICTION; b.currentW += b.vxW
+      b.vxH += (b.targetH - b.currentH) * FORM_STIFFNESS; b.vxH *= FORM_FRICTION; b.currentH += b.vxH
+      b.vxX += (b.targetX - b.currentX) * FORM_STIFFNESS; b.vxX *= FORM_FRICTION; b.currentX += b.vxX
+      b.vxY += (b.targetY - b.currentY) * FORM_STIFFNESS; b.vxY *= FORM_FRICTION; b.currentY += b.vxY
+      if (panelRef.current) {
+        panelRef.current.style.width = `${p.currentW}px`
+        panelRef.current.style.height = `${p.currentH}px`
+        panelRef.current.style.opacity = String(p.currentOpacity)
+      }
+      if (btnRef.current) {
+        btnRef.current.style.width = `${b.currentW}px`
+        btnRef.current.style.height = `${b.currentH}px`
+        btnRef.current.style.transform = `translate3d(${b.currentX}px, ${b.currentY}px, 0)`
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
   return (
     <section ref={el => { ref.current = el; sectionRef.current = el }} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -1593,79 +1708,103 @@ function ProjectFormHome() {
             Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h2>
         </BlurReveal>
-        <WordRevealP sectionRef={sectionRef} text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit." greenWords={['formulaire', 'email', '24h', 'gratuit.']} extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />
+        <WordRevealP sectionRef={sectionRef} text="Cliquez pour ouvrir le formulaire — on vous recontacte par email sous 24h avec un devis gratuit." greenWords={['formulaire', 'email', '24h', 'gratuit.']} extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />
 
         <BlurReveal delay={0.15}>
-          <AnimatePresence mode="wait">
-            {sent ? (
-              <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: 'clamp(2rem,6vw,3rem) 1rem' }}>
-                <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 64, height: 64, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                  <Check size={30} style={{ color: '#88ca53' }} />
-                </motion.div>
-                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: 'clamp(1.1rem,3vw,1.4rem)', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
-                <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
-              </motion.div>
-            ) : (
-              <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.6rem', marginBottom: '1.6rem' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
-                    <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
-                    <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                  </div>
-                </div>
-
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.6rem', marginBottom: '1.6rem' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
-                    <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
-                    <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
-                      <option value="">Choisir...</option>
-                      <option value="site-vitrine">Conception de Site Web</option>
-                      <option value="e-commerce">E-commerce</option>
-                      <option value="application-web">Application Web / SaaS</option>
-                      <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                      <option value="api-backend">API & Backend</option>
-                      <option value="google-my-business">Fiche Google My Business</option>
-                      <option value="maintenance">Maintenance & Support</option>
-                      <option value="autre">Autre</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div style={{ marginBottom: '2.4rem' }}>
-                  <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
-                  <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
-                    value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                </div>
-
-                <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: .97 }} onClick={handleSubmit}
-                  className="btn-raised" style={{ justifyContent: 'center', fontSize: '.95rem', opacity: sending ? .7 : 1 }}>
-                  {sending ? (
-                    <><span style={{ width: 16, height: 16, border: '2px solid rgba(255,255,255,.3)', borderTopColor: '#fff', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> Envoi en cours...</>
+          <div ref={wrapRef} style={{ position: 'relative', minHeight: FORM_BTN_CLOSED_H, display: 'flex', justifyContent: 'center' }}>
+            <div ref={panelRef} style={{
+              position: 'relative', background: T.card, border: `1px solid ${T.border}`, borderRadius: 22,
+              overflow: 'hidden', width: 0, height: FORM_BTN_CLOSED_H, opacity: 0,
+            }}>
+              <div style={{ width: getPanelWidth(), padding: '2rem', boxSizing: 'border-box' }}>
+                <AnimatePresence mode="wait">
+                  {sent ? (
+                    <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 64, height: 64, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                        <Check size={30} style={{ color: '#88ca53' }} />
+                      </motion.div>
+                      <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.3rem', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
+                      <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
+                    </motion.div>
                   ) : (
-                    <><Send size={16} /> <HoverSlideText text="Recevoir mon devis en 24h" /></>
+                    <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.4rem', color: T.textMain, marginBottom: '1.4rem' }}>Nous écrire</h3>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
+                          <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
+                          <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                        </div>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                          <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                        </div>
+                        <div>
+                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
+                          <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
+                            <option value="">Choisir...</option>
+                            <option value="site-vitrine">Conception de Site Web</option>
+                            <option value="e-commerce">E-commerce</option>
+                            <option value="application-web">Application Web / SaaS</option>
+                            <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
+                            <option value="api-backend">API & Backend</option>
+                            <option value="google-my-business">Fiche Google My Business</option>
+                            <option value="maintenance">Maintenance & Support</option>
+                            <option value="autre">Autre</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div style={{ marginBottom: '1rem' }}>
+                        <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
+                        <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
+                          value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                      </div>
+                      {error && <p style={{ textAlign: 'left', fontSize: '.78rem', color: '#ff6b6b', marginBottom: '.8rem' }}>{error}</p>}
+                      <p style={{ textAlign: 'left', fontSize: '.72rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
+                        <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
+                      </p>
+                      {/* Réserve la place du rond d'envoi ancré en bas à droite */}
+                      <div style={{ height: FORM_BTN_OPEN_SIZE + 10 }} />
+                    </motion.div>
                   )}
-                </motion.button>
+                </AnimatePresence>
+              </div>
+            </div>
 
-                {error && (
-                  <p style={{ textAlign: 'left', fontSize: '.78rem', color: '#ff6b6b', marginTop: '.8rem' }}>
-                    {error}
-                  </p>
-                )}
-
-                <p style={{ textAlign: 'left', fontSize: '.72rem', color: T.textMuted, marginTop: '.9rem', display: 'flex', alignItems: 'center', gap: '.35rem' }}>
-                  <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+            <button
+              ref={btnRef}
+              type="button"
+              onClick={onBtnClick}
+              aria-label={isExpanded ? 'Envoyer le message' : 'Recevoir mon devis en 24h'}
+              style={{
+                position: 'absolute', top: 0, left: '50%', marginLeft: `-${FORM_BTN_CLOSED_W / 2}px`,
+                borderRadius: 999, background: '#88ca53', border: '2px solid #fff', cursor: 'pointer', color: '#08130a',
+                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 0,
+                boxShadow: '4px 4px 0px #fff', willChange: 'transform, width, height',
+              }}
+            >
+              <span style={{
+                position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.55rem',
+                fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1rem', textTransform: 'uppercase',
+                opacity: isExpanded ? 0 : 1, transform: isExpanded ? 'scale(.85)' : 'scale(1)', pointerEvents: isExpanded ? 'none' : 'auto',
+                transition: 'opacity .2s ease, transform .2s ease', whiteSpace: 'nowrap',
+              }}>
+                <Send size={16} /> <HoverSlideText text="Recevoir mon devis en 24h" />
+              </span>
+              <span style={{
+                position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                opacity: isExpanded ? 1 : 0, transform: isExpanded ? 'scale(1)' : 'scale(.4)', pointerEvents: isExpanded ? 'auto' : 'none',
+                transition: 'opacity .2s ease, transform .2s ease',
+              }}>
+                {sending ? <span style={{ width: 16, height: 16, border: '2px solid rgba(8,19,10,.3)', borderTopColor: '#08130a', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={18} />}
+              </span>
+            </button>
+          </div>
         </BlurReveal>
       </div>
     </section>

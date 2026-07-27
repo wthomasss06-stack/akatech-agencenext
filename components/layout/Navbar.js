@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import { usePathname } from 'next/navigation'
 import CardNav from './CardNav'
 import StaggeredMenu from './StaggeredMenu'
@@ -18,6 +18,8 @@ export default function Navbar() {
 
   const isActive = (href) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href)
+
+  if (pathname?.startsWith('/explorer')) return null
 
   return (
     <>

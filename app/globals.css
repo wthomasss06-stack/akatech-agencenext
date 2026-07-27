@@ -48,6 +48,7 @@ body {
   font-family: 'JetBrains Mono', monospace;
   -webkit-font-smoothing: antialiased;
   overscroll-behavior-y: none;
+  overflow-x: hidden;
 }
 
 body.light-mode { background: var(--bg-light); color: #111111; }

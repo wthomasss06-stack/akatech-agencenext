@@ -38,8 +38,8 @@ if (typeof window !== 'undefined') gsap.registerPlugin(ScrollTrigger)
 
 const ACCENT_A = 0x88ca53 // vert AKATech
 const ACCENT_B = 0x4fe0a8 // vert-cyan complémentaire, reste dans la famille de la marque
-const SECTION_VH = 500    // hauteur du wrapper scrollable (5 écrans)
-const LOOP_CYCLES = 4     // nombre de répétitions du tunnel sur ces 500vh
+const SECTION_VH = 2500   // hauteur du wrapper scrollable (25 écrans — volontairement très large : combiné au footer/nav masqués sur cette page, on ne "sort" plus jamais du tunnel en usage normal)
+const LOOP_CYCLES = 20    // même cadence que 500vh/4 cycles (125vh/cycle), juste répété plus de fois
 
 export default function ProjectsTunnel() {
   const blobNavigate = useBlobTransition()
@@ -110,10 +110,15 @@ export default function ProjectsTunnel() {
       uniform float uTime;
       uniform vec3 uColorGlow;
       void main() {
+        // Les cartes sont en DoubleSide (visibles des deux côtés selon
+        // l'angle aléatoire de chacune) — sans ceci, la texture apparaît
+        // inversée (miroir) chaque fois qu'on regarde la face arrière,
+        // WebGL ne sachant pas naturellement quel côté est "l'endroit".
+        vec2 uv = gl_FrontFacing ? vUv : vec2(1.0 - vUv.x, vUv.y);
         float shift = 0.006 * sin(uTime * 3.0);
-        float r = texture2D(uTexture, vUv + vec2(shift, 0.0)).r;
-        float g = texture2D(uTexture, vUv).g;
-        float b = texture2D(uTexture, vUv - vec2(shift, 0.0)).b;
+        float r = texture2D(uTexture, uv + vec2(shift, 0.0)).r;
+        float g = texture2D(uTexture, uv).g;
+        float b = texture2D(uTexture, uv - vec2(shift, 0.0)).b;
         vec3 finalColor = vec3(r, g, b);
         float scanline = sin(vUv.y * 200.0 + uTime * 5.0) * 0.03;
         finalColor += vec3(scanline) + (uColorGlow * 0.1);
