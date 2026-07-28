@@ -2,8 +2,8 @@ const CACHE_NAME = 'akatech-pwa-v2'
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
-  '/favicon.png',
-  '/favicon.png',
+  '/favicon.svg',
+  '/favicon.svg',
   '/robots.txt',
 ]
 
