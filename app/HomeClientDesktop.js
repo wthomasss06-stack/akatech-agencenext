@@ -94,7 +94,7 @@ function CircularProjectsGallery() {
                 : 'linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.65) 100%)',
             }} />
             <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.7rem 1rem' }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}>{p.title}</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}><HoverSlideText text={p.title} /></div>
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(136,202,83,.9)', marginTop: '.1rem' }}>{p.type}</div>
             </div>
           </motion.div>
@@ -109,6 +109,10 @@ const HERO_SLOGANS = [
   { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
   { before: 'Développez votre activité ', highlight: 'sereinement' },
 ]
+
+// Hauteur du Hero en dvh — volontairement < 100 pour laisser apparaître
+// un aperçu de la CIRCULAR PROJECTS GALLERY en bas de viewport sur desktop.
+const HERO_VH = 103
 
 // ── Slogan Hero — cycle auto entre 3 accroches, même traitement
 // Neo-Brutalism (bloc vert + box-shadow blanc dur) sur le mot-clé ──
@@ -143,6 +147,7 @@ function Hero() {
   const layerBgRef  = useRef(null)
   const layerMidRef = useRef(null)
   const layerForeRef = useRef(null)
+  const galleryRef  = useRef(null)
 
   useEffect(() => {
     const onMouse = (e) => {
@@ -162,6 +167,7 @@ function Hero() {
       }
       apply(layerBgRef.current,   0.2)
       apply(layerMidRef.current,  0.5, true)
+      apply(galleryRef.current,   0.5, true)
       apply(layerForeRef.current, 0.8)
     }
     window.addEventListener('mousemove', onMouse)
@@ -169,7 +175,7 @@ function Hero() {
   }, [])
 
   useEffect(() => {
-    // Pendant le scroll, le Hero reste pinné (cf. wrapper 200dvh ci-dessous) :
+    // Pendant le scroll, le Hero reste pinné (cf. wrapper HERO_VH+100dvh ci-dessous) :
     // on calcule une progression 0→1 sur la distance pinnée, et on l'utilise
     // pour zoomer + flouter + faire disparaître le Hero, comme la section
     // pinnée "zoom-title" de 1.html — pour laisser émerger la suite de la page.
@@ -204,6 +210,9 @@ function Hero() {
         if (layerForeRef.current) {
           layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
         }
+        if (galleryRef.current) {
+          galleryRef.current.style.opacity = String(Math.max(0, 1 - progress * 1.25))
+        }
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -212,8 +221,8 @@ function Hero() {
   }, [])
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', height: '200dvh' }}>
-    <section id="home-hero" style={{ height: '100dvh', maxHeight: '100dvh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
+    <div ref={wrapRef} style={{ position: 'relative', height: `${HERO_VH + 200}dvh` }}>
+    <section id="home-hero" style={{ height: `${HERO_VH}dvh`, maxHeight: `${HERO_VH}dvh`, width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806', paddingBottom: 'clamp(140px, 15vh, 180px)' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -268,7 +277,7 @@ function Hero() {
 
         <motion.div
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
-          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '-2.2rem', justifyContent: 'center', position: 'relative', zIndex: 30 }}>
+          style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', justifyContent: 'center', position: 'relative', zIndex: 30 }}>
           <motion.a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
             initial={{ boxShadow: '6px 6px 0px #fff' }}
             whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
@@ -287,11 +296,20 @@ function Hero() {
           </motion.div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }} style={{ paddingTop: '3.4rem' }}>
+        
+      </div>
+
+      {/* Aperçu de la CIRCULAR PROJECTS GALLERY — ancrée au bas du Hero,
+          indépendante du centrage du bloc titre/sous-titre/avatars/CTA
+          ci-dessus : reste toujours visible en partie quelle que soit
+          la hauteur de ce bloc ou du viewport. Div simple (comme
+          layerMidRef) pour porter les mutations impératives parallax/
+          scroll sans entrer en conflit avec l'anim Framer d'entrée,
+          isolée sur le motion.div enfant. */}
+      <div ref={galleryRef} style={{ position: 'absolute', left: 0, right: 0, bottom: '-123px', zIndex: 11, willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
           <CircularProjectsGallery />
         </motion.div>
-
-        
       </div>
 
       <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
@@ -311,7 +329,7 @@ function Hero() {
         ))}
       </div>
 
-      <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
+      <div style={{ position: 'absolute', bottom: '140px', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
         <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
           style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
@@ -1584,7 +1602,7 @@ function GeoSectionHome() {
 const FORM_STIFFNESS = 0.18
 const FORM_FRICTION = 0.65
 const FORM_PANEL_W = 680
-const FORM_PANEL_H = 560
+const FORM_PANEL_H = 460 // repli si la mesure dynamique du contenu n'est pas encore disponible
 const FORM_BTN_CLOSED_W = 300
 const FORM_BTN_CLOSED_H = 62
 const FORM_BTN_OPEN_SIZE = 52
@@ -1609,6 +1627,7 @@ function ProjectFormHome() {
   const wrapRef = useRef(null)
   const panelRef = useRef(null)
   const btnRef = useRef(null)
+  const formContentRef = useRef(null)
   const [isExpanded, setIsExpanded] = useState(false)
   const isExpandedRef = useRef(false)
   const panelAnim = useRef({ currentW: 0, currentH: FORM_BTN_CLOSED_H, currentOpacity: 0, targetW: 0, targetH: FORM_BTN_CLOSED_H, targetOpacity: 0, vxW: 0, vxH: 0, vxO: 0 })
@@ -1618,13 +1637,14 @@ function ProjectFormHome() {
 
   const openPanel = () => {
     const w = getPanelWidth()
+    const h = formContentRef.current?.offsetHeight || FORM_PANEL_H
     panelAnim.current.targetW = w
-    panelAnim.current.targetH = FORM_PANEL_H
+    panelAnim.current.targetH = h
     panelAnim.current.targetOpacity = 1
     btnAnim.current.targetW = FORM_BTN_OPEN_SIZE
     btnAnim.current.targetH = FORM_BTN_OPEN_SIZE
     btnAnim.current.targetX = w - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
-    btnAnim.current.targetY = FORM_PANEL_H - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
+    btnAnim.current.targetY = h - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
     setIsExpanded(true)
     isExpandedRef.current = true
   }
@@ -1639,6 +1659,21 @@ function ProjectFormHome() {
     setIsExpanded(false)
     isExpandedRef.current = false
   }
+
+  // Le contenu change de taille (formulaire → message de succès, apparition
+  // d'une erreur) : on re-mesure pour que le panneau colle toujours à son
+  // contenu réel, au lieu de garder une hauteur figée à l'ouverture.
+  useEffect(() => {
+    if (!isExpanded) return
+    const raf = requestAnimationFrame(() => {
+      const h = formContentRef.current?.offsetHeight
+      if (h) {
+        panelAnim.current.targetH = h
+        btnAnim.current.targetY = h - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
+      }
+    })
+    return () => cancelAnimationFrame(raf)
+  }, [isExpanded, sent, error])
 
   const handleSubmit = async () => {
     if (!form.name || !form.email || !form.message) return
@@ -1716,7 +1751,7 @@ function ProjectFormHome() {
               position: 'relative', background: T.card, border: `1px solid ${T.border}`, borderRadius: 22,
               overflow: 'hidden', width: 0, height: FORM_BTN_CLOSED_H, opacity: 0,
             }}>
-              <div style={{ width: getPanelWidth(), padding: '2rem', boxSizing: 'border-box' }}>
+              <div ref={formContentRef} style={{ width: getPanelWidth(), padding: '2rem', boxSizing: 'border-box' }}>
                 <AnimatePresence mode="wait">
                   {sent ? (
                     <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '2rem 1rem' }}>
