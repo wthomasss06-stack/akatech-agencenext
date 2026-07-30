@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useRef, useEffect, useState, useCallback } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { usePathname } from 'next/navigation'
@@ -280,27 +280,22 @@ export function BackToTop() {
       aria-label="Remonter en haut de la page"
       style={{
         position: 'fixed', bottom: '6.5rem', right: '2rem', zIndex: 8999,
-        width: 46, height: 46, borderRadius: '50%',
-        background: T.light ? 'linear-gradient(145deg,#ffffff,#f0f0f0)' : 'linear-gradient(145deg,#0e2416,#081208)',
-        border: `1px solid ${T.border2}`,
-        boxShadow: T.light ? '4px 4px 14px rgba(0,0,0,.12), 0 0 20px rgba(136,202,83,.1)' : '4px 4px 14px rgba(0,0,0,.7), 0 0 20px rgba(136,202,83,.15)',
+        width: 48, height: 48, borderRadius: 10,
+        background: '#88ca53',
+        border: '3px solid #ffffff',
+        boxShadow: '4px 4px 0px #ffffff',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        cursor: 'pointer', color: T.green,
+        cursor: 'pointer', color: '#08120a',
       }}
     >
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M8 13V3M3 8l5-5 5 5" stroke={T.green} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+        <path d="M8 13V3M3 8l5-5 5 5" stroke="#08120a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </motion.button>
   )
 }
 
 // ── FLOATING WHATSAPP ─────────────────────────────────────────
-// Le bouton réagit en scrub (lié 1:1 au scroll) lorsque la section
-// PageCTA de la page traverse le viewport : il grossit et son halo
-// s'intensifie progressivement, puis revient à son état normal.
-// Le scrub anime un wrapper séparé pour ne jamais entrer en
-// conflit avec le `transform` géré par Framer Motion sur le lien.
 export function FloatingWA() {
   const T = useTheme()
   const [hov, setHov] = useState(false)
@@ -308,8 +303,6 @@ export function FloatingWA() {
   const pathname = usePathname()
 
   useEffect(() => {
-    // Délai court : on attend que le DOM de la nouvelle page (et son
-    // .page-cta-trigger) soit monté avant de (re)créer les triggers.
     const timer = setTimeout(() => {
       ScrollTrigger.refresh()
     }, 100)
@@ -356,20 +349,19 @@ export function FloatingWA() {
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
         style={{
-          width: 54, height: 54, borderRadius: '50%',
-          background: 'linear-gradient(145deg,#25d366,#128c7e)',
+          width: 54, height: 54, borderRadius: 12,
+          background: '#25d366',
+          border: '3px solid #ffffff',
+          boxShadow: hov ? '6px 6px 0px #ffffff' : '4px 4px 0px #ffffff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: hov
-            ? (T.light ? '6px 6px 20px rgba(0,0,0,.18)' : '6px 6px 20px rgba(0,0,0,.5)')
-            : (T.light ? '4px 4px 14px rgba(0,0,0,.15)' : '4px 4px 14px rgba(0,0,0,.5)'),
-          transform: hov ? 'scale(1.1)' : 'scale(1)',
-          transition: 'transform .2s, box-shadow .2s',
+          transform: hov ? 'translate(-2px, -2px)' : 'translate(0, 0)',
+          transition: 'transform .15s, box-shadow .15s',
           textDecoration: 'none',
         }}
       >
         <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <path d="M14 2C7.373 2 2 7.373 2 14c0 2.14.56 4.145 1.54 5.877L2 26l4.267-1.494A11.93 11.93 0 0 0 14 26c6.627 0 12-5.373 12-12S20.627 2 14 2Z" fill="rgba(255,255,255,.15)" stroke="white" strokeWidth="1.5" />
-          <path d="M10 8.5c-.4 0-.8.2-1.1.5-.6.6-1.4 1.8-1.4 3.1 0 2.8 2.1 5.5 3 6.4.9.9 3.6 3 6.4 3 1.3 0 2.5-.8 3.1-1.4.3-.3.5-.7.5-1.1v-1.6c0-.3-.2-.6-.5-.7l-2-.8c-.3-.1-.7 0-.9.2l-.7.8c-.2.2-.4.2-.6.1C14.6 16.7 11.3 13.4 11 12c-.1-.2 0-.4.1-.6l.8-.7c.2-.2.3-.6.2-.9l-.8-2c-.1-.3-.4-.5-.7-.5H10Z" fill="white" />
+          <path d="M14 2C7.373 2 2 7.373 2 14c0 2.14.56 4.145 1.54 5.877L2 26l4.267-1.494A11.93 11.93 0 0 0 14 26c6.627 0 12-5.373 12-12S20.627 2 14 2Z" fill="rgba(0,0,0,.25)" stroke="#08120a" strokeWidth="2" />
+          <path d="M10 8.5c-.4 0-.8.2-1.1.5-.6.6-1.4 1.8-1.4 3.1 0 2.8 2.1 5.5 3 6.4.9.9 3.6 3 6.4 3 1.3 0 2.5-.8 3.1-1.4.3-.3.5-.7.5-1.1v-1.6c0-.3-.2-.6-.5-.7l-2-.8c-.3-.1-.7 0-.9.2l-.7.8c-.2.2-.4.2-.6.1C14.6 16.7 11.3 13.4 11 12c-.1-.2 0-.4.1-.6l.8-.7c.2-.2.3-.6.2-.9l-.8-2c-.1-.3-.4-.5-.7-.5H10Z" fill="#08120a" />
         </svg>
       </motion.a>
     </div>

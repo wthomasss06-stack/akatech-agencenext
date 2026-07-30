@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { usePathname } from 'next/navigation'
@@ -457,7 +457,6 @@ export default function AIAssistant() {
       const reader = res.body.getReader()
       const decoder = new TextDecoder()
       let acc = ''
-
       for (;;) {
         const { done, value } = await reader.read()
         if (done) break
@@ -496,6 +495,7 @@ export default function AIAssistant() {
       transition={{ delay: reduceMotion ? 0 : 2.4, type: 'spring', stiffness: 260, damping: 20 }}
       style={{ position: 'fixed', bottom: '2rem', left: '2rem', zIndex: 9000 }}
     >
+      {/* ── Fenêtre de chat ── */}
       <div
         ref={panelRef}
         role="dialog"
@@ -503,51 +503,63 @@ export default function AIAssistant() {
         aria-hidden={!open}
         style={{
           position: 'absolute', bottom: 0, left: 0, zIndex: 1, overflow: 'hidden',
-          background: T.card, border: `1px solid ${T.border}`, borderRadius: 18,
-          boxShadow: T.light ? '0 12px 40px rgba(0,0,0,.16)' : '0 12px 40px rgba(0,0,0,.6)',
+          background: T.card,
+          border: `3px solid ${T.green}`,
+          borderRadius: 12,
+          boxShadow: T.light ? '8px 8px 0px #000000' : '8px 8px 0px #ffffff',
         }}
       >
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          {/* Header — padding droit réservé pour laisser la place au bouton rond (haut-droit) */}
+          {/* Header */}
           <div style={{
             padding: '1rem 4.2rem 1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem',
-            borderBottom: `1px solid ${T.border}`, flexShrink: 0,
+            borderBottom: `2px solid ${T.green}`,
+            background: T.light ? 'rgba(136,202,83,.07)' : 'rgba(136,202,83,.06)',
+            flexShrink: 0,
           }}>
             <div style={{
-              width: 34, height: 34, borderRadius: '50%', background: 'rgba(136,202,83,.12)',
-              border: `1px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              color: T.green, flexShrink: 0,
+              width: 34, height: 34, borderRadius: 6, background: T.green,
+              border: T.light ? '2px solid #000000' : '2px solid #ffffff',
+              boxShadow: T.light ? '2px 2px 0px #000000' : '2px 2px 0px #ffffff',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: '#08120a', flexShrink: 0,
             }}>
-              <Bot size={18} />
+              <Bot size={20} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 700, color: T.textMain }}>
-                Assistant AKATech
+              <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.1rem', fontWeight: 900, fontStyle: 'italic', textTransform: 'uppercase', color: T.textMain, letterSpacing: '.02em' }}>
+                ASSISTANT AKATECH
               </div>
-              <div style={{ fontSize: '.68rem', color: T.textMuted }}>Répond en quelques secondes</div>
+              <div style={{ fontSize: '.7rem', color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 600 }}>
+                ⚡ Répond en direct
+              </div>
             </div>
           </div>
 
           {/* Messages */}
-          <div ref={listRef} style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.1rem', display: 'flex', flexDirection: 'column', gap: '.7rem' }}>
+          <div ref={listRef} style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.1rem', display: 'flex', flexDirection: 'column', gap: '.85rem', background: T.bg }}>
             {messages.map((m, i) => (
               <div key={i} style={{
                 alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                maxWidth: '85%',
-                background: m.role === 'user' ? T.green : (T.light ? '#f0f0f0' : 'rgba(255,255,255,.05)'),
+                maxWidth: '86%',
+                background: m.role === 'user' ? T.green : T.card,
                 color: m.role === 'user' ? '#08120a' : T.textMain,
-                padding: '.65rem .9rem', borderRadius: 14,
-                borderBottomRightRadius: m.role === 'user' ? 3 : 14,
-                borderBottomLeftRadius: m.role === 'assistant' ? 3 : 14,
-                fontSize: '.85rem', lineHeight: 1.55, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+                padding: '.7rem .95rem', borderRadius: 8,
+                border: m.role === 'user'
+                  ? (T.light ? '2px solid #000000' : '2px solid #ffffff')
+                  : `2px solid ${T.green}`,
+                boxShadow: m.role === 'user'
+                  ? (T.light ? '3px 3px 0px #000000' : '3px 3px 0px #ffffff')
+                  : `3px 3px 0px ${T.green}`,
+                fontSize: '.85rem', fontWeight: m.role === 'user' ? 700 : 500, lineHeight: 1.55, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
               }}>
                 {m.role === 'assistant' && m.content === '' && streaming && i === messages.length - 1
-                  ? <TypingDots color={T.textMuted} />
+                  ? <TypingDots color={T.green} />
                   : renderMessageContent(m.content)}
               </div>
             ))}
             {errorMsg && (
-              <div style={{ display: 'flex', gap: '.4rem', alignItems: 'flex-start', fontSize: '.78rem', color: '#e08a4a' }}>
+              <div style={{ display: 'flex', gap: '.4rem', alignItems: 'flex-start', fontSize: '.78rem', color: '#e08a4a', background: 'rgba(224,138,74,.1)', padding: '.5rem', border: '1px solid #e08a4a', borderRadius: 6 }}>
                 <MessageCircleWarning size={15} style={{ flexShrink: 0, marginTop: 1 }} />
                 {errorMsg}
               </div>
@@ -555,7 +567,7 @@ export default function AIAssistant() {
           </div>
 
           {/* Input */}
-          <div style={{ padding: '.8rem', borderTop: `1px solid ${T.border}`, display: 'flex', gap: '.5rem', flexShrink: 0 }}>
+          <div style={{ padding: '.8rem', borderTop: `2px solid ${T.green}`, background: T.card, display: 'flex', gap: '.6rem', flexShrink: 0 }}>
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -566,10 +578,11 @@ export default function AIAssistant() {
               tabIndex={open ? 0 : -1}
               aria-label="Votre message"
               style={{
-                flex: 1, resize: 'none', minHeight: 40, maxHeight: 90,
-                background: T.light ? '#f5f5f5' : 'rgba(255,255,255,.04)',
-                border: `1px solid ${T.border}`, borderRadius: 10,
-                padding: '.6rem .8rem', fontSize: '.85rem', color: T.textMain,
+                flex: 1, resize: 'none', minHeight: 42, maxHeight: 90,
+                background: T.light ? '#f7f7f7' : '#040d06',
+                border: `2px solid ${T.green}`, borderRadius: 6,
+                boxShadow: T.light ? '3px 3px 0px #000000' : '3px 3px 0px #ffffff',
+                padding: '.65rem .85rem', fontSize: '.85rem', color: T.textMain,
                 fontFamily: 'inherit', outline: 'none',
               }}
             />
@@ -580,19 +593,22 @@ export default function AIAssistant() {
               tabIndex={open ? 0 : -1}
               aria-label="Envoyer"
               style={{
-                width: 44, height: 44, minWidth: 44, borderRadius: 10, flexShrink: 0,
-                background: streaming || !input.trim() ? T.border : T.green,
-                border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 44, height: 44, minWidth: 44, borderRadius: 6, flexShrink: 0,
+                background: streaming || !input.trim() ? (T.light ? 'rgba(136,202,83,.2)' : '#1a3320') : T.green,
+                border: T.light ? '2px solid #000000' : '2px solid #ffffff',
+                boxShadow: T.light ? '3px 3px 0px #000000' : '3px 3px 0px #ffffff',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: streaming || !input.trim() ? 'default' : 'pointer',
-                color: '#08120a', transition: 'background .15s',
+                color: '#08120a', transition: 'transform .1s, background .15s',
               }}
             >
-              <Send size={17} />
+              <Send size={18} />
             </button>
           </div>
         </div>
       </div>
 
+      {/* ── Bouton flottant ── */}
       <button
         ref={btnRef}
         type="button"
@@ -600,15 +616,15 @@ export default function AIAssistant() {
         aria-label={open ? "Fermer l'assistant AKATech" : "Ouvrir l'assistant AKATech"}
         style={{
           position: 'absolute', bottom: 0, left: 0, zIndex: 2,
-          width: AI_BTN_SIZE, height: AI_BTN_SIZE, minWidth: 44, minHeight: 44, borderRadius: '50%',
-          background: T.light ? 'linear-gradient(145deg,#ffffff,#f0f0f0)' : 'linear-gradient(145deg,#0e2416,#081208)',
-          border: `1px solid ${T.border2}`,
-          boxShadow: T.light ? '4px 4px 14px rgba(0,0,0,.12), 0 0 20px rgba(136,202,83,.12)' : '4px 4px 14px rgba(0,0,0,.7), 0 0 20px rgba(136,202,83,.18)',
+          width: AI_BTN_SIZE, height: AI_BTN_SIZE, minWidth: 44, minHeight: 44, borderRadius: 12,
+          background: T.green,
+          border: T.light ? '3px solid #000000' : '3px solid #ffffff',
+          boxShadow: T.light ? '4px 4px 0px #000000' : '4px 4px 0px #ffffff',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: T.green, padding: 0, willChange: 'transform',
+          cursor: 'pointer', color: '#08120a', padding: 0, willChange: 'transform',
         }}
       >
-        {open ? <X size={22} /> : <Bot size={24} />}
+        {open ? <X size={24} /> : <Bot size={26} />}
       </button>
     </motion.div>,
     document.body

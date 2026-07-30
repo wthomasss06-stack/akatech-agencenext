@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
@@ -125,6 +125,37 @@ function HeroSlogan() {
           encaissez.
         </span>
       </motion.p>
+    </div>
+  )
+}
+
+const HERO_SLOGANS = [
+  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
+  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
+  { before: 'Développez votre activité ', highlight: 'sereinement' },
+]
+
+function HeroSloganCycle() {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
+    return () => clearInterval(id)
+  }, [])
+  const { before, highlight } = HERO_SLOGANS[index]
+
+  return (
+    <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <AnimatePresence mode="wait">
+        <motion.p key={index}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: .45, ease: 'easeOut' }}
+          style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+          {before}
+          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
+            {highlight}
+          </span>
+        </motion.p>
+      </AnimatePresence>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-﻿'use client'
+'use client'
 import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -66,13 +66,10 @@ function AskAIStrip({ T }) {
   }
 
   return (
-    <div style={{ padding: '2.2rem 0', borderBottom: '1px solid rgba(255,255,255,.16)', textAlign: 'center' }}>
-      <style>{`
-        .aka-ask-btn { transition: background .2s, transform .2s, border-color .2s; }
-        .aka-ask-btn:hover { border-color: #88ca53 !important; transform: translateY(-3px); background: rgba(136,202,83,.06); }
-      `}</style>
+    <div style={{ padding: '2.2rem 0', textAlign: 'center' }}>
+      
       <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: '1rem' }}>
-        (<HoverSlideText text="Demandez à l'IA ce qu'elle pense d'AKATech" />)
+        Demandez à l'IA ce qu'elle pense d'AKATech
       </p>
       <div style={{ display: 'flex', gap: '.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         {PLATFORMS.map(p => (
@@ -249,22 +246,33 @@ export default function Footer() {
         <AskAIStrip T={T} />
       </div>
 
-      {/* ── Wordmark géant — clôture, façon référence ──────────── */}
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', overflow: 'hidden', pointerEvents: 'none' }}>
+      {/* ── Wordmark géant — AKATECH STUDIO. ──────────── */}
+      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', overflow: 'hidden', pointerEvents: 'none', padding: '1rem 0 2rem' }}>
         <div style={{
           fontFamily: "'Barlow Condensed',sans-serif",
-          fontSize: 'clamp(4.5rem,21vw,26rem)',
+          fontSize: 'clamp(4rem, 17vw, 21rem)',
           fontWeight: 900,
           fontStyle: 'italic',
-          letterSpacing: '-.01em',
-          lineHeight: 0.8,
-          transform: 'translateY(18%)',
-          background: 'linear-gradient(to bottom, rgba(255,255,255,.7) 0%, rgba(255,255,255,.04) 80%)',
+          letterSpacing: '-.02em',
+          lineHeight: 0.82,
+          transform: 'translateY(5%)',
+          background: 'linear-gradient(to bottom, rgba(255,255,255,.9) 0%, rgba(255,255,255,.05) 85%)',
           WebkitBackgroundClip: 'text',
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text',
+          textTransform: 'uppercase'
         }}>
           AKATECH
+          <br />
+          <span style={{
+            display: 'inline-block',
+            background: 'linear-gradient(to bottom, #88ca53 0%, rgba(136,202,83,.15) 90%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+            backgroundClip: 'text',
+          }}>
+            STUDIO.
+          </span>
         </div>
       </div>
 
