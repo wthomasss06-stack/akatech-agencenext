@@ -1,6 +1,6 @@
 ﻿'use client'
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import {
   ArrowRight, Star, ExternalLink,
@@ -8,7 +8,7 @@ import {
   TrendingUp, Users, Clock, Award,
   MessageCircle, Target, Code, Timer, ChevronLeft, ChevronRight,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
-  Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown, AlertTriangle
+  Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline, HoverSlideText } from '@/components/ui/index'
@@ -30,11 +30,13 @@ function CircularProjectsGallery() {
     ...PROJECTS.filter(p => p.id === 19),
   ]
   const [active, setActive] = useState(0)
+  const reduceMotion = useReducedMotion()
 
   useEffect(() => {
+    if (reduceMotion) return // pas de rotation auto si l'utilisateur préfère moins de mouvement
     const id = setInterval(() => setActive(a => (a + 1) % GALLERY_ITEMS.length), 2800)
     return () => clearInterval(id)
-  }, [GALLERY_ITEMS.length])
+  }, [GALLERY_ITEMS.length, reduceMotion])
 
   // Position relative de chaque carte par rapport à `active` (-2..-1..0..1..2)
   const order = GALLERY_ITEMS.map((_, i) => {
@@ -104,39 +106,24 @@ function CircularProjectsGallery() {
   )
 }
 
-const HERO_SLOGANS = [
-  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
-  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
-  { before: 'Développez votre activité ', highlight: 'sereinement' },
-]
-
 // Hauteur du Hero en dvh — volontairement < 100 pour laisser apparaître
 // un aperçu de la CIRCULAR PROJECTS GALLERY en bas de viewport sur desktop.
 const HERO_VH = 103
 
-// ── Slogan Hero — cycle auto entre 3 accroches, même traitement
-// Neo-Brutalism (bloc vert + box-shadow blanc dur) sur le mot-clé ──
-function HeroSloganCycle() {
-  const [index, setIndex] = useState(0)
-  useEffect(() => {
-    const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
-    return () => clearInterval(id)
-  }, [])
-  const { before, highlight } = HERO_SLOGANS[index]
-
+// ── Slogan Hero — accroche fixe et bénéfice-driven (plus de cycle),
+// même traitement Neo-Brutalism (bloc vert + box-shadow blanc dur) ──
+function HeroSlogan() {
   return (
     <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <AnimatePresence mode="wait">
-        <motion.p key={index}
-          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: .45, ease: 'easeOut' }}
-          style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
-          {before}
-          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
-            {highlight}
-          </span>
-        </motion.p>
-      </AnimatePresence>
+      <motion.p
+        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: .45, ease: 'easeOut' }}
+        style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+        On convertit, vous {' '}
+        <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
+          encaissez.
+        </span>
+      </motion.p>
     </div>
   )
 }
@@ -245,7 +232,7 @@ function Hero() {
 
         
 
-        <HeroSloganCycle />
+        <HeroSlogan />
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
@@ -1498,9 +1485,9 @@ function PricingCallout() {
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#88ca53', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
               <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: T.textSub, letterSpacing: '.04em', margin: 0 }}>
                 <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
-                  <AlertTriangle size={12} /> 2 créneaux disponibles
+                  <Clock size={12} /> Projets pris dans l'ordre d'arrivée
                 </span>
-                {' '}ce mois-ci — les projets sont traités dans l'ordre d'arrivée.
+                {' '}— le délai de démarrage dépend de la charge du moment. Plus tôt vous écrivez, plus tôt on commence.
               </p>
             </div>
             <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
@@ -1599,14 +1586,7 @@ function GeoSectionHome() {
   )
 }
 
-const FORM_STIFFNESS = 0.18
-const FORM_FRICTION = 0.65
 const FORM_PANEL_W = 680
-const FORM_PANEL_H = 460 // repli si la mesure dynamique du contenu n'est pas encore disponible
-const FORM_BTN_CLOSED_W = 300
-const FORM_BTN_CLOSED_H = 62
-const FORM_BTN_OPEN_SIZE = 52
-const FORM_CORNER_GAP = 18
 
 function ProjectFormHome() {
   const T = useTheme()
@@ -1621,62 +1601,8 @@ function ProjectFormHome() {
   const focusOn = e => { e.target.style.borderBottomColor = '#88ca53' }
   const focusOff = e => { e.target.style.borderBottomColor = T.border }
 
-  // ── Morph bouton → panneau (port de ContactMorphButton.tsx, sans le
-  // suivi magnétique du curseur — ça n'a pas de sens pour une section
-  // inline, contrairement au widget flottant d'origine) ──
-  const wrapRef = useRef(null)
-  const panelRef = useRef(null)
-  const btnRef = useRef(null)
-  const formContentRef = useRef(null)
-  const [isExpanded, setIsExpanded] = useState(false)
-  const isExpandedRef = useRef(false)
-  const panelAnim = useRef({ currentW: 0, currentH: FORM_BTN_CLOSED_H, currentOpacity: 0, targetW: 0, targetH: FORM_BTN_CLOSED_H, targetOpacity: 0, vxW: 0, vxH: 0, vxO: 0 })
-  const btnAnim = useRef({ currentW: FORM_BTN_CLOSED_W, currentH: FORM_BTN_CLOSED_H, currentX: 0, currentY: 0, targetX: 0, targetY: 0, targetW: FORM_BTN_CLOSED_W, targetH: FORM_BTN_CLOSED_H, vxW: 0, vxH: 0, vxX: 0, vxY: 0 })
-
-  const getPanelWidth = () => (typeof window === 'undefined' ? FORM_PANEL_W : Math.min(FORM_PANEL_W, window.innerWidth - 64))
-
-  const openPanel = () => {
-    const w = getPanelWidth()
-    const h = formContentRef.current?.offsetHeight || FORM_PANEL_H
-    panelAnim.current.targetW = w
-    panelAnim.current.targetH = h
-    panelAnim.current.targetOpacity = 1
-    btnAnim.current.targetW = FORM_BTN_OPEN_SIZE
-    btnAnim.current.targetH = FORM_BTN_OPEN_SIZE
-    btnAnim.current.targetX = w - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
-    btnAnim.current.targetY = h - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
-    setIsExpanded(true)
-    isExpandedRef.current = true
-  }
-  const closePanel = () => {
-    panelAnim.current.targetW = 0
-    panelAnim.current.targetH = FORM_BTN_CLOSED_H
-    panelAnim.current.targetOpacity = 0
-    btnAnim.current.targetW = FORM_BTN_CLOSED_W
-    btnAnim.current.targetH = FORM_BTN_CLOSED_H
-    btnAnim.current.targetX = 0
-    btnAnim.current.targetY = 0
-    setIsExpanded(false)
-    isExpandedRef.current = false
-  }
-
-  // Le contenu change de taille (formulaire → message de succès, apparition
-  // d'une erreur) : on re-mesure pour que le panneau colle toujours à son
-  // contenu réel, au lieu de garder une hauteur figée à l'ouverture.
-  useEffect(() => {
-    if (!isExpanded) return
-    const raf = requestAnimationFrame(() => {
-      const h = formContentRef.current?.offsetHeight
-      if (h) {
-        panelAnim.current.targetH = h
-        btnAnim.current.targetY = h - FORM_BTN_OPEN_SIZE - FORM_CORNER_GAP
-      }
-    })
-    return () => cancelAnimationFrame(raf)
-  }, [isExpanded, sent, error])
-
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.message) return
+    if (!form.name || !form.email || !form.message) { setError('Merci de renseigner au moins votre nom, votre email et votre besoin.'); return }
     setSending(true)
     setError('')
     try {
@@ -1689,51 +1615,6 @@ function ProjectFormHome() {
     } finally { setSending(false) }
   }
 
-  const onBtnClick = () => {
-    if (!isExpanded) { openPanel(); return }
-    if (sent) { closePanel(); setTimeout(() => { setSent(false); setError('') }, 400); return }
-    if (!sending) handleSubmit()
-  }
-
-  // Fermeture au clic extérieur (jamais pendant un envoi en cours)
-  useEffect(() => {
-    const onDocMouseDown = (e) => {
-      if (!isExpandedRef.current || sending) return
-      if (wrapRef.current && !wrapRef.current.contains(e.target)) closePanel()
-    }
-    document.addEventListener('mousedown', onDocMouseDown)
-    return () => document.removeEventListener('mousedown', onDocMouseDown)
-  }, [sending])
-
-  // Boucle à ressort — identique à ContactMorphButton.tsx
-  useEffect(() => {
-    let raf = 0
-    const tick = () => {
-      const p = panelAnim.current
-      const b = btnAnim.current
-      p.vxW += (p.targetW - p.currentW) * FORM_STIFFNESS; p.vxW *= FORM_FRICTION; p.currentW += p.vxW
-      p.vxH += (p.targetH - p.currentH) * FORM_STIFFNESS; p.vxH *= FORM_FRICTION; p.currentH += p.vxH
-      p.vxO += (p.targetOpacity - p.currentOpacity) * FORM_STIFFNESS; p.vxO *= FORM_FRICTION; p.currentOpacity += p.vxO
-      b.vxW += (b.targetW - b.currentW) * FORM_STIFFNESS; b.vxW *= FORM_FRICTION; b.currentW += b.vxW
-      b.vxH += (b.targetH - b.currentH) * FORM_STIFFNESS; b.vxH *= FORM_FRICTION; b.currentH += b.vxH
-      b.vxX += (b.targetX - b.currentX) * FORM_STIFFNESS; b.vxX *= FORM_FRICTION; b.currentX += b.vxX
-      b.vxY += (b.targetY - b.currentY) * FORM_STIFFNESS; b.vxY *= FORM_FRICTION; b.currentY += b.vxY
-      if (panelRef.current) {
-        panelRef.current.style.width = `${p.currentW}px`
-        panelRef.current.style.height = `${p.currentH}px`
-        panelRef.current.style.opacity = String(p.currentOpacity)
-      }
-      if (btnRef.current) {
-        btnRef.current.style.width = `${b.currentW}px`
-        btnRef.current.style.height = `${b.currentH}px`
-        btnRef.current.style.transform = `translate3d(${b.currentX}px, ${b.currentY}px, 0)`
-      }
-      raf = requestAnimationFrame(tick)
-    }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [])
-
   return (
     <section ref={el => { ref.current = el; sectionRef.current = el }} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
@@ -1743,102 +1624,81 @@ function ProjectFormHome() {
             Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
           </h2>
         </BlurReveal>
-        <WordRevealP sectionRef={sectionRef} text="Cliquez pour ouvrir le formulaire — on vous recontacte par email sous 24h avec un devis gratuit." greenWords={['formulaire', 'email', '24h', 'gratuit.']} extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />
+        <WordRevealP sectionRef={sectionRef} text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit." greenWords={['formulaire', 'email', '24h', 'gratuit.']} extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />
 
         <BlurReveal delay={0.15}>
-          <div ref={wrapRef} style={{ position: 'relative', minHeight: FORM_BTN_CLOSED_H, display: 'flex', justifyContent: 'center' }}>
-            <div ref={panelRef} style={{
-              position: 'relative', background: T.card, border: `1px solid ${T.border}`, borderRadius: 22,
-              overflow: 'hidden', width: 0, height: FORM_BTN_CLOSED_H, opacity: 0,
-            }}>
-              <div ref={formContentRef} style={{ width: getPanelWidth(), padding: '2rem', boxSizing: 'border-box' }}>
-                <AnimatePresence mode="wait">
-                  {sent ? (
-                    <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-                      <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 64, height: 64, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
-                        <Check size={30} style={{ color: '#88ca53' }} />
-                      </motion.div>
-                      <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.3rem', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
-                      <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
-                    </motion.div>
-                  ) : (
-                    <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                      <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.4rem', color: T.textMain, marginBottom: '1.4rem' }}>Nous écrire</h3>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
-                          <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                        </div>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
-                          <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                        </div>
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
-                          <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                        </div>
-                        <div>
-                          <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
-                          <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
-                            <option value="">Choisir...</option>
-                            <option value="site-vitrine">Conception de Site Web</option>
-                            <option value="e-commerce">E-commerce</option>
-                            <option value="application-web">Application Web / SaaS</option>
-                            <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                            <option value="api-backend">API & Backend</option>
-                            <option value="google-my-business">Fiche Google My Business</option>
-                            <option value="maintenance">Maintenance & Support</option>
-                            <option value="autre">Autre</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div style={{ marginBottom: '1rem' }}>
-                        <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
-                        <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
-                          value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
-                      </div>
-                      {error && <p style={{ textAlign: 'left', fontSize: '.78rem', color: '#ff6b6b', marginBottom: '.8rem' }}>{error}</p>}
-                      <p style={{ textAlign: 'left', fontSize: '.72rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
-                        <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
-                      </p>
-                      {/* Réserve la place du rond d'envoi ancré en bas à droite */}
-                      <div style={{ height: FORM_BTN_OPEN_SIZE + 10 }} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-
-            <button
-              ref={btnRef}
-              type="button"
-              onClick={onBtnClick}
-              aria-label={isExpanded ? 'Envoyer le message' : 'Recevoir mon devis en 24h'}
-              style={{
-                position: 'absolute', top: 0, left: '50%', marginLeft: `-${FORM_BTN_CLOSED_W / 2}px`,
-                borderRadius: 999, background: '#88ca53', border: '2px solid #fff', cursor: 'pointer', color: '#08130a',
-                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', padding: 0,
-                boxShadow: '4px 4px 0px #fff', willChange: 'transform, width, height',
-              }}
-            >
-              <span style={{
-                position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.55rem',
-                fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1rem', textTransform: 'uppercase',
-                opacity: isExpanded ? 0 : 1, transform: isExpanded ? 'scale(.85)' : 'scale(1)', pointerEvents: isExpanded ? 'none' : 'auto',
-                transition: 'opacity .2s ease, transform .2s ease', whiteSpace: 'nowrap',
-              }}>
-                <Send size={16} /> <HoverSlideText text="Recevoir mon devis en 24h" />
-              </span>
-              <span style={{
-                position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                opacity: isExpanded ? 1 : 0, transform: isExpanded ? 'scale(1)' : 'scale(.4)', pointerEvents: isExpanded ? 'auto' : 'none',
-                transition: 'opacity .2s ease, transform .2s ease',
-              }}>
-                {sending ? <span style={{ width: 16, height: 16, border: '2px solid rgba(8,19,10,.3)', borderTopColor: '#08130a', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={18} />}
-              </span>
-            </button>
+          <div style={{ maxWidth: FORM_PANEL_W, margin: '0 auto', background: T.card, border: `1px solid ${T.border}`, borderRadius: 22, padding: '2rem', boxSizing: 'border-box' }}>
+            <AnimatePresence mode="wait">
+              {sent ? (
+                <motion.div key="success" initial={{ opacity: 0, scale: .9 }} animate={{ opacity: 1, scale: 1 }} style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+                  <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 64, height: 64, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
+                    <Check size={30} style={{ color: '#88ca53' }} />
+                  </motion.div>
+                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.3rem', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
+                  <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
+                  <button type="button" onClick={() => { setSent(false); setError(''); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }} style={{ marginTop: '1.6rem', background: 'transparent', border: `1px solid ${T.border}`, borderRadius: 999, padding: '.55rem 1.3rem', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', cursor: 'pointer' }}>Envoyer un autre message</button>
+                </motion.div>
+              ) : (
+                <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.4rem', color: T.textMain, marginBottom: '1.4rem' }}>Nous écrire</h3>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
+                      <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
+                      <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                    </div>
+                  </div>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                      <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                    </div>
+                    <div>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
+                      <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
+                        <option value="">Choisir...</option>
+                        <option value="site-vitrine">Conception de Site Web</option>
+                        <option value="e-commerce">E-commerce</option>
+                        <option value="application-web">Application Web / SaaS</option>
+                        <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
+                        <option value="api-backend">API & Backend</option>
+                        <option value="google-my-business">Fiche Google My Business</option>
+                        <option value="maintenance">Maintenance & Support</option>
+                        <option value="autre">Autre</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div style={{ marginBottom: '1.6rem' }}>
+                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
+                    <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
+                      value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
+                  </div>
+                  {error && <p style={{ textAlign: 'left', fontSize: '.78rem', color: '#ff6b6b', marginBottom: '.8rem' }}>{error}</p>}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
+                    <p style={{ textAlign: 'left', fontSize: '.72rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: '.35rem', margin: 0 }}>
+                      <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
+                    </p>
+                    <button
+                      type="button"
+                      onClick={handleSubmit}
+                      disabled={sending}
+                      style={{
+                        borderRadius: 999, background: '#88ca53', border: '2px solid #fff', cursor: sending ? 'default' : 'pointer', color: '#08130a',
+                        display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '.55rem', padding: '.85rem 1.6rem',
+                        fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1rem', textTransform: 'uppercase',
+                        boxShadow: '4px 4px 0px #fff', whiteSpace: 'nowrap', flexShrink: 0, opacity: sending ? .7 : 1,
+                      }}
+                    >
+                      {sending ? <span style={{ width: 16, height: 16, border: '2px solid rgba(8,19,10,.3)', borderTopColor: '#08130a', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={16} />}
+                      <HoverSlideText text="Recevoir mon devis en 24h" />
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </BlurReveal>
       </div>

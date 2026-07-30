@@ -47,10 +47,12 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine de l'agence, c
 | **@google/genai** | 2.11 | Assistant IA — fournisseur principal (Gemini, gratuit) |
 | **groq-sdk** | 1.3 | Assistant IA — fournisseur de secours (Llama 3.1 8B, gratuit) |
 | **Prisma** + PostgreSQL (Neon) | 6.19 | Conversations, leads, visiteurs — alimente le dashboard admin |
+| **@vercel/analytics** | 2.0 | Pageviews + Web Vitals (en complément du tracking interne visiteurs) |
+| **Recharts** | 3.9 | Graphiques du dashboard admin |
 
 **Design system :**
 - Vert de marque `#88ca53` (dark mode) / `#5f9137` (light mode)
-- Polices : **JetBrains Mono** (corps, UI) · **Space Grotesk** (titres) · **Dancing Script** (accents décoratifs)
+- Polices : **JetBrains Mono** (corps, UI) · **Space Grotesk** (titres) · **Anton** (labels du mode Explorer/Tunnel) · **Dancing Script** (accents décoratifs)
 - Thème clair/sombre persistant, bascule en transition circulaire (**View Transitions API**, repli instantané sur Firefox)
 
 ---
