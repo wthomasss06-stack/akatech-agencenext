@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import { cld } from '@/lib/cloudinary'
 import {
   ArrowRight, Star, ExternalLink, ChevronDown,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
@@ -199,20 +200,35 @@ function CircularProjectsGallery({ items, draggable = false, cardW = 220, interv
   )
 }
 
-// ── Slogan Hero — accroche fixe et bénéfice-driven (plus de cycle),
-// même traitement Neo-Brutalism (bloc vert + box-shadow blanc dur) ──
-function HeroSlogan() {
+const HERO_SLOGANS = [
+  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
+  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
+  { before: 'Développez votre activité ', highlight: 'sereinement' },
+]
+
+// ── Slogan Hero — cycle auto entre 3 accroches, même traitement
+// Neo-Brutalism (bloc vert + box-shadow blanc dur) sur le mot-clé ──
+function HeroSloganCycle() {
+  const [index, setIndex] = useState(0)
+  useEffect(() => {
+    const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
+    return () => clearInterval(id)
+  }, [])
+  const { before, highlight } = HERO_SLOGANS[index]
+
   return (
     <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <motion.p
-        initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: .45, ease: 'easeOut' }}
-        style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
-        Des sites qui convertisent vos visiteurs en{' '}
-        <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
-          clients
-        </span>
-      </motion.p>
+      <AnimatePresence mode="wait">
+        <motion.p key={index}
+          initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: .45, ease: 'easeOut' }}
+          style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+          {before}
+          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
+            {highlight}
+          </span>
+        </motion.p>
+      </AnimatePresence>
     </div>
   )
 }
@@ -300,7 +316,7 @@ function Hero() {
     <section id="home-hero" style={{ height: '100dvh', maxHeight: '100dvh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        <img src={cld('/images/hero-bg.webp')} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
         <motion.div
@@ -317,7 +333,7 @@ function Hero() {
 
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '4rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
-        <HeroSlogan />
+        <HeroSloganCycle />
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}

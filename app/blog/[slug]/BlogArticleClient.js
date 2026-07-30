@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Tag, ArrowRight, MessageCircle } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { cld } from '@/lib/cloudinary'
 import { PageCTA } from '@/components/ui/index'
 import { BLOG_POSTS } from '@/lib/data'
 
@@ -136,7 +137,7 @@ export default function BlogArticleClient({ slug }) {
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '2rem' }}>
               <img
-                src="/images/founder.webp"
+                src={cld('/images/founder.webp')}
                 alt="M'Bollo Aka Elvis"
                 style={{ width: 44, height: 44, borderRadius: '50%', objectFit: 'cover', border: `1px solid ${T.border}`, flexShrink: 0 }}
               />

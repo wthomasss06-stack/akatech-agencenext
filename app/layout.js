@@ -7,6 +7,7 @@ import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
 import AIAssistant from '@/components/ui/AIAssistant'
 import VisitorTracker from '@/components/ui/VisitorTracker'
+import { cld } from '@/lib/cloudinary'
 import { Analytics } from '@vercel/analytics/next'
 import { PageTransitionProvider } from '@/components/layout/PageTransition'
 import { BlobTransitionProvider } from '@/components/layout/BlobTransition'
@@ -42,13 +43,13 @@ export const metadata = {
     title: 'AKATech — Agence Web Abidjan | Sites, E-Commerce, SaaS',
     description: "Solutions digitales sur-mesure pour entrepreneurs et PME en Côte d'Ivoire : sites vitrines, e-commerce, SaaS, API et fiches Google My Business.",
     url: SITE_URL,
-    images: [{ url: '/images/og-cover.webp', width: 1200, height: 630, alt: 'AKATech — Agence Web Abidjan' }],
+    images: [{ url: cld('/images/og-cover.webp'), width: 1200, height: 630, alt: 'AKATech — Agence Web Abidjan' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AKATech — Agence Web Abidjan',
     description: "Sites vitrines, e-commerce, SaaS et API sur-mesure pour entrepreneurs ivoiriens.",
-    images: ['/images/og-cover.webp'],
+    images: [cld('/images/og-cover.webp')],
   },
 }
 
@@ -76,8 +77,8 @@ const ORG_JSON_LD = {
   name: 'AKATech',
   alternateName: "AKATech Abidjan",
   url: SITE_URL,
-  logo: `${SITE_URL}/images/logo.webp`,
-  image: `${SITE_URL}/images/og-cover.webp`,
+  logo: cld('/images/logo.webp'),
+  image: cld('/images/og-cover.webp'),
   description: "Agence web freelance basée à Abidjan, Côte d'Ivoire. Conception de sites vitrines, e-commerce, applications SaaS, API & backend, et gestion de fiches Google My Business.",
   founder: { '@type': 'Person', name: "M'Bollo Aka Elvis" },
   address: {

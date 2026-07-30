@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import { cld } from '@/lib/cloudinary'
 import {
   ArrowRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
@@ -212,7 +213,7 @@ function Hero() {
     <section id="home-hero" style={{ height: `${HERO_VH}dvh`, maxHeight: `${HERO_VH}dvh`, width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806', paddingBottom: 'clamp(140px, 15vh, 180px)' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <img src="/images/hero-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        <img src={cld('/images/hero-bg.webp')} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
         <motion.div
@@ -232,7 +233,7 @@ function Hero() {
 
         
 
-        <HeroSlogan />
+        <HeroSloganCycle />
 
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
@@ -889,6 +890,14 @@ const DOMAINES = [
     img:   '/images/service/maintenence.webp',              // Service maintenance AKATech
   },
 ]
+
+// Bascule Cloudinary — mêmes chemins locaux gardés tels quels ci-dessus
+// pour rester lisibles, conversion faite une seule fois ici.
+for (const arr of [SERVICES_SKEW, WHY_PANELS, DOMAINES]) {
+  for (const item of arr) {
+    if (item.img) item.img = cld(item.img)
+  }
+}
 
 // ── DOMAINE CARD — gère son propre hover + image curseur rectangulaire ──
 function DomaineCard({ n, Icon, title, desc, tag, img, index, inView }) {

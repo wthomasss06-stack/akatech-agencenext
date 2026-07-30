@@ -119,6 +119,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS, PROJECTS } from '@/lib/data'
+import { cld } from '@/lib/cloudinary'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
 
@@ -368,7 +369,7 @@ function StatsFounderSection() {
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', padding: '1.2rem 1.4rem', borderRadius: 16, background: 'rgba(136,202,83,.06)', border: '1px solid rgba(136,202,83,.2)', marginBottom: '1.8rem' }}>
             <div style={{ width: 60, height: 60, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid rgba(136,202,83,.5)', boxShadow: '0 0 16px rgba(136,202,83,.2)' }}>
               <LazyImg
-                src="/images/founder.webp"
+                src={cld('/images/founder.webp')}
                 alt="M'Bollo Aka Elvis"
                 style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 10%' }}
                 placeholder={<div style={{ width: 60, height: 60, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.2rem' }}>E</div>}
@@ -504,7 +505,7 @@ function SkillsSection() {
         <BlurReveal direction="right" delay={0.2}>
           <TiltCard intensity={10} style={{ borderRadius: 16 }}>
             <div style={{ borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 32px rgba(0,0,0,.3)', height: 400 }}>
-              <LazyImg src="/images/about-4.webp" alt="Développeur" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              <LazyImg src={cld('/images/about-4.webp')} alt="Développeur" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Code size={48} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
             </div>
           </TiltCard>

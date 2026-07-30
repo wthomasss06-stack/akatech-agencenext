@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { gsap } from 'gsap'
+import { cld } from '@/lib/cloudinary'
 
 /**
  * Loader — AKATech
@@ -248,7 +249,7 @@ export default function Loader() {
             >
               <div style={{ position: 'relative', width: 220, height: 220, margin: '0 auto 1rem' }}>
                 <motion.img
-                  src="/images/logo.webp"
+                  src={cld('/images/logo.webp')}
                   alt="AKATech"
                   initial={{ opacity: 0, scale: 0.7 }}
                   animate={{ opacity: 1, scale: 1 }}

@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import { Moon, Sun, Orbit } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { cld } from '@/lib/cloudinary'
 import { HoverSlideText } from '@/components/ui/index'
 import TransitionLink from './TransitionLink'
 import { useBlobTransition } from './BlobTransition'
@@ -172,7 +173,7 @@ export default function CardNav() {
           </button>
 
           <TransitionLink href="/" className="aka-nav-logo" onClick={closeNav}>
-            <Image src="/images/logo.webp" alt="AKATech" width={75} height={50} style={{ objectFit: 'contain' }} priority />
+            <Image src={cld('/images/logo.webp')} alt="AKATech" width={75} height={50} style={{ objectFit: 'contain' }} priority />
           </TransitionLink>
 
           <div className="aka-nav-right">
@@ -200,7 +201,7 @@ export default function CardNav() {
             <div className="aka-card-label">AKATech studio.</div>
             <div className="aka-card-brand">
               <TransitionLink href="/" onClick={closeNav} className="aka-card-logo-link" aria-label="Retour à l'accueil">
-                <Image src="/images/logo.webp" alt="AKATech" width={138} height={92} style={{ objectFit: 'contain' }} />
+                <Image src={cld('/images/logo.webp')} alt="AKATech" width={138} height={92} style={{ objectFit: 'contain' }} />
               </TransitionLink>
               <NavSlogan />
             </div>

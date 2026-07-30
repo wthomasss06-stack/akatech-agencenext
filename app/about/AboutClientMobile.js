@@ -8,6 +8,7 @@ import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline, HoverSli
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS, PROJECTS } from '@/lib/data'
+import { cld } from '@/lib/cloudinary'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
 
@@ -75,15 +76,15 @@ function HeroAbout() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, delay: .2 }}
           style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gridTemplateRows: '180px 130px', gap: '.75rem' }}>
           <div style={{ gridRow: '1 / 3', borderRadius: 14, overflow: 'hidden', border: '1px solid rgba(136,202,83,.2)', boxShadow: '6px 6px 24px rgba(0,0,0,.3)' }}>
-            <LazyImg src="/images/about-1.webp" alt="AKATech" style={{ width:'100%',height:'100%',objectFit:'cover' }}
+            <LazyImg src={cld('/images/about-1.webp')} alt="AKATech" style={{ width:'100%',height:'100%',objectFit:'cover' }}
               placeholder={<div style={{ height:'100%',background:'linear-gradient(135deg,#0a1a0e,#060e09)',display:'flex',alignItems:'center',justifyContent:'center' }}><Users size={28} style={{color:'rgba(136,202,83,.3)'}}/></div>} />
           </div>
           <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(136,202,83,.15)' }}>
-            <LazyImg src="/images/about-2.webp" alt="Bureau" style={{ width:'100%',height:'100%',objectFit:'cover' }}
+            <LazyImg src={cld('/images/about-2.webp')} alt="Bureau" style={{ width:'100%',height:'100%',objectFit:'cover' }}
               placeholder={<div style={{ height:'100%',background:'linear-gradient(135deg,#0a1a0e,#060e09)',display:'flex',alignItems:'center',justifyContent:'center' }}><Monitor size={22} style={{color:'rgba(136,202,83,.3)'}}/></div>} />
           </div>
           <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid rgba(136,202,83,.15)' }}>
-            <LazyImg src="/images/about-3.webp" alt="Dev" style={{ width:'100%',height:'100%',objectFit:'cover' }}
+            <LazyImg src={cld('/images/about-3.webp')} alt="Dev" style={{ width:'100%',height:'100%',objectFit:'cover' }}
               placeholder={<div style={{ height:'100%',background:'linear-gradient(135deg,#0a1a0e,#060e09)',display:'flex',alignItems:'center',justifyContent:'center' }}><Code size={22} style={{color:'rgba(136,202,83,.3)'}}/></div>} />
           </div>
         </motion.div>
@@ -218,7 +219,7 @@ function FounderSection() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '1rem 1.1rem', borderRadius: 14, background: 'rgba(136,202,83,.06)', border: '1px solid rgba(136,202,83,.2)', marginBottom: '1.5rem' }}>
           <div style={{ width: 56, height: 56, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, border: '2px solid rgba(136,202,83,.5)', boxShadow: '0 0 14px rgba(136,202,83,.2)' }}>
             <LazyImg
-              src="/images/founder.webp"
+              src={cld('/images/founder.webp')}
               alt="M'Bollo Aka Elvis"
               style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 10%' }}
               placeholder={<div style={{ width: 56, height: 56, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.1rem' }}>E</div>}
@@ -331,7 +332,7 @@ function SkillsSection() {
       {/* Image */}
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .35 }}
         style={{ marginTop: '2rem', borderRadius: 14, overflow: 'hidden', border: `1px solid ${T.border}`, height: 220 }}>
-        <LazyImg src="/images/about-4.webp" alt="Développeur" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        <LazyImg src={cld('/images/about-4.webp')} alt="Développeur" style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Code size={36} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
       </motion.div>
     </section>

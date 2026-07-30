@@ -1,5 +1,6 @@
 import BlogArticleClient from './BlogArticleClient'
 import { BLOG_POSTS } from '@/lib/data'
+import { cld } from '@/lib/cloudinary'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -41,11 +42,11 @@ export default function BlogArticlePage({ params }) {
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt,
-    image: `${SITE_URL}${post.img}`,
+    image: post.img,
     datePublished: post.date,
     dateModified: post.date,
     author: { '@type': 'Organization', name: 'AKATech' },
-    publisher: { '@type': 'Organization', name: 'AKATech', logo: { '@type': 'ImageObject', url: `${SITE_URL}/images/logo.webp` } },
+    publisher: { '@type': 'Organization', name: 'AKATech', logo: { '@type': 'ImageObject', url: cld('/images/logo.webp') } },
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${SITE_URL}/blog/${post.slug}` },
   } : null
 

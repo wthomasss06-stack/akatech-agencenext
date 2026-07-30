@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
+import { cld } from '@/lib/cloudinary'
 
 export default function Logo({ size = 48, animate = true, onClick, showTag = true }) {
   const ptsRef = useRef(null)
@@ -58,7 +59,7 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
         animation: animate ? 'akaGlowPulse 3s ease-in-out infinite' : 'none',
       }}>
         <Image
-          src="/images/logo.webp"
+          src={cld('/images/logo.webp')}
           alt="AKATech Logo"
           width={displayWidth}
           height={displayHeight}

@@ -11,6 +11,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, GreenUnderline, PageCTA } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
+import { cld } from '@/lib/cloudinary'
 
 // ═══════════════════════════════════════════════════════════════
 // ── ANIMATION COMPONENTS ─────────────────────────────────────
@@ -380,7 +381,7 @@ function ContactChannels() {
               {/* Center */}
               <div id="cnt-center"
                 style={{ width: 76, height: 76, borderRadius: '50%', background: 'linear-gradient(135deg, rgba(136,202,83,.25), rgba(136,202,83,.08))', border: '2px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(12px)', justifySelf: 'center', boxShadow: '0 0 40px rgba(136,202,83,.2)', flexShrink: 0 }}>
-                <Image src="/images/logo.webp" alt="AKATech" width={52} height={52} style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(136,202,83,.5))' }} />
+                <Image src={cld('/images/logo.webp')} alt="AKATech" width={52} height={52} style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(136,202,83,.5))' }} />
               </div>
               {/* Right 2 */}
               {CHANNELS.slice(2).map(({ id, icon: Icon, label, color }) => (
