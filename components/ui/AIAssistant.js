@@ -1,7 +1,8 @@
 ﻿'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 
@@ -292,11 +293,20 @@ function LinkButton({ url, label }) {
   )
 }
 
+const AI_STIFFNESS = 0.18
+const AI_FRICTION = 0.65
+const AI_PANEL_W = 380
+const AI_PANEL_H = 560
+const AI_BTN_SIZE = 54
+const AI_GAP = 14
+
 export default function AIAssistant() {
   const T = useTheme()
   const pathname = usePathname()
   const reduceMotion = useReducedMotion()
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => { setMounted(true) }, [])
   const [messages, setMessages] = useState([{ role: 'assistant', content: GREETING }])
   const [input, setInput] = useState('')
   const [streaming, setStreaming] = useState(false)
@@ -340,15 +350,81 @@ export default function AIAssistant() {
     }
   }, [endConversation])
 
-  const toggleOpen = () => {
-    setOpen((prev) => {
-      const nextOpen = !prev
-      if (!nextOpen) {
-        endConversation(messages)
-      }
-      return nextOpen
-    })
+  // ── Morph bouton → panneau (même mécanique que ProjectFormHome : le
+  // formulaire est désormais toujours visible, donc ce bouton hérite de
+  // l'effet ressort. Contrairement au formulaire, le bouton garde une
+  // taille fixe (cercle) — seule sa position bascule du coin bas-gauche
+  // vers le coin haut-droit du panneau ouvert) ──
+  const wrapRef = useRef(null)
+  const panelRef = useRef(null)
+  const btnRef = useRef(null)
+  const openRef = useRef(false)
+  const panelAnim = useRef({ currentW: 0, currentH: 0, currentOpacity: 0, targetW: 0, targetH: 0, targetOpacity: 0, vxW: 0, vxH: 0, vxO: 0 })
+  const btnAnim = useRef({ currentX: 0, currentY: 0, targetX: 0, targetY: 0, vxX: 0, vxY: 0 })
+
+  const getPanelSize = () => (typeof window === 'undefined'
+    ? { w: AI_PANEL_W, h: AI_PANEL_H }
+    : { w: Math.min(AI_PANEL_W, window.innerWidth - 38), h: Math.min(AI_PANEL_H, window.innerHeight - 128) })
+
+  const openPanel = () => {
+    const { w, h } = getPanelSize()
+    panelAnim.current.targetW = w
+    panelAnim.current.targetH = h
+    panelAnim.current.targetOpacity = 1
+    btnAnim.current.targetX = w - AI_BTN_SIZE - AI_GAP
+    btnAnim.current.targetY = h - AI_BTN_SIZE - AI_GAP
+    if (reduceMotion) {
+      Object.assign(panelAnim.current, { currentW: w, currentH: h, currentOpacity: 1 })
+      Object.assign(btnAnim.current, { currentX: btnAnim.current.targetX, currentY: btnAnim.current.targetY })
+    }
+    setOpen(true)
+    openRef.current = true
   }
+
+  const closePanel = () => {
+    panelAnim.current.targetW = 0
+    panelAnim.current.targetH = 0
+    panelAnim.current.targetOpacity = 0
+    btnAnim.current.targetX = 0
+    btnAnim.current.targetY = 0
+    if (reduceMotion) {
+      Object.assign(panelAnim.current, { currentW: 0, currentH: 0, currentOpacity: 0 })
+      Object.assign(btnAnim.current, { currentX: 0, currentY: 0 })
+    }
+    setOpen(false)
+    openRef.current = false
+    endConversation(messagesRef.current)
+  }
+
+  const toggleOpen = () => { openRef.current ? closePanel() : openPanel() }
+
+  // Boucle à ressort — identique à ProjectFormHome. En reduceMotion, les
+  // valeurs current sont déjà égales aux target (voir openPanel/closePanel
+  // ci-dessus) donc la boucle tourne mais n'anime rien.
+  useEffect(() => {
+    let raf = 0
+    const tick = () => {
+      const p = panelAnim.current
+      const b = btnAnim.current
+      p.vxW += (p.targetW - p.currentW) * AI_STIFFNESS; p.vxW *= AI_FRICTION; p.currentW += p.vxW
+      p.vxH += (p.targetH - p.currentH) * AI_STIFFNESS; p.vxH *= AI_FRICTION; p.currentH += p.vxH
+      p.vxO += (p.targetOpacity - p.currentOpacity) * AI_STIFFNESS; p.vxO *= AI_FRICTION; p.currentOpacity += p.vxO
+      b.vxX += (b.targetX - b.currentX) * AI_STIFFNESS; b.vxX *= AI_FRICTION; b.currentX += b.vxX
+      b.vxY += (b.targetY - b.currentY) * AI_STIFFNESS; b.vxY *= AI_FRICTION; b.currentY += b.vxY
+      if (panelRef.current) {
+        panelRef.current.style.width = `${p.currentW}px`
+        panelRef.current.style.height = `${p.currentH}px`
+        panelRef.current.style.opacity = String(p.currentOpacity)
+        panelRef.current.style.visibility = p.currentOpacity > 0.05 ? 'visible' : 'hidden'
+      }
+      if (btnRef.current) {
+        btnRef.current.style.transform = `translate3d(${b.currentX}px, ${-b.currentY}px, 0)`
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
 
   useEffect(() => {
     if (!listRef.current) return
@@ -410,132 +486,132 @@ export default function AIAssistant() {
   }
 
   if (pathname?.startsWith('/explorer')) return null
+  if (!mounted) return null
 
-  return (
-    <>
-      <motion.button
+  return createPortal(
+    <motion.div
+      ref={wrapRef}
+      initial={reduceMotion ? false : { scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ delay: reduceMotion ? 0 : 2.4, type: 'spring', stiffness: 260, damping: 20 }}
+      style={{ position: 'fixed', bottom: '2rem', left: '2rem', zIndex: 9000 }}
+    >
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-label="Assistant AKATech"
+        aria-hidden={!open}
+        style={{
+          position: 'absolute', bottom: 0, left: 0, zIndex: 1, overflow: 'hidden',
+          background: T.card, border: `1px solid ${T.border}`, borderRadius: 18,
+          boxShadow: T.light ? '0 12px 40px rgba(0,0,0,.16)' : '0 12px 40px rgba(0,0,0,.6)',
+        }}
+      >
+        <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+          {/* Header — padding droit réservé pour laisser la place au bouton rond (haut-droit) */}
+          <div style={{
+            padding: '1rem 4.2rem 1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem',
+            borderBottom: `1px solid ${T.border}`, flexShrink: 0,
+          }}>
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%', background: 'rgba(136,202,83,.12)',
+              border: `1px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center',
+              color: T.green, flexShrink: 0,
+            }}>
+              <Bot size={18} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 700, color: T.textMain }}>
+                Assistant AKATech
+              </div>
+              <div style={{ fontSize: '.68rem', color: T.textMuted }}>Répond en quelques secondes</div>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div ref={listRef} style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.1rem', display: 'flex', flexDirection: 'column', gap: '.7rem' }}>
+            {messages.map((m, i) => (
+              <div key={i} style={{
+                alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
+                maxWidth: '85%',
+                background: m.role === 'user' ? T.green : (T.light ? '#f0f0f0' : 'rgba(255,255,255,.05)'),
+                color: m.role === 'user' ? '#08120a' : T.textMain,
+                padding: '.65rem .9rem', borderRadius: 14,
+                borderBottomRightRadius: m.role === 'user' ? 3 : 14,
+                borderBottomLeftRadius: m.role === 'assistant' ? 3 : 14,
+                fontSize: '.85rem', lineHeight: 1.55, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
+              }}>
+                {m.role === 'assistant' && m.content === '' && streaming && i === messages.length - 1
+                  ? <TypingDots color={T.textMuted} />
+                  : renderMessageContent(m.content)}
+              </div>
+            ))}
+            {errorMsg && (
+              <div style={{ display: 'flex', gap: '.4rem', alignItems: 'flex-start', fontSize: '.78rem', color: '#e08a4a' }}>
+                <MessageCircleWarning size={15} style={{ flexShrink: 0, marginTop: 1 }} />
+                {errorMsg}
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div style={{ padding: '.8rem', borderTop: `1px solid ${T.border}`, display: 'flex', gap: '.5rem', flexShrink: 0 }}>
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyDown}
+              placeholder="Décrivez votre projet…"
+              rows={1}
+              disabled={streaming}
+              tabIndex={open ? 0 : -1}
+              aria-label="Votre message"
+              style={{
+                flex: 1, resize: 'none', minHeight: 40, maxHeight: 90,
+                background: T.light ? '#f5f5f5' : 'rgba(255,255,255,.04)',
+                border: `1px solid ${T.border}`, borderRadius: 10,
+                padding: '.6rem .8rem', fontSize: '.85rem', color: T.textMain,
+                fontFamily: 'inherit', outline: 'none',
+              }}
+            />
+            <button
+              type="button"
+              onClick={send}
+              disabled={streaming || !input.trim()}
+              tabIndex={open ? 0 : -1}
+              aria-label="Envoyer"
+              style={{
+                width: 44, height: 44, minWidth: 44, borderRadius: 10, flexShrink: 0,
+                background: streaming || !input.trim() ? T.border : T.green,
+                border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                cursor: streaming || !input.trim() ? 'default' : 'pointer',
+                color: '#08120a', transition: 'background .15s',
+              }}
+            >
+              <Send size={17} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <button
+        ref={btnRef}
         type="button"
         onClick={toggleOpen}
         aria-label={open ? "Fermer l'assistant AKATech" : "Ouvrir l'assistant AKATech"}
-        initial={reduceMotion ? false : { scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ delay: reduceMotion ? 0 : 2.4, type: 'spring', stiffness: 260, damping: 20 }}
         style={{
-          position: 'fixed', bottom: '2rem', left: '2rem', zIndex: 9000,
-          width: 54, height: 54, minWidth: 44, minHeight: 44, borderRadius: '50%',
+          position: 'absolute', bottom: 0, left: 0, zIndex: 2,
+          width: AI_BTN_SIZE, height: AI_BTN_SIZE, minWidth: 44, minHeight: 44, borderRadius: '50%',
           background: T.light ? 'linear-gradient(145deg,#ffffff,#f0f0f0)' : 'linear-gradient(145deg,#0e2416,#081208)',
           border: `1px solid ${T.border2}`,
           boxShadow: T.light ? '4px 4px 14px rgba(0,0,0,.12), 0 0 20px rgba(136,202,83,.12)' : '4px 4px 14px rgba(0,0,0,.7), 0 0 20px rgba(136,202,83,.18)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          cursor: 'pointer', color: T.green, padding: 0,
+          cursor: 'pointer', color: T.green, padding: 0, willChange: 'transform',
         }}
       >
         {open ? <X size={22} /> : <Bot size={24} />}
-      </motion.button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            role="dialog"
-            aria-label="Assistant AKATech"
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .92, y: 16 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: .92, y: 16 }}
-            transition={{ duration: .22, ease: [.22, 1, .36, 1] }}
-            style={{
-              position: 'fixed', bottom: '5.5rem', left: '1.2rem', zIndex: 9001,
-              width: 'min(380px, calc(100vw - 2.4rem))',
-              height: 'min(560px, calc(100vh - 8rem))',
-              display: 'flex', flexDirection: 'column',
-              background: T.card, border: `1px solid ${T.border}`, borderRadius: 18,
-              boxShadow: T.light ? '0 12px 40px rgba(0,0,0,.16)' : '0 12px 40px rgba(0,0,0,.6)',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Header */}
-            <div style={{
-              padding: '1rem 1.2rem', display: 'flex', alignItems: 'center', gap: '.7rem',
-              borderBottom: `1px solid ${T.border}`, flexShrink: 0,
-            }}>
-              <div style={{
-                width: 34, height: 34, borderRadius: '50%', background: 'rgba(136,202,83,.12)',
-                border: `1px solid ${T.border2}`, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                color: T.green, flexShrink: 0,
-              }}>
-                <Bot size={18} />
-              </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 700, color: T.textMain }}>
-                  Assistant AKATech
-                </div>
-                <div style={{ fontSize: '.68rem', color: T.textMuted }}>Répond en quelques secondes</div>
-              </div>
-            </div>
-
-            {/* Messages */}
-            <div ref={listRef} style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.1rem', display: 'flex', flexDirection: 'column', gap: '.7rem' }}>
-              {messages.map((m, i) => (
-                <div key={i} style={{
-                  alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',
-                  maxWidth: '85%',
-                  background: m.role === 'user' ? T.green : (T.light ? '#f0f0f0' : 'rgba(255,255,255,.05)'),
-                  color: m.role === 'user' ? '#08120a' : T.textMain,
-                  padding: '.65rem .9rem', borderRadius: 14,
-                  borderBottomRightRadius: m.role === 'user' ? 3 : 14,
-                  borderBottomLeftRadius: m.role === 'assistant' ? 3 : 14,
-                  fontSize: '.85rem', lineHeight: 1.55, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                }}>
-                  {m.role === 'assistant' && m.content === '' && streaming && i === messages.length - 1
-                    ? <TypingDots color={T.textMuted} />
-                    : renderMessageContent(m.content)}
-                </div>
-              ))}
-              {errorMsg && (
-                <div style={{ display: 'flex', gap: '.4rem', alignItems: 'flex-start', fontSize: '.78rem', color: '#e08a4a' }}>
-                  <MessageCircleWarning size={15} style={{ flexShrink: 0, marginTop: 1 }} />
-                  {errorMsg}
-                </div>
-              )}
-            </div>
-
-            {/* Input */}
-            <div style={{ padding: '.8rem', borderTop: `1px solid ${T.border}`, display: 'flex', gap: '.5rem', flexShrink: 0 }}>
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={onKeyDown}
-                placeholder="Décrivez votre projet…"
-                rows={1}
-                disabled={streaming}
-                aria-label="Votre message"
-                style={{
-                  flex: 1, resize: 'none', minHeight: 40, maxHeight: 90,
-                  background: T.light ? '#f5f5f5' : 'rgba(255,255,255,.04)',
-                  border: `1px solid ${T.border}`, borderRadius: 10,
-                  padding: '.6rem .8rem', fontSize: '.85rem', color: T.textMain,
-                  fontFamily: 'inherit', outline: 'none',
-                }}
-              />
-              <button
-                type="button"
-                onClick={send}
-                disabled={streaming || !input.trim()}
-                aria-label="Envoyer"
-                style={{
-                  width: 44, height: 44, minWidth: 44, borderRadius: 10, flexShrink: 0,
-                  background: streaming || !input.trim() ? T.border : T.green,
-                  border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  cursor: streaming || !input.trim() ? 'default' : 'pointer',
-                  color: '#08120a', transition: 'background .15s',
-                }}
-              >
-                <Send size={17} />
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
+      </button>
+    </motion.div>,
+    document.body
   )
 }
 
