@@ -217,7 +217,7 @@ export default function CardNav() {
           </div>
 
           <div className="aka-nav-card aka-card-3" ref={el => cardsRef.current[2] = el}>
-            <div className="aka-card-label">L'agence</div>
+            <div className="aka-card-label">Le Studio.</div>
             <div className="aka-card-links">
               <CardLinkWithGhost href="/services" label="Service" sub="Ce que nous proposons" onClick={closeNav} />
               <CardLinkWithGhost href="/about" label="À propos" sub="Notre équipe, Abidjan" onClick={closeNav} />

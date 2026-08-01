@@ -1,0 +1,83 @@
+/* components/layout/FooterWordmark.css
+   Wordmark géant hoverable du footer — "AKATECH" / "STUDIO."
+   Chaque .hover-char porte sa propre lettre (.hover-char-letter) et sa
+   propre image cachée (.hover-char-image, une par caractère, rendue dans
+   Footer.js) : au survol de CE caractère précis, la lettre s'efface et son
+   image apparaît par-dessus, en place — mécanique reprise de
+   reveal_hover_image_par_lettre.html (Effect 093), en unités em pour
+   rester juste sur le wordmark responsive (clamp 4rem → 21rem) sans JS de
+   mesure/repositionnement.
+*/
+
+.studio-wordmark-hoverable {
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  letter-spacing: 0;
+  font-kerning: normal;
+}
+
+.hover-char {
+  position: relative;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: top;
+  margin: 0 -.04em;
+  padding: 0 .03em;
+  line-height: 1;
+  z-index: 1;
+}
+
+.hover-char:hover {
+  z-index: 10;
+}
+
+.hover-char-letter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: opacity .25s ease, transform .3s ease;
+}
+
+.hover-char:hover .hover-char-letter,
+.hover-char.is-touched .hover-char-letter {
+  opacity: 0;
+  transform: scale(.7);
+}
+
+.hover-char-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1.1em;
+  height: 1.1em;
+  max-width: 1.3em;
+  max-height: 1.3em;
+  object-fit: contain;
+  transform: translate(-50%, -50%) scale(.7) rotate(-5deg);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  /* Épouse la silhouette de l'icône (fond transparent) — les sources ont
+     déjà leur propre ombre portée intégrée au rendu 3D. */
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .4));
+  transition: opacity .3s ease, transform .4s cubic-bezier(.175, .885, .32, 1.275);
+}
+
+.hover-char:hover .hover-char-image,
+.hover-char.is-touched .hover-char-image {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1) rotate(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hover-char-letter,
+  .hover-char-image {
+    transition: none;
+  }
+}

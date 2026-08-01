@@ -74,7 +74,7 @@ Grilles complètes : https://akatech.vercel.app/pricing
 - **Jean Edy** — Portfolio trilingue FR/EN/RU. React + Vite + GSAP.
 - **MD Laverie Pressing** — Site vitrine pressing avec prise de RDV. React + Vite + GSAP.
 - **Université les Anges** — Site institutionnel. HTML + CSS + Bulma.
-- **AKATech** — Site officiel de l'agence. Next.js 15 + Framer Motion + WebGL.
+- **AKATech** — Site officiel du Studio.. Next.js 15 + Framer Motion + WebGL.
 - **TechFlow** — Site vitrine technologique. HTML + Tailwind CSS.
 
 Portfolio complet : https://akatech.vercel.app/projects
@@ -87,7 +87,7 @@ Portfolio complet : https://akatech.vercel.app/projects
 
 ## Pages principales
 
-- [Accueil](https://akatech.vercel.app) — présentation de l'agence, services, tarifs, réalisations.
+- [Accueil](https://akatech.vercel.app) — présentation du Studio., services, tarifs, réalisations.
 - [Services](https://akatech.vercel.app/services) — détail des 5 domaines d'expertise.
 - [Réalisations](https://akatech.vercel.app/projects) — 19+ projets livrés, filtrables par catégorie.
 - [Tarifs](https://akatech.vercel.app/pricing) — grilles de prix détaillées et FAQ.

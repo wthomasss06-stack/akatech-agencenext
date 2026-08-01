@@ -27,7 +27,7 @@ Développé par **M'Bollo Aka Elvis** — Développeur Full-Stack basé à Abidj
 
 **AKATech** est une agence web freelance basée à **Abidjan, Côte d'Ivoire**, spécialisée dans la conception de solutions digitales sur-mesure pour les entrepreneurs, PME et créatifs d'Afrique de l'Ouest : sites vitrines, e-commerce, applications SaaS, API/backend et fiches Google My Business.
 
-Ce dépôt contient le **site officiel d'AKATech** — la vitrine de l'agence, construite avec **Next.js 14**, **GSAP** et **Three.js** — ainsi qu'un **assistant IA conversationnel** intégré au site public et un **dashboard admin privé** (leads, conversations, analytics). Le SEO est pensé au-delà du référencement classique : données structurées **JSON-LD** taillées pour le SEO, l'**AEO** (moteurs de réponse type Google AI Overviews) et le **GEO** (recommandation par les LLM comme ChatGPT ou Perplexity).
+Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., construite avec **Next.js 14**, **GSAP** et **Three.js** — ainsi qu'un **assistant IA conversationnel** intégré au site public et un **dashboard admin privé** (leads, conversations, analytics). Le SEO est pensé au-delà du référencement classique : données structurées **JSON-LD** taillées pour le SEO, l'**AEO** (moteurs de réponse type Google AI Overviews) et le **GEO** (recommandation par les LLM comme ChatGPT ou Perplexity).
 
 > **Toutes les prestations sont développées directement par AKATech** — pas de sous-traitance, pas de templates génériques.
 
@@ -342,7 +342,7 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Tunnel 3D WebGL** (`/explorer`) — Three.js + GSAP ScrollTrigger, parcourt les 19 projets, textures = vraies captures d'écran
 - **Thème clair/sombre** en transition circulaire via **View Transitions API** (repli instantané si non supporté)
 - **SEO structuré JSON-LD** (`ProfessionalService`) pensé SEO + AEO + GEO — citable par Google AI Overviews et les LLM
-- **`public/llms.txt`** — résumé structuré du site (services, tarifs, pages, contact) au format markdown conventionnel, pour que les LLM (ChatGPT, Perplexity, Claude…) décrivent l'agence avec des informations à jour plutôt que des suppositions
+- **`public/llms.txt`** — résumé structuré du site (services, tarifs, pages, contact) au format markdown conventionnel, pour que les LLM (ChatGPT, Perplexity, Claude…) décrivent Studio. avec des informations à jour plutôt que des suppositions
 - **Footer "Demander à l'IA"** — liens pré-remplis vers ChatGPT, Claude, Perplexity, Gemini, Grok
 - **Formulaire de contact** → Resend, avec limite anti-spam basique en mémoire
 - **Marquees de confiance** (`TrustStacksMarquee`, `ConversionMarquee`) sur Accueil / À propos / Services

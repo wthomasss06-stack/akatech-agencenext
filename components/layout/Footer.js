@@ -1,5 +1,5 @@
-'use client'
-import { useState, useEffect } from 'react'
+﻿'use client'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MapPin, Phone, Send } from 'lucide-react'
@@ -8,6 +8,9 @@ import AuroraHero from '@/components/ui/AuroraHero'
 import { HoverSlideText } from '@/components/ui/index'
 import { useTheme } from '@/lib/theme'
 import TransitionLink from './TransitionLink'
+import { wireLetterHoverSwap } from '@/lib/hoverImageChars'
+import { STUDIO_LETTER_IMAGE_POOLS } from '@/lib/studioWordmarkImages'
+import './FooterWordmark.css'
 
 /* ── Slogans cycle — footer ──────────────────────────── */
 const FOOTER_SLOGANS = [
@@ -75,13 +78,81 @@ function AskAIStrip({ T }) {
         {PLATFORMS.map(p => (
           <button key={p.id} onClick={() => handleClick(p)} title={`Demander à ${p.label}`}
             className="aka-ask-btn"
-            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'rgba(255,255,255,.04)', border: `1px solid ${copied === p.id ? '#88ca53' : 'rgba(255,255,255,.16)'}`, cursor: 'pointer', minWidth: 70 }}>
-            <img src={p.icon} alt={p.label} width={22} height={22} style={{ borderRadius: 6, display: 'block' }} />
+            style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'transparent', border: 'none', cursor: 'pointer', minWidth: 70 }}>
+            <img src={p.icon} alt={p.label} width={22} height={22} style={{ borderRadius: 0, display: 'block' }} />
             <span style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.5)' }}>
               <HoverSlideText text={copied === p.id ? 'Copié !' : p.label} />
             </span>
           </button>
         ))}
+      </div>
+    </div>
+  )
+}
+
+// ── Wordmark géant hoverable — "AKATECH" (blanc) / "STUDIO." (vert) ───
+// Chaque caractère porte SA PROPRE <img> (rendue ci-dessous, cachée par
+// défaut) ; au survol de CE caractère précis, la lettre s'efface et SON
+// image — tirée au hasard dans son pool, cf. lib/studioWordmarkImages.js,
+// ex. 9 variantes pour "A" — apparaît par-dessus, en place. Reprend la
+// mécanique de reveal_hover_image_par_lettre.html (Effect 093 : lettre →
+// image EN PLACE, pas une image qui suit le curseur) via
+// wireLetterHoverSwap (lib/hoverImageChars.js), en gardant le tirage
+// aléatoire par lettre plutôt qu'une image fixe par position. Le point
+// final de "STUDIO." a son propre pool dédié (clé '.').
+function StudioWordmark() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    if (!ref.current) return
+    return wireLetterHoverSwap(ref.current, '.hover-char', STUDIO_LETTER_IMAGE_POOLS)
+  }, [])
+
+  const renderChars = (word) =>
+    word.split('').map((ch, i) => {
+      const hasPool = (STUDIO_LETTER_IMAGE_POOLS[ch] || []).length > 0
+      return (
+        <span className="hover-char" key={i}>
+          <span className="hover-char-letter">{ch}</span>
+          {hasPool && <img className="hover-char-image" alt="" aria-hidden="true" decoding="async" />}
+        </span>
+      )
+    })
+
+  return (
+    <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', overflow: 'visible', pointerEvents: 'none', padding: '1rem 0 2rem' }}>
+      <div
+        ref={ref}
+        className="studio-wordmark-hoverable"
+        style={{
+          position: 'relative',
+          display: 'inline-block',
+          fontFamily: "'Barlow Condensed',sans-serif",
+          fontSize: 'clamp(4rem, 17vw, 21rem)',
+          fontWeight: 900,
+          fontStyle: 'italic',
+          letterSpacing: '-.02em',
+          lineHeight: 0.82,
+          transform: 'translateY(5%)',
+          background: 'linear-gradient(to bottom, rgba(255,255,255,.9) 0%, rgba(255,255,255,.05) 85%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+          textTransform: 'uppercase',
+          pointerEvents: 'auto',
+        }}
+      >
+        {renderChars('AKATECH')}
+        <br />
+        <span style={{
+          display: 'inline-block',
+          background: 'linear-gradient(to bottom, #88ca53 0%, rgba(136,202,83,.15) 90%)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}>
+          {renderChars('STUDIO.')}
+        </span>
       </div>
     </div>
   )
@@ -246,41 +317,14 @@ export default function Footer() {
         <AskAIStrip T={T} />
       </div>
 
-      {/* ── Wordmark géant — AKATECH STUDIO. ──────────── */}
-      <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', width: '100%', overflow: 'hidden', pointerEvents: 'none', padding: '1rem 0 2rem' }}>
-        <div style={{
-          fontFamily: "'Barlow Condensed',sans-serif",
-          fontSize: 'clamp(4rem, 17vw, 21rem)',
-          fontWeight: 900,
-          fontStyle: 'italic',
-          letterSpacing: '-.02em',
-          lineHeight: 0.82,
-          transform: 'translateY(5%)',
-          background: 'linear-gradient(to bottom, rgba(255,255,255,.9) 0%, rgba(255,255,255,.05) 85%)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-          textTransform: 'uppercase'
-        }}>
-          AKATECH
-          <br />
-          <span style={{
-            display: 'inline-block',
-            background: 'linear-gradient(to bottom, #88ca53 0%, rgba(136,202,83,.15) 90%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text',
-          }}>
-            STUDIO.
-          </span>
-        </div>
-      </div>
+      {/* ── Wordmark géant — AKATECH STUDIO. (hoverable) ──────── */}
+      <StudioWordmark />
 
       {/* ── Copyright bar ──────────────────────────────────────── */}
       <div style={{ position: 'relative', zIndex: 2, textAlign: 'center', padding: '1.2rem 5% 1.6rem', fontSize: '.7rem', color: muted }}>
         © {year}{' '}
-        <TransitionLink href="/" style={{ color: 'rgba(136,202,83,.8)' }}><HoverSlideText text="AKATech" /></TransitionLink>
-        {' '}· AKATech Studio. · Abidjan
+        <TransitionLink href="/" style={{ color: 'rgba(136,202,83,.8)' }}><HoverSlideText text="AKATech Studio." /></TransitionLink>
+        {' '} · Abidjan
       </div>
     </footer>
   )
