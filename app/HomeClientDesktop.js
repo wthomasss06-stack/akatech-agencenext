@@ -929,7 +929,9 @@ const DOMAINES = [
 // pour rester lisibles, conversion faite une seule fois ici.
 for (const arr of [SERVICES_SKEW, WHY_PANELS, DOMAINES]) {
   for (const item of arr) {
-    if (item.img) item.img = cld(item.img)
+    if (item.img && typeof item.img === 'string' && item.img.startsWith('/images/')) {
+      item.img = cld(item.img)
+    }
   }
 }
 
