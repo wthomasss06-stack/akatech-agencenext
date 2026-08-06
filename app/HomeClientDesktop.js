@@ -5,6 +5,14 @@ import Link from 'next/link'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { cld } from '@/lib/cloudinary'
+
+// Reconversion défensive : si l'image est déjà passée par la boucle de
+// normalisation Cloudinary plus bas (mutation en place de SERVICES_SKEW /
+// WHY_PANELS), s.img est déjà une URL Cloudinary — on ne la re-wrappe pas
+// (cld() sur une URL déjà transformée casserait le chemin). Sinon on
+// convertit nous-mêmes : la section Prestations/Processus ne dépend plus
+// de l'ordre d'exécution d'un effet de bord ailleurs dans le fichier.
+const toCloudinary = (img) => (typeof img === 'string' && img.startsWith('/images/')) ? cld(img) : img
 import {
   ArrowRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
@@ -615,6 +623,7 @@ function GhostScrollShowcase({ items }) {
     <div ref={containerRef} style={{ position: 'relative' }}>
       {items.map((item, i) => {
         const title = item.title.replace(/\n/g, ' ')
+        const ghostText = (item.tag || item.title).replace(/\n/g, ' ')
         const Tag = item.href ? Link : 'div'
         const tagProps = item.href ? { href: item.href } : {}
         return (
@@ -657,25 +666,15 @@ function GhostScrollShowcase({ items }) {
                 willChange: 'transform', userSelect: 'none', pointerEvents: 'none',
               }}
             >
-              {title}
+              {ghostText}
             </div>
 
             <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '3.2rem 5%', zIndex: 2, pointerEvents: 'none' }}>
               <div style={{ maxWidth: 680 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '.9rem', marginBottom: '.9rem' }}>
+                <div style={{ marginBottom: '.9rem' }}>
                   <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.25em' }}>
                     {item.n} / {String(items.length).padStart(2, '0')}
                   </span>
-                  {item.tag && (
-                    <span style={{
-                      padding: '.32rem .85rem', borderRadius: 100,
-                      background: 'rgba(136,202,83,.14)', border: '1px solid rgba(136,202,83,.32)',
-                      fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', fontWeight: 700,
-                      color: '#b3ee85', whiteSpace: 'nowrap',
-                    }}>
-                      {item.tag}
-                    </span>
-                  )}
                 </div>
                 <h3 style={{
                   fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic',
@@ -719,7 +718,7 @@ function ServicesPreview() {
 
   // Tous les services — showcase scroll plein écran, chaque panneau pointe vers son service sur /services
   const GHOST_ITEMS = SERVICES_SKEW.map(s => ({
-    n: s.n, title: s.title, img: s.img, tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
+    n: s.n, title: s.title, img: toCloudinary(s.img), tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
   }))
 
   return (
@@ -742,12 +741,12 @@ function ServicesPreview() {
           </BlurReveal>
         </div>
 
-        {/* ── Ghost Scroll Showcase — tous les services, plein écran (sort du conteneur 1200px) ── */}
-        <BlurReveal delay={0.15}>
-          <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
-            <GhostScrollShowcase items={GHOST_ITEMS} />
-          </div>
-        </BlurReveal>
+        {/* ── Ghost Scroll Showcase — tous les services, plein écran (sort du conteneur 1200px).
+             Pas de BlurReveal ici : le blur d'entrée reste réservé au texte, jamais aux images
+             (showcase déjà "révélé" par son propre scroll GSAP, pas besoin d'un 2e effet dessus). */}
+        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+          <GhostScrollShowcase items={GHOST_ITEMS} />
+        </div>
 
       </div>
     </section>
@@ -775,7 +774,7 @@ function WhyUs() {
 
   // Étapes du processus — showcase scroll plein écran (même pattern que ServicesPreview)
   const GHOST_ITEMS = WHY_PANELS.map(p => ({
-    n: p.n, title: p.title, img: p.img, tag: p.sub, desc: p.desc,
+    n: p.n, title: p.title, img: toCloudinary(p.img), tag: p.sub, desc: p.desc,
   }))
 
   return (
@@ -798,12 +797,11 @@ function WhyUs() {
           </span>
         </BlurReveal>
 
-        {/* ── Ghost Scroll Showcase — toutes les étapes, plein écran (sort du conteneur 1200px) ── */}
-        <BlurReveal delay={0.15}>
-          <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
-            <GhostScrollShowcase items={GHOST_ITEMS} />
-          </div>
-        </BlurReveal>
+        {/* ── Ghost Scroll Showcase — toutes les étapes, plein écran (sort du conteneur 1200px).
+             Pas de BlurReveal ici, même logique que ServicesPreview : blur réservé au texte. ── */}
+        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+          <GhostScrollShowcase items={GHOST_ITEMS} />
+        </div>
 
       </div>
     </section>
