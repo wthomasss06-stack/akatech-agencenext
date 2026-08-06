@@ -2,6 +2,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { cld } from '@/lib/cloudinary'
 import {
   ArrowRight, Star, ExternalLink,
@@ -17,6 +19,10 @@ import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger)
+}
 
 const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
 
@@ -532,185 +538,188 @@ const SERVICES_SKEW = [
   { n: '05', Icon: MapPin,   title: 'Fiche Google My Business',         desc: "Création ou optimisation de votre fiche Google (NAP, photos, SEO local) et suivi mensuel : avis, publications et statistiques.", price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
 ]
 
-// ── HOVER IMAGE REVEAL — style identity_branding ─────────────
-// Flèche ↗ pivote 45° au hover + titre large + séparateur + image curseur 1:1
-function HoverImageReveal({ items }) {
-  const [hovered, setHovered] = useState(null)
-  const hoveredRef            = useRef(null)
-  const rotRef                = useRef(0)
-  const containerRef          = useRef(null)
-  const floatRef               = useRef(null)
-  const sliceRefs              = useRef([])
-  const targetRef              = useRef({ x: 0, y: 0 })
-  const currentRef             = useRef({ x: 0, y: 0 })
-  const T = useTheme()
+// ── GHOST SCROLL SHOWCASE — parallax + texte fantôme horizontal ──
+// Port du pattern gemini-code-1785847388601.html (GSAP + ScrollTrigger) :
+// chaque item devient un panneau plein écran avec une image de fond en
+// parallax vertical (scrub) et un très grand titre en contour ("ghost",
+// même traitement que les H2 du site) qui glisse à l'horizontale au
+// scroll, sens alterné pair/impair. Légende en bas à gauche (numéro,
+// titre lisible, tag, description, lien) pour garder l'information
+// exploitable — remplace HoverImageReveal pour Prestations et Processus.
+function GhostScrollShowcase({ items }) {
+  const containerRef = useRef(null)
+  const panelRefs = useRef([])
+  const bgRefs = useRef([])
+  const ghostRefs = useRef([])
+  const reduceMotion = useReducedMotion()
 
-  const onMouseMove = (e) => {
-    const rect = containerRef.current?.getBoundingClientRect()
-    if (!rect) return
-    targetRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top }
-  }
-
-  const applySlices = (i) => {
-    sliceRefs.current.forEach((el, idx) => {
-      if (!el) return
-      el.style.transform = idx === i ? 'translateY(0%)' : idx < i ? 'translateY(-100%)' : 'translateY(100%)'
-    })
-  }
-
-  const onEnter = (i) => {
-    hoveredRef.current = i
-    rotRef.current = (Math.random() - 0.5) * 10
-    setHovered(i)
-    applySlices(i)
-  }
-  const onLeave = () => {
-    hoveredRef.current = null
-    setHovered(null)
-    sliceRefs.current.forEach(el => { if (el) el.style.transform = 'translateY(100%)' })
-  }
-
-  // Boucle spring/lerp — la fenêtre suit le curseur avec un amorti (comme
-  // hover_video.html), mutation directe du style (pas de state React à
-  // 60fps) pour rester fluide et éviter les re-renders inutiles.
   useEffect(() => {
-    let raf
-    const ease = 0.1
-    const tick = () => {
-      const c = currentRef.current, t = targetRef.current
-      c.x += (t.x - c.x) * ease
-      c.y += (t.y - c.y) * ease
-      if (floatRef.current) {
-        const active = hoveredRef.current !== null
-        floatRef.current.style.transform = `translate(${c.x + 24}px,${c.y - 130}px) rotate(${rotRef.current}deg) scale(${active ? 1 : 0.75})`
-        floatRef.current.style.opacity = active ? '1' : '0'
-      }
-      raf = requestAnimationFrame(tick)
+    panelRefs.current = panelRefs.current.slice(0, items.length)
+    bgRefs.current = bgRefs.current.slice(0, items.length)
+    ghostRefs.current = ghostRefs.current.slice(0, items.length)
+
+    // Chargement paresseux des images de fond : on n'assigne
+    // backgroundImage qu'à l'approche du viewport (perf sur 5-7
+    // panneaux plein écran d'un coup).
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const el = entry.target
+          const url = el.dataset.bg
+          if (url) el.style.backgroundImage = `url(${url})`
+          io.unobserve(el)
+        }
+      })
+    }, { rootMargin: '600px 0px' })
+    bgRefs.current.forEach((el) => el && io.observe(el))
+
+    if (reduceMotion) return () => io.disconnect()
+
+    const timer = setTimeout(() => ScrollTrigger.refresh(), 100)
+
+    const ctx = gsap.context(() => {
+      const panels = panelRefs.current.filter(Boolean)
+      const lastIndex = panels.length - 1
+
+      panels.forEach((panel, i) => {
+        const bg = bgRefs.current[i]
+        const ghost = ghostRefs.current[i]
+        if (!bg || !ghost) return
+
+        gsap.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: panel,
+            start: i === 0 ? 'top top' : 'top bottom',
+            end: i === lastIndex ? 'top top' : 'bottom top',
+            scrub: 0.75,
+          },
+        })
+          .fromTo(ghost,
+            { xPercent: i % 2 === 0 ? 30 : -50 },
+            { xPercent: i % 2 === 0 ? -50 : 30 }, 0)
+          .fromTo(bg,
+            { yPercent: i === 0 ? -25 : 0 },
+            { yPercent: i === lastIndex ? -25 : -50 }, 0)
+      })
+    }, containerRef)
+
+    return () => {
+      clearTimeout(timer)
+      io.disconnect()
+      ctx.revert()
     }
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
-  }, [])
+  }, [items, reduceMotion])
 
   return (
-    <div ref={containerRef} onMouseMove={onMouseMove} style={{ position: 'relative', userSelect: 'none' }}>
-
-      {/* ── Rows + séparateurs ── */}
+    <div ref={containerRef} style={{ position: 'relative' }}>
       {items.map((item, i) => {
-        const RowTag = item.href ? Link : 'div'
-        const rowProps = item.href ? { href: item.href } : {}
+        const title = item.title.replace(/\n/g, ' ')
+        const Tag = item.href ? Link : 'div'
+        const tagProps = item.href ? { href: item.href } : {}
         return (
-        <div key={i}>
-          <RowTag
-            {...rowProps}
-            onMouseEnter={() => onEnter(i)}
-            onMouseLeave={onLeave}
+          <Tag
+            key={item.n}
+            {...tagProps}
+            ref={(el) => { panelRefs.current[i] = el }}
+            className={item.href ? 'ghost-scroll-panel is-link' : 'ghost-scroll-panel'}
             style={{
-              display: 'flex', alignItems: 'center', gap: '1.4rem',
-              padding: '1.1rem 0',
-              paddingLeft: hovered === i ? '.5rem' : '0',
-              cursor: item.href ? 'pointer' : 'default',
-              textDecoration: 'none',
-              transition: 'padding-left .25s ease',
+              position: 'relative', display: 'block',
+              height: '100vh', minHeight: 560, maxHeight: 1000,
+              overflow: 'hidden', textDecoration: 'none',
             }}
           >
-            {/* Flèche ↗ — pivote à 45° au hover, sans contours */}
-            <div style={{
-              width: 38, height: 38, flexShrink: 0,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              transform: hovered === i ? 'rotate(50deg)' : 'rotate(25deg)',
-              transition: 'transform .25s cubic-bezier(.22,1,.36,1)',
-            }}>
-              <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
-                <path d="M2 12L12 2M12 2H5M12 2V9"
-                  stroke="#88ca53" strokeWidth="1.8"
-                  strokeLinecap="round" strokeLinejoin="round"
-                  style={{ opacity: hovered === i ? 1 : 0.38, transition: 'opacity .22s' }}
-                />
-              </svg>
+            <div
+              ref={(el) => { bgRefs.current[i] = el }}
+              data-bg={item.img}
+              aria-hidden="true"
+              className="ghost-scroll-bg"
+              style={{
+                position: 'absolute', top: 0, left: 0, width: '100%', height: '200%',
+                backgroundSize: 'cover', backgroundPosition: 'center 18%', backgroundRepeat: 'no-repeat',
+                filter: 'brightness(.38) saturate(1.1)',
+                willChange: 'transform',
+              }}
+            />
+            <div aria-hidden="true" style={{
+              position: 'absolute', inset: 0, pointerEvents: 'none',
+              background: 'linear-gradient(180deg, rgba(6,14,9,.2) 0%, rgba(6,14,9,.16) 42%, rgba(6,14,9,.93) 100%)',
+            }} />
+            <div
+              ref={(el) => { ghostRefs.current[i] = el }}
+              aria-hidden="true"
+              style={{
+                position: 'absolute', top: '26%', left: 0, zIndex: 1,
+                fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic',
+                textTransform: 'uppercase', whiteSpace: 'nowrap', lineHeight: 1,
+                fontSize: 'clamp(4.5rem, 13vw, 11.5rem)',
+                color: 'transparent', WebkitTextStroke: '1.5px rgba(136,202,83,.35)',
+                willChange: 'transform', userSelect: 'none', pointerEvents: 'none',
+              }}
+            >
+              {title}
             </div>
 
-            {/* Numéro */}
-            <span style={{
-              fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700,
-              minWidth: '2rem', letterSpacing: '.3em', transition: 'color .22s',
-              color: hovered === i ? '#88ca53' : 'rgba(136,202,83,.32)',
-            }}>
-              {item.n}
-            </span>
-
-            {/* Titre */}
-            <span style={{
-              fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', flex: 1,
-              fontSize: 'clamp(1.5rem,2.8vw,2.4rem)', letterSpacing: '-.03em', lineHeight: 1,
-              color: hovered === i ? T.textMain : T.textMuted,
-              transition: 'color .25s ease',
-            }}>
-              {item.label}
-            </span>
-
-            {/* Tag slide-in */}
-            {item.tag && (
-              <span style={{
-                padding: '.22rem .75rem', borderRadius: 100,
-                background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.22)',
-                fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700,
-                color: '#88ca53', whiteSpace: 'nowrap',
-                opacity: hovered === i ? 1 : 0,
-                transform: hovered === i ? 'translateX(0)' : 'translateX(10px)',
-                transition: 'opacity .22s ease, transform .22s ease',
-              }}>
-                {item.tag}
-              </span>
-            )}
-          </RowTag>
-
-          {/* Séparateur horizontal */}
-          <div style={{
-            height: 1,
-            background: hovered === i
-              ? 'linear-gradient(90deg,rgba(136,202,83,.55) 0%,rgba(136,202,83,.06) 100%)'
-              : T.border,
-            transition: 'background .28s ease',
-          }} />
-        </div>
+            <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '3.2rem 5%', zIndex: 2, pointerEvents: 'none' }}>
+              <div style={{ maxWidth: 680 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '.9rem', marginBottom: '.9rem' }}>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.25em' }}>
+                    {item.n} / {String(items.length).padStart(2, '0')}
+                  </span>
+                  {item.tag && (
+                    <span style={{
+                      padding: '.32rem .85rem', borderRadius: 100,
+                      background: 'rgba(136,202,83,.14)', border: '1px solid rgba(136,202,83,.32)',
+                      fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', fontWeight: 700,
+                      color: '#b3ee85', whiteSpace: 'nowrap',
+                    }}>
+                      {item.tag}
+                    </span>
+                  )}
+                </div>
+                <h3 style={{
+                  fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic',
+                  textTransform: 'uppercase', letterSpacing: '-.01em', lineHeight: .96,
+                  fontSize: 'clamp(2rem, 4vw, 3.2rem)', color: '#fff', margin: '0 0 .7rem',
+                }}>
+                  {title}
+                </h3>
+                {item.desc && (
+                  <p style={{
+                    fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', lineHeight: 1.65,
+                    color: 'rgba(255,255,255,.66)', margin: 0, maxWidth: 520,
+                  }}>
+                    {item.desc}
+                  </p>
+                )}
+                {item.href && (
+                  <span style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '.5rem', marginTop: '1.3rem',
+                    fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: '#88ca53',
+                  }}>
+                    Voir le service
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                      <path d="M2 12L12 2M12 2H5M12 2V9" stroke="#88ca53" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                )}
+              </div>
+            </div>
+          </Tag>
         )
       })}
-
-      {/* ── Fenêtre image curseur — 260×260, slices empilées ── */}
-      <div ref={floatRef} style={{
-        position: 'absolute', top: 0, left: 0,
-        width: 260, height: 260,
-        borderRadius: 16, overflow: 'hidden',
-        pointerEvents: 'none', zIndex: 20,
-        opacity: 0,
-        boxShadow: '0 24px 70px rgba(0,0,0,.55)',
-        border: '1.5px solid rgba(136,202,83,.35)',
-        willChange: 'transform, opacity',
-      }}>
-        {items.map((item, i) => (
-          <div key={i} ref={el => sliceRefs.current[i] = el} style={{
-            position: 'absolute', inset: 0, width: '100%', height: '100%', overflow: 'hidden',
-            transform: 'translateY(100%)',
-            transition: 'transform .6s cubic-bezier(0.16,1,0.3,1)',
-          }}>
-            {item.img && (
-              <img src={item.img} alt={item.label}
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: 'brightness(.92)' }} />
-            )}
-          </div>
-        ))}
-      </div>
     </div>
   )
 }
+
 
 function ServicesPreview() {
   const T = useTheme()
   const ref = useRef(null)
 
-  // Tous les services — hover image reveal, chaque ligne pointe vers son service sur /services
-  const HOVER_ITEMS = SERVICES_SKEW.map(s => ({
-    n: s.n, label: s.title, img: s.img, tag: s.del, href: `/services#${s.slug}`,
+  // Tous les services — showcase scroll plein écran, chaque panneau pointe vers son service sur /services
+  const GHOST_ITEMS = SERVICES_SKEW.map(s => ({
+    n: s.n, title: s.title, img: s.img, tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
   }))
 
   return (
@@ -733,22 +742,18 @@ function ServicesPreview() {
           </BlurReveal>
         </div>
 
-        {/* Bouton + liste — centrés */}
-        <div style={{ paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
-          
-
-          {/* ── Hover Image Reveal — tous les services ── */}
-          <BlurReveal delay={0.15}>
-            <div style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, padding: '.5rem 0' }}>
-              <HoverImageReveal items={HOVER_ITEMS} />
-            </div>
-          </BlurReveal>
-        </div>
+        {/* ── Ghost Scroll Showcase — tous les services, plein écran (sort du conteneur 1200px) ── */}
+        <BlurReveal delay={0.15}>
+          <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+            <GhostScrollShowcase items={GHOST_ITEMS} />
+          </div>
+        </BlurReveal>
 
       </div>
     </section>
   )
 }
+
 
 
 // ═══════════════════════════════════════════════════════════════
@@ -768,9 +773,9 @@ function WhyUs() {
   const T = useTheme()
   const ref = useRef(null)
 
-  // Étapes du processus — hover image reveal (même pattern que ServicesPreview)
-  const HOVER_ITEMS = WHY_PANELS.map(p => ({
-    n: p.n, label: p.title.replace('\n', ' '), img: p.img, tag: p.sub,
+  // Étapes du processus — showcase scroll plein écran (même pattern que ServicesPreview)
+  const GHOST_ITEMS = WHY_PANELS.map(p => ({
+    n: p.n, title: p.title, img: p.img, tag: p.sub, desc: p.desc,
   }))
 
   return (
@@ -787,26 +792,24 @@ function WhyUs() {
           </h2>
         </BlurReveal>
 
-        {/* Label + liste — centrés */}
-        <div style={{ paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
-          <BlurReveal delay={0.05}>
-            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.42em', textTransform: 'uppercase', color: '#88ca53', display: 'block', marginBottom: '1.5rem' }}>
-              Notre processus
-            </span>
-          </BlurReveal>
+        <BlurReveal delay={0.05}>
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.42em', textTransform: 'uppercase', color: '#88ca53', display: 'block', marginBottom: '1.5rem', textAlign: 'center' }}>
+            Notre processus
+          </span>
+        </BlurReveal>
 
-          {/* ── Hover Image Reveal — toutes les étapes du processus ── */}
-          <BlurReveal delay={0.15}>
-            <div style={{ borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}`, padding: '.5rem 0' }}>
-              <HoverImageReveal items={HOVER_ITEMS} />
-            </div>
-          </BlurReveal>
-        </div>
+        {/* ── Ghost Scroll Showcase — toutes les étapes, plein écran (sort du conteneur 1200px) ── */}
+        <BlurReveal delay={0.15}>
+          <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+            <GhostScrollShowcase items={GHOST_ITEMS} />
+          </div>
+        </BlurReveal>
 
       </div>
     </section>
   )
 }
+
 // ── TESTIMONIALS (inchangé) ───────────────────────────────────
 function Testimonials() {
   const T = useTheme()
@@ -1180,109 +1183,85 @@ function DomainesSection() {
   )
 }
 
-// ── TUNNEL ARCHIVE 3D ──────────────────────────────────────────
-// Port de l'effet "15 / LE TUNNEL ARCHIVE 3D" (5haut_niveay.html) :
-// grille pinnée en perspective 3D, qui avance vers la caméra au scroll.
+// ── NOS DERNIÈRES RÉALISATIONS — galerie horizontale auto-scroll ──
 function ArchiveTunnelSection() {
   const T = useTheme()
-  const wrapRef = useRef(null)
-  const gridRef = useRef(null)
+  const containerRef = useRef(null)
+  const indexRef = useRef(0)
+  const [hoveredId, setHoveredId] = useState(null)
   const TUNNEL_ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
     ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
     ...PROJECTS.filter(p => p.id === 19),
   ]
-  const DEPTHS = [0, -220, -60, -340, -120, -260, -180]
-  const SPANS  = [1, 1, 1, 1, 2, 1, 1]
 
   useEffect(() => {
-    let raf = null
-    let lastProgress = null
-    const onScroll = () => {
-      if (raf) return
-      raf = requestAnimationFrame(() => {
-        raf = null
-        const wrap = wrapRef.current
-        const grid = gridRef.current
-        if (!wrap || !grid) return
-        const winH = window.visualViewport?.height || window.innerHeight
-        const top = wrap.getBoundingClientRect().top
-        const pinDistance = wrap.offsetHeight - winH
-        const progress = pinDistance > 0 ? Math.min(1, Math.max(0, -top / pinDistance)) : 0
-        if (progress === lastProgress) return
-        lastProgress = progress
+    const container = containerRef.current
+    if (!container || TUNNEL_ITEMS.length === 0) return
 
-        grid.style.transform = `translateZ(${progress * 1000}px) rotateX(${progress * 15}deg)`
-        grid.style.opacity   = String(progress > 0.9 ? Math.max(0, 1 - (progress - 0.9) / 0.1) : 1)
+    const cardWidth = 420
+    const cardGap = 24
+    const interval = setInterval(() => {
+      indexRef.current = (indexRef.current + 1) % TUNNEL_ITEMS.length
+      const target = indexRef.current * (cardWidth + cardGap)
+      container.scrollTo({ left: target, behavior: 'smooth' })
+    }, 3400)
 
-        const sat = Math.min(1, progress * 1.4)
-        grid.querySelectorAll('.tunnel-cell').forEach(cell => {
-          cell.style.filter = `grayscale(${1 - sat}) contrast(1.05)`
-        })
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => { window.removeEventListener('scroll', onScroll); if (raf) cancelAnimationFrame(raf) }
-  }, [])
+    return () => clearInterval(interval)
+  }, [TUNNEL_ITEMS.length])
 
   return (
-    <div ref={wrapRef} style={{ position: 'relative', height: '250dvh', background: T.bg }}>
-
-      {/* Titre de section — statique, même système d'alignement que les autres titres (maxWidth 1200) */}
-      <div style={{ padding: '5rem 5% 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.4rem', textAlign: 'center' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, margin: 0 }}>
-            <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
-            Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
-          </h2>
-          <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-            <HoverSlideText text="Voir tous les projets" /> <ArrowRight size={15} />
-          </Link>
-        </div>
+    <section style={{ padding: '5rem 0 6rem', background: T.bg }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.4rem', textAlign: 'center' }}>
+        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, margin: 0 }}>
+          <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
+          Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+        </h2>
+        <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
+          <HoverSlideText text="Voir tous les projets" /> <ArrowRight size={15} />
+        </Link>
       </div>
 
-      <section style={{ position: 'sticky', top: 0, height: '100dvh', overflow: 'hidden', perspective: '1200px', display: 'flex', alignItems: 'center' }}>
-
-        <div
-          ref={gridRef}
-          style={{
-            width: '100%', height: '100%',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '2vw',
-            padding: '15vh 8vw',
-            transformStyle: 'preserve-3d',
-            willChange: 'transform',
-          }}
-        >
+      <div ref={containerRef} style={{ marginTop: '3rem', overflowX: 'auto', overflowY: 'hidden', padding: '1rem 5%', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', width: 'max-content', paddingBottom: '1rem' }}>
           {TUNNEL_ITEMS.map((p, i) => (
-            <div
-              key={p.id}
-              className="tunnel-cell"
+            <div key={p.id}
+              onMouseEnter={() => setHoveredId(p.id)}
+              onMouseLeave={() => setHoveredId(null)}
               style={{
-                gridColumn: SPANS[i] === 2 ? 'span 2' : 'auto',
-                position: 'relative',
-                minHeight: 180,
-                borderRadius: 10,
+                minWidth: 420,
+                minHeight: 560,
+                borderRadius: 24,
                 overflow: 'hidden',
-                border: '1px solid rgba(136,202,83,.4)',
-                transform: `translateZ(${DEPTHS[i] || 0}px)`,
-                filter: 'grayscale(1) contrast(1.05)',
-                transition: 'filter .15s linear',
+                border: '1px solid rgba(136,202,83,.25)',
+                boxShadow: '0 28px 70px rgba(0,0,0,.22)',
+                background: T.surface,
+                scrollSnapAlign: 'start',
+                position: 'relative',
               }}
             >
-              <LazyImg src={p.img} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 55%, rgba(0,0,0,.78) 100%)' }} />
-              <div style={{ position: 'absolute', bottom: '.6rem', left: '.7rem', right: '.7rem' }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#fff' }}>{p.title}</div>
+              <div style={{ position: 'relative', width: '100%', height: 420, overflow: 'hidden' }}>
+                <LazyImg src={p.img} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.28)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease' }} />
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: hoveredId === p.id ? 'translate(-50%, -50%)' : 'translate(-50%, -30%)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease, transform .25s ease', width: 'calc(100% - 40px)', display: 'flex', justifyContent: 'center' }}>
+                  {p.url ? (
+                    <a href={p.url} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', maxWidth: 260, justifyContent: 'center' }}>
+                      <HoverSlideText text="Voir le projet" />
+                      <ArrowRight size={16} />
+                    </a>
+                  ) : (
+                    <div style={{ width: '100%', maxWidth: 260, textAlign: 'center', padding: '.95rem 1rem', borderRadius: 999, border: '2px solid #fff', boxShadow: '4px 4px 0px #fff', background: 'rgba(255,255,255,.1)', color: '#fff', fontFamily: "'JetBrains Mono',monospace", fontSize: '.79rem' }}>
+                      Bientôt en ligne
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}
         </div>
-      </section>
-    </div>
+      </div>
+    </section>
   )
 }
 

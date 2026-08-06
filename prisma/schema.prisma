@@ -109,6 +109,7 @@ model VisitSession {
   device         String? // mobile | desktop | tablet
   referrer       String?
   userAgent      String?
+  consent        String? // 'accepted' | 'rejected' | null = pas encore décidé (bannière cookies)
 
   pageViews PageView[]
 

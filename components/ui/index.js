@@ -432,24 +432,28 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   return (
-    <section ref={ref} className="page-cta-trigger" style={{ padding: '6rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
+    <section ref={ref} className="page-cta-trigger" style={{ padding: '7.5rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden', textAlign: 'center' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: T.light ? .15 : .12 }} />
-      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 400, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.1),transparent 65%)', pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 760, height: 480, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.13),transparent 65%)', pointerEvents: 'none' }} />
       <motion.div initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }} animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}
-        style={{ position: 'relative', zIndex: 1, maxWidth: 640, margin: '0 auto' }}>
-        <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2.2rem)', fontWeight: 800, fontFamily: "'JetBrains Mono',monospace", color: T.textMain, letterSpacing: '-.02em', lineHeight: 1.3, marginBottom: '2.2rem' }}>
+        style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto' }}>
+        <h2 style={{
+          position: 'relative',
+          fontSize: 'clamp(2.15rem, 6vw, 4.8rem)', fontWeight: 900, fontStyle: 'italic',
+          fontFamily: "'Barlow Condensed',sans-serif", textTransform: 'uppercase',
+          color: T.textMain, letterSpacing: '-.01em', lineHeight: .98, marginBottom: '2.8rem',
+        }}>
+          <GhostTitle text={message} />
           {message}
         </h2>
-        <a href={href} target="_blank" rel="noreferrer" className="cta-circle-btn">
-          <span className="cta-circle-label"><HoverSlideText text={cta} /></span>
-          <span className="cta-circle-arrow" aria-hidden="true">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" strokeWidth="2.2"
-              strokeLinecap="round" strokeLinejoin="round">
-              <line x1="7" y1="17" x2="17" y2="7" />
-              <polyline points="7 7 17 7 17 17" />
-            </svg>
-          </span>
+        <a href={href} target="_blank" rel="noreferrer" className="btn-raised btn-xl">
+          <HoverSlideText text={cta} />
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.2"
+            strokeLinecap="round" strokeLinejoin="round">
+            <line x1="7" y1="17" x2="17" y2="7" />
+            <polyline points="7 7 17 7 17 17" />
+          </svg>
         </a>
       </motion.div>
     </section>

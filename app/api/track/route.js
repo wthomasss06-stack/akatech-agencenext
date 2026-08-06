@@ -1,6 +1,6 @@
 // app/api/track/route.js
 import { cookies, headers } from 'next/headers'
-import { upsertVisitor, getOrCreateVisitSession, recordPageView } from '@/lib/db'
+import { upsertVisitor, getOrCreateVisitSession, recordPageView, updateSessionConsent } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
@@ -12,8 +12,13 @@ function getDevice(userAgent = '') {
 
 export async function POST(request) {
   try {
-    const { path, referrer } = await request.json()
-    if (!path || typeof path !== 'string' || path.length > 500) {
+    const { path, referrer, consent } = await request.json()
+    const hasPath = typeof path === 'string' && path.length > 0 && path.length <= 500
+    const hasConsent = consent === 'accepted' || consent === 'rejected'
+
+    // Un appel doit porter une page vue OU une décision de consentement
+    // (la bannière cookies peut être tranchée sans navigation entre-temps).
+    if (!hasPath && !hasConsent) {
       return Response.json({ ok: false }, { status: 400 })
     }
 
@@ -38,7 +43,9 @@ export async function POST(request) {
       referrer: isNewSession ? (referrer || null) : undefined,
       userAgent: isNewSession ? userAgent : undefined,
     })
-    await recordPageView(session.id, path)
+
+    if (hasPath) await recordPageView(session.id, path)
+    if (hasConsent) await updateSessionConsent(session.id, consent)
 
     return Response.json({ ok: true, tracked: true })
   } catch (error) {

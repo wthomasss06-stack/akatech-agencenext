@@ -167,6 +167,26 @@ body.light-mode .sku-card:hover {
 body.light-mode .btn-raised.btn-sm, body.light-mode .btn-ghost.btn-sm { box-shadow: 2px 2px 0px #08130a; }
 body.light-mode .btn-raised.btn-sm:hover, body.light-mode .btn-ghost.btn-sm:hover { box-shadow: 4px 4px 0px #08130a; }
 body.light-mode .btn-raised.btn-sm:active, body.light-mode .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px #08130a; }
+
+/* Variante XL — CTA final unique (voir PageCTA), texte + bouton
+   volontairement imposants. Même logique que .btn-sm, à l'envers. */
+.btn-raised.btn-xl, .btn-ghost.btn-xl {
+  padding: 1.35rem 2.8rem;
+  font-size: clamp(1rem, 1.7vw, 1.32rem);
+  gap: .8rem;
+  border-width: 3px;
+  box-shadow: 6px 6px 0px #fff;
+}
+.btn-raised.btn-xl:hover, .btn-ghost.btn-xl:hover { box-shadow: 10px 10px 0px #fff; transform: translate(-4px,-4px); }
+.btn-raised.btn-xl:active, .btn-ghost.btn-xl:active { box-shadow: 2px 2px 0px #fff; }
+.btn-raised.btn-xl > svg, .btn-ghost.btn-xl > svg { width: 22px; height: 22px; }
+body.light-mode .btn-raised.btn-xl, body.light-mode .btn-ghost.btn-xl { box-shadow: 6px 6px 0px #08130a; }
+body.light-mode .btn-raised.btn-xl:hover, body.light-mode .btn-ghost.btn-xl:hover { box-shadow: 10px 10px 0px #08130a; }
+body.light-mode .btn-raised.btn-xl:active, body.light-mode .btn-ghost.btn-xl:active { box-shadow: 2px 2px 0px #08130a; }
+@media (max-width: 480px) {
+  .btn-raised.btn-xl, .btn-ghost.btn-xl { padding: 1.05rem 1.9rem; font-size: 1rem; width: 100%; justify-content: center; }
+}
+
 .btn-ghost:hover {
   background: rgba(255,255,255,.08);
   transform: translate(-3px,-3px);
@@ -297,6 +317,71 @@ body.light-mode .ghost-title-wrap {
   display: block;
   white-space: nowrap;
 }
+
+/* Ghost Scroll Showcase — panneaux plein écran Prestations / Processus.
+   Le fond bouge déjà via GSAP (transform), donc le hover ne touche
+   volontairement que le filter (aucun conflit de transform). */
+.ghost-scroll-bg {
+  transition: filter .4s ease;
+}
+.ghost-scroll-panel.is-link:hover .ghost-scroll-bg,
+.ghost-scroll-panel.is-link:focus-visible .ghost-scroll-bg {
+  filter: brightness(.5) saturate(1.2) !important;
+}
+.ghost-scroll-panel.is-link {
+  cursor: pointer;
+}
+
+/* Cookie Consent — bottom-sheet plein écran sur mobile, carte ancrée
+   en bas à gauche sur desktop (le bouton WhatsApp flottant occupe déjà
+   le bas à droite, cf. FloatingWA). Neo-brutalism : mêmes tokens que
+   .aka-nav-card (bordure 2px + ombre portée dure 4px, sans flou) —
+   figés en mode sombre (pas de variante body.light-mode) car la carte
+   reste toujours une "surface sombre" quel que soit le thème du site,
+   cf. cardBg dans CookieConsent.js. */
+.cookie-consent-card {
+  left: 1rem;
+  right: 1rem;
+  bottom: 1rem;
+  border: 2px solid #ffffff;
+  border-radius: 18px;
+  box-shadow: 4px 4px 0px #ffffff;
+}
+@media (min-width: 640px) {
+  .cookie-consent-card {
+    left: 1.5rem;
+    right: auto;
+    bottom: 1.5rem;
+    width: 380px;
+  }
+}
+
+/* Boutons de la carte cookie — même mécanique que .btn-raised/.btn-ghost
+   (bordure 2px, ombre portée dure, lift au survol, écrasement au clic,
+   échelle proche de .btn-sm) mais figés en tokens "mode sombre" pour la
+   même raison que ci-dessus. */
+.cookie-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: .78rem 1rem;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  box-shadow: 2px 2px 0px #ffffff;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  font-size: .82rem;
+  letter-spacing: .01em;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease, background .2s;
+}
+.cookie-btn:hover { transform: translate(-3px, -3px); box-shadow: 4px 4px 0px #ffffff; }
+.cookie-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #ffffff; }
+
+.cookie-btn-raised { background: var(--g1); color: #020a05; }
+.cookie-btn-ghost { background: transparent; color: #ffffff; }
+.cookie-btn-ghost:hover { background: rgba(255,255,255,.08); }
 
 /* ── LAYOUT COLUMNS
    --body-indent = décalage du "trait jaune" par rapport au container.

@@ -7,6 +7,7 @@ import Loader from '@/components/ui/Loader'
 import ScrollToTop from '@/components/ui/ScrollToTop'
 import AIAssistant from '@/components/ui/AIAssistant'
 import VisitorTracker from '@/components/ui/VisitorTracker'
+import CookieConsent from '@/components/ui/CookieConsent'
 import { cld } from '@/lib/cloudinary'
 import { Analytics } from '@vercel/analytics/next'
 import { PageTransitionProvider } from '@/components/layout/PageTransition'
@@ -124,10 +125,10 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.ico" sizes="48x48" />
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="96x96" />
+        <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/manifest.json" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -150,6 +151,7 @@ export default function RootLayout({ children }) {
               <BackToTop />
               <AIAssistant />
               <VisitorTracker />
+              <CookieConsent />
               <Analytics />
             </BlobTransitionProvider>
           </PageTransitionProvider>

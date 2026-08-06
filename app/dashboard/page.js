@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
-  Trash2, AlertTriangle,
+  Trash2, AlertTriangle, Cookie,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -280,6 +280,7 @@ const EMPTY_VISITORS = {
   totalVisitors: 0, newVisitors: 0, totalSessions: 0, totalPageViews: 0,
   bounceRate: 0, avgSessionDurationSeconds: 0,
   devices: [], sources: [], topPages: [], activeHours: [],
+  consent: { accepted: 0, rejected: 0, pending: 0 },
 }
 
 function normalizeStats(d) {
@@ -548,6 +549,44 @@ export default function DashboardPage() {
                       </div>
                     </div>
                   )}
+                </div>
+                <div style={{ ...CARD, padding: '1.2rem' }}>
+                  <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 14 }}>Consentement cookies</div>
+                  {(() => {
+                    const c = v.consent || { accepted: 0, rejected: 0, pending: 0 }
+                    const consentData = [
+                      { name: 'Accepté', value: c.accepted },
+                      { name: 'Refusé', value: c.rejected },
+                      { name: 'En attente', value: c.pending },
+                    ].filter(d => d.value > 0)
+                    const consentColors = { 'Accepté': T.green, 'Refusé': '#e0605a', 'En attente': T.textMuted }
+                    return consentData.length === 0 ? (
+                      <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de données</div>
+                    ) : (
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                        <ResponsiveContainer width="50%" height={140}>
+                          <PieChart>
+                            <Pie data={consentData} dataKey="value" nameKey="name" innerRadius={35} outerRadius={58} paddingAngle={3}>
+                              {consentData.map((d) => (
+                                <Cell key={d.name} fill={consentColors[d.name]} stroke="none" />
+                              ))}
+                            </Pie>
+                            <RTooltip content={<ChartTooltip T={T} />} />
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
+                          {consentData.map((d) => (
+                            <div key={d.name} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '.75rem' }}>
+                              <span style={{ width: 8, height: 8, borderRadius: '50%', background: consentColors[d.name], flexShrink: 0 }} />
+                              <Cookie size={13} color={T.textMuted} />
+                              <span style={{ color: T.textSub, flex: 1 }}>{d.name}</span>
+                              <span style={{ color: T.textMain, fontWeight: 700 }}>{d.value}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })()}
                 </div>
                 <div style={{ ...CARD, padding: '1.2rem' }}>
                   <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 14 }}>Sources de trafic</div>
