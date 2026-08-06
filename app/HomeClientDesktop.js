@@ -1186,8 +1186,6 @@ function DomainesSection() {
 // ── NOS DERNIÈRES RÉALISATIONS — galerie horizontale auto-scroll ──
 function ArchiveTunnelSection() {
   const T = useTheme()
-  const containerRef = useRef(null)
-  const indexRef = useRef(0)
   const [hoveredId, setHoveredId] = useState(null)
   const TUNNEL_ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
@@ -1195,21 +1193,7 @@ function ArchiveTunnelSection() {
     ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
     ...PROJECTS.filter(p => p.id === 19),
   ]
-
-  useEffect(() => {
-    const container = containerRef.current
-    if (!container || TUNNEL_ITEMS.length === 0) return
-
-    const cardWidth = 420
-    const cardGap = 24
-    const interval = setInterval(() => {
-      indexRef.current = (indexRef.current + 1) % TUNNEL_ITEMS.length
-      const target = indexRef.current * (cardWidth + cardGap)
-      container.scrollTo({ left: target, behavior: 'smooth' })
-    }, 3400)
-
-    return () => clearInterval(interval)
-  }, [TUNNEL_ITEMS.length])
+  const LOOP_ITEMS = [...TUNNEL_ITEMS, ...TUNNEL_ITEMS]
 
   return (
     <section style={{ padding: '5rem 0 6rem', background: T.bg }}>
@@ -1223,10 +1207,23 @@ function ArchiveTunnelSection() {
         </Link>
       </div>
 
-      <div ref={containerRef} style={{ marginTop: '3rem', overflowX: 'auto', overflowY: 'hidden', padding: '1rem 5%', scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}>
-        <div style={{ display: 'flex', gap: '1.5rem', width: 'max-content', paddingBottom: '1rem' }}>
-          {TUNNEL_ITEMS.map((p, i) => (
-            <div key={p.id}
+      <div style={{ marginTop: '3rem', overflowX: 'hidden', overflowY: 'hidden', padding: '1rem 5%', WebkitOverflowScrolling: 'touch' }}>
+        <style jsx>{`
+          @keyframes projectsMarquee {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-50% - 0.75rem)); }
+          }
+          .projects-marquee-track {
+            animation: projectsMarquee 22s linear infinite;
+            will-change: transform;
+          }
+          .projects-marquee-track:hover {
+            animation-play-state: paused;
+          }
+        `}</style>
+        <div className="projects-marquee-track" style={{ display: 'flex', gap: '1.5rem', width: 'max-content', paddingBottom: '1rem' }}>
+          {LOOP_ITEMS.map((p, i) => (
+            <div key={`${p.id}-${i}`}
               onMouseEnter={() => setHoveredId(p.id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{
@@ -1237,8 +1234,8 @@ function ArchiveTunnelSection() {
                 border: '1px solid rgba(136,202,83,.25)',
                 boxShadow: '0 28px 70px rgba(0,0,0,.22)',
                 background: T.surface,
-                scrollSnapAlign: 'start',
                 position: 'relative',
+                flexShrink: 0,
               }}
             >
               <div style={{ position: 'relative', width: '100%', height: 420, overflow: 'hidden' }}>
@@ -1255,6 +1252,14 @@ function ArchiveTunnelSection() {
                       Bientôt en ligne
                     </div>
                   )}
+                </div>
+              </div>
+              <div style={{ padding: '1rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', gap: '.25rem', background: T.surface }}>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain, letterSpacing: '-.01em' }}>
+                  {p.title}
+                </div>
+                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: '#88ca53', textTransform: 'uppercase', letterSpacing: '.08em' }}>
+                  {p.type}
                 </div>
               </div>
             </div>
