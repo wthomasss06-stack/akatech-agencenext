@@ -6,13 +6,6 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { cld } from '@/lib/cloudinary'
 
-// Reconversion défensive : si l'image est déjà passée par la boucle de
-// normalisation Cloudinary plus bas (mutation en place de SERVICES_SKEW /
-// WHY_PANELS), s.img est déjà une URL Cloudinary — on ne la re-wrappe pas
-// (cld() sur une URL déjà transformée casserait le chemin). Sinon on
-// convertit nous-mêmes : la section Prestations/Processus ne dépend plus
-// de l'ordre d'exécution d'un effet de bord ailleurs dans le fichier.
-const toCloudinary = (img) => (typeof img === 'string' && img.startsWith('/images/')) ? cld(img) : img
 import {
   ArrowRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
@@ -568,7 +561,8 @@ function GhostScrollShowcase({ items }) {
 
     // Chargement paresseux des images de fond : on n'assigne
     // backgroundImage qu'à l'approche du viewport (perf sur 5-7
-    // panneaux plein écran d'un coup).
+    // panneaux plein écran d'un coup). Fichiers locaux directs (public/images/service,
+    // public/images/process) — plus de tentative Cloudinary sur ces images.
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -718,7 +712,7 @@ function ServicesPreview() {
 
   // Tous les services — showcase scroll plein écran, chaque panneau pointe vers son service sur /services
   const GHOST_ITEMS = SERVICES_SKEW.map(s => ({
-    n: s.n, title: s.title, img: toCloudinary(s.img), tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
+    n: s.n, title: s.title, img: s.img, tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
   }))
 
   return (
@@ -774,7 +768,7 @@ function WhyUs() {
 
   // Étapes du processus — showcase scroll plein écran (même pattern que ServicesPreview)
   const GHOST_ITEMS = WHY_PANELS.map(p => ({
-    n: p.n, title: p.title, img: toCloudinary(p.img), tag: p.sub, desc: p.desc,
+    n: p.n, title: p.title, img: p.img, tag: p.sub, desc: p.desc,
   }))
 
   return (
@@ -923,9 +917,11 @@ const DOMAINES = [
   },
 ]
 
-// Bascule Cloudinary — mêmes chemins locaux gardés tels quels ci-dessus
-// pour rester lisibles, conversion faite une seule fois ici.
-for (const arr of [SERVICES_SKEW, WHY_PANELS, DOMAINES]) {
+// Bascule Cloudinary — DOMAINES uniquement ici : SERVICES_SKEW et WHY_PANELS
+// gèrent leur propre conversion dans GhostScrollShowcase (avec repli sur le
+// fichier local si Cloudinary ne répond pas), donc on ne les mute plus en
+// place ici pour ne pas perdre l'accès au chemin local d'origine.
+for (const arr of [DOMAINES]) {
   for (const item of arr) {
     if (item.img && typeof item.img === 'string' && item.img.startsWith('/images/')) {
       item.img = cld(item.img)
