@@ -158,12 +158,12 @@ export default function CardNav() {
         '--card2-bg': T.light ? '#eaf5e2' : '#0a1f10',
         '--card3-bg': T.light ? '#ffffff' : '#060e09',
         '--card-text': T.light ? '#0a0c16' : '#f2ede8',
-        '--card1-border': T.light ? '2px solid #08130a' : '2px solid #fff',
-        '--card2-border': T.light ? '2px solid #08130a' : '2px solid #fff',
-        '--card3-border': T.light ? '2px solid #08130a' : '2px solid #fff',
-        '--card-shadow': T.light ? '4px 4px 0px #08130a' : '4px 4px 0px #fff',
+        '--card1-border': T.light ? '2px solid #050505' : '2px solid #050505',
+        '--card2-border': T.light ? '2px solid #050505' : '2px solid #050505',
+        '--card3-border': T.light ? '2px solid #050505' : '2px solid #050505',
+        '--card-shadow': T.light ? '4px 4px 0px #050505' : '4px 4px 0px #050505',
         '--card3-label': T.light ? 'rgba(10,20,10,0.5)' : 'rgba(242,237,232,0.5)',
-        '--card1-link-hover': T.light ? '#2f6a17' : '#88ca53',
+        '--card1-link-hover': T.light ? '#2f6a17' : '#c6ff3d',
         '--theme-green': T.green,
       }}>
         <div className="aka-nav-top">

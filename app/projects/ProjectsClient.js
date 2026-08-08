@@ -282,7 +282,7 @@ function StackedRealisations() {
         </ul>
 
         <div className="fcx-progress-track" style={{ background: 'rgba(136,202,83,.12)' }}>
-          <div ref={fillRef} className="fcx-progress-fill" style={{ width: 0, background: '#88ca53' }} />
+          <div ref={fillRef} className="fcx-progress-fill" style={{ width: 0, background: 'linear-gradient(135deg, #c6ff3d, #88ca53)' }} />
         </div>
       </div>
 

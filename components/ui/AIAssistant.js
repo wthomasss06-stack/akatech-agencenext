@@ -174,7 +174,7 @@ function PortfolioButton({ url }) {
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '.5rem',
         padding: '.55rem 1rem', borderRadius: 10,
-        background: 'linear-gradient(135deg, #88ca53, #5f9137)',
+        background: 'linear-gradient(135deg, #c6ff3d, #88ca53)',
         color: '#fff', fontSize: '.8rem', fontWeight: 600,
         textDecoration: 'none', margin: '.3rem 0',
         boxShadow: '0 2px 8px rgba(136,202,83,.3)',
@@ -506,7 +506,7 @@ export default function AIAssistant() {
           background: T.card,
           border: `3px solid ${T.green}`,
           borderRadius: 12,
-          boxShadow: T.light ? '8px 8px 0px #000000' : '8px 8px 0px #ffffff',
+          boxShadow: '8px 8px 0px #050505',
         }}
       >
         <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -519,8 +519,8 @@ export default function AIAssistant() {
           }}>
             <div style={{
               width: 34, height: 34, borderRadius: 6, background: T.green,
-              border: T.light ? '2px solid #000000' : '2px solid #ffffff',
-              boxShadow: T.light ? '2px 2px 0px #000000' : '2px 2px 0px #ffffff',
+              border: '2px solid #050505',
+              boxShadow: '2px 2px 0px #050505',
               display: 'flex', alignItems: 'center', justifyContent: 'center',
               color: '#08120a', flexShrink: 0,
             }}>
@@ -546,10 +546,10 @@ export default function AIAssistant() {
                 color: m.role === 'user' ? '#08120a' : T.textMain,
                 padding: '.7rem .95rem', borderRadius: 8,
                 border: m.role === 'user'
-                  ? (T.light ? '2px solid #000000' : '2px solid #ffffff')
+                  ? ('2px solid #050505')
                   : `2px solid ${T.green}`,
                 boxShadow: m.role === 'user'
-                  ? (T.light ? '3px 3px 0px #000000' : '3px 3px 0px #ffffff')
+                  ? ('3px 3px 0px #050505')
                   : `3px 3px 0px ${T.green}`,
                 fontSize: '.85rem', fontWeight: m.role === 'user' ? 700 : 500, lineHeight: 1.55, whiteSpace: 'pre-wrap', wordBreak: 'break-word',
               }}>
@@ -581,7 +581,7 @@ export default function AIAssistant() {
                 flex: 1, resize: 'none', minHeight: 42, maxHeight: 90,
                 background: T.light ? '#f7f7f7' : '#040d06',
                 border: `2px solid ${T.green}`, borderRadius: 6,
-                boxShadow: T.light ? '3px 3px 0px #000000' : '3px 3px 0px #ffffff',
+                boxShadow: '3px 3px 0px #050505',
                 padding: '.65rem .85rem', fontSize: '.85rem', color: T.textMain,
                 fontFamily: 'inherit', outline: 'none',
               }}
@@ -595,8 +595,8 @@ export default function AIAssistant() {
               style={{
                 width: 44, height: 44, minWidth: 44, borderRadius: 6, flexShrink: 0,
                 background: streaming || !input.trim() ? (T.light ? 'rgba(136,202,83,.2)' : '#1a3320') : T.green,
-                border: T.light ? '2px solid #000000' : '2px solid #ffffff',
-                boxShadow: T.light ? '3px 3px 0px #000000' : '3px 3px 0px #ffffff',
+                border: '2px solid #050505',
+                boxShadow: '3px 3px 0px #050505',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 cursor: streaming || !input.trim() ? 'default' : 'pointer',
                 color: '#08120a', transition: 'transform .1s, background .15s',
@@ -618,8 +618,8 @@ export default function AIAssistant() {
           position: 'absolute', bottom: 0, left: 0, zIndex: 2,
           width: AI_BTN_SIZE, height: AI_BTN_SIZE, minWidth: 44, minHeight: 44, borderRadius: 12,
           background: T.green,
-          border: T.light ? '3px solid #000000' : '3px solid #ffffff',
-          boxShadow: T.light ? '4px 4px 0px #000000' : '4px 4px 0px #ffffff',
+          border: '3px solid #050505',
+          boxShadow: '4px 4px 0px #050505',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           cursor: 'pointer', color: '#08120a', padding: 0, willChange: 'transform',
         }}

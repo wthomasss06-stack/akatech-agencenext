@@ -224,7 +224,7 @@ function HeroSloganCycle() {
           transition={{ duration: .45, ease: 'easeOut' }}
           style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
           {before}
-          <span style={{ display: 'inline-block', background: '#88ca53', color: '#08130a', padding: '.1em .3em', boxShadow: '6px 6px 0px #fff', textShadow: 'none' }}>
+          <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, var(--pop-lime), var(--g1))', color: '#050505', padding: '.1em .35em', border: '3px solid #050505', borderRadius: '.18em', boxShadow: '5px 5px 0px #fff, 0 0 32px var(--pop-lime-glow)', textShadow: 'none', transform: 'rotate(-2deg)' }}>
             {highlight}
           </span>
         </motion.p>

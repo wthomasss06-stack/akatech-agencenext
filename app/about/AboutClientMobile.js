@@ -261,7 +261,7 @@ function TimelineSection() {
             <motion.div key={year}
               initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: i * .12 }}
               style={{ position: 'relative', marginBottom: '2rem' }}>
-              <div style={{ position: 'absolute', left: '-1.8rem', top: '1.1rem', width: 12, height: 12, borderRadius: '50%', background: '#88ca53', border: '2.5px solid rgba(136,202,83,.3)', boxShadow: '0 0 10px rgba(136,202,83,.4)' }} />
+              <div style={{ position: 'absolute', left: '-1.8rem', top: '1.1rem', width: 12, height: 12, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', border: '2.5px solid rgba(136,202,83,.3)', boxShadow: '0 0 10px rgba(136,202,83,.4)' }} />
               <div className="sku-card" style={{ padding: '1.2rem 1.4rem' }}>
                 <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.35rem' }}>{year}</div>
                 <h3 style={{ fontSize: '.92rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.3rem' }}>{title}</h3>

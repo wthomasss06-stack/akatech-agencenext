@@ -46,8 +46,8 @@ nav.aka-card-nav {
   transition: transform 0.35s cubic-bezier(0.77,0,0.175,1), opacity 0.3s, background 0.4s;
   border-radius: 2px; transform-origin: center;
 }
-.aka-hamburger.open .aka-hline:nth-child(1) { transform: translateY(6.75px) rotate(45deg); background: #88ca53; }
-.aka-hamburger.open .aka-hline:nth-child(2) { transform: translateY(-8.25px) rotate(-45deg); background: #88ca53; }
+.aka-hamburger.open .aka-hline:nth-child(1) { transform: translateY(6.75px) rotate(45deg); background: #c6ff3d; }
+.aka-hamburger.open .aka-hline:nth-child(2) { transform: translateY(-8.25px) rotate(-45deg); background: #c6ff3d; }
 
 .aka-nav-logo {
   justify-self: center;
@@ -58,20 +58,20 @@ nav.aka-card-nav {
 .aka-nav-right { justify-self: end; display: flex; align-items: center; gap: 8px; }
 
 .aka-theme-btn {
-  width: 28px; height: 28px; border-radius: 8px;
-  border: 2px solid #fff;
-  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  width: 28px; height: 28px; border-radius: 999px;
+  border: 2px solid #050505;
+  background: linear-gradient(135deg, #c6ff3d, #88ca53);
   color: #04140a;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: transform .15s ease, box-shadow .15s ease, color .2s;
-  box-shadow: 2px 2px 0px #fff;
+  cursor: pointer; transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s cubic-bezier(.34,1.56,.64,1), color .2s;
+  box-shadow: 2px 2px 0px #050505;
 }
+.aka-theme-btn:hover { box-shadow: 3px 4px 0px #050505, 0 0 14px rgba(198,255,61,.4); transform: rotate(-8deg) scale(1.08); }
+.aka-theme-btn:active { transform: translate(1px,1px) rotate(0deg) scale(.95); box-shadow: 1px 1px 0px #050505; }
 
-.aka-theme-btn:active { transform: translate(1px,1px); box-shadow: 1px 1px 0px #fff; }
-
-.light-mode .aka-theme-btn { border-color: #08130a; box-shadow: 2px 2px 0px #08130a; }
-.light-mode .aka-theme-btn:hover { box-shadow: 4px 4px 0px #08130a; }
-.light-mode .aka-theme-btn:active { box-shadow: 1px 1px 0px #08130a; }
+.light-mode .aka-theme-btn { border-color: #050505; box-shadow: 2px 2px 0px #050505; }
+.light-mode .aka-theme-btn:hover { box-shadow: 3px 4px 0px #050505, 0 0 14px rgba(198,255,61,.4); }
+.light-mode .aka-theme-btn:active { box-shadow: 1px 1px 0px #050505; }
 
 .aka-nav-content {
   display: grid; grid-template-columns: repeat(3, 1fr);
@@ -85,8 +85,8 @@ nav.aka-card-nav {
   box-shadow: var(--card-shadow);
   transition: box-shadow 0.3s, background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
 }
-.aka-nav-card:hover { box-shadow: 7px 7px 0px #fff; }
-.light-mode .aka-nav-card:hover { box-shadow: 7px 7px 0px #08130a; }
+.aka-nav-card:hover { box-shadow: 7px 7px 0px #050505, 0 0 26px rgba(198,255,61,.28); }
+.light-mode .aka-nav-card:hover { box-shadow: 7px 7px 0px #050505, 0 0 26px rgba(198,255,61,.22); }
 
 .aka-card-1 {
   background: var(--card1-bg);
@@ -120,7 +120,7 @@ nav.aka-card-nav {
 }
 .aka-card-1 .aka-card-link:hover { color: var(--card1-link-hover); transform: translateX(5px); }
 .aka-card-2 .aka-card-link:hover,
-.aka-card-3 .aka-card-link:hover { color: #88ca53; transform: translateX(5px); }
+.aka-card-3 .aka-card-link:hover { color: #c6ff3d; transform: translateX(5px); }
 
 .aka-card-brand { display: flex; flex-direction: column; gap: 14px; }
 .aka-card-logo-link {

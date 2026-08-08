@@ -290,7 +290,7 @@ function AboutStatsSlide() {
       <div style={{ width: '100%', height: 2, borderRadius: 2, background: 'rgba(136,202,83,.16)', overflow: 'hidden', marginTop: '.4rem' }}>
         <span key={i} style={{
           display: 'block', height: '100%', width: '100%',
-          background: '#88ca53',
+          background: 'linear-gradient(135deg, #c6ff3d, #88ca53)',
           transformOrigin: 'left center',
           transform: 'scaleX(0)',
           animation: `aboutStatsProgress ${SLIDE_MS}ms linear forwards`,
@@ -412,7 +412,7 @@ function TimelineSection() {
           {TIMELINE.map(({ year, title, desc }, i) => (
             <BlurReveal key={year} delay={i * 0.15} direction={i % 2 === 0 ? 'left' : 'right'}>
               <div style={{ display: 'flex', justifyContent: i % 2 === 0 ? 'flex-start' : 'flex-end', marginBottom: '3rem', position: 'relative' }}>
-                <div style={{ position: 'absolute', left: '50%', top: '1.2rem', transform: 'translateX(-50%)', width: 14, height: 14, borderRadius: '50%', background: '#88ca53', border: '3px solid rgba(136,202,83,.3)', boxShadow: '0 0 16px rgba(136,202,83,.4)', zIndex: 1 }} />
+                <div style={{ position: 'absolute', left: '50%', top: '1.2rem', transform: 'translateX(-50%)', width: 14, height: 14, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', border: '3px solid rgba(136,202,83,.3)', boxShadow: '0 0 16px rgba(136,202,83,.4)', zIndex: 1 }} />
                 <motion.div className="sku-card" whileHover={{ y: -4, scale: 1.01 }} style={{ width: '44%', padding: '1.5rem', position: 'relative', overflow: 'hidden' }}>
                   <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: 'radial-gradient(circle at 100% 0%,rgba(136,202,83,.1),transparent 70%)', pointerEvents: 'none' }} />
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>

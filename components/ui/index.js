@@ -276,20 +276,23 @@ export function BackToTop() {
       initial={{ opacity: 0, scale: .6, y: 20 }}
       animate={{ opacity: 1, scale: 1, y: 0 }}
       exit={{ opacity: 0, scale: .6, y: 20 }}
+      whileHover={{ scale: 1.08, rotate: -4, boxShadow: '6px 8px 0px #050505, 0 0 24px rgba(198,255,61,.45)' }}
+      whileTap={{ scale: .94, rotate: 0, boxShadow: '2px 2px 0px #050505' }}
+      transition={{ type: 'spring', stiffness: 400, damping: 18 }}
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       aria-label="Remonter en haut de la page"
       style={{
         position: 'fixed', bottom: '6.5rem', right: '2rem', zIndex: 8999,
-        width: 48, height: 48, borderRadius: 10,
-        background: '#88ca53',
-        border: '3px solid #ffffff',
-        boxShadow: '4px 4px 0px #ffffff',
+        width: 48, height: 48, borderRadius: 999,
+        background: 'linear-gradient(135deg, #c6ff3d, #88ca53)',
+        border: '3px solid #050505',
+        boxShadow: '4px 4px 0px #050505',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        cursor: 'pointer', color: '#08120a',
+        cursor: 'pointer', color: '#050505',
       }}
     >
       <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-        <path d="M8 13V3M3 8l5-5 5 5" stroke="#08120a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M8 13V3M3 8l5-5 5 5" stroke="#050505" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </motion.button>
   )
@@ -349,13 +352,13 @@ export function FloatingWA() {
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
         style={{
-          width: 54, height: 54, borderRadius: 12,
+          width: 54, height: 54, borderRadius: 999,
           background: '#25d366',
-          border: '3px solid #ffffff',
-          boxShadow: hov ? '6px 6px 0px #ffffff' : '4px 4px 0px #ffffff',
+          border: '3px solid #050505',
+          boxShadow: hov ? '6px 8px 0px #050505, 0 0 22px rgba(198,255,61,.4)' : '4px 4px 0px #050505',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          transform: hov ? 'translate(-2px, -2px)' : 'translate(0, 0)',
-          transition: 'transform .15s, box-shadow .15s',
+          transform: hov ? 'translate(-2px, -4px) rotate(-3deg) scale(1.06)' : 'translate(0, 0) rotate(0deg) scale(1)',
+          transition: 'transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s cubic-bezier(.34,1.56,.64,1)',
           textDecoration: 'none',
         }}
       >
