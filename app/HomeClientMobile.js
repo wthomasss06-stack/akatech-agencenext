@@ -367,18 +367,20 @@ function Hero() {
           initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}
           style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', marginBottom: '-1.6rem', justifyContent: 'center', position: 'relative', zIndex: 30 }}>
           <motion.a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
-            initial={{ boxShadow: '6px 6px 0px #fff' }}
-            whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
-            whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#08130a', background: '#88ca53', padding: '1rem 2.1rem', borderRadius: 999 }}>
+            initial={{ boxShadow: '5px 5px 0px #050505' }}
+            whileHover={{ x: -3, y: -6, rotate: -1.5, scale: 1.04, boxShadow: '8px 11px 0px #050505, 0 0 32px rgba(198,255,61,.45)' }}
+            whileTap={{ x: 1, y: 1, rotate: 0, scale: .97, boxShadow: '2px 2px 0px #050505' }}
+            transition={{ type: 'spring', stiffness: 400, damping: 18 }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#050505', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', padding: '1rem 2.1rem', borderRadius: 999, border: '3px solid #fff' }}>
             <HoverSlideText text="Démarrer mon projet" /> <ArrowRight size={16} />
           </motion.a>
           <motion.div
-            initial={{ boxShadow: '6px 6px 0px #fff' }}
-            whileHover={{ x: -4, y: -4, boxShadow: '10px 10px 0px #fff' }}
-            whileTap={{ x: 2, y: 2, boxShadow: '2px 2px 0px #fff' }}
+            initial={{ boxShadow: '5px 5px 0px #050505' }}
+            whileHover={{ x: -3, y: -6, rotate: 1.5, scale: 1.04, boxShadow: '8px 11px 0px #050505, 0 0 32px rgba(198,255,61,.45)' }}
+            whileTap={{ x: 1, y: 1, rotate: 0, scale: .97, boxShadow: '2px 2px 0px #050505' }}
+            transition={{ type: 'spring', stiffness: 400, damping: 18 }}
             style={{ display: 'inline-block', borderRadius: 999 }}>
-            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#fff', background: 'transparent', border: '2px solid #fff', borderRadius: 999, padding: 'calc(1rem - 2px) calc(2.1rem - 2px)' }}>
+            <Link href="/contact" style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#c6ff3d', background: 'transparent', border: '3px solid #c6ff3d', borderRadius: 999, padding: 'calc(1rem - 3px) calc(2.1rem - 3px)' }}>
               <HoverSlideText text="Prenez RDV" />
             </Link>
           </motion.div>
@@ -1250,14 +1252,13 @@ function ProjectFormHome() {
                   type="button"
                   onClick={handleSubmit}
                   disabled={sending}
+                  className="btn-raised"
                   style={{
-                    marginTop: '1.2rem', width: '100%', borderRadius: 999, background: '#88ca53', border: '2px solid #fff', cursor: sending ? 'default' : 'pointer', color: '#08130a',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.5rem', padding: '.85rem 1.4rem',
-                    fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '.95rem', textTransform: 'uppercase',
-                    boxShadow: '4px 4px 0px #fff', opacity: sending ? .7 : 1,
+                    marginTop: '1.2rem', width: '100%', cursor: sending ? 'default' : 'pointer',
+                    justifyContent: 'center', opacity: sending ? .7 : 1,
                   }}
                 >
-                  {sending ? <span style={{ width: 15, height: 15, border: '2px solid rgba(8,19,10,.3)', borderTopColor: '#08130a', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={17} />}
+                  {sending ? <span style={{ width: 15, height: 15, border: '2px solid rgba(5,5,5,.3)', borderTopColor: '#050505', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={17} />}
                   <HoverSlideText text="Recevoir mon devis en 24h" />
                 </button>
               </motion.div>

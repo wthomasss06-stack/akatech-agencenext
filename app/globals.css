@@ -6,6 +6,13 @@
   --g3: #5f9137;
   --g5: #b3ee85;
 
+  /* ── Maximalisme pop vitaminé — palette élargie, toujours vert/noir/blanc ── */
+  --pop-lime: #c6ff3d;
+  --pop-lime2: #8fe814;
+  --pop-black: #050505;
+  --pop-forest: #0a2410;
+  --pop-lime-glow: rgba(198,255,61,.42);
+
   /* ── Backgrounds — 1 variable de base + 1 variante carte, par mode ── */
   --bg-dark: #060e09;
   --bg-dark-card: #0d1a11;
@@ -108,29 +115,29 @@ body.light-mode .sku-card:hover {
   align-items: center;
   gap: .55rem;
   padding: .82rem 1.85rem;
-  background: var(--g1);
-  color: #020a05;
+  background: linear-gradient(135deg, var(--pop-lime) 0%, var(--g1) 100%);
+  color: var(--pop-black);
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
   font-style: italic;
   font-size: .88rem;
   border-radius: 999px;
-  border: 2px solid #fff;
+  border: 3px solid #fff;
   cursor: pointer;
-  box-shadow: 4px 4px 0px #fff;
-  transition: transform .15s ease, box-shadow .15s ease;
+  box-shadow: 4px 4px 0px var(--pop-black);
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s cubic-bezier(.34,1.56,.64,1);
   position: relative;
   text-decoration: none;
   letter-spacing: .01em;
 }
 .btn-raised::after { display: none; }
 .btn-raised:hover {
-  transform: translate(-3px,-3px);
-  box-shadow: 7px 7px 0px #fff;
+  transform: translate(-2px,-5px) rotate(-1.5deg) scale(1.04);
+  box-shadow: 6px 9px 0px var(--pop-black), 0 0 28px var(--pop-lime-glow);
 }
 .btn-raised:active {
-  transform: translate(2px,2px);
-  box-shadow: 1px 1px 0px #fff;
+  transform: translate(1px,1px) rotate(0deg) scale(.97);
+  box-shadow: 2px 2px 0px var(--pop-black);
 }
 
 .btn-ghost {
@@ -139,16 +146,16 @@ body.light-mode .sku-card:hover {
   gap: .55rem;
   padding: .82rem 1.85rem;
   background: transparent;
-  color: #fff;
+  color: var(--pop-lime);
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
   font-style: italic;
   font-size: .88rem;
   border-radius: 999px;
-  border: 2px solid #fff;
-  box-shadow: 4px 4px 0px #fff;
+  border: 3px solid var(--pop-lime);
+  box-shadow: 4px 4px 0px var(--pop-black);
   cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease, background .2s;
+  transition: transform .35s cubic-bezier(.34,1.56,.64,1), box-shadow .35s cubic-bezier(.34,1.56,.64,1), background .2s;
   text-decoration: none;
   letter-spacing: .01em;
 }
@@ -160,13 +167,13 @@ body.light-mode .sku-card:hover {
   padding: .5rem 1.15rem;
   font-size: .7rem;
   gap: .4rem;
-  box-shadow: 2px 2px 0px #fff;
+  box-shadow: 2px 2px 0px var(--pop-black);
 }
-.btn-raised.btn-sm:hover, .btn-ghost.btn-sm:hover { box-shadow: 4px 4px 0px #fff; }
-.btn-raised.btn-sm:active, .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px #fff; }
-body.light-mode .btn-raised.btn-sm, body.light-mode .btn-ghost.btn-sm { box-shadow: 2px 2px 0px #08130a; }
-body.light-mode .btn-raised.btn-sm:hover, body.light-mode .btn-ghost.btn-sm:hover { box-shadow: 4px 4px 0px #08130a; }
-body.light-mode .btn-raised.btn-sm:active, body.light-mode .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px #08130a; }
+.btn-raised.btn-sm:hover, .btn-ghost.btn-sm:hover { box-shadow: 4px 5px 0px var(--pop-black), 0 0 18px var(--pop-lime-glow); }
+.btn-raised.btn-sm:active, .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px var(--pop-black); }
+body.light-mode .btn-raised.btn-sm, body.light-mode .btn-ghost.btn-sm { box-shadow: 2px 2px 0px var(--pop-black); }
+body.light-mode .btn-raised.btn-sm:hover, body.light-mode .btn-ghost.btn-sm:hover { box-shadow: 4px 5px 0px var(--pop-black), 0 0 18px var(--pop-lime-glow); }
+body.light-mode .btn-raised.btn-sm:active, body.light-mode .btn-ghost.btn-sm:active { box-shadow: 1px 1px 0px var(--pop-black); }
 
 /* Variante XL — CTA final unique (voir PageCTA), texte + bouton
    volontairement imposants. Même logique que .btn-sm, à l'envers. */
@@ -175,113 +182,149 @@ body.light-mode .btn-raised.btn-sm:active, body.light-mode .btn-ghost.btn-sm:act
   font-size: clamp(1rem, 1.7vw, 1.32rem);
   gap: .8rem;
   border-width: 3px;
-  box-shadow: 6px 6px 0px #fff;
+  box-shadow: 6px 6px 0px var(--pop-black);
 }
-.btn-raised.btn-xl:hover, .btn-ghost.btn-xl:hover { box-shadow: 10px 10px 0px #fff; transform: translate(-4px,-4px); }
-.btn-raised.btn-xl:active, .btn-ghost.btn-xl:active { box-shadow: 2px 2px 0px #fff; }
+.btn-raised.btn-xl:hover, .btn-ghost.btn-xl:hover { box-shadow: 9px 12px 0px var(--pop-black), 0 0 40px var(--pop-lime-glow); transform: translate(-3px,-6px) rotate(-1.5deg) scale(1.04); }
+.btn-raised.btn-xl:active, .btn-ghost.btn-xl:active { box-shadow: 2px 2px 0px var(--pop-black); }
 .btn-raised.btn-xl > svg, .btn-ghost.btn-xl > svg { width: 22px; height: 22px; }
-body.light-mode .btn-raised.btn-xl, body.light-mode .btn-ghost.btn-xl { box-shadow: 6px 6px 0px #08130a; }
-body.light-mode .btn-raised.btn-xl:hover, body.light-mode .btn-ghost.btn-xl:hover { box-shadow: 10px 10px 0px #08130a; }
-body.light-mode .btn-raised.btn-xl:active, body.light-mode .btn-ghost.btn-xl:active { box-shadow: 2px 2px 0px #08130a; }
+body.light-mode .btn-raised.btn-xl, body.light-mode .btn-ghost.btn-xl { box-shadow: 6px 6px 0px var(--pop-black); }
+body.light-mode .btn-raised.btn-xl:hover, body.light-mode .btn-ghost.btn-xl:hover { box-shadow: 9px 12px 0px var(--pop-black), 0 0 40px var(--pop-lime-glow); }
+body.light-mode .btn-raised.btn-xl:active, body.light-mode .btn-ghost.btn-xl:active { box-shadow: 2px 2px 0px var(--pop-black); }
 @media (max-width: 480px) {
   .btn-raised.btn-xl, .btn-ghost.btn-xl { padding: 1.05rem 1.9rem; font-size: 1rem; width: 100%; justify-content: center; }
 }
 
 .btn-ghost:hover {
-  background: rgba(255,255,255,.08);
-  transform: translate(-3px,-3px);
-  box-shadow: 7px 7px 0px #fff;
+  background: rgba(198,255,61,.1);
+  transform: translate(-2px,-5px) rotate(-1.5deg) scale(1.04);
+  box-shadow: 6px 9px 0px var(--pop-black), 0 0 28px var(--pop-lime-glow);
 }
 .btn-ghost:active {
-  transform: translate(2px,2px);
-  box-shadow: 1px 1px 0px #fff;
+  transform: translate(1px,1px) rotate(0deg) scale(.97);
+  box-shadow: 2px 2px 0px var(--pop-black);
 }
 
 body.light-mode .btn-raised {
-  background: #5f9137;
-  color: #ffffff;
-  border-color: #08130a;
-  box-shadow: 4px 4px 0px #08130a;
+  background: linear-gradient(135deg, var(--pop-lime) 0%, #5f9137 100%);
+  color: var(--pop-black);
+  border-color: var(--pop-black);
+  box-shadow: 4px 4px 0px var(--pop-black);
 }
 body.light-mode .btn-raised:hover {
-  transform: translate(-3px,-3px);
-  box-shadow: 7px 7px 0px #08130a;
+  transform: translate(-2px,-5px) rotate(-1.5deg) scale(1.04);
+  box-shadow: 6px 9px 0px var(--pop-black), 0 0 28px var(--pop-lime-glow);
 }
 body.light-mode .btn-raised:active {
-  transform: translate(2px,2px);
-  box-shadow: 1px 1px 0px #08130a;
+  transform: translate(1px,1px) scale(.97);
+  box-shadow: 2px 2px 0px var(--pop-black);
 }
 body.light-mode .btn-ghost {
-  color: #5f9137;
-    border: 1px solid rgba(95,145,55,.35);
-    box-shadow: none;
+  color: #4e7a2c;
+  border: 3px solid #4e7a2c;
+  box-shadow: 4px 4px 0px var(--pop-black);
 }
 body.light-mode .btn-ghost:hover {
-  background: rgba(95,145,55,.07);
-    border-color: #5f9137;
-    transform: translateY(-2px);
-    box-shadow: none;
+  background: rgba(95,145,55,.08);
+  border-color: #4e7a2c;
+  transform: translate(-2px,-5px) rotate(-1.5deg) scale(1.04);
+  box-shadow: 6px 9px 0px var(--pop-black), 0 0 28px var(--pop-lime-glow);
 }
 body.light-mode .btn-ghost:active {
-  transform: translate(2px,2px);
-  box-shadow: 1px 1px 0px #08130a;
+  transform: translate(1px,1px) scale(.97);
+  box-shadow: 2px 2px 0px var(--pop-black);
 }
 
-/* Neo-Brutalism réservé au desktop — sous 1024px (seuil du switch
-   Desktop/Mobile), les boutons gardent le style doux d'origine. */
+/* Sous 1024px (seuil du switch Desktop/Mobile) : même identité que le
+   desktop (pilule complète, contour + ombre noirs) — juste sans le
+   rebond/rotation ressort au survol, pensé souris, pas tactile. */
 @media (max-width: 1023px) {
   .btn-raised {
-    border-radius: 6px;
-    border: none;
-    box-shadow: none;
+    border-radius: 999px;
+    border: 3px solid var(--pop-black);
+    box-shadow: 3px 3px 0px var(--pop-black);
+    background: linear-gradient(135deg, var(--pop-lime) 0%, var(--g1) 100%);
     transition: background .2s, transform .22s, box-shadow .22s;
   }
   .btn-raised:hover {
-    background: var(--g2);
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(136,202,83,.22);
+    box-shadow: 4px 5px 0px var(--pop-black), 0 0 22px var(--pop-lime-glow);
   }
-  .btn-raised:active { transform: translateY(0); box-shadow: none; }
+  .btn-raised:active { transform: translateY(0); box-shadow: 2px 2px 0px var(--pop-black); }
 
   .btn-ghost {
-    border-radius: 6px;
-    border: 1px solid var(--border2);
-    box-shadow: none;
-    color: var(--g1);
-    transition: border-color .22s, color .22s, background .22s, transform .22s;
+    border-radius: 999px;
+    border: 3px solid var(--pop-lime);
+    box-shadow: 3px 3px 0px var(--pop-black);
+    color: var(--pop-lime);
+    transition: border-color .22s, color .22s, background .22s, transform .22s, box-shadow .22s;
   }
   .btn-ghost:hover {
-    background: rgba(136,202,83,.07);
-    border-color: var(--g1);
+    background: rgba(198,255,61,.08);
     transform: translateY(-2px);
-    box-shadow: none;
+    box-shadow: 4px 5px 0px var(--pop-black), 0 0 22px var(--pop-lime-glow);
   }
-  .btn-ghost:active { transform: translateY(0); box-shadow: none; }
+  .btn-ghost:active { transform: translateY(0); box-shadow: 2px 2px 0px var(--pop-black); }
 
   body.light-mode .btn-raised {
-    background: #5f9137;
-    color: #ffffff;
-    border: none;
-    box-shadow: none;
+    background: linear-gradient(135deg, var(--pop-lime) 0%, #5f9137 100%);
+    color: var(--pop-black);
+    border: 3px solid var(--pop-black);
+    box-shadow: 3px 3px 0px var(--pop-black);
   }
   body.light-mode .btn-raised:hover {
-    background: #4e7a2c;
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(95,145,55,.18);
+    box-shadow: 4px 5px 0px var(--pop-black), 0 0 22px var(--pop-lime-glow);
   }
-  body.light-mode .btn-raised:active { box-shadow: none; }
+  body.light-mode .btn-raised:active { box-shadow: 2px 2px 0px var(--pop-black); }
   body.light-mode .btn-ghost {
-    color: #5f9137;
-    border: 1px solid rgba(95,145,55,.35);
-    box-shadow: none;
+    color: #4e7a2c;
+    border: 3px solid #4e7a2c;
+    box-shadow: 3px 3px 0px var(--pop-black);
   }
   body.light-mode .btn-ghost:hover {
     background: rgba(95,145,55,.07);
-    border-color: #5f9137;
     transform: translateY(-2px);
-    box-shadow: none;
+    box-shadow: 4px 5px 0px var(--pop-black), 0 0 22px var(--pop-lime-glow);
   }
-  body.light-mode .btn-ghost:active { box-shadow: none; }
+  body.light-mode .btn-ghost:active { box-shadow: 2px 2px 0px var(--pop-black); }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MAXIMALISME POP VITAMINÉ — direction visuelle du site.
+   Toujours vert / noir / blanc uniquement, mais poussé à fond :
+   dégradés électriques, halo néon, texture demi-teinte façon pop
+   art, contours BD épais, interactions qui rebondissent
+   (cubic-bezier "back out" plutôt que le glissement plat du
+   neobrutalisme). Remplace section par section le langage
+   précédent (ombre portée plate).
+   ═══════════════════════════════════════════════════════════ */
+
+/* Texture demi-teinte (pop art) — alternative/complément à .grid-bg */
+.halftone-bg {
+  background-image: radial-gradient(circle, currentColor 1.5px, transparent 1.5px);
+  background-size: 10px 10px;
+  color: var(--g1);
+}
+
+/* Sticker / badge tamponné, légèrement pivoté */
+.pop-sticker {
+  display: inline-flex;
+  align-items: center;
+  gap: .35em;
+  padding: .45em 1em;
+  background: var(--pop-black);
+  color: var(--pop-lime);
+  border: 2px solid var(--pop-lime);
+  border-radius: 999px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-style: italic;
+  text-transform: uppercase;
+  font-size: .78rem;
+  letter-spacing: .02em;
+  transform: rotate(-3deg);
+  white-space: nowrap;
+  box-shadow: 3px 3px 0px var(--pop-lime-glow);
 }
 
 /* Ghost Title — texte fantôme en contour superposé au h2/h1.
@@ -300,7 +343,7 @@ body.light-mode .btn-ghost:active {
   font: inherit;
   line-height: inherit;
   letter-spacing: inherit;
-  -webkit-text-stroke: 1.5px rgba(136,202,83,.35);
+  -webkit-text-stroke: 1.5px rgba(198,255,61,.4);
   transform: translate(.22em, .12em) scale(1.025);
 }
 body.light-mode .ghost-title-wrap {
@@ -407,14 +450,22 @@ body.light-mode .ghost-title-wrap {
   letter-spacing: -.01em;
   line-height: 0.95;
 }
-/* Text gradient — accent coloré, même police que le reste du titre */
+/* Text gradient — désormais un vrai dégradé électrique (pop vitaminé),
+   même police que le reste du titre. Se propage à tous les usages déjà
+   en place dans le site (Prestations, Processus, CTA...). */
 .text-gradient {
-  color: var(--g1);
+  background: linear-gradient(100deg, var(--pop-lime) 0%, var(--g1) 55%, var(--pop-lime2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Mode light */
 body.light-mode .text-gradient {
-  color: #5f9137;
+  background: linear-gradient(100deg, var(--g1) 0%, #5f9137 60%, #3f6b26 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 /* Grid background */
