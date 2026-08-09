@@ -30,6 +30,24 @@ if (!cloudName || !apiKey || !apiSecret) {
 
 const BASE_FOLDER = 'akatech/images';
 const imagesDir = path.join(__dirname, '..', 'public', 'images');
+// Mémoire locale des empreintes déjà envoyées — permet de sauter les fichiers
+// inchangés d'un run à l'autre au lieu de re-uploader les 145 images à chaque
+// fois. Purement local (jamais commité), voir .gitignore.
+const manifestPath = path.join(__dirname, '.cloudinary-manifest.json');
+const FORCE = process.argv.includes('--force');
+
+function loadManifest() {
+  if (FORCE) return {};
+  try {
+    return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function fileHash(filePath) {
+  return crypto.createHash('md5').update(fs.readFileSync(filePath)).digest('hex');
+}
 
 function getFilesRecursively(dir) {
   let results = [];
@@ -100,18 +118,30 @@ async function uploadAll() {
     return;
   }
 
+  const manifest = loadManifest();
   const files = getFilesRecursively(imagesDir);
-  console.log(`🚀 Début de l'upload de ${files.length} fichiers vers Cloudinary (${cloudName})...\n`);
+  console.log(`🚀 Vérification de ${files.length} fichiers vers Cloudinary (${cloudName})...${FORCE ? ' (--force : tout réenvoyer)' : ''}\n`);
 
   let successCount = 0;
   let failCount = 0;
+  let skippedCount = 0;
+  const seenPaths = new Set();
 
   for (const filePath of files) {
     const relativePath = path.relative(imagesDir, filePath).replace(/\\/g, '/');
+    seenPaths.add(relativePath);
+    const hash = fileHash(filePath);
+
+    if (manifest[relativePath] === hash) {
+      skippedCount++;
+      continue;
+    }
+
     try {
       console.log(`⏳ Uploading [${relativePath}]...`);
       const res = await uploadFile(filePath, relativePath);
       console.log(`  ✅ Succès: ${res.secure_url}`);
+      manifest[relativePath] = hash;
       successCount++;
     } catch (err) {
       console.error(`  ❌ Échec pour ${relativePath}:`, err.message);
@@ -119,7 +149,18 @@ async function uploadAll() {
     }
   }
 
-  console.log(`\n🎉 Upload terminé ! Succès: ${successCount}, Échecs: ${failCount}`);
+  // Fichiers supprimés localement depuis le dernier run : retirés de la
+  // mémoire (pas de leur copie Cloudinary, au cas où ils servent encore
+  // ailleurs) — sinon un fichier recréé plus tard avec le même contenu
+  // serait à tort considéré "déjà à jour" et jamais réenvoyé.
+  for (const knownPath of Object.keys(manifest)) {
+    if (!seenPaths.has(knownPath)) delete manifest[knownPath];
+  }
+
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+
+  console.log(`\n🎉 Terminé ! Envoyés: ${successCount}, Déjà à jour (ignorés): ${skippedCount}, Échecs: ${failCount}`);
+  if (skippedCount > 0) console.log(`💡 Pour tout renvoyer quand même : node scripts/upload-cloudinary.js --force`);
 }
 
 uploadAll();
