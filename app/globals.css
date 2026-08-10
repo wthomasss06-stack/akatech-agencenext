@@ -66,7 +66,7 @@ img { max-width: 100%; display: block; object-fit: cover; }
 /* Scrollbar */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg-dark); }
-::-webkit-scrollbar-thumb { background: var(--g1); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: #c6ff3d; border-radius: 2px; }
 body.light-mode ::-webkit-scrollbar-track { background: #f0f0f0; }
 body.light-mode ::-webkit-scrollbar-thumb { background: #5f9137; }
 
@@ -782,13 +782,13 @@ body.light-mode .cta-circle-arrow {
 }
 .cta-circle-btn:hover .cta-circle-arrow {
   border-color: var(--g1);
-  background: var(--g1);
+  background: linear-gradient(135deg, #c6ff3d, var(--g1));
   color: #020a05;
   transform: rotate(50deg);
 }
 body.light-mode .cta-circle-btn:hover .cta-circle-arrow {
   border-color: #5f9137;
-  background: #5f9137;
+  background: linear-gradient(135deg, #c6ff3d, #5f9137);
   color: #f0f5ec;
   transform: rotate(50deg);
 }

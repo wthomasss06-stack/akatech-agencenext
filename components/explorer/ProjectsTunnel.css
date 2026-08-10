@@ -124,7 +124,7 @@
 }
 .pt-mobile-card a {
   display: inline-flex; align-items: center; gap: .5rem;
-  background: linear-gradient(135deg, #88ca53, #5a9e34);
+  background: linear-gradient(135deg, #c6ff3d, #88ca53);
   color: #04140a; font-family: 'JetBrains Mono', monospace;
   font-weight: 700; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase;
   padding: .85rem 1.6rem; border-radius: 999px; text-decoration: none;

@@ -312,7 +312,7 @@
 .light-mode .sm-panel-item:hover .sm-panel-item-arrow,
 .light-mode .sm-panel-item--active .sm-panel-item-arrow {
   border-color: #050505;
-  background: #5f9137;
+  background: linear-gradient(135deg, #c6ff3d, #5f9137);
   color: #f0f5ec;
   transform: rotate(50deg);
   box-shadow: 3px 3px 0px #050505;

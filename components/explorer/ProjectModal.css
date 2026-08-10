@@ -40,7 +40,7 @@
   color: #fff; cursor: pointer;
   transition: background .25s ease, transform .35s cubic-bezier(.22,1,.36,1), border-color .25s ease;
 }
-.pgm-close:hover { background: #88ca53; border-color: #88ca53; color: #04140a; transform: rotate(90deg); }
+.pgm-close:hover { background: linear-gradient(135deg, #c6ff3d, #88ca53); border-color: #050505; color: #04140a; transform: rotate(90deg); }
 
 .pgm-image {
   position: relative; background: #0a1710;
