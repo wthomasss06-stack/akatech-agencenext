@@ -1,4 +1,5 @@
 import ServicesResponsive from './ServicesResponsive'
+import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'Services — AKATech | Sites Vitrines, E-Commerce, API Abidjan',
@@ -23,6 +24,10 @@ export default function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(SERVICES_JSON_LD) }} />
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+        { name: 'Services', url: 'https://akatech.vercel.app/services' },
+      ]} />
       <ServicesResponsive />
     </>
   )

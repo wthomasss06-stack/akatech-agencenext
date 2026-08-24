@@ -1,5 +1,6 @@
 import ProjectsResponsive from './ProjectsResponsive'
 import { PROJECTS } from '@/lib/data'
+import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: "Réalisations — AKATech | Projets Web Côte d'Ivoire",
@@ -8,4 +9,14 @@ export const metadata = {
   openGraph: { title: "Réalisations — AKATech", description: `${PROJECTS.length}+ projets web livrés en Côte d'Ivoire : sites, e-commerce, marketplaces, portfolios.`, locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/projects' },
 }
 
-export default function Page() { return <ProjectsResponsive /> }
+export default function Page() {
+  return (
+    <>
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+        { name: 'Réalisations', url: 'https://akatech.vercel.app/projects' },
+      ]} />
+      <ProjectsResponsive />
+    </>
+  )
+}

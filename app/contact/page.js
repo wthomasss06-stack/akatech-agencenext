@@ -1,4 +1,5 @@
 import ContactResponsive from './ContactResponsive'
+import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'Contact — AKATech | Devis Gratuit en 24h',
@@ -22,6 +23,10 @@ export default function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(CONTACT_JSON_LD) }} />
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+        { name: 'Contact', url: 'https://akatech.vercel.app/contact' },
+      ]} />
       <ContactResponsive />
     </>
   )

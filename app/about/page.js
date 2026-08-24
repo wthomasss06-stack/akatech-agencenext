@@ -1,5 +1,6 @@
 import AboutResponsive from './AboutResponsive'
 import { PROJECTS } from '@/lib/data'
+import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'À propos — AKATech | Agence Web Abidjan',
@@ -18,6 +19,10 @@ export default function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ABOUT_JSON_LD) }} />
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+        { name: 'À propos', url: 'https://akatech.vercel.app/about' },
+      ]} />
       <AboutResponsive />
     </>
   )

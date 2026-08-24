@@ -12,6 +12,8 @@ import { cld } from '@/lib/cloudinary'
 import { Analytics } from '@vercel/analytics/next'
 import { PageTransitionProvider } from '@/components/layout/PageTransition'
 import { BlobTransitionProvider } from '@/components/layout/BlobTransition'
+import { SitewideStructuredData } from './seo/StructuredData'
+import BreadcrumbTrail from './seo/BreadcrumbTrail'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -113,12 +115,6 @@ const ORG_JSON_LD = {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Fiche Google My Business' } },
     ],
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '5',
-    reviewCount: '3',
-    bestRating: '5',
-  },
 }
 
 export default function RootLayout({ children }) {
@@ -133,10 +129,7 @@ export default function RootLayout({ children }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Anton&family=Dancing+Script:wght@700&family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_JSON_LD) }}
-        />
+        <SitewideStructuredData organization={ORG_JSON_LD} />
       </head>
       <body>
         <ThemeProvider>
@@ -145,6 +138,7 @@ export default function RootLayout({ children }) {
               <ScrollToTop />
               <Loader />
               <Navbar />
+              <BreadcrumbTrail />
               <main>{children}</main>
               <Footer />
               <FloatingWA />

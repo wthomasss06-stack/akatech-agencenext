@@ -1,6 +1,7 @@
 import BlogArticleClient from './BlogArticleClient'
 import { BLOG_POSTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
+import { BreadcrumbJsonLd } from '../../seo/StructuredData'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -54,6 +55,13 @@ export default function BlogArticlePage({ params }) {
     <>
       {ARTICLE_JSON_LD && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ARTICLE_JSON_LD) }} />
+      )}
+      {post && (
+        <BreadcrumbJsonLd items={[
+          { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+          { name: 'Blog', url: 'https://akatech.vercel.app/blog' },
+          { name: post.title, url: `https://akatech.vercel.app/blog/${post.slug}` },
+        ]} />
       )}
       <BlogArticleClient slug={params.slug} />
     </>

@@ -1,4 +1,5 @@
 import BlogResponsive from './BlogResponsive'
+import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'Blog — AKATech | Conseils Digitaux pour Entrepreneurs Africains',
@@ -7,4 +8,14 @@ export const metadata = {
   openGraph: { title: 'Blog — AKATech', description: "Conseils concrets en stratégie digitale, SEO et e-commerce pour entrepreneurs ivoiriens.", locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/blog' },
 }
 
-export default function Page() { return <BlogResponsive /> }
+export default function Page() {
+  return (
+    <>
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+        { name: 'Blog', url: 'https://akatech.vercel.app/blog' },
+      ]} />
+      <BlogResponsive />
+    </>
+  )
+}

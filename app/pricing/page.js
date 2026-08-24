@@ -1,5 +1,6 @@
 import PricingResponsive from './PricingResponsive'
 import { FAQ_ITEMS } from '@/lib/data'
+import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'Tarifs — AKATech | Prix Sites Web & Applications Abidjan',
@@ -22,6 +23,10 @@ export default function Page() {
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(FAQ_JSON_LD) }} />
+      <BreadcrumbJsonLd items={[
+        { name: 'Accueil', url: 'https://akatech.vercel.app/' },
+        { name: 'Tarifs', url: 'https://akatech.vercel.app/pricing' },
+      ]} />
       <PricingResponsive />
     </>
   )
