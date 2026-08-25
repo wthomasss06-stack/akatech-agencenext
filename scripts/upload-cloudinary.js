@@ -2,20 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 
-// 1. Charger .env.local
+// Chargement local uniquement : les secrets restent dans .env.local et ne sont
+// jamais écrits dans le manifeste ni dans les logs.
 const envPath = path.join(__dirname, '..', '.env.local');
 if (fs.existsSync(envPath)) {
-  const envConfig = fs.readFileSync(envPath, 'utf8');
-  envConfig.split(/\r?\n/).forEach(line => {
+  fs.readFileSync(envPath, 'utf8').split(/\r?\n/).forEach(line => {
     const trimmed = line.trim();
-    if (trimmed && !trimmed.startsWith('#')) {
-      const equalsIdx = trimmed.indexOf('=');
-      if (equalsIdx !== -1) {
-        const key = trimmed.slice(0, equalsIdx).trim();
-        const value = trimmed.slice(equalsIdx + 1).trim();
-        process.env[key] = value;
-      }
-    }
+    if (!trimmed || trimmed.startsWith('#')) return;
+    const equalsIdx = trimmed.indexOf('=');
+    if (equalsIdx === -1) return;
+    process.env[trimmed.slice(0, equalsIdx).trim()] = trimmed.slice(equalsIdx + 1).trim();
   });
 }
 
@@ -24,143 +20,135 @@ const apiKey = process.env.CLOUDINARY_API_KEY;
 const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
 if (!cloudName || !apiKey || !apiSecret) {
-  console.error('❌ Erreur : CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY ou CLOUDINARY_API_SECRET manquant dans .env.local');
+  console.error('❌ CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY ou CLOUDINARY_API_SECRET manquant dans .env.local');
   process.exit(1);
 }
 
 const BASE_FOLDER = 'akatech/images';
 const imagesDir = path.join(__dirname, '..', 'public', 'images');
-// Mémoire locale des empreintes déjà envoyées — permet de sauter les fichiers
-// inchangés d'un run à l'autre au lieu de re-uploader les 145 images à chaque
-// fois. Purement local (jamais commité), voir .gitignore.
 const manifestPath = path.join(__dirname, '.cloudinary-manifest.json');
 const FORCE = process.argv.includes('--force');
+const DRY_RUN = process.argv.includes('--dry-run');
+const VIDEO_EXTENSIONS = new Set(['.webm', '.mp4', '.mov', '.m4v', '.avi']);
 
 function loadManifest() {
   if (FORCE) return {};
-  try {
-    return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-  } catch {
-    return {};
-  }
+  try { return JSON.parse(fs.readFileSync(manifestPath, 'utf8')); } catch { return {}; }
 }
 
 function fileHash(filePath) {
-  return crypto.createHash('md5').update(fs.readFileSync(filePath)).digest('hex');
+  return crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
 }
 
 function getFilesRecursively(dir) {
-  let results = [];
-  const list = fs.readdirSync(dir);
-  list.forEach(file => {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat && stat.isDirectory()) {
-      results = results.concat(getFilesRecursively(filePath));
-    } else {
-      results.push(filePath);
-    }
+  return fs.readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
+    const filePath = path.join(dir, entry.name);
+    return entry.isDirectory() ? getFilesRecursively(filePath) : [filePath];
   });
-  return results;
+}
+
+/**
+ * Identifiant Cloudinary déterministe : le nom logique du média est son chemin
+ * public sans extension. Ainsi, un nouveau WebP remplace le média précédent
+ * portant le même nom de projet, même si son extension change.
+ */
+function publicIdFor(relativePath) {
+  const normalized = relativePath.replace(/\\/g, '/').normalize('NFC');
+  const extension = path.posix.extname(normalized);
+  return `${BASE_FOLDER}/${extension ? normalized.slice(0, -extension.length) : normalized}`;
+}
+
+function resourceTypeFor(relativePath) {
+  return VIDEO_EXTENSIONS.has(path.extname(relativePath).toLowerCase()) ? 'video' : 'image';
 }
 
 function generateSignature(params, secret) {
-  const sortedKeys = Object.keys(params).sort();
-  const toSign = sortedKeys.map(k => `${k}=${params[k]}`).join('&') + secret;
-  return crypto.createHash('sha1').update(toSign).digest('hex');
+  const payload = Object.keys(params).sort().map(key => `${key}=${params[key]}`).join('&');
+  return crypto.createHash('sha1').update(payload + secret).digest('hex');
 }
 
 async function uploadFile(filePath, relativePath) {
-  const ext = path.extname(relativePath);
-  const relativePathNoExt = relativePath.slice(0, relativePath.length - ext.length);
-  const publicId = `${BASE_FOLDER}/${relativePathNoExt}`;
-
-  const isVideo = ['.webm', '.mp4', '.mov'].includes(ext.toLowerCase());
-  const resourceType = isVideo ? 'video' : 'image';
-
+  const publicId = publicIdFor(relativePath);
+  const resourceType = resourceTypeFor(relativePath);
   const timestamp = Math.floor(Date.now() / 1000);
   const paramsToSign = {
+    invalidate: 'true',
     overwrite: 'true',
     public_id: publicId,
-    timestamp: timestamp
+    timestamp,
+    unique_filename: 'false',
+    use_filename: 'false',
   };
-
   const signature = generateSignature(paramsToSign, apiSecret);
-
-  const fileBuffer = fs.readFileSync(filePath);
-  const blob = new Blob([fileBuffer]);
-
   const formData = new FormData();
-  formData.append('file', blob, path.basename(filePath));
+  formData.append('file', new Blob([fs.readFileSync(filePath)]), path.basename(filePath));
   formData.append('api_key', apiKey);
-  formData.append('timestamp', timestamp);
+  formData.append('timestamp', String(timestamp));
   formData.append('public_id', publicId);
   formData.append('overwrite', 'true');
+  formData.append('invalidate', 'true');
+  formData.append('unique_filename', 'false');
+  formData.append('use_filename', 'false');
   formData.append('signature', signature);
 
-  const url = `https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`;
+  if (DRY_RUN) return { secure_url: '[dry-run]', public_id: publicId, resource_type: resourceType };
 
-  const response = await fetch(url, {
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
     method: 'POST',
-    body: formData
+    body: formData,
   });
-
   const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.error ? data.error.message : JSON.stringify(data));
-  }
+  if (!response.ok) throw new Error(data.error?.message || JSON.stringify(data));
   return data;
 }
 
 async function uploadAll() {
-  if (!fs.existsSync(imagesDir)) {
-    console.error("❌ Le dossier public/images n'existe pas.");
-    return;
-  }
-
+  if (!fs.existsSync(imagesDir)) throw new Error("Le dossier public/images n'existe pas.");
   const manifest = loadManifest();
   const files = getFilesRecursively(imagesDir);
-  console.log(`🚀 Vérification de ${files.length} fichiers vers Cloudinary (${cloudName})...${FORCE ? ' (--force : tout réenvoyer)' : ''}\n`);
-
-  let successCount = 0;
-  let failCount = 0;
-  let skippedCount = 0;
+  let uploaded = 0;
+  let skipped = 0;
+  let failed = 0;
   const seenPaths = new Set();
+
+  console.log(`🚀 Synchronisation de ${files.length} médias vers Cloudinary${DRY_RUN ? ' (dry-run)' : ''}${FORCE ? ' (force)' : ''}`);
 
   for (const filePath of files) {
     const relativePath = path.relative(imagesDir, filePath).replace(/\\/g, '/');
-    seenPaths.add(relativePath);
+    const publicId = publicIdFor(relativePath);
     const hash = fileHash(filePath);
+    seenPaths.add(relativePath);
+    const previous = manifest[relativePath];
+    const previousHash = typeof previous === 'string' ? previous : previous?.hash;
 
-    if (manifest[relativePath] === hash) {
-      skippedCount++;
+    if (!FORCE && previousHash === hash) {
+      skipped++;
       continue;
     }
 
     try {
-      console.log(`⏳ Uploading [${relativePath}]...`);
-      const res = await uploadFile(filePath, relativePath);
-      console.log(`  ✅ Succès: ${res.secure_url}`);
-      manifest[relativePath] = hash;
-      successCount++;
-    } catch (err) {
-      console.error(`  ❌ Échec pour ${relativePath}:`, err.message);
-      failCount++;
+      console.log(`⏳ ${relativePath} → ${publicId}`);
+      const result = await uploadFile(filePath, relativePath);
+      manifest[relativePath] = {
+        hash,
+        publicId,
+        resourceType: resourceTypeFor(relativePath),
+        updatedAt: new Date().toISOString(),
+      };
+      console.log(`  ✅ ${result.secure_url}`);
+      uploaded++;
+    } catch (error) {
+      console.error(`  ❌ ${relativePath}: ${error.message}`);
+      failed++;
     }
   }
 
-  // Fichiers supprimés localement depuis le dernier run : retirés de la
-  // mémoire (pas de leur copie Cloudinary, au cas où ils servent encore
-  // ailleurs) — sinon un fichier recréé plus tard avec le même contenu
-  // serait à tort considéré "déjà à jour" et jamais réenvoyé.
   for (const knownPath of Object.keys(manifest)) {
     if (!seenPaths.has(knownPath)) delete manifest[knownPath];
   }
-
-  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-
-  console.log(`\n🎉 Terminé ! Envoyés: ${successCount}, Déjà à jour (ignorés): ${skippedCount}, Échecs: ${failCount}`);
-  if (skippedCount > 0) console.log(`💡 Pour tout renvoyer quand même : node scripts/upload-cloudinary.js --force`);
+  if (!DRY_RUN) fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+  console.log(`\nTerminé — envoyés: ${uploaded}, inchangés: ${skipped}, échecs: ${failed}`);
+  if (failed) process.exitCode = 1;
 }
 
-uploadAll();
+uploadAll().catch(error => { console.error(`❌ ${error.message}`); process.exitCode = 1; });

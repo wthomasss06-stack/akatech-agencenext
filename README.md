@@ -72,7 +72,7 @@ akatech-nextjs/
 │   ├── robots.js · sitemap.js
 │   │
 │   ├── about/                 # Équipe, stats animées, valeurs
-│   ├── services/               # 5 domaines d'expertise
+│   ├── services/               # 5 domaines d'expertise, visuels WebP locaux
 │   ├── projects/               # Galerie filtrée (19 réalisations)
 │   ├── pricing/                 # 5 grilles tarifaires + FAQ
 │   ├── blog/[slug]/            # 4 articles + recherche + newsletter
@@ -116,7 +116,7 @@ akatech-nextjs/
 |---|---|---|
 | `/` | Accueil | Hero animé, services, marquees de confiance, projets récents, témoignages |
 | `/about` | À propos | Équipe, stats animées, valeurs |
-| `/services` | Services | 5 domaines d'expertise, process en 4 étapes |
+| `/services` | Services | 5 domaines d'expertise, processus en 7 étapes |
 | `/projects` | Projets | Galerie filtrée par catégorie — 19 réalisations |
 | `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 19 projets — desktop uniquement, repli vers `/projects` sur mobile |
 | `/pricing` | Tarifs | 5 grilles (Portfolio, Vitrine, E-commerce, SaaS, GBP), FAQ, témoignages |
@@ -196,24 +196,73 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 > **Toutes ces prestations sont réalisées et livrées directement par AKATech.**
 
 ### 01 · Conception de Site Web
+<img src="./public/images/service/creation%20de%20site%20web.webp" alt="Création de site web AKATech" width="720" />
+
 Sites modernes, responsive et optimisés conversion — du portfolio à l'e-commerce.
 **À partir de 100 000 FCFA · 5 à 7 jours**
 
 ### 02 · Cartes Interactives & Dashboards
+<img src="./public/images/service/dasbord.webp" alt="Cartes interactives et dashboards AKATech" width="720" />
+
 Cartes Mapbox / Leaflet et dashboards de data en temps réel.
 **Sur devis · 7 à 14 jours**
 
 ### 03 · API & Backend Robustes
+<img src="./public/images/service/api.webp" alt="API et backend AKATech" width="720" />
+
 API REST sécurisées (Django / Flask), JWT, Mobile Money, déploiement cloud.
 **À partir de 200 000 FCFA · 7 à 14 jours**
 
 ### 04 · Maintenance & Support
+<img src="./public/images/service/maintenence.webp" alt="Maintenance et support AKATech" width="720" />
+
 Mises à jour, corrections, sauvegardes, support prioritaire.
 **À partir de 20 000 FCFA/mois**
 
 ### 05 · Fiche Google My Business
+<img src="./public/images/service/fiche-google.webp" alt="Fiche Google Business Profile AKATech" width="720" />
+
 Création ou optimisation, SEO local, suivi mensuel des avis.
 **À partir de 20 000 FCFA · 1 à 2 jours**
+
+---
+
+## 🤝 Processus de travail
+
+<img src="./public/images/process/prise%20de%20contact.webp" alt="Prise de contact AKATech" width="720" />
+
+### 01 · Prise de contact
+On vous écoute : vous présentez votre activité, vos objectifs et votre besoin. Le premier échange est gratuit et sans engagement.
+
+<img src="./public/images/process/devis%20et%20condition.webp" alt="Devis et conditions AKATech" width="720" />
+
+### 02 · Devis & conditions
+Nous vous envoyons un devis détaillé avec la solution proposée, les technologies, le périmètre, le délai et les conditions.
+
+<img src="./public/images/process/acompte.webp" alt="Acompte de démarrage AKATech" width="720" />
+
+### 03 · Acompte de démarrage
+Un acompte de 50 % confirme la commande et permet de lancer le projet dans un cadre clair.
+
+<img src="./public/images/process/creation%20du%20site.webp" alt="Création du site AKATech" width="720" />
+
+### 04 · Création du site
+Nous concevons et développons le site sur mesure : architecture, design responsive, contenu, animations, fonctionnalités et intégrations prévues au devis.
+
+<img src="./public/images/process/livraison.webp" alt="Livraison pour validation AKATech" width="720" />
+
+### 05 · Livraison pour validation
+Vous recevez un lien de prévisualisation pour tester le site, demander vos retours et valider le résultat avant la mise en ligne définitive.
+
+<img src="./public/images/process/solde.webp" alt="Solde et transmission des fichiers AKATech" width="720" />
+
+### 06 · Solde & transmission
+Une fois le projet validé, le solde est réglé. Les fichiers sources, les accès à l’hébergement et au domaine ainsi que les informations d’administration sont transmis.
+
+<img src="./public/images/process/mise%20en%20ligne.webp" alt="Mise en ligne et support AKATech" width="720" />
+
+### 07 · Mise en ligne & support
+Le site est publié. Une période de suivi accompagne le démarrage et les corrections de bugs liées à la livraison sont prises en charge gratuitement pendant le mois suivant.
 
 ---
 
