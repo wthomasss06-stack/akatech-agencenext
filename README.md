@@ -27,7 +27,7 @@ Développé par **M'Bollo Aka Elvis** — Développeur Full-Stack basé à Abidj
 
 **AKATech** est une agence web freelance basée à **Abidjan, Côte d'Ivoire**, spécialisée dans la conception de solutions digitales sur-mesure pour les entrepreneurs, PME et créatifs d'Afrique de l'Ouest : sites vitrines, e-commerce, applications SaaS, API/backend et fiches Google My Business.
 
-Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., construite avec **Next.js 14**, **GSAP** et **Three.js** — ainsi qu'un **assistant IA conversationnel** intégré au site public et un **dashboard admin privé** (leads, conversations, analytics). Le SEO est pensé au-delà du référencement classique : données structurées **JSON-LD** taillées pour le SEO, l'**AEO** (moteurs de réponse type Google AI Overviews) et le **GEO** (recommandation par les LLM comme ChatGPT ou Perplexity).
+Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., construite avec **Next.js 14**, **GSAP** et **Three.js** — ainsi qu'un **assistant IA conversationnel** intégré au site public. Le SEO est pensé au-delà du référencement classique : données structurées **JSON-LD** taillées pour le SEO, l'**AEO** (moteurs de réponse type Google AI Overviews) et le **GEO** (recommandation par les LLM comme ChatGPT ou Perplexity).
 
 > **Toutes les prestations sont développées directement par AKATech** — pas de sous-traitance, pas de templates génériques.
 
@@ -85,9 +85,7 @@ akatech-nextjs/
 │       ├── assistant/           # Chat IA — Gemini → Groq, tool use capture_lead
 │       ├── assistant/end/       # Clôture une conversation en base (sans appel IA)
 │       ├── track/                # Écrit visiteur/session/page vue en base (cookies posés par middleware.js)
-│       ├── leads/                # CRUD leads — protégé
-│       ├── conversations/        # Lecture conversations + détail — protégé
-│       └── stats/                # Agrégations dashboard (KPIs, analytics, usage IA) — protégé
+│       
 │
 ├── components/
 │   ├── layout/    # Navbar, Footer, CardNav, StaggeredMenu, PageTransition, BlobTransition
@@ -100,7 +98,7 @@ akatech-nextjs/
 │   ├── theme.js         # useTheme — dark/light + View Transitions
 │   ├── assistant.js     # System prompt généré depuis lib/data.js + définition du tool capture_lead
 │   ├── ai-providers.js  # Cascade de modèles Gemini, fallback Groq, rate-limiting, validation — partagé entre les routes assistant
-│   └── db.js            # Client Prisma + CRUD conversations/leads/visiteurs + agrégations stats
+│   
 │
 ├── public/
 ├── next.config.js · vercel.json · jsconfig.json · package.json
@@ -122,7 +120,7 @@ akatech-nextjs/
 | `/pricing` | Tarifs | 5 grilles (Portfolio, Vitrine, E-commerce, SaaS, GBP), FAQ, témoignages |
 | `/blog` + `/blog/[slug]` | Blog | Articles, recherche, tags, newsletter |
 | `/contact` | Contact | Formulaire (Resend), canaux directs, FAQ |
-| `/dashboard` 🔒 | Admin | Leads, conversations, analytics visiteurs, usage IA — protégé par Basic Auth |
+
 
 ---
 
@@ -144,31 +142,13 @@ Les deux fournisseurs sont sur des paliers **gratuits** (voir `.env.example`) �
 
 **System prompt généré, pas codé en dur** — `lib/assistant.js` construit le prompt à partir de `lib/data.js` (`SERVICES`, `PRICING`, `FAQ_ITEMS`, `PROJECT_TYPE_LABELS`) à chaque requête : un changement de tarif sur le site se reflète automatiquement dans les réponses de l'assistant, sans synchronisation manuelle.
 
-**Streaming** de bout en bout (réponse affichée au fil de la génération), historique de conversation envoyé en base via `lib/db.js` (`Conversation`, `Message`), lead persistant via `Lead` en plus de l'email.
+
 
 Fichiers clés : `lib/ai-providers.js` (cascade + rate-limiting, partagé), `lib/assistant.js` (prompt + tool), `app/api/assistant/route.js`, `components/ui/AIAssistant.js`.
 
 ---
 
-## 📊 Dashboard admin
 
-Route `/dashboard`, protégée par **HTTP Basic Auth** (`middleware.js`, identifiants dans `ADMIN_USER`/`ADMIN_PASSWORD`) — pas de système de login complet : usage mono-admin, la popup native du navigateur suffit.
-
-**4 onglets** :
-| Onglet | Contenu |
-|---|---|
-| **Vue d'ensemble** | KPIs (visiteurs, sessions, conversations, leads, taux de conversion), activité 30 jours, usage IA du jour |
-| **Analytics** | Appareils, sources de trafic, pages les plus vues, heures actives |
-| **Conversations** | Liste + recherche + détail complet d'un échange avec l'assistant |
-| **Leads** | Recherche, filtre par statut, score (0-100), changement de statut (NEW → QUALIFIED → CONTACTED → CONVERTED/LOST) |
-
-Auto-rafraîchi toutes les 30 secondes (stats + onglet actif) — pas besoin de recharger la page pour voir arriver une nouvelle conversation.
-
-**Tracking visiteurs** : `middleware.js` pose deux cookies (`akatech_visitor`, 1 an · `akatech_session`, 30 min glissantes), un petit composant client (`VisitorTracker`) signale chaque page vue à `/api/track`, qui écrit en base via Prisma (le middleware tourne en runtime **Edge** et ne peut pas utiliser Prisma directement, d'où la route séparée).
-
-**Usage IA** : compteur d'appels Gemini/Groq du jour (dérivé des messages déjà enregistrés), comparé à des repères indicatifs des limites gratuites publiques des deux fournisseurs — pas un quota exact, juste de quoi garder un œil dessus.
-
----
 
 ## 🗄️ Base de données
 
@@ -396,7 +376,7 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Formulaire de contact** → Resend, avec limite anti-spam basique en mémoire
 - **Marquees de confiance** (`TrustStacksMarquee`, `ConversionMarquee`) sur Accueil / À propos / Services
 - **Assistant IA** conversationnel, double fournisseur (Gemini → Groq), capture de leads — voir section dédiée plus haut
-- **Dashboard admin** (`/dashboard`) — leads, conversations, analytics visiteurs, usage IA, protégé par Basic Auth
+
 
 
 ---
