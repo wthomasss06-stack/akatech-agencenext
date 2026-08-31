@@ -105,11 +105,12 @@ export default function InvoicesTab({ T, CARD }) {
 
   useEffect(() => { if (view === 'list') loadInvoices() }, [view, loadInvoices])
 
-  // Ajuste l'échelle d'affichage à la largeur disponible — InvoicePreview
-  // garde sa taille A4 réelle dans le DOM ; seul ce conteneur englobant
-  // est réduit visuellement via transform. html2canvas cible directement
-  // invoiceRef (jamais ce conteneur), donc l'export reste toujours en
-  // pleine résolution quelle que soit l'échelle affichée à l'écran.
+  // Ajuste l'échelle d'affichage à la largeur disponible — pour l'aperçu
+  // écran uniquement. Ce `transform: scale()` est justement ce qui cassait
+  // l'export (voir la copie hors-écran plus bas, dans le rendu de la vue
+  // formulaire) : html2canvas ne capture pas correctement un élément dont
+  // un ANCÊTRE a un transform CSS, même à scale(1) — ça produisait le
+  // texte dédoublé/superposé sur les PNG/PDF générés.
   useEffect(() => {
     if (view !== 'form') return
     function updateScale() {
@@ -285,6 +286,16 @@ export default function InvoicesTab({ T, CARD }) {
   }
 
   const totals = computeInvoiceTotals(form)
+  const previewProps = {
+    number: form.number, contractRef: form.contractRef,
+    issueDate: form.issueDate, dueDate: form.dueDate,
+    clientName: form.clientName, clientAddress: form.clientAddress,
+    clientPhone: form.clientPhone, clientEmail: form.clientEmail, clientRccm: form.clientRccm,
+    currency: form.currency, lines: form.lines,
+    applyTva: form.applyTva, applyTimbre: form.applyTimbre,
+    deposit: Number(form.deposit) || 0, notes: form.notes,
+    totals,
+  }
 
   // ── Vue formulaire (création / édition) ──────────────────────
   if (view === 'form') {
@@ -389,19 +400,15 @@ export default function InvoicesTab({ T, CARD }) {
             <div ref={scaleHostRef} style={{ ...CARD, padding: 12, overflow: 'hidden' }}>
               <div style={{ height: 1122 * scale, overflow: 'hidden' }}>
                 <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: 793 }}>
-                  <InvoicePreview
-                    ref={invoiceRef}
-                    number={form.number} contractRef={form.contractRef}
-                    issueDate={form.issueDate} dueDate={form.dueDate}
-                    clientName={form.clientName} clientAddress={form.clientAddress}
-                    clientPhone={form.clientPhone} clientEmail={form.clientEmail} clientRccm={form.clientRccm}
-                    currency={form.currency} lines={form.lines}
-                    applyTva={form.applyTva} applyTimbre={form.applyTimbre}
-                    deposit={Number(form.deposit) || 0} notes={form.notes}
-                    totals={totals}
-                  />
+                  <InvoicePreview {...previewProps} />
                 </div>
               </div>
+            </div>
+
+            {/* Copie non scalée, hors écran — c'est elle que html2canvas
+                capture (voir le commentaire sur updateScale plus haut). */}
+            <div style={{ position: 'fixed', top: 0, left: '-99999px', zIndex: -1 }} aria-hidden="true">
+              <InvoicePreview ref={invoiceRef} {...previewProps} />
             </div>
           </div>
         </div>
