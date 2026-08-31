@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server'
    multi-utilisateurs. Basic Auth protège efficacement contre l'accès
    public sans ajouter de dépendance, de table "users" ni de page de
    login à construire. Identifiants dans ADMIN_USER / ADMIN_PASSWORD. */
-const PROTECTED_PREFIXES = ['/dashboard', '/api/leads', '/api/conversations', '/api/stats']
+const PROTECTED_PREFIXES = ['/dashboard', '/api/leads', '/api/conversations', '/api/stats', '/api/invoices']
 
 function isProtected(pathname) {
   return PROTECTED_PREFIXES.some((p) => pathname === p || pathname.startsWith(p + '/'))

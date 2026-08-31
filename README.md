@@ -160,6 +160,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 | `Message` | Chaque tour de la conversation, avec le fournisseur IA utilisé |
 | `Lead` | Prospect capturé par l'assistant — score, statut, notes |
 | `Visitor` / `VisitSession` / `PageView` | Analytics visiteurs pour le dashboard |
+| `Invoice` | Factures émises par AKATech — créées, modifiées et téléchargées (PNG/PDF) depuis l'onglet **Factures** du dashboard |
 
 > ⚠️ La connexion à la base est **facultative** : sans `DATABASE_URL`, le chat continue de fonctionner normalement (juste sans historique ni dashboard) plutôt que de planter.
 
@@ -376,6 +377,7 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Formulaire de contact** → Resend, avec limite anti-spam basique en mémoire
 - **Marquees de confiance** (`TrustStacksMarquee`, `ConversionMarquee`) sur Accueil / À propos / Services
 - **Assistant IA** conversationnel, double fournisseur (Gemini → Groq), capture de leads — voir section dédiée plus haut
+- **Factures** (`/dashboard`, onglet Factures) — création, historique et export PNG/PDF (html2canvas + jsPDF, générés à la demande depuis les données de la facture, rien n'est stocké en fichier) ; totaux toujours recalculés côté serveur avant écriture en base
 
 
 

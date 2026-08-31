@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
-  Trash2, AlertTriangle, Cookie,
+  Trash2, AlertTriangle, Cookie, Receipt,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -11,6 +11,7 @@ import {
 } from 'recharts'
 import { HoverSlideText } from '@/components/ui/index'
 import Logo from '@/components/ui/Logo'
+import InvoicesTab from '@/components/dashboard/InvoicesTab'
 
 /* ────────────────────────────────────────────────────────────
    Ce dashboard n'utilise ni Tailwind ni shadcn/ui : ce projet ne les
@@ -79,6 +80,7 @@ const TABS = [
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'conversations', label: 'Conversations', icon: MessagesSquare },
   { id: 'leads', label: 'Leads', icon: Users },
+  { id: 'invoices', label: 'Factures', icon: Receipt },
 ]
 
 const STATUS_LABELS = {
@@ -753,6 +755,8 @@ export default function DashboardPage() {
                 <Pagination pagination={leadPagination} onPage={setLeadPage} T={T} />
               </div>
             )}
+
+            {tab === 'invoices' && <InvoicesTab T={T} CARD={CARD} />}
           </>
         )}
       </div>

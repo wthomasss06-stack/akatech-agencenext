@@ -126,3 +126,46 @@ model PageView {
   @@index([sessionId])
   @@index([viewedAt])
 }
+
+// ═══════════════════════════════════════════
+// FACTURES — dashboard admin (/dashboard, onglet Factures)
+// ═══════════════════════════════════════════
+
+enum InvoiceStatus {
+  ENVOYEE
+  PAYEE
+  ANNULEE
+}
+
+model Invoice {
+  id            String        @id @default(cuid())
+  number        String        @unique // ex: F-2026-001
+  contractRef   String?
+  issueDate     DateTime
+  dueDate       DateTime?
+  clientName    String
+  clientAddress String?
+  clientPhone   String?
+  clientEmail   String?
+  clientRccm    String?
+  currency      String        @default("FCFA")
+  lines         Json          // [{ desc, qty, price }, ...]
+  applyTva      Boolean       @default(true)
+  applyTimbre   Boolean       @default(true)
+  deposit       Float         @default(0)
+  notes         String?
+  // Totaux recalculés côté serveur à chaque création/modification
+  // (lib/invoice-calc.js) plutôt que de faire confiance à ce que le
+  // navigateur envoie — voir lib/db.js.
+  subtotal      Float
+  tvaAmount     Float
+  timbreAmount  Float
+  total         Float
+  balance       Float
+  status        InvoiceStatus @default(ENVOYEE)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status])
+  @@index([issueDate])
+}
