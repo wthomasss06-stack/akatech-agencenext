@@ -1,7 +1,6 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { cld } from '@/lib/cloudinary'
 
 export default function Logo({ size = 48, animate = true, onClick, showTag = true }) {
   const ptsRef = useRef(null)
@@ -26,11 +25,10 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
     document.head.appendChild(style)
   }, [])
 
-  // Le fichier logo.webp est un rectangle large (1536×1024 ≈ 1.5:1), pas un
-  // carré — on respecte ce ratio pour que le logo remplisse vraiment sa boîte
-  // (avant : boîte carrée + object-fit:contain => le logo était "écrasé" et
-  // laissait un grand vide transparent en haut/bas, donc il paraissait petit).
-  const LOGO_RATIO = 1536 / 1024
+  // logo.webp fait 938×990px (légèrement plus haut que large) — on respecte
+  // ce ratio pour que le logo remplisse vraiment sa boîte (sinon : boîte
+  // carrée + object-fit:contain => grand vide transparent, logo trop petit).
+  const LOGO_RATIO = 938 / 990
   const displayHeight = Math.round(size * 2.5)
   const displayWidth = Math.round(displayHeight * LOGO_RATIO)
 
@@ -59,7 +57,7 @@ export default function Logo({ size = 48, animate = true, onClick, showTag = tru
         animation: animate ? 'akaGlowPulse 3s ease-in-out infinite' : 'none',
       }}>
         <Image
-          src={cld('/images/logo.webp')}
+          src="/images/logo.webp"
           alt="AKATech Logo"
           width={displayWidth}
           height={displayHeight}

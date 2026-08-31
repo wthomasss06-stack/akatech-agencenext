@@ -80,7 +80,7 @@ const ORG_JSON_LD = {
   name: 'AKATech',
   alternateName: "AKATech Abidjan",
   url: SITE_URL,
-  logo: cld('/images/logo.webp'),
+  logo: `${SITE_URL}/images/logo.webp`,
   image: cld('/images/og-cover.webp'),
   description: "Agence web freelance basée à Abidjan, Côte d'Ivoire. Conception de sites vitrines, e-commerce, applications SaaS, API & backend, et gestion de fiches Google My Business.",
   founder: { '@type': 'Person', name: "M'Bollo Aka Elvis" },
