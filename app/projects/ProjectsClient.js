@@ -1,11 +1,12 @@
 ﻿'use client'
 import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Code, Check, Globe, ArrowUpRight } from 'lucide-react'
+import { Code, Check, Globe, ArrowUpRight, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
+import CaseStudyModal from './CaseStudyModal'
 
 
 /* ────────────────────────────────────────────────
@@ -113,6 +114,7 @@ function getDisplayUrl(url) {
    ProjectScrollSlide (App.jsx / elvis-portfolio).
 ──────────────────────────────────────────────── */
 function ProjectScrollSlide({ project, index, total, T }) {
+  const [showCase, setShowCase] = useState(false)
   const desktopImg = project.img
   const displayUrl = getDisplayUrl(project.url)
 
@@ -199,6 +201,17 @@ function ProjectScrollSlide({ project, index, total, T }) {
 
           <h3 className="fc-desc" style={{ color: T.textSub }}>{project.desc}</h3>
 
+          {project.problem && project.solution ? (
+            <button
+              type="button"
+              onClick={() => setShowCase(true)}
+              className="btn-ghost btn-sm"
+              style={{ alignSelf: 'flex-start' }}
+            >
+              <FileText size={15} /> <HoverSlideText text="Voir l'étude de cas" />
+            </button>
+          ) : null}
+
           {project.url ? (
             <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm" style={{ alignSelf: 'flex-start' }}>
               <Globe size={15} /> <HoverSlideText text="Voir le projet" />
@@ -211,6 +224,8 @@ function ProjectScrollSlide({ project, index, total, T }) {
           )}
         </div>
       </div>
+
+      {showCase ? <CaseStudyModal project={project} onClose={() => setShowCase(false)} /> : null}
 
       <div className="fcx-counter">
         <strong>{String(index + 1).padStart(2, '0')}</strong> / {String(total).padStart(2, '0')}

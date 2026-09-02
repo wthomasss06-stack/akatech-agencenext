@@ -105,12 +105,11 @@ export default function InvoicesTab({ T, CARD }) {
 
   useEffect(() => { if (view === 'list') loadInvoices() }, [view, loadInvoices])
 
-  // Ajuste l'échelle d'affichage à la largeur disponible — pour l'aperçu
-  // écran uniquement. Ce `transform: scale()` est justement ce qui cassait
-  // l'export (voir la copie hors-écran plus bas, dans le rendu de la vue
-  // formulaire) : html2canvas ne capture pas correctement un élément dont
-  // un ANCÊTRE a un transform CSS, même à scale(1) — ça produisait le
-  // texte dédoublé/superposé sur les PNG/PDF générés.
+  // Ajuste l'échelle d'affichage à la largeur disponible — InvoicePreview
+  // garde sa taille A4 réelle dans le DOM ; seul ce conteneur englobant
+  // est réduit visuellement via transform. html2canvas cible directement
+  // invoiceRef (jamais ce conteneur), donc l'export reste toujours en
+  // pleine résolution quelle que soit l'échelle affichée à l'écran.
   useEffect(() => {
     if (view !== 'form') return
     function updateScale() {
@@ -146,7 +145,7 @@ export default function InvoicesTab({ T, CARD }) {
       clientEmail: inv.clientEmail || '',
       clientRccm: inv.clientRccm || '',
       currency: inv.currency,
-      lines: Array.isArray(inv.lines) && inv.lines.length ? inv.lines : [{ desc: '', qty: 1, price: 0 }],
+      lines: Array.isArray(inv.lines) && inv.lines.length ? inv.lines : [{ desc: '', detail: '', qty: 1, price: 0 }],
       applyTva: inv.applyTva,
       applyTimbre: inv.applyTimbre,
       deposit: inv.deposit,
@@ -170,13 +169,14 @@ export default function InvoicesTab({ T, CARD }) {
   function updateLine(idx, field, value) {
     setForm(f => {
       const lines = f.lines.slice()
-      lines[idx] = { ...lines[idx], [field]: field === 'desc' ? value : (parseFloat(value) || 0) }
+      const isText = field === 'desc' || field === 'detail'
+      lines[idx] = { ...lines[idx], [field]: isText ? value : (parseFloat(value) || 0) }
       return { ...f, lines }
     })
   }
 
   function addLine() {
-    setForm(f => ({ ...f, lines: [...f.lines, { desc: '', qty: 1, price: 0 }] }))
+    setForm(f => ({ ...f, lines: [...f.lines, { desc: '', detail: '', qty: 1, price: 0 }] }))
   }
 
   function removeLine(idx) {
@@ -286,16 +286,6 @@ export default function InvoicesTab({ T, CARD }) {
   }
 
   const totals = computeInvoiceTotals(form)
-  const previewProps = {
-    number: form.number, contractRef: form.contractRef,
-    issueDate: form.issueDate, dueDate: form.dueDate,
-    clientName: form.clientName, clientAddress: form.clientAddress,
-    clientPhone: form.clientPhone, clientEmail: form.clientEmail, clientRccm: form.clientRccm,
-    currency: form.currency, lines: form.lines,
-    applyTva: form.applyTva, applyTimbre: form.applyTimbre,
-    deposit: Number(form.deposit) || 0, notes: form.notes,
-    totals,
-  }
 
   // ── Vue formulaire (création / édition) ──────────────────────
   if (view === 'form') {
@@ -336,6 +326,7 @@ export default function InvoicesTab({ T, CARD }) {
                   )}
                 </div>
                 <input value={line.desc} onChange={e => updateLine(i, 'desc', e.target.value)} placeholder="Description de la prestation" style={{ ...inputStyle(T), marginBottom: 6 }} />
+                <input value={line.detail || ''} onChange={e => updateLine(i, 'detail', e.target.value)} placeholder="Détail (optionnel) — ex. 10 pages · SEO avancé · hébergement inclus" style={{ ...inputStyle(T), marginBottom: 6, fontSize: '.75rem', color: T.textSub }} />
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
                   <Field T={T} label="Qté" small><input type="number" min="0" value={line.qty} onChange={e => updateLine(i, 'qty', e.target.value)} style={inputStyle(T)} /></Field>
                   <Field T={T} label="Prix unitaire" small><input type="number" min="0" value={line.price} onChange={e => updateLine(i, 'price', e.target.value)} style={inputStyle(T)} /></Field>
@@ -400,15 +391,19 @@ export default function InvoicesTab({ T, CARD }) {
             <div ref={scaleHostRef} style={{ ...CARD, padding: 12, overflow: 'hidden' }}>
               <div style={{ height: 1122 * scale, overflow: 'hidden' }}>
                 <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: 793 }}>
-                  <InvoicePreview {...previewProps} />
+                  <InvoicePreview
+                    ref={invoiceRef}
+                    number={form.number} contractRef={form.contractRef}
+                    issueDate={form.issueDate} dueDate={form.dueDate}
+                    clientName={form.clientName} clientAddress={form.clientAddress}
+                    clientPhone={form.clientPhone} clientEmail={form.clientEmail} clientRccm={form.clientRccm}
+                    currency={form.currency} lines={form.lines}
+                    applyTva={form.applyTva} applyTimbre={form.applyTimbre}
+                    deposit={Number(form.deposit) || 0} notes={form.notes}
+                    totals={totals}
+                  />
                 </div>
               </div>
-            </div>
-
-            {/* Copie non scalée, hors écran — c'est elle que html2canvas
-                capture (voir le commentaire sur updateScale plus haut). */}
-            <div style={{ position: 'fixed', top: 0, left: '-99999px', zIndex: -1 }} aria-hidden="true">
-              <InvoicePreview ref={invoiceRef} {...previewProps} />
             </div>
           </div>
         </div>

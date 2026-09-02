@@ -1,4 +1,5 @@
 import HomeResponsive from './HomeResponsive'
+import { FAQ_ITEMS } from '@/lib/data'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -14,26 +15,21 @@ export const metadata = {
   },
 }
 
+// Les 6 premières questions de FAQ_ITEMS — mêmes questions, dans le même
+// ordre, que celles réellement affichées sur la page (voir
+// HomeClientDesktop.js : FAQ_ITEMS.slice(0, 6)). Avant, ce schema listait
+// 3 questions codées en dur qui ne correspondaient à aucun texte visible
+// sur la page — un schema FAQPage est censé refléter le contenu affiché,
+// pas en inventer un autre. app/pricing/page.js suit déjà ce principe
+// (schema généré depuis FAQ_ITEMS) ; on aligne l'accueil dessus.
 const FAQ_JSON_LD = {
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: [
-    {
-      '@type': 'Question',
-      name: "Quel est le prix d'un site web à Abidjan avec AKATech ?",
-      acceptedAnswer: { '@type': 'Answer', text: "Les tarifs démarrent à 100 000 FCFA pour un portfolio, 220 000 FCFA pour un site vitrine, et 450 000 FCFA pour un e-commerce. Le devis exact dépend du nombre de pages et fonctionnalités." },
-    },
-    {
-      '@type': 'Question',
-      name: 'Combien de temps faut-il pour livrer un site web ?',
-      acceptedAnswer: { '@type': 'Answer', text: "Entre 3 et 14 jours selon le pack choisi : un portfolio simple est livré en 3 à 5 jours, un site vitrine en 5 à 10 jours, un e-commerce en 14 jours." },
-    },
-    {
-      '@type': 'Question',
-      name: "AKATech accepte-t-il le paiement Mobile Money ?",
-      acceptedAnswer: { '@type': 'Answer', text: "Oui, AKATech accepte Orange Money, MTN Mobile Money, Wave et le virement bancaire, avec un paiement en deux fois : 50% à la commande et 50% à la livraison." },
-    },
-  ],
+  mainEntity: FAQ_ITEMS.slice(0, 6).map(({ q, a }) => ({
+    '@type': 'Question',
+    name: q,
+    acceptedAnswer: { '@type': 'Answer', text: a },
+  })),
 }
 
 export default function Page() {
