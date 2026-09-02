@@ -129,6 +129,17 @@
   cursor: default;
 }
 
+/* ── Étude de cas (Problème / Solution / Résultat) ──
+   Ajouté pour app/projects/CaseStudyModal.js, qui réutilise ce même
+   fichier pour rester visuellement identique aux modales Explorer. */
+.pgm-case-block { display: flex; flex-direction: column; gap: .3rem; }
+.pgm-case-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .62rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+}
+.pgm-case-text { font-size: .88rem; line-height: 1.6; color: rgba(242,237,232,.8); margin: 0; }
+
 /* ── Responsive ──────────────────────────────────── */
 @media (max-width: 900px) {
   .pgm-backdrop { padding: 0; }

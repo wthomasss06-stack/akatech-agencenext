@@ -8,7 +8,7 @@ import {
   AnimatePresence,
   useInView,
 } from 'framer-motion'
-import { Code, ExternalLink, FileText } from 'lucide-react'
+import { Code, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -189,33 +189,20 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 
             {/* Contenu */}
             <div style={{ padding: '1.8rem 2rem' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1.2rem', marginBottom: '.6rem' }}>
-                <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", letterSpacing: '-.02em', lineHeight: 1.2 }}>
-                  {project.title}
-                </h3>
-                {project.url ? (
-                  <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm" style={{ flexShrink: 0 }}>
-                    <ExternalLink size={11} /> <HoverSlideText text="Voir le site" />
-                  </a>
-                ) : (
-                  <span className="btn-ghost btn-sm" style={{ opacity: .5, cursor: 'default', pointerEvents: 'none', flexShrink: 0 }}>
-                    <HoverSlideText text="Démo locale" />
-                  </span>
-                )}
-              </div>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", letterSpacing: '-.02em', lineHeight: 1.2, marginBottom: '.6rem' }}>
+                {project.title}
+              </h3>
 
               <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.2rem' }}>{project.desc}</p>
 
-              {project.problem && project.solution ? (
-                <button
-                  type="button"
-                  onClick={() => setShowCase(true)}
-                  className="btn-ghost btn-sm"
-                  style={{ marginBottom: '1.2rem' }}
-                >
-                  <FileText size={12} /> <HoverSlideText text="Voir l'étude de cas" />
-                </button>
-              ) : null}
+              <button
+                type="button"
+                onClick={() => setShowCase(true)}
+                className="btn-ghost btn-sm"
+                style={{ marginBottom: '1.2rem' }}
+              >
+                <FileText size={12} /> <HoverSlideText text="Détail du projet" />
+              </button>
 
               {/* Stack technique */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>

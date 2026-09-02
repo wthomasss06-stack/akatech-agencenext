@@ -1,77 +1,117 @@
 // app/projects/CaseStudyModal.js
-// Étude de cas (Problème → Solution → Résultat) affichée en overlay
-// plutôt qu'ajoutée directement dans .fc-info : les slides de
-// /projects sont en `height: 100vh; overflow: hidden` (mécanique de
-// scroll horizontal), donc du texte ajouté à même la colonne peut être
-// tronqué sans qu'on le voie. Un overlay avec son propre
-// `overflow-y: auto` évite ce risque quelle que soit la hauteur de
-// l'écran, et fonctionne à l'identique en desktop et mobile.
+// Fiche détail d'un projet, ouverte depuis /projects (bouton unique
+// "Détail du projet"). Réutilise volontairement le même gabarit et la
+// même feuille de style que components/explorer/ProjectModal.jsx
+// (import de ProjectModal.css, classes .pgm-*) pour que la modale
+// Réalisations soit visuellement identique à celle d'Explorer — seule
+// différence : les sections Problème / Solution / Résultat, propres à
+// l'étude de cas, ajoutées via les classes .pgm-case-* (mêmes fichier
+// CSS, règles ajoutées à la suite).
 'use client'
-import { X } from 'lucide-react'
+import { useEffect } from 'react'
+import { X, ArrowUpRight } from 'lucide-react'
+import { HoverSlideText } from '@/components/ui/index'
+import '@/components/explorer/ProjectModal.css'
+
+function statusInfo(p) {
+  if (p.live && p.url) return { label: 'En ligne', offline: false }
+  if (p.progress != null && p.progress < 100) return { label: `En cours · ${p.progress}%`, offline: true }
+  return { label: 'Hors ligne', offline: true }
+}
 
 export default function CaseStudyModal({ project, onClose }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [onClose])
+
   if (!project) return null
-  const rows = [
-    ['Problème', project.problem],
-    ['Solution', project.solution],
-    ['Résultat', project.impact],
-  ].filter(([, text]) => !!text)
+  const status = statusInfo(project)
 
   return (
-    <div
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`Étude de cas — ${project.title}`}
-      style={{
-        position: 'fixed', inset: 0, zIndex: 9999,
-        background: 'rgba(4,10,6,.88)', backdropFilter: 'blur(6px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '6vw 5vw',
-      }}
-    >
-      <div
-        onClick={(e) => e.stopPropagation()}
-        style={{
-          background: '#0c1710', border: '1px solid rgba(136,202,83,.3)', borderRadius: 18,
-          maxWidth: 620, width: '100%', maxHeight: '82vh', overflowY: 'auto',
-          padding: '2.2rem 2rem', position: 'relative', boxShadow: '0 40px 100px rgba(0,0,0,.5)',
-        }}
-      >
-        <button
-          onClick={onClose}
-          aria-label="Fermer"
-          style={{
-            position: 'absolute', top: 16, right: 16, background: 'rgba(255,255,255,.06)',
-            border: '1px solid rgba(255,255,255,.1)', borderRadius: '50%', width: 34, height: 34,
-            display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#cfe4d6', cursor: 'pointer',
-          }}
-        >
+    <div className="pgm-backdrop" onClick={onClose}>
+      <div className="pgm-modal" onClick={(e) => e.stopPropagation()}>
+        <button type="button" className="pgm-close" onClick={onClose} aria-label="Fermer">
           <X size={16} />
         </button>
 
-        <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', letterSpacing: '.1em', textTransform: 'uppercase', color: '#88ca53', marginBottom: 8 }}>
-          Étude de cas
+        <div className="pgm-image">
+          <img src={project.img} alt={project.title} />
+          <div className="pgm-image-fade" />
         </div>
-        <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff', margin: '0 0 1.6rem', lineHeight: 1.2 }}>
-          {project.title}
-        </h3>
 
-        {rows.map(([label, text]) => (
-          <div key={label} style={{ marginBottom: '1.4rem' }}>
-            <div style={{ fontSize: '.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.08em', color: 'rgba(255,255,255,.4)', marginBottom: '.4rem' }}>
-              {label}
+        <div className="pgm-info">
+          <span className="pgm-eyebrow">{project.type}</span>
+          <h2 className="pgm-name">{project.title}</h2>
+          {project.subtitle && <p className="pgm-sub">{project.subtitle}</p>}
+
+          <div className="pgm-meta">
+            <div className="pgm-meta-item">
+              <span>Année</span>
+              <span>{project.year}</span>
             </div>
-            <p style={{ fontSize: '.95rem', lineHeight: 1.7, color: 'rgba(255,255,255,.85)', margin: 0 }}>
-              {text}
-            </p>
+            <div className="pgm-meta-item">
+              <span>Marché</span>
+              <span>Côte d'Ivoire</span>
+            </div>
+            <div className="pgm-meta-item">
+              <span>Statut</span>
+              <span>
+                <em style={{
+                  width: 6, height: 6, borderRadius: '50%', fontStyle: 'normal',
+                  background: status.offline ? 'rgba(255,255,255,.35)' : '#88ca53',
+                  boxShadow: status.offline ? 'none' : '0 0 6px 1px rgba(136,202,83,.7)',
+                  display: 'inline-block',
+                }} />
+                {status.label}
+              </span>
+            </div>
           </div>
-        ))}
 
-        {project.url ? (
-          <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm" style={{ marginTop: '.4rem' }}>
-            Voir le projet en ligne
-          </a>
-        ) : null}
+          {project.result && (
+            <span className="pgm-result">↑ {project.result}</span>
+          )}
+
+          {project.desc && <p className="pgm-desc">{project.desc}</p>}
+
+          {project.problem && (
+            <div className="pgm-case-block">
+              <span className="pgm-case-label">Problème</span>
+              <p className="pgm-case-text">{project.problem}</p>
+            </div>
+          )}
+          {project.solution && (
+            <div className="pgm-case-block">
+              <span className="pgm-case-label">Solution</span>
+              <p className="pgm-case-text">{project.solution}</p>
+            </div>
+          )}
+          {project.impact && (
+            <div className="pgm-case-block">
+              <span className="pgm-case-label">Résultat</span>
+              <p className="pgm-case-text">{project.impact}</p>
+            </div>
+          )}
+
+          {Array.isArray(project.tech) && project.tech.length > 0 && (
+            <div className="pgm-tags">
+              {project.tech.map((t, i) => <span className="pgm-tag" key={i}>{t}</span>)}
+            </div>
+          )}
+
+          <div className="pgm-actions">
+            {project.live && project.url ? (
+              <a href={project.url} target="_blank" rel="noreferrer" className="btn-raised">
+                <HoverSlideText text="Voir le projet" /> <ArrowUpRight size={15} />
+              </a>
+            ) : (
+              <span className="pgm-cta-muted">
+                {project.progress != null && project.progress < 100 ? `En cours — ${project.progress}%` : 'Démo locale'}
+              </span>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )

@@ -1,7 +1,7 @@
 ﻿'use client'
 import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Code, Check, Globe, ArrowUpRight, FileText } from 'lucide-react'
+import { Code, Check, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -201,27 +201,14 @@ function ProjectScrollSlide({ project, index, total, T }) {
 
           <h3 className="fc-desc" style={{ color: T.textSub }}>{project.desc}</h3>
 
-          {project.problem && project.solution ? (
-            <button
-              type="button"
-              onClick={() => setShowCase(true)}
-              className="btn-ghost btn-sm"
-              style={{ alignSelf: 'flex-start' }}
-            >
-              <FileText size={15} /> <HoverSlideText text="Voir l'étude de cas" />
-            </button>
-          ) : null}
-
-          {project.url ? (
-            <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm" style={{ alignSelf: 'flex-start' }}>
-              <Globe size={15} /> <HoverSlideText text="Voir le projet" />
-              <ArrowUpRight size={14} />
-            </a>
-          ) : (
-            <span className="btn-ghost btn-sm" style={{ opacity: .6, cursor: 'default', pointerEvents: 'none', alignSelf: 'flex-start' }}>
-              <Code size={15} /> <HoverSlideText text="Démo locale" />
-            </span>
-          )}
+          <button
+            type="button"
+            onClick={() => setShowCase(true)}
+            className="btn-ghost btn-sm"
+            style={{ alignSelf: 'flex-start' }}
+          >
+            <FileText size={15} /> <HoverSlideText text="Détail du projet" />
+          </button>
         </div>
       </div>
 
