@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect } from 'react'
 import {
   motion,
   useScroll,
@@ -8,12 +8,11 @@ import {
   AnimatePresence,
   useInView,
 } from 'framer-motion'
-import { Code, FileText } from 'lucide-react'
+import { Code, FileText, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
-import CaseStudyModal from './CaseStudyModal'
 
 
 
@@ -84,7 +83,6 @@ function HeroRealisations() {
    utiliser les hooks useTransform)
 ──────────────────────────────────────────────── */
 function StackedCard({ project, index, total, scrollYProgress, T }) {
-  const [showCase, setShowCase] = useState(false)
   const segStart = index / total
   const segEnd   = Math.min((index + 1) / total, 1)
 
@@ -195,14 +193,24 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 
               <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.2rem' }}>{project.desc}</p>
 
-              <button
-                type="button"
-                onClick={() => setShowCase(true)}
-                className="btn-ghost btn-sm"
-                style={{ marginBottom: '1.2rem' }}
-              >
-                <FileText size={12} /> <HoverSlideText text="Détail du projet" />
-              </button>
+              {project.live && project.url ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-ghost btn-sm"
+                  style={{ marginBottom: '1.2rem' }}
+                >
+                  <HoverSlideText text="Voir le projet" /> <ArrowUpRight size={12} />
+                </a>
+              ) : (
+                <span
+                  className="btn-ghost btn-sm"
+                  style={{ marginBottom: '1.2rem', opacity: .5, pointerEvents: 'none' }}
+                >
+                  <FileText size={12} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `En cours · ${project.progress}%` : 'Démo locale'} />
+                </span>
+              )}
 
               {/* Stack technique */}
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
@@ -228,7 +236,6 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
         </div>
       </motion.div>
     </div>
-    {showCase ? <CaseStudyModal project={project} onClose={() => setShowCase(false)} /> : null}
     </>
   )
 }
