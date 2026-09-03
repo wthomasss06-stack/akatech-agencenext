@@ -3,7 +3,7 @@
 // ici, elle est déjà passée avant d'arriver à ce handler (voir
 // app/api/leads/route.js pour le même principe).
 import { NextResponse } from 'next/server'
-import { listInvoices, createInvoice, getNextInvoiceNumber } from '@/lib/db'
+import { listInvoices, createInvoice, getNextInvoiceNumber, getNextContractRef } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
@@ -11,11 +11,11 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url)
 
-    // ?next=1 renvoie juste le prochain numéro suggéré (pour préremplir
-    // le formulaire "Nouvelle facture"), sans toucher à la base.
+    // ?next=1 renvoie le numéro ET la réf. contrat suggérés (pour
+    // préremplir le formulaire "Nouvelle facture"), sans toucher à la base.
     if (searchParams.get('next')) {
-      const number = await getNextInvoiceNumber()
-      return NextResponse.json({ number })
+      const [number, contractRef] = await Promise.all([getNextInvoiceNumber(), getNextContractRef()])
+      return NextResponse.json({ number, contractRef })
     }
 
     const page = parseInt(searchParams.get('page') || '1')

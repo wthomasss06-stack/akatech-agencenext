@@ -129,7 +129,11 @@ export default function InvoicesTab({ T, CARD }) {
     setView('form')
     fetch('/api/invoices?next=1')
       .then(r => r.json())
-      .then(d => { if (d.number) setForm(f => ({ ...f, number: d.number })) })
+      .then(d => setForm(f => ({
+        ...f,
+        ...(d.number ? { number: d.number } : {}),
+        ...(d.contractRef ? { contractRef: d.contractRef } : {}),
+      })))
       .catch(() => {})
   }
 
@@ -287,6 +291,20 @@ export default function InvoicesTab({ T, CARD }) {
 
   const totals = computeInvoiceTotals(form)
 
+  // Props partagées entre l'aperçu visible (mis à l'échelle) et la
+  // copie hors écran dédiée à html2canvas (voir plus bas) — une seule
+  // source pour ne jamais laisser les deux divergent.
+  const previewProps = {
+    number: form.number, contractRef: form.contractRef,
+    issueDate: form.issueDate, dueDate: form.dueDate,
+    clientName: form.clientName, clientAddress: form.clientAddress,
+    clientPhone: form.clientPhone, clientEmail: form.clientEmail, clientRccm: form.clientRccm,
+    currency: form.currency, lines: form.lines,
+    applyTva: form.applyTva, applyTimbre: form.applyTimbre,
+    deposit: Number(form.deposit) || 0, notes: form.notes,
+    totals,
+  }
+
   // ── Vue formulaire (création / édition) ──────────────────────
   if (view === 'form') {
     return (
@@ -391,19 +409,22 @@ export default function InvoicesTab({ T, CARD }) {
             <div ref={scaleHostRef} style={{ ...CARD, padding: 12, overflow: 'hidden' }}>
               <div style={{ height: 1122 * scale, overflow: 'hidden' }}>
                 <div style={{ transform: `scale(${scale})`, transformOrigin: 'top left', width: 793 }}>
-                  <InvoicePreview
-                    ref={invoiceRef}
-                    number={form.number} contractRef={form.contractRef}
-                    issueDate={form.issueDate} dueDate={form.dueDate}
-                    clientName={form.clientName} clientAddress={form.clientAddress}
-                    clientPhone={form.clientPhone} clientEmail={form.clientEmail} clientRccm={form.clientRccm}
-                    currency={form.currency} lines={form.lines}
-                    applyTva={form.applyTva} applyTimbre={form.applyTimbre}
-                    deposit={Number(form.deposit) || 0} notes={form.notes}
-                    totals={totals}
-                  />
+                  <InvoicePreview {...previewProps} />
                 </div>
               </div>
+            </div>
+
+            {/* Copie hors écran, toujours à l'échelle 1 : html2canvas
+                casse le rendu (texte dupliqué/superposé, voir bug
+                remonté) quand l'élément capturé est descendant d'un
+                ancêtre avec `transform: scale()` — ce qui était le cas
+                de invoiceRef ci-dessus même s'il ciblait directement
+                InvoicePreview. On lui donne donc une cible dédiée,
+                jamais affectée par le zoom d'aperçu, positionnée hors
+                écran (pas `display:none` : html2canvas ne capture pas
+                un élément non mis en page). */}
+            <div style={{ position: 'fixed', top: 0, left: -10000, pointerEvents: 'none' }} aria-hidden="true">
+              <InvoicePreview ref={invoiceRef} {...previewProps} />
             </div>
           </div>
         </div>
