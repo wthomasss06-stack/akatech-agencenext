@@ -76,10 +76,9 @@ const InvoicePreview = forwardRef(function InvoicePreview({
         <div className="ak-party">
           <div className="ak-label">// Émetteur</div>
           <div className="ak-party-name">AKATech Studio</div>
-          <div className="ak-party-line">M&apos;Bollo Aka Elvis — Entreprise Individuelle</div>
+          <div className="ak-party-line">M&apos;Bollo Aka Elvis — Travailleur indépendant</div>
           <div className="ak-party-line">Abidjan, Côte d&apos;Ivoire</div>
           <div className="ak-party-line">wthomasss06@gmail.com · +225 01 42 50 77 50</div>
-          <div className="ak-party-fine">RCCM : [N° RCCM] · NCC : [N° NCC]</div>
         </div>
         <div className="ak-party">
           <div className="ak-label">// Facturé à</div>

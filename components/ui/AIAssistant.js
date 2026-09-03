@@ -617,7 +617,7 @@ export default function AIAssistant() {
         style={{
           position: 'absolute', bottom: 0, left: 0, zIndex: 2,
           width: AI_BTN_SIZE, height: AI_BTN_SIZE, minWidth: 44, minHeight: 44, borderRadius: 12,
-          background: T.green,
+          background: `linear-gradient(135deg, #c6ff3d, ${T.green})`,
           border: '3px solid #050505',
           boxShadow: '4px 4px 0px #050505',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
