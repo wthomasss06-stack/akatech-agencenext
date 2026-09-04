@@ -16,17 +16,17 @@ const PRICING = {
     label: 'Portfolio',
     plans: [
       {
-        badge: 'STARTER', price: '100 000 FCFA', del: '3 à 5 jours',
+        badge: 'STARTER', price: '100 000 FCFA', del: '5 à 7 jours',
         features: ['3 pages', 'Design responsive', 'Section projets', 'Formulaire contact',
           'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)'],
       },
       {
-        badge: 'STANDARD', price: '175 000 FCFA', del: '5 à 7 jours', popular: true,
+        badge: 'STANDARD', price: '175 000 FCFA', del: '7 à 10 jours', popular: true,
         features: ['5 pages', 'Animations modernes', 'Projets détaillés', 'SEO de base',
           'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)'],
       },
       {
-        badge: 'PREMIUM', price: '275 000 FCFA', del: '7 à 10 jours',
+        badge: 'PREMIUM', price: '275 000 FCFA', del: '10 à 14 jours',
         features: ['Design personnalisé', 'Animations avancées', 'Blog intégré',
           'Optimisation performance (SXO)', 'Nom de domaine offert (1 an)',
           'Hébergement inclus (1 an)', '1 mois support'],
@@ -37,18 +37,18 @@ const PRICING = {
     label: 'Site Vitrine',
     plans: [
       {
-        badge: 'STARTER', price: '220 000 FCFA', del: '5 à 7 jours',
+        badge: 'STARTER', price: '220 000 FCFA', del: '7 à 10 jours',
         features: ['5 pages', 'Design responsive', 'Formulaire contact', 'SEO de base',
           'Nom de domaine offert (1 an)', '1 mois support'],
       },
       {
-        badge: 'PRO', price: '350 000 FCFA', del: '7 à 10 jours', popular: true,
+        badge: 'PRO', price: '350 000 FCFA', del: '10 à 14 jours', popular: true,
         features: ['10 pages', 'Design premium', 'Blog intégré', 'SEO avancé (SEO + AEO)',
           'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
           '3 mois support', 'Formation 2h'],
       },
       {
-        badge: 'ELITE', price: '550 000 FCFA', del: '10 à 14 jours',
+        badge: 'ELITE', price: '550 000 FCFA', del: '14 à 21 jours',
         features: ['15 à 20 pages', 'Design sur mesure', 'CMS complet', 'SEO + AEO + GEO + Analytics',
           'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
           '6 mois support', 'Formation complète', 'Page supp. : 15 000 à 25 000 FCFA'],
@@ -59,19 +59,19 @@ const PRICING = {
     label: 'E-commerce',
     plans: [
       {
-        badge: 'STARTER', price: '450 000 FCFA', del: '14 jours',
+        badge: 'STARTER', price: '450 000 FCFA', del: '1 mois à 1 mois 2 semaines',
         features: ["Jusqu'à 50 produits", 'Paiement Mobile Money', 'Gestion commandes',
           'Tableau de bord', 'Nom de domaine offert (1 an)',
           'Hébergement inclus (1 an)', '1 mois support'],
       },
       {
-        badge: 'PRO', price: '750 000 FCFA', del: '21 jours', popular: true,
+        badge: 'PRO', price: '750 000 FCFA', del: '1 mois à 1 mois 2 semaines', popular: true,
         features: ['200 à 500 produits', 'Multi-paiement', 'Gestion stock temps réel',
           'SEO produits + CRO + Analytics', 'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
           '3 mois support', 'Formation admin'],
       },
       {
-        badge: 'ELITE', price: '1 200 000 FCFA', del: '30 jours',
+        badge: 'ELITE', price: '1 200 000 FCFA', del: '1 mois à 1 mois 2 semaines',
         features: ['Produits illimités', 'API paiement personnalisée',
           'Optimisation IA (GEO)', 'Automatisations + Rapports avancés',
           'Nom de domaine offert (1 an)', 'Hébergement inclus (1 an)',
