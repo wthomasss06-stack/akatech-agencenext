@@ -10,7 +10,7 @@ import {
   Zap, Timer, Check, HelpCircle, Send, Lock,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
@@ -1335,7 +1335,23 @@ export default function HomePageMobile() {
       <Testimonials />
       <GeoSectionHome />
       <ProjectFormHome />
-      <PageCTA message="Comme eux, donnez à votre activité la présence digitale qu'elle mérite." cta="Rejoindre nos clients" />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-home-mobile.webp"
+          alt="Comme eux, donnez à votre activité la présence digitale qu'elle mérite."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '5.34%', top: '39.71%', width: '41.15%', height: '10.05%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }
