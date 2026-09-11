@@ -488,7 +488,7 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
           }
         }
       `}</style>
-    </section>
+    </motion.section>
   )
 }
 
