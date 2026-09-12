@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Users, Monitor, Code, Heart, Zap, Star, Target, MessageCircle, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, PageCTA, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS, PROJECTS } from '@/lib/data'
@@ -392,7 +392,23 @@ export default function AboutPageMobile() {
       {/* 5 */}<ValuesSection />
       {/* 6 */}<SkillsSection />
       {/* 7 */}<RayonSection />
-      <PageCTA message="Prêt à collaborer avec AKATech ? Discutons de votre projet." cta="Démarrer un projet" />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-about-mobile.webp"
+          alt="Prêt à collaborer avec AKATech ? Discutons de votre projet."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '6.14%', top: '44.9%', width: '40.83%', height: '9.49%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }

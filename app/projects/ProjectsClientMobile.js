@@ -10,7 +10,7 @@ import {
 } from 'framer-motion'
 import { Code, FileText, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { PROJECTS } from '@/lib/data'
 
@@ -342,10 +342,23 @@ export default function RealisationsPage() {
       <ProjectsIntro />
       <StackedRealisations />
 
-      <PageCTA
-        message="Votre réalisation peut être la prochaine ici. Partagez votre idée — devis gratuit, sans engagement."
-        cta="Parlons de votre projet"
-      />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-projects-mobile.webp"
+          alt="Votre réalisation peut être la prochaine ici. Partagez votre idée."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '5.98%', top: '47.93%', width: '41.15%', height: '9.01%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }

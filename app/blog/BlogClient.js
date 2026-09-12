@@ -9,7 +9,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
 
@@ -869,10 +869,23 @@ export default function BlogPage() {
       <Newsletter />
       <ProcessBlog />
 
-      <PageCTA
-        message="Vous avez un projet web ? Discutons-en — consultation gratuite et sans engagement."
-        cta="Démarrer un projet"
-      />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-blog-desktop.webp"
+          alt="Vous avez un projet web ? Discutons-en gratuitement."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '12.74%', top: '63.67%', width: '29.79%', height: '17.19%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }

@@ -116,7 +116,7 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 }
 
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS, PROJECTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
@@ -606,10 +606,23 @@ export default function AboutPage() {
       {/* 5 */}<SkillsSection />
       {/* 6 */}<RayonSection />
 
-      <PageCTA
-        message="Prêt à collaborer avec AKATech ? Discutons de votre projet dès maintenant."
-        cta="Démarrer un projet"
-      />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-about-desktop.webp"
+          alt="Prêt à collaborer avec AKATech ? Discutons de votre projet."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '8.63%', top: '69.07%', width: '31.57%', height: '17.69%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }

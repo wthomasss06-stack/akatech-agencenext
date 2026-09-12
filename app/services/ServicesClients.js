@@ -4,7 +4,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, LazyImg, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { SERVICES } from '@/lib/data'
@@ -255,7 +255,23 @@ export default function ServicesPage() {
       <ServicesList />
       <ConversionMarquee />
       <TechSection />
-      <PageCTA message="Prêt à lancer votre projet ? Obtenez un devis gratuit en 24h." cta="Obtenir mon devis" />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-services-desktop.webp"
+          alt="Prêt à lancer votre projet ? Obtenez un devis gratuit en 24h."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Parlons de votre projet"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '12.01%', top: '62.89%', width: '28.81%', height: '17.19%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }

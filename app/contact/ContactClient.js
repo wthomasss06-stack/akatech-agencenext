@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, GreenUnderline, PageCTA } from '@/components/ui/index'
+import { GhostTitle, GreenUnderline, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 
@@ -501,10 +501,23 @@ export default function ContactPage() {
       <ContactChannels />
       <ConversionMarquee />
 
-      <PageCTA
-        message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
-        cta="Démarrer sur WhatsApp"
-      />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-contact-desktop.webp"
+          alt="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '7.76%', top: '70.7%', width: '28.61%', height: '17.58%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }

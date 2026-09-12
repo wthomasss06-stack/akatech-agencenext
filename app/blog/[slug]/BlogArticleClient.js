@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowLeft, Clock, Tag, ArrowRight, MessageCircle } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { cld } from '@/lib/cloudinary'
-import { PageCTA } from '@/components/ui/index'
+import { LazyImg } from '@/components/ui/index'
 import { BLOG_POSTS } from '@/lib/data'
 
 const FULL_ARTICLES = {
@@ -280,7 +280,42 @@ export default function BlogArticleClient({ slug }) {
         </section>
       )}
 
-      <PageCTA message="Vous avez un projet web ? Discutons-en gratuitement." cta="Démarrer un projet" />
+      <>
+      <section className="hide-mobile" style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-blog-desktop.webp"
+          alt="Vous avez un projet web ? Discutons-en gratuitement."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '12.74%', top: '63.67%', width: '29.79%', height: '17.19%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
+      <section className="hide-desktop" style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-blog-mobile.webp"
+          alt="Vous avez un projet web ? Discutons-en gratuitement."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '5.74%', top: '42.66%', width: '41.23%', height: '9.65%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
+      </>
     </div>
   )
 }

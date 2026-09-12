@@ -7,7 +7,7 @@ import {
   ArrowRight, Shield
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
-import { GhostTitle, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { GhostTitle, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 
@@ -371,7 +371,23 @@ export default function ContactPage() {
       <ProjectForm />
       <ContactChannels />
       <ConversionMarquee />
-      <PageCTA message="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant." cta="Démarrer sur WhatsApp" />
+      <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
+        <LazyImg
+          src="/images/cta-contact-mobile.webp"
+          alt="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
+        <motion.a
+          href="https://wa.me/2250142507750" target="_blank" rel="noreferrer"
+          aria-label="Rejoindre nos clients"
+          whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          transition={{ duration: .2, ease: [.22, 1, .36, 1] }}
+          style={{
+            position: 'absolute', left: '6.14%', top: '44.9%', width: '40.83%', height: '9.49%',
+            borderRadius: 999, cursor: 'pointer',
+          }}
+        />
+      </section>
     </div>
   )
 }
