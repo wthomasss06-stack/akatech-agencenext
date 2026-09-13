@@ -1,4 +1,5 @@
 ﻿import './globals.css'
+import { Suspense } from 'react'
 import { ThemeProvider } from '@/lib/theme'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
@@ -138,13 +139,13 @@ export default function RootLayout({ children }) {
             <BlobTransitionProvider>
               <ScrollToTop />
               <Loader />
-              <PublicChrome><Navbar /></PublicChrome>
-              <PublicChrome><BreadcrumbTrail /></PublicChrome>
+              <Suspense fallback={null}><PublicChrome><Navbar /></PublicChrome></Suspense>
+              <Suspense fallback={null}><PublicChrome><BreadcrumbTrail /></PublicChrome></Suspense>
               <main>{children}</main>
-              <PublicChrome><Footer /></PublicChrome>
-              <PublicChrome><FloatingWA /></PublicChrome>
-              <PublicChrome><BackToTop /></PublicChrome>
-              <AIAssistant />
+              <Suspense fallback={null}><PublicChrome><Footer /></PublicChrome></Suspense>
+              <Suspense fallback={null}><PublicChrome><FloatingWA /></PublicChrome></Suspense>
+              <Suspense fallback={null}><PublicChrome><BackToTop /></PublicChrome></Suspense>
+              <Suspense fallback={null}><AIAssistant /></Suspense>
               <VisitorTracker />
               <CookieConsent />
               <Analytics />
