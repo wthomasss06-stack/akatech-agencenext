@@ -355,3 +355,64 @@ différence de schéma sont nécessaires.
 4. Tester le parcours complet avec les clés Gemini, Groq et Resend réelles.
 5. Effectuer une QA production sans exposer de secrets.
 6. Passer à `prisma migrate deploy` pour les futures évolutions de production.
+
+## 10. Correctifs — 13 septembre 2026 (session Claude Web)
+
+### 10.1 Lien de questionnaire cassé dans le chat
+
+Cause réelle : le modèle enrobe parfois le lien renvoyé par `start_questionnaire`
+en syntaxe Markdown (`**[libellé](url)**`), que le rendu du chat n'interprète
+pas. L'ancien parseur enchaînait des `.replace()` indépendants (devis, puis
+site, puis...) sur le même texte ; un placeholder déjà créé pour le lien devis
+contenant encore littéralement `https://akatech.vercel.app`, le regex du site
+suivant le re-matchait à l'intérieur et le coupait en trois morceaux (bouton
+vide, bouton site parasite, reste de l'URL en texte brut).
+
+Corrigé dans `components/ui/AIAssistant.js` :
+- un seul passage combiné (regex à groupes nommés) sur le texte, donc plus
+  aucun risque qu'un pattern suivant re-matche à l'intérieur d'un placeholder
+  déjà injecté ;
+- déballage préalable d'un éventuel lien Markdown `[libellé](url)` avant toute
+  détection de bouton ;
+- exclusion de `*` du corps des URL détectées (en plus de l'espace/`)`/`]`),
+  pour ne pas avaler un `**` de mise en gras dans le token.
+
+Renforcé dans `lib/assistant.js` : consigne explicite de ne jamais enrober le
+lien du questionnaire en Markdown ni en gras (alignée sur la consigne déjà
+existante pour le lien WhatsApp), et règle générale équivalente dans la
+section Ton.
+
+Testé sur le cas réel (capture chocolaterie) et 6 cas de contrôle (URL nue,
+lien site seul, WhatsApp, plusieurs liens dans un même message, lien Markdown
+sans gras, lien générique inconnu) : le lien devis conserve systématiquement
+son token complet.
+
+### 10.2 Pages légales
+
+`components/legal/LegalPage.js` utilisait `var(--bg-dark)` en dur : cette
+variable ne change pas quand le visiteur bascule en mode clair (seule
+`body.light-mode` redéfinit des règles ciblées dans `globals.css`, pas les
+variables `--bg-dark`/`--text-main` elles-mêmes). Passé sur `useTheme()`,
+comme le reste du site (Footer, AIAssistant) — les 3 pages légales suivent
+désormais le thème clair/sombre.
+
+`app/confidentialite/page.js` complété :
+- fondement légal explicite (loi n° 2013-450 du 19 juin 2013, Côte d'Ivoire)
+  et autorité de contrôle (ARTCI), absents de la version précédente ;
+- droit de réclamation auprès de l'ARTCI ajouté à « Vos droits » ;
+- fournisseurs IA (Google Gemini, Groq) nommés explicitement dans
+  « Prestataires et transferts », pour rester cohérent avec les autres
+  prestataires déjà nommés (Vercel, Neon, Resend, Cloudinary) ;
+- paragraphe cookies réécrit pour décrire le mécanisme réel (bandeau
+  essentiels/analytiques, choix mémorisé) plutôt qu'un texte générique.
+
+`mentions-legales` et `conditions-utilisation` vérifiées : déjà correctes et
+honnêtes sur le statut non enregistré de la structure — pas de changement.
+
+⚠️ Point non traité, à signaler : `app/confidentialite/page.js` ne mentionne
+toujours pas explicitement l'obligation de déclaration des traitements auprès
+de l'ARTCI (la loi 2013-450 semble s'appliquer même à une personne physique).
+Je ne suis pas en position de confirmer si cette déclaration est requise pour
+l'activité réelle d'AKATech — à vérifier directement auprès de l'ARTCI ou
+d'un juriste avant de considérer les 3 pages comme définitives, surtout tant
+que la structure n'a pas de RCCM/NCC.

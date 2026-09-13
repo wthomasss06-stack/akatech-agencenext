@@ -31,14 +31,20 @@ const sections = [
   {
     title: 'Prestataires et transferts',
     blocks: [
-      { type: 'text', text: 'Le site s’appuie sur des prestataires techniques pouvant traiter certaines données pour son compte : Vercel pour l’hébergement et le déploiement, Neon/PostgreSQL pour la persistance, Resend pour les emails, les fournisseurs d’IA utilisés par l’assistant et le calcul de devis, Cloudinary pour certains médias, ainsi que Vercel Analytics pour la mesure d’audience.' },
+      { type: 'text', text: 'Le site s’appuie sur des prestataires techniques pouvant traiter certaines données pour son compte : Vercel pour l’hébergement et le déploiement, Neon/PostgreSQL pour la persistance, Resend pour les emails, Google (Gemini) et Groq pour le traitement des messages par l’assistant IA et le calcul de devis, Cloudinary pour certains médias, ainsi que Vercel Analytics pour la mesure d’audience.' },
       { type: 'text', text: 'Ces prestataires peuvent être établis en dehors de la Côte d’Ivoire. AKATech Studio sélectionne les services nécessaires au fonctionnement du site et leur transmet uniquement les données utiles à leur mission.' },
+    ],
+  },
+  {
+    title: 'Cadre légal applicable',
+    blocks: [
+      { type: 'text', text: 'Ce traitement de données personnelles est encadré par la loi n° 2013-450 du 19 juin 2013 relative à la protection des données à caractère personnel en Côte d’Ivoire, dont le respect est contrôlé par l’Autorité de Régulation des Télécommunications/TIC de Côte d’Ivoire (ARTCI).' },
     ],
   },
   {
     title: 'Cookies et conservation',
     blocks: [
-      { type: 'text', text: 'Le site utilise des cookies ou identifiants locaux nécessaires à la session, au suivi de navigation, aux préférences d’interface et à la mémorisation du consentement. La bannière de consentement permet de prendre une décision lorsque des cookies non essentiels sont concernés.' },
+      { type: 'text', text: 'Une bannière vous permet de choisir : les cookies essentiels au fonctionnement du site et à une mesure d’audience anonyme restent actifs dans tous les cas, tandis que les cookies analytiques ne sont activés qu’avec votre accord. Votre choix est mémorisé sur votre appareil et vous pouvez le modifier à tout moment en effaçant les données de navigation du site.' },
       { type: 'text', text: 'Les données sont conservées pendant une durée proportionnée à la finalité : le temps du traitement de la demande, du suivi commercial ou des obligations applicables. Les durées exactes peuvent dépendre du type de données et du service concerné.' },
     ],
   },
@@ -47,6 +53,7 @@ const sections = [
     blocks: [
       { type: 'text', text: 'Vous pouvez demander l’accès, la rectification, la suppression, la limitation ou l’opposition au traitement de vos données, lorsque ces droits sont applicables. Vous pouvez également retirer un consentement donné.' },
       { type: 'text', text: 'Pour exercer un droit, écrivez à wthomasss06@gmail.com en précisant votre demande et, si nécessaire, le contexte dans lequel vos données ont été transmises. Une vérification raisonnable de votre identité peut être demandée.' },
+      { type: 'text', text: 'Vous disposez également du droit d’introduire une réclamation auprès de l’ARTCI, autorité de protection des données personnelles en Côte d’Ivoire.' },
     ],
   },
 ]

@@ -38,131 +38,71 @@ const GREETING = (HOUR >= 23 || HOUR < 6)
     ? GREETINGS_LUNCH[Math.floor(Math.random() * GREETINGS_LUNCH.length)]
     : GREETINGS_DAY[Math.floor(Math.random() * GREETINGS_DAY.length)]
     
-/* Regex pour détecter les liens dans les messages */
-const URL_REGEX = /(https?:\/\/[^\s]+)/g
-const WA_REGEX = /https:\/\/wa\.me\/\S+/g
-const PORTFOLIO_REGEX = /https:\/\/mbolloaka-dev\.vercel\.app\/?/g
-const SITE_REGEX = /https?:\/\/akatech\.vercel\.app\/?/g
-const DEVIS_REGEX = /https?:\/\/[^\s)\]]*\/devis\/[^\s)\]]+/gi
-const LINKEDIN_REGEX = /https:\/\/www\.linkedin\.com\/in\/[^\s]+/g
-const GITHUB_REGEX = /https:\/\/github\.com\/[^\s]+/g
+/* Détection de liens → boutons cliquables, en UNE SEULE passe combinée.
+   Bug corrigé ici (voir capture d'écran chocolaterie, sept. 2026) :
+   l'ancienne version enchaînait des .replace() indépendants
+   (DEVIS_REGEX puis SITE_REGEX puis...) sur le MÊME texte. Comme un
+   placeholder "[BUTTON_DEVIS:https://akatech.vercel.app/devis/...]"
+   contient encore littéralement "https://akatech.vercel.app", le
+   SITE_REGEX suivant le re-matchait À L'INTÉRIEUR du placeholder déjà
+   créé et le coupait en trois : un bouton Devis vide, un bouton Site
+   parasite, et le reste de l'URL ("devis/...?t=xxx") laissé en texte
+   brut non cliquable. Avec une seule passe et des groupes nommés,
+   chaque URL n'est examinée qu'une fois et ne peut plus être re-coupée
+   par un pattern suivant.
+   Le "*" est exclu du corps des URL (comme l'espace/")"/"]") parce que
+   le modèle enrobe parfois le lien en **gras** : sans ça, "**" collé à
+   la fin de l'URL serait avalé dans le token et casserait le lien. */
+const LINK_REGEX = new RegExp(
+  [
+    String.raw`(?<devis>https?:\/\/[^\s)\]*]*\/devis\/[^\s)\]*]+)`,
+    String.raw`(?<wa>https:\/\/wa\.me\/[^\s)\]*]+)`,
+    String.raw`(?<portfolio>https:\/\/mbolloaka-dev\.vercel\.app\/?)`,
+    String.raw`(?<site>https?:\/\/akatech\.vercel\.app\/?)`,
+    String.raw`(?<linkedin>https:\/\/www\.linkedin\.com\/in\/[^\s)\]*]+)`,
+    String.raw`(?<github>https:\/\/github\.com\/[^\s)\]*]+)`,
+    String.raw`(?<generic>https?:\/\/[^\s)\]*]+)`,
+  ].join('|'),
+  'gi'
+)
 
-/* Détecte et transforme les liens en boutons cliquables */
 function renderMessageContent(text) {
   if (!text) return text
 
-  // D'abord, remplace les liens spécifiques par des boutons stylés
-  let processed = text
+  // Étape 1 — le modèle enrobe parfois le lien en Markdown
+  // ([libellé](url)) alors que ce rendu n'interprète pas le Markdown :
+  // on retire l'enrobage et ne garde que l'URL, AVANT toute détection
+  // de bouton. Le libellé est jeté : le bouton stylé porte déjà le
+  // sien.
+  const unwrapped = text.replace(/\[[^\]]*\]\((https?:\/\/[^\s)]+)\)/g, '$1')
 
-  // Certains modèles ajoutent par erreur une parenthèse ou un second lien
-  // Markdown avant l'URL du devis. On répare l'URL avant de la transformer.
-  const questionnairePath = '(portfolio|vitrine_ecommerce|saas)\\?t=([A-Za-z0-9_-]+)'
-  const questionnaireUrl = 'https://akatech.vercel.app/devis/$1?t=$2'
-  processed = processed
-    .replace(
-      new RegExp(`\\]\\(https://akatech\\.vercel\\.app/\\)\\s*devis/${questionnairePath}`, 'gi'),
-      `](${questionnaireUrl})`
-    )
-    .replace(
-      new RegExp(`https://akatech\\.vercel\\.app/\\)?\\s*devis/${questionnairePath}`, 'gi'),
-      questionnaireUrl
-    )
-    .replace(
-      new RegExp(`(?<!/)devis/${questionnairePath}`, 'gi'),
-      questionnaireUrl
-    )
-
-  // Devis doit être traité avant le lien général du site AKATech.
-  processed = processed.replace(DEVIS_REGEX, (match) => {
-    return `\n[BUTTON_DEVIS:${match}]\n`
+  // Étape 2 — une seule passe : chaque URL est catégorisée UNE fois via
+  // les groupes nommés ci-dessus (le premier qui matche gagne — devis
+  // est essayé avant site, donc un lien /devis/ ne se fait pas
+  // intercepter par le pattern du site nu).
+  const processed = unwrapped.replace(LINK_REGEX, (...args) => {
+    const groups = args[args.length - 1]
+    const match = args[0]
+    const type = Object.keys(groups).find((k) => groups[k])
+    return `\n[BUTTON_${type.toUpperCase()}:${match}]\n`
   })
 
-  // WhatsApp
-  processed = processed.replace(WA_REGEX, (match) => {
-    return `\n[BUTTON_WA:${match}]\n`
-  })
-
-  // Portfolio
-  processed = processed.replace(PORTFOLIO_REGEX, (match) => {
-    return `\n[BUTTON_PORTFOLIO:${match}]\n`
-  })
-
-  // Site AKATech
-  processed = processed.replace(SITE_REGEX, (match) => {
-    return `\n[BUTTON_SITE:${match}]\n`
-  })
-
-  // LinkedIn
-  processed = processed.replace(LINKEDIN_REGEX, (match) => {
-    return `\n[BUTTON_LINKEDIN:${match}]\n`
-  })
-
-  // GitHub
-  processed = processed.replace(GITHUB_REGEX, (match) => {
-    return `\n[BUTTON_GITHUB:${match}]\n`
-  })
-
-  // Autres liens génériques
-  processed = processed.replace(URL_REGEX, (match) => {
-    if (match.includes('wa.me') || match.includes('mbolloaka-dev') || 
-        match.includes('akatech.vercel') || match.includes('/devis/') ||
-        match.includes('linkedin.com') || match.includes('github.com')) {
-      return match // Déjà traité
-    }
-    return `\n[BUTTON_LINK:${match}]\n`
-  })
-
-  // Maintenant, on split et on rend chaque partie
   const parts = processed.split(/\n/)
 
   return parts.map((part, i) => {
-    // Bouton WhatsApp
-    if (part.startsWith('[BUTTON_WA:')) {
-      const url = part.replace('[BUTTON_WA:', '').replace(']', '')
-      return <WhatsAppButton key={i} url={url} />
+    const m = part.match(/^\[BUTTON_([A-Z]+):(.+)\]$/)
+    if (m) {
+      const [, kind, url] = m
+      if (kind === 'WA') return <WhatsAppButton key={i} url={url} />
+      if (kind === 'PORTFOLIO') return <PortfolioButton key={i} url={url} />
+      if (kind === 'SITE') return <SiteButton key={i} url={url} />
+      if (kind === 'DEVIS') return <DevisButton key={i} url={url} />
+      if (kind === 'LINKEDIN') return <LinkedInButton key={i} url={url} />
+      if (kind === 'GITHUB') return <GitHubButton key={i} url={url} />
+      if (kind === 'GENERIC') return <LinkButton key={i} url={url} label="Voir le lien" />
     }
 
-    // Bouton Portfolio
-    if (part.startsWith('[BUTTON_PORTFOLIO:')) {
-      const url = part.replace('[BUTTON_PORTFOLIO:', '').replace(']', '')
-      return <PortfolioButton key={i} url={url} />
-    }
-
-    // Bouton Site
-    if (part.startsWith('[BUTTON_SITE:')) {
-      const url = part.replace('[BUTTON_SITE:', '').replace(']', '')
-      return <SiteButton key={i} url={url} />
-    }
-
-    // Bouton Devis
-    if (part.startsWith('[BUTTON_DEVIS:')) {
-      const url = part.replace('[BUTTON_DEVIS:', '').replace(']', '')
-      return <DevisButton key={i} url={url} />
-    }
-
-    // Bouton LinkedIn
-    if (part.startsWith('[BUTTON_LINKEDIN:')) {
-      const url = part.replace('[BUTTON_LINKEDIN:', '').replace(']', '')
-      return <LinkedInButton key={i} url={url} />
-    }
-
-    // Bouton GitHub
-    if (part.startsWith('[BUTTON_GITHUB:')) {
-      const url = part.replace('[BUTTON_GITHUB:', '').replace(']', '')
-      return <GitHubButton key={i} url={url} />
-    }
-
-    // Bouton lien générique
-    if (part.startsWith('[BUTTON_LINK:')) {
-      const url = part.replace('[BUTTON_LINK:', '').replace(']', '')
-      return <LinkButton key={i} url={url} label="Voir le lien" />
-    }
-
-    // Texte normal
-    if (part.trim()) {
-      return <span key={i}>{part}</span>
-    }
-
+    if (part.trim()) return <span key={i}>{part}</span>
     return <br key={i} />
   })
 }
