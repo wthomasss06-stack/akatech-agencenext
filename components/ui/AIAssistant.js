@@ -474,7 +474,10 @@ export default function AIAssistant() {
     if (!text || streaming) return
 
     setErrorMsg(null)
-    const nextMessages = [...messages, { role: 'user', content: text }]
+    const nextMessages = [
+      ...messages.filter(message => message.content?.trim()),
+      { role: 'user', content: text },
+    ]
     setMessages([...nextMessages, { role: 'assistant', content: '' }])
     setInput('')
     setStreaming(true)
@@ -508,6 +511,11 @@ export default function AIAssistant() {
       }
     } catch (err) {
       if (err.name !== 'AbortError') {
+        setMessages(current => (
+          current.at(-1)?.role === 'assistant' && !current.at(-1).content
+            ? current.slice(0, -1)
+            : current
+        ))
         setErrorMsg("La connexion a été interrompue. Réessayez, ou écrivez directement sur WhatsApp.")
       }
     } finally {
