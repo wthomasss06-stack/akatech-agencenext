@@ -56,10 +56,21 @@ function renderMessageContent(text) {
 
   // Certains modèles ajoutent par erreur une parenthèse ou un second lien
   // Markdown avant l'URL du devis. On répare l'URL avant de la transformer.
-  processed = processed.replace(
-    /https:\/\/akatech\.vercel\.app\/(?:\)?\s*)?devis\/([a-z_]+[?][^\s)\]]+)/gi,
-    'https://akatech.vercel.app/devis/$1'
-  )
+  const questionnairePath = '(portfolio|vitrine_ecommerce|saas)\\?t=([A-Za-z0-9_-]+)'
+  const questionnaireUrl = 'https://akatech.vercel.app/devis/$1?t=$2'
+  processed = processed
+    .replace(
+      new RegExp(`\\]\\(https://akatech\\.vercel\\.app/\\)\\s*devis/${questionnairePath}`, 'gi'),
+      `](${questionnaireUrl})`
+    )
+    .replace(
+      new RegExp(`https://akatech\\.vercel\\.app/\\)?\\s*devis/${questionnairePath}`, 'gi'),
+      questionnaireUrl
+    )
+    .replace(
+      new RegExp(`(?<!/)devis/${questionnairePath}`, 'gi'),
+      questionnaireUrl
+    )
 
   // Devis doit être traité avant le lien général du site AKATech.
   processed = processed.replace(DEVIS_REGEX, (match) => {
