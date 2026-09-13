@@ -30,7 +30,19 @@ Visiteur
   v
 Assistant IA
   |
-  +-- besoin compatible --> start_questionnaire
+  +-- question générale / besoin flou --> conversation
+  |                                       |
+  |                                       +--> FAQ, services, projets, fondateur
+  |                                       |
+  |                                       +--> besoin suffisamment clair ?
+  |                                                    |
+  |                                                    v
+  |                                             Qualification (2–3 questions)
+  |                                                    |
+  |                                                    v
+  |                                             Classification du projet
+  |
+  +-- projet pris en charge --> start_questionnaire
   |                         |
   |                         v
   |                  /devis/{type}?t=TOKEN
@@ -54,8 +66,14 @@ Assistant IA
   |           Email immédiat   Statut DECLINED
   |           à AKATech         Relance manuelle
   |
-  +-- besoin non compatible --> flux existant capture_lead
+  +-- besoin non compatible --> capture_lead
 ```
+
+Le questionnaire ne remplace donc pas la conversation. L'assistant reste capable
+de répondre aux questions générales sur AKATech, ses services, ses projets, son
+fondateur et ses modalités de collaboration. Il ne bascule vers la qualification
+que lorsqu'un besoin de projet apparaît, puis ne lance le questionnaire qu'après
+avoir obtenu assez de contexte.
 
 ## 3. Fonctionnalités livrées
 
@@ -82,7 +100,8 @@ Assistant IA
 - `lib/assistant.js`
   - outil `start_questionnaire` ;
   - valeurs autorisées : `portfolio`, `vitrine_ecommerce`, `saas` ;
-  - prompt public strictement limité à la compréhension et à la qualification ;
+  - conversation générale conservée pour les FAQ, services, projets et fondateur ;
+  - prompt public séparant conversation, qualification et devis ;
   - environ 2 à 3 questions ciblées avant le lancement du questionnaire ;
   - interdiction d'annoncer un prix, un pack, un tier ou un délai personnalisé
     avant la soumission du questionnaire ;
@@ -170,12 +189,20 @@ de la grille tarifaire de l'application.
 
 ### 4.3 Déclenchement du questionnaire
 
-Le chat suit un rôle de qualification, pas de devis :
+Le chat fait cohabiter conversation générale et qualification commerciale. Il ne
+devient pas un robot de devis :
 
-1. comprendre l'activité et le résultat recherché ;
-2. poser environ 2 à 3 questions courtes et ciblées ;
-3. classifier le projet ;
-4. appeler `start_questionnaire` dès que le besoin est suffisamment clair.
+- les questions générales restent dans le dialogue normal (FAQ, services,
+  projets, fondateur et collaboration) ;
+- lorsqu'un besoin de projet apparaît, l'assistant comprend l'activité et le
+  résultat recherché ;
+- il pose environ 2 à 3 questions courtes et ciblées ;
+- il classe ensuite le projet et appelle `start_questionnaire` si la catégorie
+  est prise en charge.
+
+Le contrat de fonctionnement du chat est donc : comprendre, qualifier,
+classifier et lancer le questionnaire — pas calculer ni négocier le devis dans
+la conversation.
 
 Avant la soumission du questionnaire, l'assistant ne doit jamais annoncer de prix,
 de pack, de tier, de fourchette ou de délai personnalisé. Le tier et le montant
