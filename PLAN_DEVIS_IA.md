@@ -82,6 +82,10 @@ Assistant IA
 - `lib/assistant.js`
   - outil `start_questionnaire` ;
   - valeurs autorisées : `portfolio`, `vitrine_ecommerce`, `saas` ;
+  - prompt public strictement limité à la compréhension et à la qualification ;
+  - environ 2 à 3 questions ciblées avant le lancement du questionnaire ;
+  - interdiction d'annoncer un prix, un pack, un tier ou un délai personnalisé
+    avant la soumission du questionnaire ;
   - consignes indiquant quand utiliser le questionnaire et quand conserver
     `capture_lead`.
 - `app/api/assistant/route.js`
@@ -166,10 +170,21 @@ de la grille tarifaire de l'application.
 
 ### 4.3 Déclenchement du questionnaire
 
+Le chat suit un rôle de qualification, pas de devis :
+
+1. comprendre l'activité et le résultat recherché ;
+2. poser environ 2 à 3 questions courtes et ciblées ;
+3. classifier le projet ;
+4. appeler `start_questionnaire` dès que le besoin est suffisamment clair.
+
+Avant la soumission du questionnaire, l'assistant ne doit jamais annoncer de prix,
+de pack, de tier, de fourchette ou de délai personnalisé. Le tier et le montant
+final sont déterminés ensuite par `quote-calc.js` à partir des réponses et de
+`PRICING`.
+
 Le questionnaire est lancé uniquement lorsque le besoin appartient clairement à
-l'une des trois catégories prises en charge. Les demandes de maintenance,
-d'API, de GBP ou d'autres besoins continuent d'utiliser le flux
-`capture_lead`.
+l'une des trois catégories prises en charge. Les demandes de maintenance, d'API,
+de GBP ou d'autres besoins continuent d'utiliser le flux `capture_lead`.
 
 ### 4.4 Exécution synchrone
 

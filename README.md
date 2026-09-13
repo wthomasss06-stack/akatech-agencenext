@@ -96,7 +96,7 @@ akatech-nextjs/
 ├── lib/
 │   ├── data.js         # SERVICES, PROJECTS (19), PRICING, TESTIMONIALS, TEAM, STATS, BLOG_POSTS, FAQ_ITEMS, PROJECT_TYPE_LABELS
 │   ├── theme.js         # useTheme — dark/light + View Transitions
-│   ├── assistant.js     # System prompt généré depuis lib/data.js + définition du tool capture_lead
+│   ├── assistant.js     # Prompt de qualification + tools start_questionnaire/capture_lead
 │   ├── ai-providers.js  # Cascade de modèles Gemini, fallback Groq, rate-limiting, validation — partagé entre les routes assistant
 │   
 │
@@ -128,7 +128,7 @@ akatech-nextjs/
 
 Widget de chat flottant (bouton bas-gauche — le bas-droit est déjà pris par le bouton WhatsApp), présent sur tout le site public.
 
-**Ce qu'il fait** : répond aux questions sur les services et tarifs, donne des fourchettes de prix par type de projet, qualifie le visiteur et — une fois qu'il a nom + contact + besoin clair — appelle un outil (`capture_lead`) qui enregistre le prospect en base et envoie un email à l'admin.
+**Ce qu'il fait** : répond aux questions sur AKATech, qualifie brièvement le visiteur puis lance le questionnaire de devis adapté (`start_questionnaire`) pour les projets portfolio, vitrine/e-commerce et SaaS. Le prix est calculé après le questionnaire. Pour les besoins hors parcours, il utilise `capture_lead` pour enregistrer le prospect et envoyer un email à l'admin.
 
 **Double fournisseur, cascade automatique** :
 ```
