@@ -195,14 +195,14 @@ function DevisButton({ url, onOpen }) {
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '.5rem',
         padding: '.55rem 1rem', borderRadius: 10,
-        background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+        background: 'linear-gradient(135deg, #c6ff3d, #88ca53)',
         color: '#fff', fontSize: '.8rem', fontWeight: 600,
         textDecoration: 'none', margin: '.3rem 0', cursor: 'pointer',
-        boxShadow: '0 2px 8px rgba(245,158,11,.3)',
+        boxShadow: '0 2px 8px rgba(136,202,83,.3)',
         transition: 'transform .15s, box-shadow .15s',
       }}
-      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(245,158,11,.4)' }}
-      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(245,158,11,.3)' }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(136,202,83,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(136,202,83,.3)' }}
     >
       <FileText size={15} />
       Remplir mon devis
@@ -642,7 +642,7 @@ export default function AIAssistant() {
                 <X size={18} />
               </button>
             </div>
-            <iframe src={questionnaireUrl} title="Questionnaire de devis AKATech" style={{ flex: 1, width: '100%', border: 0, background: T.bg }} />
+            <iframe src={`${questionnaireUrl}${questionnaireUrl.includes('?') ? '&' : '?'}embedded=1`} title="Questionnaire de devis AKATech" style={{ flex: 1, width: '100%', border: 0, background: T.bg }} />
           </div>
         </div>
       )}

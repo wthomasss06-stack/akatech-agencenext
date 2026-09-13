@@ -137,10 +137,10 @@ export default function RootLayout({ children }) {
             <BlobTransitionProvider>
               <ScrollToTop />
               <Loader />
-              <Navbar />
+              <div className="public-chrome"><Navbar /></div>
               <BreadcrumbTrail />
               <main>{children}</main>
-              <Footer />
+              <div className="public-chrome"><Footer /></div>
               <FloatingWA />
               <BackToTop />
               <AIAssistant />

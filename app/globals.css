@@ -61,6 +61,13 @@ body {
 
 body.light-mode { background: var(--bg-light); color: #111111; }
 
+/* The assistant embeds only the questionnaire; public navigation and footer
+   would duplicate the modal shell and steal its vertical space. */
+body.questionnaire-embedded .public-chrome,
+body.questionnaire-embedded > div > div > div > div:has(> .public-chrome) {
+  display: none !important;
+}
+
 a { text-decoration: none; color: inherit; }
 img { max-width: 100%; display: block; object-fit: cover; }
 

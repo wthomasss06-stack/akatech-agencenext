@@ -34,6 +34,7 @@ function buildFieldValue(currentValue, field, nextValue) {
 export default function DevisTypePage({ params }) {
   const T = useTheme()
   const searchParams = useSearchParams()
+  const embedded = searchParams.get('embedded') === '1'
   const type = String(params?.type || '').toLowerCase()
   const token = searchParams.get('t') || ''
   const schema = QUESTIONNAIRES[type]
@@ -43,6 +44,12 @@ export default function DevisTypePage({ params }) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(null)
   const [deciding, setDeciding] = useState(false)
+
+  useEffect(() => {
+    if (!embedded) return undefined
+    document.body.classList.add('questionnaire-embedded')
+    return () => document.body.classList.remove('questionnaire-embedded')
+  }, [embedded])
 
   useEffect(() => {
     if (!token || !schema) return
@@ -197,7 +204,7 @@ export default function DevisTypePage({ params }) {
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: T.bg, color: T.textMain, padding: '4rem 1.25rem' }}>
+    <main style={{ minHeight: '100vh', background: T.bg, color: T.textMain, padding: embedded ? '1.5rem 1.25rem 3rem' : '4rem 1.25rem' }}>
       <div style={{ maxWidth: 1120, margin: '0 auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '.75rem', letterSpacing: '.12em', textTransform: 'uppercase', color: T.green, fontWeight: 700 }}>
