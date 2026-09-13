@@ -1,7 +1,7 @@
 'use client'
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
-import { usePathname } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -298,6 +298,7 @@ const AI_GAP = 14
 export default function AIAssistant() {
   const T = useTheme()
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const reduceMotion = useReducedMotion()
   const [open, setOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -498,6 +499,7 @@ export default function AIAssistant() {
   }, [questionnaireUrl])
 
   if (pathname?.startsWith('/explorer')) return null
+  if (searchParams.get('embedded') === '1') return null
   if (!mounted) return null
 
   return createPortal(

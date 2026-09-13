@@ -138,11 +138,11 @@ export default function RootLayout({ children }) {
               <ScrollToTop />
               <Loader />
               <div className="public-chrome"><Navbar /></div>
-              <BreadcrumbTrail />
+              <div className="public-chrome"><BreadcrumbTrail /></div>
               <main>{children}</main>
               <div className="public-chrome"><Footer /></div>
-              <FloatingWA />
-              <BackToTop />
+              <div className="public-chrome"><FloatingWA /></div>
+              <div className="public-chrome"><BackToTop /></div>
               <AIAssistant />
               <VisitorTracker />
               <CookieConsent />
