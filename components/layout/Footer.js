@@ -252,14 +252,6 @@ export default function Footer() {
                 </TransitionLink>
               ))}
             </div>
-
-            <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: `1px solid ${border}`, display: 'flex', flexWrap: 'wrap', gap: '1rem 1.5rem' }}>
-              {LEGAL.map(([label, href]) => (
-                <TransitionLink key={label} href={href} style={{ ...lk, fontSize: '.75rem' }}>
-                  <HoverSlideText text={label} />
-                </TransitionLink>
-              ))}
-            </div>
           </div>
 
           {/* Services */}
@@ -278,24 +270,19 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Socials */}
+          {/* Legal */}
           <div>
             <h3 style={{ fontSize: '.72rem', textTransform: 'uppercase', letterSpacing: '.14em', marginBottom: '1.1rem', fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono',monospace" }}>
-              Réseaux
+              Légal
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {SOCIALS.map(({ label, href }) => (
-                <a key={label} href={href} target="_blank" rel="noreferrer" style={lk}
+              {LEGAL.map(([label, href]) => (
+                <TransitionLink key={label} href={href} style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
                   <HoverSlideText text={label} />
-                </a>
+                </TransitionLink>
               ))}
-              <a href="mailto:wthomasss06@gmail.com" style={lk}
-                onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
-                onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                <HoverSlideText text="Email" />
-              </a>
             </div>
           </div>
 
@@ -314,6 +301,18 @@ export default function Footer() {
                 <span style={{ ...lk, cursor: 'default' }}>
                   <MapPin size={12} style={{ flexShrink: 0 }} />Abidjan, Côte d'Ivoire
                 </span>
+                <a href="mailto:wthomasss06@gmail.com" style={lk}
+                  onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
+                  onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
+                  <HoverSlideText text="Email" />
+                </a>
+                {SOCIALS.map(({ label, href }) => (
+                  <a key={label} href={href} target="_blank" rel="noreferrer" style={lk}
+                    onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
+                    onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
+                    <HoverSlideText text={label} />
+                  </a>
+                ))}
               </div>
             </div>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-ghost" style={{ fontSize: '.8rem', padding: '.7rem 1.6rem' }}>
