@@ -200,9 +200,10 @@ async function runAssistant(messages, controller, encoder, conversationId) {
           console.error('[Assistant] Échec création questionnaire:', err?.message ?? err)
         }
 
-        const finalToken = token || crypto.randomUUID().replace(/-/g, '')
-        const questionnaireUrl = `${baseUrl}/devis/${typeKey}?t=${finalToken}`
-        const toolResultText = `Le formulaire de devis est prêt. Ouvre ce lien : ${questionnaireUrl}`
+        const questionnaireUrl = token ? `${baseUrl}/devis/${typeKey}?t=${token}` : null
+        const toolResultText = questionnaireUrl
+          ? `Le formulaire de devis est prêt. Ouvre ce lien : ${questionnaireUrl}`
+          : `Le formulaire n'a pas pu être préparé automatiquement. Invite le visiteur à écrire directement à Aka : ${WHATSAPP_LINK}`
 
         const nextContents = [
           ...contents,
@@ -213,7 +214,7 @@ async function runAssistant(messages, controller, encoder, conversationId) {
               functionResponse: {
                 name: functionCall.name,
                 id: functionCall.id,
-                response: { result: toolResultText, url: questionnaireUrl, token: finalToken, type: typeKey },
+                response: { result: toolResultText, url: questionnaireUrl, token, type: typeKey },
               },
             }],
           },
