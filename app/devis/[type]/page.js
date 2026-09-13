@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { QUESTIONNAIRES, QUESTIONNAIRE_TYPES } from '@/lib/questionnaires-schema'
+import { useTheme } from '@/lib/theme'
 
 const VALID_TYPES = Object.keys(QUESTIONNAIRES)
 
@@ -31,6 +32,7 @@ function buildFieldValue(currentValue, field, nextValue) {
 }
 
 export default function DevisTypePage({ params }) {
+  const T = useTheme()
   const searchParams = useSearchParams()
   const type = String(params?.type || '').toLowerCase()
   const token = searchParams.get('t') || ''
@@ -40,6 +42,7 @@ export default function DevisTypePage({ params }) {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(null)
+  const [deciding, setDeciding] = useState(false)
 
   useEffect(() => {
     if (!token || !schema) return
@@ -57,7 +60,20 @@ export default function DevisTypePage({ params }) {
 
         const payload = await res.json()
         if (!mounted) return
-        setAnswers(payload.questionnaire?.answers || {})
+        const questionnaire = payload.questionnaire
+        setAnswers(questionnaire?.answers || {})
+        if (questionnaire?.quote && ['QUOTED', 'ACCEPTED', 'DECLINED'].includes(questionnaire.status)) {
+          setSuccess({
+            title: questionnaire.status === 'ACCEPTED' ? 'Offre acceptée' : questionnaire.status === 'DECLINED' ? 'Offre refusée' : 'Questionnaire déjà soumis',
+            description: questionnaire.status === 'ACCEPTED'
+              ? 'Merci. AKATech a bien reçu votre acceptation et reviendra vers vous pour la suite.'
+              : questionnaire.status === 'DECLINED'
+                ? 'Votre décision a bien été enregistrée. AKATech pourra revenir vers vous si nécessaire.'
+                : 'Votre devis est prêt. Vous pouvez maintenant accepter ou refuser l’offre.',
+            quote: questionnaire.quote,
+            status: questionnaire.status,
+          })
+        }
       })
       .catch((err) => {
         if (!mounted) return
@@ -122,11 +138,41 @@ export default function DevisTypePage({ params }) {
         title: 'Questionnaire soumis',
         description: 'Votre devis a bien été généré. Vous pouvez maintenant accepter ou refuser l’offre.',
         quote: payload.quote,
+        status: 'QUOTED',
       })
     } catch (err) {
       setError(err.message || 'Erreur inconnue')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const handleDecision = async (decision) => {
+    if (!token || deciding || success?.status !== 'QUOTED') return
+
+    setDeciding(true)
+    setError('')
+    try {
+      const res = await fetch(`/api/questionnaire/${token}/decision`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ decision }),
+      })
+      const payload = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(payload.error || 'Décision impossible.')
+
+      setSuccess((current) => ({
+        ...current,
+        status: payload.questionnaire.status,
+        title: decision === 'accepted' ? 'Offre acceptée' : 'Offre refusée',
+        description: decision === 'accepted'
+          ? 'Merci. AKATech a bien reçu votre acceptation et reviendra vers vous pour la suite.'
+          : 'Votre décision a bien été enregistrée. AKATech pourra revenir vers vous si nécessaire.',
+      }))
+    } catch (err) {
+      setError(err.message || 'Erreur inconnue')
+    } finally {
+      setDeciding(false)
     }
   }
 
@@ -151,44 +197,54 @@ export default function DevisTypePage({ params }) {
   }
 
   return (
-    <main style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #0a0f14 0%, #111827 100%)', color: '#fff', padding: '4rem 1.25rem' }}>
+    <main style={{ minHeight: '100vh', background: T.bg, color: T.textMain, padding: '4rem 1.25rem' }}>
       <div style={{ maxWidth: 1120, margin: '0 auto' }}>
         <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ fontSize: '.75rem', letterSpacing: '.12em', textTransform: 'uppercase', color: '#a4d96c', fontWeight: 700 }}>
+          <div style={{ fontSize: '.75rem', letterSpacing: '.12em', textTransform: 'uppercase', color: T.green, fontWeight: 700 }}>
             {QUESTIONNAIRE_TYPES[type] || schema.label}
           </div>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', margin: '0.4rem 0 0.8rem', fontWeight: 800 }}>
             Questionnaire de devis
           </h1>
-          <p style={{ color: '#d7dee6', maxWidth: 760, lineHeight: 1.7, margin: 0 }}>
+          <p style={{ color: T.textSub, maxWidth: 760, lineHeight: 1.7, margin: 0 }}>
             {schema.intro || 'Répondez simplement aux questions ci-dessous. Vos réponses aideront Aka à comprendre votre projet et à préparer une proposition adaptée.'}
           </p>
         </div>
 
         {!token && (
-          <div style={{ background: 'rgba(239,68,68,.12)', border: '1px solid rgba(239,68,68,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: '#fecaca', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'rgba(239,68,68,.12)', border: '1px solid rgba(239,68,68,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: T.textMain, marginBottom: '1.5rem' }}>
             Ce formulaire est protégé par un token de sécurité. Le lien du questionnaire est invalide ou incomplet.
           </div>
         )}
 
         {error && (
-          <div style={{ background: 'rgba(239,68,68,.12)', border: '1px solid rgba(239,68,68,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: '#fecaca', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'rgba(239,68,68,.12)', border: '1px solid rgba(239,68,68,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: T.textMain, marginBottom: '1.5rem' }}>
             {error}
           </div>
         )}
 
         {success && (
-          <div style={{ background: 'rgba(34,197,94,.12)', border: '1px solid rgba(34,197,94,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: '#dcfce7', marginBottom: '1.5rem' }}>
+          <div style={{ background: 'rgba(34,197,94,.12)', border: '1px solid rgba(34,197,94,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: T.textMain, marginBottom: '1.5rem' }}>
             <h2 style={{ margin: '0 0 .4rem', fontSize: '1.2rem' }}>{success.title}</h2>
-            <p style={{ margin: '0 0 .8rem', color: '#dcfce7' }}>{success.description}</p>
+            <p style={{ margin: '0 0 .8rem', color: T.textSub }}>{success.description}</p>
             {success.quote && (
-              <div style={{ background: 'rgba(6,95,70,.25)', borderRadius: 12, padding: '.9rem 1rem' }}>
+              <div style={{ background: T.light ? 'rgba(95,145,55,.1)' : 'rgba(6,95,70,.25)', border: `1px solid ${T.border2}`, borderRadius: 12, padding: '.9rem 1rem' }}>
                 <div style={{ fontWeight: 700 }}>Devis estimé</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '.35rem' }}>
                   {success.quote.priceLabel || `${success.quote.priceMinFCFA?.toLocaleString('fr-FR') || 0} FCFA`}
                 </div>
                 {success.quote.positioningPitch && (
-                  <p style={{ margin: '.8rem 0 0', lineHeight: 1.6, color: '#f0fdf4' }}>{success.quote.positioningPitch}</p>
+                  <p style={{ margin: '.8rem 0 0', lineHeight: 1.6, color: T.textSub }}>{success.quote.positioningPitch}</p>
+                )}
+                {success.status === 'QUOTED' && (
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem', marginTop: '1rem' }}>
+                    <button type="button" onClick={() => handleDecision('accepted')} disabled={deciding} style={{ border: 'none', borderRadius: 999, background: T.green, color: '#08120a', fontWeight: 800, padding: '.75rem 1.1rem', cursor: deciding ? 'wait' : 'pointer', opacity: deciding ? .65 : 1 }}>
+                      {deciding ? 'Enregistrement…' : 'J’accepte le devis'}
+                    </button>
+                    <button type="button" onClick={() => handleDecision('declined')} disabled={deciding} style={{ border: `1px solid ${T.border2}`, borderRadius: 999, background: 'transparent', color: T.textMain, fontWeight: 700, padding: '.75rem 1.1rem', cursor: deciding ? 'wait' : 'pointer', opacity: deciding ? .65 : 1 }}>
+                      Je refuse le devis
+                    </button>
+                  </div>
                 )}
               </div>
             )}
@@ -197,12 +253,12 @@ export default function DevisTypePage({ params }) {
 
         <div style={{ display: 'grid', gap: '1.25rem' }}>
           {visibleSections.map((section) => (
-            <section key={section.title} style={{ background: 'rgba(17,24,39,.76)', border: '1px solid rgba(148,163,184,.22)', borderRadius: 22, padding: '1.5rem', boxShadow: '0 25px 50px rgba(15,23,42,.35)' }}>
+            <section key={section.title} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: '1.5rem', boxShadow: '0 12px 30px rgba(0,0,0,.12)' }}>
               <h2 style={{ margin: '0 0 1rem', fontSize: '1.2rem' }}>{section.title}</h2>
               <div style={{ display: 'grid', gap: '1rem' }}>
                 {section.fields.map((field) => {
                   const currentValue = answers[field.id]
-                  const fieldLabel = <label htmlFor={field.id} style={{ display: 'block', marginBottom: '.45rem', fontWeight: 600, color: '#e5eef9' }}>{field.label}{field.required ? ' *' : ''}</label>
+                  const fieldLabel = <label htmlFor={field.id} style={{ display: 'block', marginBottom: '.45rem', fontWeight: 600, color: T.textMain }}>{field.label}{field.required ? ' *' : ''}</label>
 
                   return (
                     <div key={field.id} style={{ display: 'grid', gap: '.5rem' }}>
@@ -215,7 +271,7 @@ export default function DevisTypePage({ params }) {
                           onChange={(event) => handleChange(field, event.target.value)}
                           required={field.required}
                           rows={5}
-                          style={{ width: '100%', minHeight: 120, resize: 'vertical', borderRadius: 12, border: '1px solid rgba(148,163,184,.35)', background: '#0f172a', color: '#fff', padding: '0.9rem 1rem' }}
+                          style={{ width: '100%', minHeight: 120, resize: 'vertical', borderRadius: 10, border: `1px solid ${T.border2}`, background: T.bg, color: T.textMain, padding: '0.9rem 1rem' }}
                         />
                       )}
 
@@ -226,14 +282,14 @@ export default function DevisTypePage({ params }) {
                           value={typeof currentValue === 'string' ? currentValue : ''}
                           onChange={(event) => handleChange(field, event.target.value)}
                           required={field.required}
-                          style={{ width: '100%', borderRadius: 12, border: '1px solid rgba(148,163,184,.35)', background: '#0f172a', color: '#fff', padding: '0.9rem 1rem' }}
+                          style={{ width: '100%', borderRadius: 10, border: `1px solid ${T.border2}`, background: T.bg, color: T.textMain, padding: '0.9rem 1rem' }}
                         />
                       )}
 
                       {field.type === 'radio' && (
                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem' }}>
                           {field.options.map((option) => (
-                            <label key={option} style={{ display: 'inline-flex', alignItems: 'center', gap: '.55rem', padding: '.6rem .8rem', borderRadius: 12, border: '1px solid rgba(148,163,184,.25)', background: currentValue === option ? 'rgba(136,202,83,.12)' : 'rgba(15,23,42,.7)', cursor: 'pointer' }}>
+                            <label key={option} style={{ display: 'inline-flex', alignItems: 'center', gap: '.55rem', padding: '.6rem .8rem', borderRadius: 10, border: `1px solid ${T.border}`, background: currentValue === option ? 'rgba(136,202,83,.12)' : T.bg, cursor: 'pointer' }}>
                               <input
                                 type="radio"
                                 name={field.id}
@@ -251,7 +307,7 @@ export default function DevisTypePage({ params }) {
                           {field.options.map((option) => {
                             const checked = Array.isArray(currentValue) && currentValue.includes(option)
                             return (
-                              <label key={option} style={{ display: 'inline-flex', alignItems: 'center', gap: '.55rem', padding: '.6rem .8rem', borderRadius: 12, border: '1px solid rgba(148,163,184,.25)', background: checked ? 'rgba(136,202,83,.12)' : 'rgba(15,23,42,.7)', cursor: 'pointer' }}>
+                              <label key={option} style={{ display: 'inline-flex', alignItems: 'center', gap: '.55rem', padding: '.6rem .8rem', borderRadius: 10, border: `1px solid ${T.border}`, background: checked ? 'rgba(136,202,83,.12)' : T.bg, cursor: 'pointer' }}>
                                 <input
                                   type="checkbox"
                                   checked={checked}
@@ -292,7 +348,7 @@ export default function DevisTypePage({ params }) {
         </div>
 
         {loading && (
-          <div style={{ textAlign: 'center', color: '#d7dee6', marginTop: '1rem' }}>Chargement du questionnaire…</div>
+            <div style={{ textAlign: 'center', color: T.textSub, marginTop: '1rem' }}>Chargement du questionnaire…</div>
         )}
       </div>
     </main>

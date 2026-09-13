@@ -17,6 +17,10 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: 'Decision invalide' }, { status: 400 })
     }
 
+    if (questionnaire.status !== 'QUOTED') {
+      return NextResponse.json({ error: 'Le devis doit être généré avant cette décision' }, { status: 409 })
+    }
+
     const updated = await updateQuestionnaireDecision(questionnaire.id, decision)
 
     if (decision === 'accepted') {

@@ -17,8 +17,15 @@ Le socle du parcours de devis est livré et opérationnel :
   avec Prisma ;
 - le projet a été validé avec `npm run build`.
 
-Le principal chantier restant est l'interface admin complète de l'onglet
-**Prospects**, suivie d'une QA métier et sécurité en conditions réelles.
+L'interface admin de l'onglet **Prospects** est maintenant complète pour le suivi
+quotidien : recherche, filtre, détail des réponses et du devis, changement de
+statut et suppression confirmée. Le parcours public a également été stabilisé
+pour garder la conversation visible pendant le questionnaire et afficher les
+actions d'acceptation/refus après le calcul du devis.
+
+Il reste une QA métier et sécurité en conditions réelles avec une base et Resend
+configurés : soumission complète des trois types, réception du PDF, acceptation,
+refus, puis contrôle des emails et des statuts en production.
 
 AKATechOS reste un produit séparé : aucune fusion avec le site n'a été retenue.
 
@@ -114,7 +121,8 @@ avoir obtenu assez de contexte.
   - conservation du flux existant en cas de besoin non compatible.
 - `components/ui/AIAssistant.js`
   - détection des liens `/devis/...` ;
-  - affichage d'un bouton cliquable au lieu d'un lien tronqué.
+  - ouverture du questionnaire dans un modal iframe sans navigation ni perte de
+    l'état de la conversation.
 
 ### 3.3 Questionnaire public et devis
 
@@ -136,7 +144,9 @@ avoir obtenu assez de contexte.
   - formulaire rendu depuis `QUESTIONNAIRES` ;
   - récupération du token ;
   - sauvegarde locale et serveur ;
-  - affichage du devis et des actions Accepter/Refuser.
+  - affichage du devis et des actions Accepter/Refuser ;
+  - thème clair/sombre partagé avec le reste du site ;
+  - conservation de l'état affiché après rechargement du questionnaire.
 - `lib/db.js`
   - création, lecture et mise à jour des questionnaires ;
   - sauvegarde et mise à jour des devis.
@@ -165,7 +175,8 @@ avoir obtenu assez de contexte.
   - protection de `/api/prospects` avec les routes admin.
 - `app/api/prospects/route.js`
   - liste filtrable des questionnaires et devis ;
-  - endpoint dynamique prêt pour le dashboard.
+  - mise à jour de statut et suppression protégées ;
+  - endpoint consommé par le détail complet de l'onglet Prospects.
 - Le build Next.js est passé avec succès après ces changements.
 
 ## 4. Décisions prises

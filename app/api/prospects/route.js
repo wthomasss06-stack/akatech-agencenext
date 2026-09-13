@@ -4,6 +4,8 @@ import { prisma } from '@/lib/db'
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
+const VALID_STATUSES = ['STARTED', 'SUBMITTED', 'QUOTED', 'ACCEPTED', 'DECLINED']
+
 export async function GET(request) {
   try {
     const { searchParams } = request.nextUrl
@@ -64,6 +66,39 @@ export async function GET(request) {
     })
   } catch (error) {
     console.error('[API Prospects] Erreur:', error)
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+  }
+}
+
+export async function PATCH(request) {
+  try {
+    const { id, status } = await request.json()
+    if (!id || !VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: 'ID et statut valide requis' }, { status: 400 })
+    }
+
+    const prospect = await prisma.questionnaire.update({
+      where: { id },
+      data: { status, ...(status === 'ACCEPTED' || status === 'DECLINED' ? { decidedAt: new Date() } : {}) },
+      include: { quote: true },
+    })
+    return NextResponse.json({ prospect })
+  } catch (error) {
+    if (error.code === 'P2025') return NextResponse.json({ error: 'Prospect introuvable' }, { status: 404 })
+    console.error('[API Prospects PATCH] Erreur:', error)
+    return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
+  }
+}
+
+export async function DELETE(request) {
+  try {
+    const id = new URL(request.url).searchParams.get('id')
+    if (!id) return NextResponse.json({ error: 'ID requis' }, { status: 400 })
+    await prisma.questionnaire.delete({ where: { id } })
+    return NextResponse.json({ ok: true, deleted: 1 })
+  } catch (error) {
+    if (error.code === 'P2025') return NextResponse.json({ ok: true, deleted: 0 })
+    console.error('[API Prospects DELETE] Erreur:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }
 }

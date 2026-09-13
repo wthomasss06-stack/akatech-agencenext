@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { createQuestionnaire } from '@/lib/db'
+import { createQuestionnaire, getQuestionnaireByToken } from '@/lib/db'
 import { QUESTIONNAIRES } from '@/lib/questionnaires-schema'
 
 export const runtime = 'nodejs'

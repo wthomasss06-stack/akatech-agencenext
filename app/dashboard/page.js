@@ -87,6 +87,8 @@ const TABS = [
 const STATUS_LABELS = {
   NEW: 'Nouveau', QUALIFIED: 'Qualifié', CONTACTED: 'Contacté',
   CONVERTED: 'Converti', LOST: 'Perdu', ACTIVE: 'Actif', ENDED: 'Terminé',
+  STARTED: 'Formulaire ouvert', SUBMITTED: 'Réponses reçues', QUOTED: 'Devis envoyé',
+  ACCEPTED: 'Accepté', DECLINED: 'Refusé',
 }
 const STATUS_COLORS = {
   NEW: '#5b8def', QUALIFIED: '#88ca53', CONTACTED: '#e0a83e',
@@ -215,6 +217,49 @@ function DetailModal({ conversation, onClose, T }) {
   )
 }
 
+function ProspectDetailModal({ prospect, onClose, onStatus, onDelete, saving, T }) {
+  if (!prospect) return null
+  const answers = Object.entries(prospect.answers || {})
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 10, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(.75rem, 4vw, 2rem)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 20, width: 'min(720px, 100%)', maxHeight: '86vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 24px rgba(0,0,0,.3)' }}>
+        <div style={{ padding: '1.1rem 1.3rem', borderBottom: `1px solid ${T.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+          <div>
+            <div style={{ fontWeight: 800, color: T.textMain }}>{prospect.contactName || 'Prospect sans nom'}</div>
+            <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 3 }}>{prospect.contactHandle || 'Contact non renseigné'} · {prospect.type}</div>
+          </div>
+          <button onClick={onClose} aria-label="Fermer le prospect" style={{ background: 'none', border: 'none', color: T.textSub, cursor: 'pointer', padding: 8 }}><X size={20} /></button>
+        </div>
+        <div style={{ padding: '1.2rem 1.3rem', overflowY: 'auto' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+            <StatusPill status={prospect.status} T={T} />
+            <select value={prospect.status} disabled={saving} onChange={(e) => onStatus(prospect.id, e.target.value)} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 8, padding: '.4rem .6rem', color: T.textMain, fontSize: '.78rem' }}>
+              {['STARTED', 'SUBMITTED', 'QUOTED', 'ACCEPTED', 'DECLINED'].map((status) => <option key={status} value={status}>{STATUS_LABELS[status] || status}</option>)}
+            </select>
+            <button type="button" onClick={() => onDelete(prospect)} title="Supprimer ce prospect" style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#d93025', cursor: 'pointer', padding: 8 }}><Trash2 size={16} /></button>
+          </div>
+          {prospect.quote && (
+            <div style={{ background: T.light ? 'rgba(95,145,55,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border2}`, borderRadius: 10, padding: '.8rem 1rem', marginBottom: 16 }}>
+              <div style={{ fontSize: '.7rem', color: T.textMuted, textTransform: 'uppercase', fontWeight: 700 }}>Devis · {prospect.quote.category} · {prospect.quote.tier}</div>
+              <div style={{ fontSize: '1.25rem', fontWeight: 800, marginTop: 5, color: T.textMain }}>{prospect.quote.priceMinFCFA === prospect.quote.priceMaxFCFA ? `${prospect.quote.priceMinFCFA.toLocaleString('fr-FR')} FCFA` : `${prospect.quote.priceMinFCFA.toLocaleString('fr-FR')} – ${prospect.quote.priceMaxFCFA.toLocaleString('fr-FR')} FCFA`}</div>
+              {prospect.quote.rationale && <div style={{ fontSize: '.78rem', color: T.textSub, lineHeight: 1.5, marginTop: 6 }}>{prospect.quote.rationale}</div>}
+            </div>
+          )}
+          <div style={{ fontSize: '.75rem', color: T.textMuted, marginBottom: 8 }}>Réponses du questionnaire</div>
+          <div style={{ display: 'grid', gap: 8 }}>
+            {answers.length === 0 ? <div style={{ color: T.textMuted, fontSize: '.8rem' }}>Aucune réponse enregistrée.</div> : answers.map(([key, value]) => (
+              <div key={key} style={{ borderBottom: `1px solid ${T.border}`, paddingBottom: 8 }}>
+                <div style={{ fontSize: '.7rem', color: T.textMuted }}>{key}</div>
+                <div style={{ fontSize: '.8rem', color: T.textMain, whiteSpace: 'pre-wrap', wordBreak: 'break-word', marginTop: 2 }}>{Array.isArray(value) ? value.join(', ') : String(value ?? '')}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Confirmation custom (remplace window.confirm natif, non stylable) —
 // affiche le libellé de l'élément visé pour éviter un mauvais clic,
 // et désactive le bouton pendant l'appel réseau pour éviter un double-submit.
@@ -240,7 +285,7 @@ function ConfirmModal({ target, onCancel, onConfirm, deleting, T }) {
           </div>
           <div>
             <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.1rem', color: T.textMain }}>
-              Supprimer {target.type === 'lead' ? 'ce lead' : 'cette conversation'} ?
+              Supprimer {target.type === 'lead' ? 'ce lead' : target.type === 'prospect' ? 'ce prospect' : 'cette conversation'} ?
             </div>
             <div style={{ fontSize: '.8rem', color: T.textSub, marginTop: 4 }}>
               {target.label}
@@ -250,7 +295,9 @@ function ConfirmModal({ target, onCancel, onConfirm, deleting, T }) {
         <div style={{ fontSize: '.78rem', color: T.textMuted, marginBottom: '1.3rem' }}>
           {target.type === 'lead'
             ? "Le lead sera supprimé définitivement. La conversation associée n'est pas touchée."
-            : 'La conversation et tous ses messages seront supprimés définitivement.'}
+            : target.type === 'prospect'
+              ? 'Le questionnaire, son devis et ses réponses seront supprimés définitivement.'
+              : 'La conversation et tous ses messages seront supprimés définitivement.'}
           {' '}Cette action est irréversible.
         </div>
         <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
@@ -334,6 +381,8 @@ export default function DashboardPage() {
   const [prospectPagination, setProspectPagination] = useState(null)
   const [prospectSearch, setProspectSearch] = useState('')
   const [prospectStatusFilter, setProspectStatusFilter] = useState('')
+  const [selectedProspect, setSelectedProspect] = useState(null)
+  const [prospectSaving, setProspectSaving] = useState(false)
 
   const loadStats = useCallback(() => {
     setLoading(true)
@@ -409,6 +458,24 @@ export default function DashboardPage() {
     loadLeads()
   }
 
+  async function updateProspectStatus(id, status) {
+    setProspectSaving(true)
+    try {
+      const res = await fetch('/api/prospects', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, status }),
+      })
+      if (!res.ok) throw new Error('Mise à jour impossible')
+      setSelectedProspect((current) => current?.id === id ? { ...current, status } : current)
+      loadProspects()
+    } catch (err) {
+      console.error('Erreur statut prospect:', err)
+    } finally {
+      setProspectSaving(false)
+    }
+  }
+
   async function confirmDeletion() {
     if (!confirmTarget) return
     setDeleting(true)
@@ -416,6 +483,10 @@ export default function DashboardPage() {
       if (confirmTarget.type === 'lead') {
         await fetch(`/api/leads?id=${confirmTarget.id}`, { method: 'DELETE' })
         loadLeads()
+      } else if (confirmTarget.type === 'prospect') {
+        await fetch(`/api/prospects?id=${confirmTarget.id}`, { method: 'DELETE' })
+        if (selectedProspect?.id === confirmTarget.id) setSelectedProspect(null)
+        loadProspects()
       } else {
         await fetch(`/api/conversations/${confirmTarget.id}`, { method: 'DELETE' })
         if (selectedConversation?.id === confirmTarget.id) setSelectedConversation(null)
@@ -804,7 +875,7 @@ export default function DashboardPage() {
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                   {prospects.length === 0 && <div style={{ color: T.textMuted, fontSize: '.82rem', padding: '1rem 0' }}>Aucun prospect pour l'instant.</div>}
                   {prospects.map((prospect) => (
-                    <div key={prospect.id} style={{
+                    <div key={prospect.id} onClick={() => setSelectedProspect(prospect)} style={{
                       ...CARD, borderRadius: 14, padding: '.9rem 1rem',
                       display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
                     }}>
@@ -833,6 +904,14 @@ export default function DashboardPage() {
       </div>
 
       <DetailModal conversation={selectedConversation} onClose={() => setSelectedConversation(null)} T={T} />
+      <ProspectDetailModal
+        prospect={selectedProspect}
+        onClose={() => setSelectedProspect(null)}
+        onStatus={updateProspectStatus}
+        onDelete={(prospect) => setConfirmTarget({ type: 'prospect', id: prospect.id, label: prospect.contactName || prospect.token })}
+        saving={prospectSaving}
+        T={T}
+      />
       <ConfirmModal target={confirmTarget} onCancel={() => !deleting && setConfirmTarget(null)} onConfirm={confirmDeletion} deleting={deleting} T={T} />
     </div>
   )

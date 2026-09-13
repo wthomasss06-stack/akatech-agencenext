@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { generateGeminiContent, generateGroqContent } from '@/lib/ai-providers'
 import { getQuestionnaireByToken, updateQuestionnaireState, upsertQuestionnaireQuote } from '@/lib/db'
 import { buildClassificationPrompt, sanitizeClassification, tiersFor, CATEGORY_BY_TYPE } from '@/lib/quote-calc'
+import { flattenFields } from '@/lib/questionnaires-schema'
 import { buildPositioningPrompt, sanitizePitch } from '@/lib/market-positioning'
 import { sendQuestionnaireEmail } from '@/lib/questionnaire-pdf'
 
@@ -14,6 +15,26 @@ function normalizeQuestionnaireType(type) {
     SAAS: 'saas',
   }
   return map[String(type)] || String(type || 'portfolio')
+}
+
+function isVisible(field, answers) {
+  if (!field?.showIf) return true
+  const value = answers[field.showIf.field]
+  if (field.showIf.equals !== undefined) return value === field.showIf.equals
+  if (field.showIf.includes !== undefined) return Array.isArray(value)
+    ? value.includes(field.showIf.includes)
+    : String(value ?? '').includes(String(field.showIf.includes))
+  return true
+}
+
+function missingRequiredFields(type, answers) {
+  return flattenFields(type)
+    .filter((field) => field.required && isVisible(field, answers))
+    .filter((field) => {
+      const value = answers[field.id]
+      return Array.isArray(value) ? value.length === 0 : String(value ?? '').trim() === ''
+    })
+    .map((field) => field.label)
 }
 
 function extractGeminiText(response) {
@@ -103,11 +124,19 @@ export async function POST(request, { params }) {
     if (!questionnaire) {
       return NextResponse.json({ error: 'Questionnaire introuvable' }, { status: 404 })
     }
+    if (['ACCEPTED', 'DECLINED'].includes(questionnaire.status)) {
+      return NextResponse.json({ error: 'Ce devis a déjà fait l’objet d’une décision' }, { status: 409 })
+    }
 
     const body = await request.json()
     const answers = typeof body.answers === 'object' && body.answers ? body.answers : {}
+    const type = normalizeQuestionnaireType(questionnaire.type)
+    const missingFields = missingRequiredFields(type, answers)
+    if (missingFields.length > 0) {
+      return NextResponse.json({ error: `Champs requis manquants : ${missingFields.slice(0, 6).join(', ')}` }, { status: 400 })
+    }
     const contactName = typeof body.contactName === 'string' ? body.contactName : questionnaire.contactName || null
-    const contactHandle = typeof body.contactHandle === 'string' ? body.contactHandle : questionnaire.contactHandle || null
+    const contactHandle = typeof body.contactHandle === 'string' ? body.contactHandle : questionnaire.contactHandle || answers.email || answers.whatsapp || answers.phone || null
 
     const updated = await updateQuestionnaireState(questionnaire.id, {
       answers,
@@ -117,7 +146,6 @@ export async function POST(request, { params }) {
       status: 'SUBMITTED',
     })
 
-    const type = normalizeQuestionnaireType(updated.type)
     const classification = await classifyAnswers(type, answers)
     const pitch = await buildPitch(type, answers)
 

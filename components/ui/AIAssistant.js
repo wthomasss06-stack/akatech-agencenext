@@ -66,7 +66,7 @@ const LINK_REGEX = new RegExp(
   'gi'
 )
 
-function renderMessageContent(text) {
+function renderMessageContent(text, onOpenDevis) {
   if (!text) return text
 
   // Étape 1 — le modèle enrobe parfois le lien en Markdown
@@ -96,7 +96,7 @@ function renderMessageContent(text) {
       if (kind === 'WA') return <WhatsAppButton key={i} url={url} />
       if (kind === 'PORTFOLIO') return <PortfolioButton key={i} url={url} />
       if (kind === 'SITE') return <SiteButton key={i} url={url} />
-      if (kind === 'DEVIS') return <DevisButton key={i} url={url} />
+      if (kind === 'DEVIS') return <DevisButton key={i} url={url} onOpen={onOpenDevis} />
       if (kind === 'LINKEDIN') return <LinkedInButton key={i} url={url} />
       if (kind === 'GITHUB') return <GitHubButton key={i} url={url} />
       if (kind === 'GENERIC') return <LinkButton key={i} url={url} label="Voir le lien" />
@@ -186,19 +186,18 @@ function SiteButton({ url }) {
   )
 }
 
-function DevisButton({ url }) {
+function DevisButton({ url, onOpen }) {
   return (
-    <a
-      href={url}
-      target="_blank"
-      rel="noreferrer"
+    <button
+      type="button"
+      onClick={() => onOpen?.(url)}
       className="ai-assistant-btn ai-assistant-btn-devis"
       style={{
         display: 'inline-flex', alignItems: 'center', gap: '.5rem',
         padding: '.55rem 1rem', borderRadius: 10,
         background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
         color: '#fff', fontSize: '.8rem', fontWeight: 600,
-        textDecoration: 'none', margin: '.3rem 0',
+        textDecoration: 'none', margin: '.3rem 0', cursor: 'pointer',
         boxShadow: '0 2px 8px rgba(245,158,11,.3)',
         transition: 'transform .15s, box-shadow .15s',
       }}
@@ -208,7 +207,7 @@ function DevisButton({ url }) {
       <FileText size={15} />
       Remplir mon devis
       <ExternalLink size={12} style={{ opacity: .7 }} />
-    </a>
+    </button>
   )
 }
 
@@ -307,6 +306,7 @@ export default function AIAssistant() {
   const [input, setInput] = useState('')
   const [streaming, setStreaming] = useState(false)
   const [errorMsg, setErrorMsg] = useState(null)
+  const [questionnaireUrl, setQuestionnaireUrl] = useState(null)
   const listRef = useRef(null)
   const abortRef = useRef(null)
 
@@ -488,6 +488,15 @@ export default function AIAssistant() {
     }
   }
 
+  useEffect(() => {
+    if (!questionnaireUrl) return
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') setQuestionnaireUrl(null)
+    }
+    window.addEventListener('keydown', handleEscape)
+    return () => window.removeEventListener('keydown', handleEscape)
+  }, [questionnaireUrl])
+
   if (pathname?.startsWith('/explorer')) return null
   if (!mounted) return null
 
@@ -559,7 +568,7 @@ export default function AIAssistant() {
               }}>
                 {m.role === 'assistant' && m.content === '' && streaming && i === messages.length - 1
                   ? <TypingDots color={T.green} />
-                  : renderMessageContent(m.content)}
+                  : renderMessageContent(m.content, setQuestionnaireUrl)}
               </div>
             ))}
             {errorMsg && (
@@ -611,6 +620,32 @@ export default function AIAssistant() {
           </div>
         </div>
       </div>
+
+      {questionnaireUrl && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Questionnaire de devis"
+          onClick={() => setQuestionnaireUrl(null)}
+          style={{ position: 'fixed', inset: 0, zIndex: 9100, background: 'rgba(0,0,0,.72)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(.75rem, 3vw, 2rem)' }}
+        >
+          <div
+            onClick={(event) => event.stopPropagation()}
+            style={{ width: 'min(980px, 100%)', height: 'min(860px, 94vh)', background: T.card, border: `2px solid ${T.green}`, borderRadius: 14, boxShadow: '8px 8px 0 #050505', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '.75rem', padding: '.7rem .9rem', borderBottom: `2px solid ${T.green}`, background: T.card }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '.55rem', color: T.textMain, fontWeight: 800, fontSize: '.85rem' }}>
+                <FileText size={16} color={T.green} />
+                Questionnaire de devis
+              </div>
+              <button type="button" onClick={() => setQuestionnaireUrl(null)} aria-label="Fermer le questionnaire" style={{ width: 36, height: 36, border: '2px solid #050505', borderRadius: 7, background: T.green, color: '#08120a', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
+                <X size={18} />
+              </button>
+            </div>
+            <iframe src={questionnaireUrl} title="Questionnaire de devis AKATech" style={{ flex: 1, width: '100%', border: 0, background: T.bg }} />
+          </div>
+        </div>
+      )}
 
       {/* ── Bouton flottant ── */}
       <button
