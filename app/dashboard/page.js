@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
-  Trash2, AlertTriangle, Cookie, Receipt,
+  Trash2, AlertTriangle, Cookie, Receipt, ClipboardList,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -80,6 +80,7 @@ const TABS = [
   { id: 'analytics', label: 'Analytics', icon: BarChart3 },
   { id: 'conversations', label: 'Conversations', icon: MessagesSquare },
   { id: 'leads', label: 'Leads', icon: Users },
+  { id: 'prospects', label: 'Prospects', icon: ClipboardList },
   { id: 'invoices', label: 'Factures', icon: Receipt },
 ]
 
@@ -328,6 +329,12 @@ export default function DashboardPage() {
   const [leadSearch, setLeadSearch] = useState('')
   const [leadStatusFilter, setLeadStatusFilter] = useState('')
 
+  const [prospects, setProspects] = useState([])
+  const [prospectPage, setProspectPage] = useState(1)
+  const [prospectPagination, setProspectPagination] = useState(null)
+  const [prospectSearch, setProspectSearch] = useState('')
+  const [prospectStatusFilter, setProspectStatusFilter] = useState('')
+
   const loadStats = useCallback(() => {
     setLoading(true)
     fetch('/api/stats')
@@ -357,9 +364,22 @@ export default function DashboardPage() {
     }).catch(err => console.error('Erreur chargement leads:', err))
   }, [leadPage, leadSearch, leadStatusFilter])
 
+  const loadProspects = useCallback(() => {
+    const params = new URLSearchParams({
+      page: prospectPage, limit: 15,
+      ...(prospectSearch ? { search: prospectSearch } : {}),
+      ...(prospectStatusFilter ? { status: prospectStatusFilter } : {}),
+    })
+    fetch(`/api/prospects?${params}`).then(r => r.json()).then((d) => {
+      setProspects(d.prospects || [])
+      setProspectPagination(d.pagination)
+    }).catch(err => console.error('Erreur chargement prospects:', err))
+  }, [prospectPage, prospectSearch, prospectStatusFilter])
+
   useEffect(() => { loadStats() }, [loadStats])
   useEffect(() => { if (tab === 'conversations') loadConversations() }, [tab, loadConversations])
   useEffect(() => { if (tab === 'leads') loadLeads() }, [tab, loadLeads])
+  useEffect(() => { if (tab === 'prospects') loadProspects() }, [tab, loadProspects])
 
   // Rafraîchissement automatique — remplace le rapport par email comme
   // moyen de voir arriver une nouvelle conversation : plus besoin de
@@ -369,9 +389,10 @@ export default function DashboardPage() {
       loadStats()
       if (tab === 'conversations') loadConversations()
       if (tab === 'leads') loadLeads()
+      if (tab === 'prospects') loadProspects()
     }, 30_000)
     return () => clearInterval(interval)
-  }, [tab, loadStats, loadConversations, loadLeads])
+  }, [tab, loadStats, loadConversations, loadLeads, loadProspects])
 
   async function openConversation(id) {
     const res = await fetch(`/api/conversations/${id}`)
@@ -753,6 +774,56 @@ export default function DashboardPage() {
                   ))}
                 </div>
                 <Pagination pagination={leadPagination} onPage={setLeadPage} T={T} />
+              </div>
+            )}
+
+            {tab === 'prospects' && (
+              <div>
+                <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+                  <div style={{ flex: 1, minWidth: 180, display: 'flex', alignItems: 'center', gap: 8, background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: '.5rem .8rem' }}>
+                    <Search size={15} color={T.textMuted} />
+                    <input
+                      value={prospectSearch}
+                      onChange={(e) => { setProspectSearch(e.target.value); setProspectPage(1) }}
+                      placeholder="Rechercher un prospect…"
+                      style={{ flex: 1, background: 'none', border: 'none', outline: 'none', color: T.textMain, fontSize: '.82rem' }}
+                    />
+                  </div>
+                  <select
+                    value={prospectStatusFilter}
+                    onChange={(e) => { setProspectStatusFilter(e.target.value); setProspectPage(1) }}
+                    style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: '.5rem .8rem', color: T.textMain, fontSize: '.82rem' }}
+                  >
+                    <option value="">Tous les statuts</option>
+                    {['STARTED', 'SUBMITTED', 'QUOTED', 'ACCEPTED', 'DECLINED'].map((status) => (
+                      <option key={status} value={status}>{status}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  {prospects.length === 0 && <div style={{ color: T.textMuted, fontSize: '.82rem', padding: '1rem 0' }}>Aucun prospect pour l'instant.</div>}
+                  {prospects.map((prospect) => (
+                    <div key={prospect.id} style={{
+                      ...CARD, borderRadius: 14, padding: '.9rem 1rem',
+                      display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap',
+                    }}>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span style={{ fontSize: '.85rem', fontWeight: 700 }}>{prospect.contactName || 'Prospect sans nom'}</span>
+                          <StatusPill status={prospect.status} T={T} />
+                        </div>
+                        <div style={{ fontSize: '.75rem', color: T.textSub, marginTop: 4 }}>
+                          {prospect.contactHandle || 'Contact non renseigné'} · {prospect.type}
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '.72rem', color: T.textMuted, flexShrink: 0 }}>
+                        {new Date(prospect.createdAt).toLocaleDateString('fr-FR')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <Pagination pagination={prospectPagination} onPage={setProspectPage} T={T} />
               </div>
             )}
 
