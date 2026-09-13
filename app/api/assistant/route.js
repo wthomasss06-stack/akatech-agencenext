@@ -14,7 +14,7 @@ import {
 } from '@/lib/ai-providers'
 import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK } from '@/lib/assistant'
 import { PROJECT_TYPE_LABELS } from '@/lib/data'
-import { getOrCreateConversation, saveMessage, saveLead } from '@/lib/db'
+import { getOrCreateConversation, saveMessage, saveLead, createQuestionnaire } from '@/lib/db'
 
 export const runtime = 'nodejs'
 
@@ -175,6 +175,45 @@ async function runAssistant(messages, controller, encoder, conversationId) {
                 name: functionCall.name,
                 id: functionCall.id,
                 response: { result: toolResultText },
+              },
+            }],
+          },
+        ]
+        await turn(nextContents, depth + 1)
+      }
+
+      if (functionCall?.name === 'start_questionnaire' && depth === 0) {
+        const questionnaireType = String(functionCall.args?.type || 'portfolio')
+        const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://akatech.vercel.app'
+        const typeKey = ['portfolio', 'vitrine_ecommerce', 'saas'].includes(questionnaireType) ? questionnaireType : 'portfolio'
+
+        let token = null
+        try {
+          const q = await createQuestionnaire({
+            type: typeKey,
+            conversationId,
+            contactName: functionCall.args?.name || null,
+            contactHandle: functionCall.args?.contact || null,
+          })
+          token = q.token
+        } catch (err) {
+          console.error('[Assistant] Échec création questionnaire:', err?.message ?? err)
+        }
+
+        const finalToken = token || crypto.randomUUID().replace(/-/g, '')
+        const questionnaireUrl = `${baseUrl}/devis/${typeKey}?t=${finalToken}`
+        const toolResultText = `Le formulaire de devis est prêt. Ouvre ce lien : ${questionnaireUrl}`
+
+        const nextContents = [
+          ...contents,
+          { role: 'model', parts: [functionCallPart] },
+          {
+            role: 'user',
+            parts: [{
+              functionResponse: {
+                name: functionCall.name,
+                id: functionCall.id,
+                response: { result: toolResultText, url: questionnaireUrl, token: finalToken, type: typeKey },
               },
             }],
           },

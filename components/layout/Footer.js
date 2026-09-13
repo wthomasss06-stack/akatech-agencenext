@@ -191,6 +191,12 @@ export default function Footer() {
     ['Maintenance', '/services'],
   ]
 
+  const LEGAL = [
+    ['Mentions légales', '/mentions-legales'],
+    ['Confidentialité', '/confidentialite'],
+    ['Conditions d’utilisation', '/conditions-utilisation'],
+  ]
+
   return (
     <footer id="site-footer" style={{
       position: 'relative',
@@ -242,6 +248,14 @@ export default function Footer() {
                 <TransitionLink key={label} href={href} style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
+                  <HoverSlideText text={label} />
+                </TransitionLink>
+              ))}
+            </div>
+
+            <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: `1px solid ${border}`, display: 'flex', flexWrap: 'wrap', gap: '1rem 1.5rem' }}>
+              {LEGAL.map(([label, href]) => (
+                <TransitionLink key={label} href={href} style={{ ...lk, fontSize: '.75rem' }}>
                   <HoverSlideText text={label} />
                 </TransitionLink>
               ))}

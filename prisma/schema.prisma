@@ -48,6 +48,10 @@ model Conversation {
 
   messages Message[]
   lead     Lead?
+  // Une conversation peut donner lieu à un questionnaire de devis
+  // (voir section DEVIS AUTOMATISÉS plus bas) — jamais l'inverse : un
+  // questionnaire peut aussi être rempli sans passage par le chat.
+  questionnaires Questionnaire[]
 
   @@index([status])
   @@index([createdAt])
@@ -168,4 +172,71 @@ model Invoice {
 
   @@index([status])
   @@index([issueDate])
+}
+
+// ═══════════════════════════════════════════
+// DEVIS AUTOMATISÉS — IA du site (dashboard admin, onglet Prospects)
+// ═══════════════════════════════════════════
+// L'IA du site (lib/assistant.js) oriente un visiteur vers l'un des 3
+// questionnaires dynamiques (lib/questionnaires-schema.js) via le tool
+// `start_questionnaire`, sans jamais remplir ni calculer le devis
+// elle-même dans le chat. Le prospect remplit le formulaire dédié
+// (app/devis/[type]), puis lib/quote-calc.js calcule le devis :
+// classification par LLM contrainte à un tier existant, prix TOUJOURS
+// lu depuis PRICING (lib/data.js) — jamais un montant renvoyé par le
+// LLM ou par le navigateur (même principe que lib/invoice-calc.js pour
+// les factures).
+
+enum QuestionnaireType {
+  PORTFOLIO
+  VITRINE_ECOMMERCE
+  SAAS
+}
+
+enum QuestionnaireStatus {
+  STARTED    // lien généré par l'IA, formulaire pas encore ouvert/rempli
+  SUBMITTED  // formulaire soumis, devis pas encore calculé (cas rare, calcul synchrone normalement)
+  QUOTED     // devis calculé et affiché au prospect + PDF envoyé à Aka
+  ACCEPTED   // prospect a cliqué "J'accepte" — formulaire complet reçu par Aka pour conclure
+  DECLINED   // prospect a décliné — suivi manuel par Aka (devis PDF envoyé à part)
+}
+
+model Questionnaire {
+  id             String              @id @default(cuid())
+  token          String              @unique // lien public non devinable (crypto.randomUUID())
+  type           QuestionnaireType
+  conversationId String?
+  conversation   Conversation?       @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  contactName    String?
+  contactHandle  String?             // email ou WhatsApp déjà connu depuis le chat, avant remplissage
+  answers        Json?               // réponses brutes — structure = lib/questionnaires-schema.js
+  status         QuestionnaireStatus @default(STARTED)
+  createdAt      DateTime            @default(now())
+  submittedAt    DateTime?
+  decidedAt      DateTime?           // date d'acceptation ou de refus
+
+  quote Quote?
+
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model Quote {
+  id              String        @id @default(cuid())
+  questionnaireId String        @unique
+  questionnaire   Questionnaire @relation(fields: [questionnaireId], references: [id], onDelete: Cascade)
+  category        String        // 'portfolio' | 'vitrine' | 'ecommerce' | 'saas' — clé PRICING (lib/data.js)
+  tier            String        // ex: 'STANDARD', 'PRO', 'PLATEFORME_ABONNEMENT'
+  priceMinFCFA    Int           // = priceMaxFCFA si prix fixe (portfolio/vitrine/e-commerce/gbp)
+  priceMaxFCFA    Int           // fourchette réelle seulement pour les 3 archétypes SaaS
+  rationale       String        // justification lisible générée par le LLM — jamais le prix lui-même
+  matchedNeeds    Json?         // liste des besoins détectés (affichage devis + email + PDF)
+  positioningPitch String?      // texte optionnel "ce qu'AKATech vous apporte" (lib/market-positioning.js)
+                                 // — Groq, jamais Gemini : voir ce fichier pour le raisonnement quota.
+                                 // null si l'appel a échoué ou a été jugé trop risqué (sanitizePitch) :
+                                 // le devis s'affiche normalement sans ce texte dans ce cas.
+  createdAt       DateTime      @default(now())
+
+  @@index([category])
 }

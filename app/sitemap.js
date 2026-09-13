@@ -13,6 +13,9 @@ export default function sitemap() {
     { url: `${SITE_URL}/about`, priority: 0.7, changeFrequency: 'monthly' },
     { url: `${SITE_URL}/contact`, priority: 0.8, changeFrequency: 'monthly' },
     { url: `${SITE_URL}/blog`, priority: 0.6, changeFrequency: 'weekly' },
+    { url: `${SITE_URL}/mentions-legales`, priority: 0.2, changeFrequency: 'yearly' },
+    { url: `${SITE_URL}/confidentialite`, priority: 0.2, changeFrequency: 'yearly' },
+    { url: `${SITE_URL}/conditions-utilisation`, priority: 0.2, changeFrequency: 'yearly' },
   ].map(r => ({ ...r, lastModified: new Date() }))
 
   const blogRoutes = (BLOG_POSTS || []).map(post => ({

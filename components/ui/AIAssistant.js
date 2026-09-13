@@ -3,7 +3,7 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { createPortal } from 'react-dom'
 import { usePathname } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
-import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail } from 'lucide-react'
+import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 
 const HOUR = new Date().getHours()
@@ -42,7 +42,8 @@ const GREETING = (HOUR >= 23 || HOUR < 6)
 const URL_REGEX = /(https?:\/\/[^\s]+)/g
 const WA_REGEX = /https:\/\/wa\.me\/\S+/g
 const PORTFOLIO_REGEX = /https:\/\/mbolloaka-dev\.vercel\.app\/?/g
-const SITE_REGEX = /https:\/\/akatech\.vercel\.app\/?/g
+const SITE_REGEX = /https?:\/\/akatech\.vercel\.app\/?/g
+const DEVIS_REGEX = /https?:\/\/[^\s]*\/devis\/[^\s]+/gi
 const LINKEDIN_REGEX = /https:\/\/www\.linkedin\.com\/in\/[^\s]+/g
 const GITHUB_REGEX = /https:\/\/github\.com\/[^\s]+/g
 
@@ -68,6 +69,11 @@ function renderMessageContent(text) {
     return `\n[BUTTON_SITE:${match}]\n`
   })
 
+  // Devis public
+  processed = processed.replace(DEVIS_REGEX, (match) => {
+    return `\n[BUTTON_DEVIS:${match}]\n`
+  })
+
   // LinkedIn
   processed = processed.replace(LINKEDIN_REGEX, (match) => {
     return `\n[BUTTON_LINKEDIN:${match}]\n`
@@ -81,8 +87,8 @@ function renderMessageContent(text) {
   // Autres liens génériques
   processed = processed.replace(URL_REGEX, (match) => {
     if (match.includes('wa.me') || match.includes('mbolloaka-dev') || 
-        match.includes('akatech.vercel') || match.includes('linkedin.com') ||
-        match.includes('github.com')) {
+        match.includes('akatech.vercel') || match.includes('/devis/') ||
+        match.includes('linkedin.com') || match.includes('github.com')) {
       return match // Déjà traité
     }
     return `\n[BUTTON_LINK:${match}]\n`
@@ -108,6 +114,12 @@ function renderMessageContent(text) {
     if (part.startsWith('[BUTTON_SITE:')) {
       const url = part.replace('[BUTTON_SITE:', '').replace(']', '')
       return <SiteButton key={i} url={url} />
+    }
+
+    // Bouton Devis
+    if (part.startsWith('[BUTTON_DEVIS:')) {
+      const url = part.replace('[BUTTON_DEVIS:', '').replace(']', '')
+      return <DevisButton key={i} url={url} />
     }
 
     // Bouton LinkedIn
@@ -211,6 +223,32 @@ function SiteButton({ url }) {
     >
       <Globe size={15} />
       Visiter le site AKATech
+      <ExternalLink size={12} style={{ opacity: .7 }} />
+    </a>
+  )
+}
+
+function DevisButton({ url }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="ai-assistant-btn ai-assistant-btn-devis"
+      style={{
+        display: 'inline-flex', alignItems: 'center', gap: '.5rem',
+        padding: '.55rem 1rem', borderRadius: 10,
+        background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+        color: '#fff', fontSize: '.8rem', fontWeight: 600,
+        textDecoration: 'none', margin: '.3rem 0',
+        boxShadow: '0 2px 8px rgba(245,158,11,.3)',
+        transition: 'transform .15s, box-shadow .15s',
+      }}
+      onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(245,158,11,.4)' }}
+      onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(245,158,11,.3)' }}
+    >
+      <FileText size={15} />
+      Remplir mon devis
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </a>
   )
