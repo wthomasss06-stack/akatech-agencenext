@@ -44,6 +44,7 @@ export default function DevisTypePage({ params }) {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(null)
   const [deciding, setDeciding] = useState(false)
+  const formSubmitted = Boolean(success)
 
   useEffect(() => {
     if (!embedded) return undefined
@@ -258,7 +259,7 @@ export default function DevisTypePage({ params }) {
           </div>
         )}
 
-        <div style={{ display: 'grid', gap: '1.25rem' }}>
+        {!formSubmitted && <div style={{ display: 'grid', gap: '1.25rem' }}>
           {visibleSections.map((section) => (
             <section key={section.title} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 16, padding: '1.5rem', boxShadow: '0 12px 30px rgba(0,0,0,.12)' }}>
               <h2 style={{ margin: '0 0 1rem', fontSize: '1.2rem' }}>{section.title}</h2>
@@ -332,9 +333,9 @@ export default function DevisTypePage({ params }) {
               </div>
             </section>
           ))}
-        </div>
+        </div>}
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
+        {!formSubmitted && <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1.5rem' }}>
           <button
             type="button"
             onClick={handleSubmit}
@@ -352,7 +353,7 @@ export default function DevisTypePage({ params }) {
           >
             {submitting ? 'Soumission…' : 'Soumettre le questionnaire'}
           </button>
-        </div>
+        </div>}
 
         {loading && (
             <div style={{ textAlign: 'center', color: T.textSub, marginTop: '1rem' }}>Chargement du questionnaire…</div>

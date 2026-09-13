@@ -180,6 +180,7 @@ export default function Loader() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isHome, homePhase])
 
+  if (pathname?.startsWith('/devis')) return null
   if (!visible) return null
 
   // Sur la home, le wrapper reste monté pendant toute la phase "collapse" :

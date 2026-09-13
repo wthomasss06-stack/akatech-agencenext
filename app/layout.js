@@ -14,6 +14,7 @@ import { PageTransitionProvider } from '@/components/layout/PageTransition'
 import { BlobTransitionProvider } from '@/components/layout/BlobTransition'
 import { SitewideStructuredData } from './seo/StructuredData'
 import BreadcrumbTrail from './seo/BreadcrumbTrail'
+import PublicChrome from '@/components/layout/PublicChrome'
 
 const SITE_URL = 'https://akatech.vercel.app'
 
@@ -137,12 +138,12 @@ export default function RootLayout({ children }) {
             <BlobTransitionProvider>
               <ScrollToTop />
               <Loader />
-              <div className="public-chrome"><Navbar /></div>
-              <div className="public-chrome"><BreadcrumbTrail /></div>
+              <PublicChrome><Navbar /></PublicChrome>
+              <PublicChrome><BreadcrumbTrail /></PublicChrome>
               <main>{children}</main>
-              <div className="public-chrome"><Footer /></div>
-              <div className="public-chrome"><FloatingWA /></div>
-              <div className="public-chrome"><BackToTop /></div>
+              <PublicChrome><Footer /></PublicChrome>
+              <PublicChrome><FloatingWA /></PublicChrome>
+              <PublicChrome><BackToTop /></PublicChrome>
               <AIAssistant />
               <VisitorTracker />
               <CookieConsent />

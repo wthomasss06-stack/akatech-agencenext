@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { generateGeminiContent, generateGroqContent } from '@/lib/ai-providers'
-import { getQuestionnaireByToken, updateQuestionnaireState, upsertQuestionnaireQuote } from '@/lib/db'
+import { getQuestionnaireByToken, updateQuestionnaireState, upsertQuestionnaireQuote, saveQuestionnaireLead } from '@/lib/db'
 import { buildClassificationPrompt, sanitizeClassification, tiersFor, CATEGORY_BY_TYPE } from '@/lib/quote-calc'
 import { flattenFields } from '@/lib/questionnaires-schema'
 import { buildPositioningPrompt, sanitizePitch } from '@/lib/market-positioning'
@@ -173,6 +173,17 @@ export async function POST(request, { params }) {
       status: 'QUOTED',
       submittedAt: updated.submittedAt || new Date(),
     })
+
+    if (updated.conversationId) {
+      await saveQuestionnaireLead(updated.conversationId, {
+        name: contactName,
+        contact: contactHandle,
+        project_type: quote.category,
+        budget_range: answers.budget_range || answers.budget_timeline || 'Non précisé',
+        timeline: answers.launch_date || 'Non précisé',
+        summary: classification.rationale || `Questionnaire ${type} soumis pour préparation d'un devis.`,
+      })
+    }
 
     try {
       await sendQuestionnaireEmail({

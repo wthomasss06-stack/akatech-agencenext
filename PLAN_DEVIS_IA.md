@@ -122,7 +122,8 @@ avoir obtenu assez de contexte.
 - `components/ui/AIAssistant.js`
   - détection des liens `/devis/...` ;
   - ouverture du questionnaire dans un modal iframe sans navigation ni perte de
-    l'état de la conversation.
+    l'état de la conversation ;
+  - aucun second assistant ou bouton flottant dans le questionnaire intégré.
 
 ### 3.3 Questionnaire public et devis
 
@@ -146,10 +147,14 @@ avoir obtenu assez de contexte.
   - sauvegarde locale et serveur ;
   - affichage du devis et des actions Accepter/Refuser ;
   - thème clair/sombre partagé avec le reste du site ;
-  - conservation de l'état affiché après rechargement du questionnaire.
+  - conservation de l'état affiché après rechargement du questionnaire ;
+  - repli du formulaire après soumission pour ne laisser visibles que le devis
+    et les décisions Accepter/Refuser.
 - `lib/db.js`
   - création, lecture et mise à jour des questionnaires ;
-  - sauvegarde et mise à jour des devis.
+  - sauvegarde et mise à jour des devis ;
+  - création idempotente d'un lead lié à la conversation quand le questionnaire
+    est issu de l'assistant et qu'un nom et un contact sont disponibles.
 
 ### 3.4 PDF et emails
 
@@ -166,7 +171,7 @@ avoir obtenu assez de contexte.
   - un échec email ne bloque pas la décision enregistrée.
 - Refus :
   - statut `DECLINED` ;
-  - pas d'email automatique retenu ;
+  - aucun email automatique envoyé ;
   - relance manuelle prévue.
 
 ### 3.5 Administration et sécurité
@@ -178,6 +183,15 @@ avoir obtenu assez de contexte.
   - mise à jour de statut et suppression protégées ;
   - endpoint consommé par le détail complet de l'onglet Prospects.
 - Le build Next.js est passé avec succès après ces changements.
+
+### 3.6 Vérifications effectuées
+
+- `npm run build` passe après les changements du parcours intégré.
+- Les diagnostics VS Code ne signalent aucune erreur sur les routes, composants
+  et helpers modifiés.
+- Le test réel Resend/base reste à faire avec les variables de production :
+  soumettre un questionnaire issu de l'assistant, vérifier le lead, le PDF,
+  l'email d'acceptation, puis le statut `DECLINED` sans email lors d'un refus.
 
 ## 4. Décisions prises
 
