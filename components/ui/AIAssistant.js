@@ -43,7 +43,7 @@ const URL_REGEX = /(https?:\/\/[^\s]+)/g
 const WA_REGEX = /https:\/\/wa\.me\/\S+/g
 const PORTFOLIO_REGEX = /https:\/\/mbolloaka-dev\.vercel\.app\/?/g
 const SITE_REGEX = /https?:\/\/akatech\.vercel\.app\/?/g
-const DEVIS_REGEX = /https?:\/\/[^\s]*\/devis\/[^\s]+/gi
+const DEVIS_REGEX = /https?:\/\/[^\s)\]]*\/devis\/[^\s)\]]+/gi
 const LINKEDIN_REGEX = /https:\/\/www\.linkedin\.com\/in\/[^\s]+/g
 const GITHUB_REGEX = /https:\/\/github\.com\/[^\s]+/g
 
@@ -53,6 +53,18 @@ function renderMessageContent(text) {
 
   // D'abord, remplace les liens spécifiques par des boutons stylés
   let processed = text
+
+  // Certains modèles ajoutent par erreur une parenthèse ou un second lien
+  // Markdown avant l'URL du devis. On répare l'URL avant de la transformer.
+  processed = processed.replace(
+    /https:\/\/akatech\.vercel\.app\/\)?devis\//gi,
+    'https://akatech.vercel.app/devis/'
+  )
+
+  // Devis doit être traité avant le lien général du site AKATech.
+  processed = processed.replace(DEVIS_REGEX, (match) => {
+    return `\n[BUTTON_DEVIS:${match}]\n`
+  })
 
   // WhatsApp
   processed = processed.replace(WA_REGEX, (match) => {
@@ -67,11 +79,6 @@ function renderMessageContent(text) {
   // Site AKATech
   processed = processed.replace(SITE_REGEX, (match) => {
     return `\n[BUTTON_SITE:${match}]\n`
-  })
-
-  // Devis public
-  processed = processed.replace(DEVIS_REGEX, (match) => {
-    return `\n[BUTTON_DEVIS:${match}]\n`
   })
 
   // LinkedIn

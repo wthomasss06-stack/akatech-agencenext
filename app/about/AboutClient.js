@@ -233,7 +233,7 @@ const ABOUT_STATS = [
   { target: 10,  suffix: '+', label: 'Clients',    sub: 'Particuliers, startups et PME accompagnés' },
   { target: 100, suffix: '%', label: 'Satisfaits', sub: 'Clients livrés dans les délais convenus' },
   { target: 12,  suffix: '',  label: 'En prod.',   sub: 'Applications actuellement en ligne' },
-  { target: 3,   suffix: '+', label: 'Années',     sub: "D'expérience en développement web" },
+  { target: 3,   suffix: '+',  label: "Années d'expérience", sub: 'En développement web' },
   { target: 15,  suffix: '',  label: 'Outils',     sub: 'Technologies maîtrisées au quotidien' },
 ]
 const SLIDE_MS = 4000

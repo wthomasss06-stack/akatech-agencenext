@@ -161,7 +161,7 @@ export default function DevisTypePage({ params }) {
             Questionnaire de devis
           </h1>
           <p style={{ color: '#d7dee6', maxWidth: 760, lineHeight: 1.7, margin: 0 }}>
-            {schema.intro}
+            {schema.intro || 'Répondez simplement aux questions ci-dessous. Vos réponses aideront Aka à comprendre votre projet et à préparer une proposition adaptée.'}
           </p>
         </div>
 
