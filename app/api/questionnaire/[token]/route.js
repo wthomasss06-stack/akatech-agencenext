@@ -37,6 +37,28 @@ function missingRequiredFields(type, answers) {
     .map((field) => field.label)
 }
 
+// Aucune limite n'existait au-delà du plafond générique de la plateforme
+// (~4,5 Mo sur les fonctions Vercel) : un payload abusif pouvait donc
+// gonfler la base, le prompt de classification (coût Gemini) et le PDF.
+// 100 Ko couvre largement 62 réponses en texte libre ; 5 000 caractères
+// par champ dépasse largement la plus longue question du questionnaire.
+const MAX_ANSWERS_BYTES = 100_000
+const MAX_FIELD_LENGTH = 5_000
+
+function validateAnswersSize(answers) {
+  const serialized = JSON.stringify(answers)
+  if (Buffer.byteLength(serialized, 'utf8') > MAX_ANSWERS_BYTES) {
+    return 'Le formulaire envoyé est trop volumineux.'
+  }
+  for (const [key, value] of Object.entries(answers)) {
+    const asString = Array.isArray(value) ? value.join(', ') : String(value ?? '')
+    if (asString.length > MAX_FIELD_LENGTH) {
+      return `Une réponse est trop longue (${key}).`
+    }
+  }
+  return null
+}
+
 function extractGeminiText(response) {
   if (!response) return ''
   if (typeof response.text === 'string') return response.text
@@ -130,6 +152,10 @@ export async function POST(request, { params }) {
 
     const body = await request.json()
     const answers = typeof body.answers === 'object' && body.answers ? body.answers : {}
+    const sizeError = validateAnswersSize(answers)
+    if (sizeError) {
+      return NextResponse.json({ error: sizeError }, { status: 413 })
+    }
     const type = normalizeQuestionnaireType(questionnaire.type)
     const missingFields = missingRequiredFields(type, answers)
     if (missingFields.length > 0) {

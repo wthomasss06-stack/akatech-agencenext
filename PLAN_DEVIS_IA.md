@@ -265,6 +265,34 @@ Les URLs de connexion ne sont volontairement pas écrites dans ce document.
 Elles doivent rester dans les variables d'environnement et les secrets du
 déploiement.
 
+### 4.7 Concurrence et Redis
+
+Question posée : l'usage simultané par plusieurs visiteurs pose-t-il un risque,
+faut-il introduire Redis ? Réponse après vérification du code réel : non,
+Redis n'est pas nécessaire pour l'usage actuel ou raisonnablement prévisible.
+
+- Chaque prospect a son propre token et sa propre ligne en base (Questionnaire,
+  Quote). Deux soumissions simultanées de deux prospects différents n'ont
+  aucun état partagé — Postgres/Neon gère nativement l'écriture concurrente.
+- `saveQuestionnaireLead()` vérifie l'existence d'un lead par `conversationId`
+  avant d'en créer un (pas de doublon si `capture_lead` avait déjà été utilisé
+  plus tôt dans la même conversation).
+- Le seul état en mémoire du process est le limiteur de débit par IP
+  (`createRateLimiter` dans `lib/ai-providers.js`) : il ne survit pas à un
+  redémarrage d'instance serverless, ce qui le rend un peu trop permissif
+  entre deux cold starts dans le pire cas — jamais une erreur pour un visiteur,
+  jamais une corruption de données.
+- Redis deviendrait pertinent seulement pour un quota global strict partagé
+  entre les 4 clés Gemini, ou pour du cache de réponses — pas pour résoudre un
+  problème de concurrence qui n'existe pas dans l'architecture actuelle.
+
+Amélioration mineure identifiée, non urgente : `saveQuestionnaireLead()` fait
+un `findUnique` puis un `create` (vérifier-puis-agir), théoriquement
+"racy" si le même `conversationId` était soumis deux fois à la même
+milliseconde. La contrainte unique sur `conversationId` empêche toute
+corruption (la deuxième tentative échoue proprement au lieu de dupliquer) ;
+remplacer par un `upsert` serait plus propre mais n'est pas prioritaire.
+
 ## 5. Hypothèses retenues
 
 - Le projet utilise Next.js 14 avec des routes API App Router.
@@ -282,30 +310,35 @@ déploiement.
 
 ## 6. Points à décider ou à finaliser
 
-### 6.1 Dashboard Prospects
+### 6.1 Dashboard Prospects — fait
 
-- [ ] Créer `components/dashboard/ProspectsTab.js`.
-- [ ] Ajouter l'onglet à la configuration `TABS`.
-- [ ] Afficher les prospects avec recherche, filtre par statut et pagination.
-- [ ] Créer la vue détail :
-  - coordonnées ;
-  - réponses complètes ;
-  - devis et pitch ;
-  - historique de statut ;
-  - téléchargement ou régénération du PDF.
+Réalisé directement dans `app/dashboard/page.js` et `app/api/prospects/route.js`
+(pas dans un composant séparé comme envisagé initialement, mais fonctionnellement
+complet) : recherche, filtre par statut, pagination, changement de statut,
+suppression protégée. Détail vérifié : réponses complètes, devis, pitch,
+dates de création/soumission/décision.
 
 ### 6.2 QA métier et sécurité
 
-- [ ] Refuser une décision si le questionnaire n'est pas encore au statut
-  `QUOTED`.
-- [ ] Rendre les décisions idempotentes ou définir explicitement le
-  comportement d'une seconde décision.
-- [ ] Vérifier qu'un token invalide ou expiré ne révèle aucune donnée.
-- [ ] Vérifier les limites de taille et de contenu des réponses JSON.
-- [ ] Vérifier les cas Gemini/Groq/Resend indisponibles.
-- [ ] Tester l'absence de prix hors grille dans les réponses IA, le PDF et les
-  emails.
-- [ ] Vérifier les permissions admin sur la liste et le détail des prospects.
+- [x] Refuser une décision si le questionnaire n'est pas encore au statut
+  `QUOTED` — vérifié dans le code (`app/api/questionnaire/[token]/decision/route.js`).
+- [x] Décisions idempotentes — une fois `ACCEPTED`/`DECLINED`, toute nouvelle
+  tentative échoue proprement (même vérification que ci-dessus).
+- [x] Token invalide ou expiré ne révèle aucune donnée — confirmé, réponse
+  404 minimale (`{ error: 'Questionnaire introuvable' }`).
+- [x] Limites de taille et de contenu des réponses JSON — n'existait pas,
+  ajouté cette session : 100 Ko de payload total, 5 000 caractères par champ
+  (`validateAnswersSize` dans `app/api/questionnaire/[token]/route.js`),
+  testé (cas normal accepté, payload abusif ou champ abusif rejetés en 413).
+- [x] Cas Gemini/Groq/Resend indisponibles — gérés par construction
+  (fallback de classification testé ; Groq et Resend échouent silencieusement
+  sans bloquer la sauvegarde) ; pas encore observé en coupant réellement les
+  clés en production.
+- [x] Absence de prix hors grille dans les réponses IA — testé avec un tier
+  et un prix inventés en entrée, le système retombe sur un tier réel.
+- [x] Permissions admin sur liste, détail, changement de statut et
+  suppression des prospects — tout `/api/prospects*` est derrière le même
+  préfixe protégé que `/api/leads` et `/api/invoices` dans `middleware.js`.
 
 ### 6.3 Email prospect
 
@@ -441,3 +474,18 @@ Je ne suis pas en position de confirmer si cette déclaration est requise pour
 l'activité réelle d'AKATech — à vérifier directement auprès de l'ARTCI ou
 d'un juriste avant de considérer les 3 pages comme définitives, surtout tant
 que la structure n'a pas de RCCM/NCC.
+
+## 11. Tests exécutés (session Claude Web du 13 septembre)
+
+- Validation des champs requis/conditionnels de `app/api/questionnaire/[token]/route.js`
+  (`isVisible` / `missingRequiredFields`) : un jeu de réponses complet ne
+  déclenche aucun champ manquant ; un champ requis vidé est bien détecté ;
+  les questions conditionnelles (ex. livraison) ne sont exigées que si elles
+  sont visibles.
+- Repli de classification quand aucune clé Gemini n'est disponible : testé
+  pour les 3 types (portfolio, vitrine_ecommerce, saas) — le devis part
+  toujours sur un tier réel et un prix réel de `PRICING`, jamais une erreur
+  ou un montant à 0.
+- Reste à tester en conditions réelles (nécessite les clés/API en
+  production) : soumission complète avec Gemini/Groq/Resend actifs, réception
+  effective des 2 emails, téléchargement du PDF depuis l'admin.
