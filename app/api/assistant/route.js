@@ -105,13 +105,13 @@ async function sendLeadEmail(lead) {
    sessionId manquait : dans ce cas persistAssistantReply()/saveLead()
    sont simplement no-op et le chat continue de fonctionner normalement
    (historique/dashboard restent facultatifs, comme prévu à l'origine). */
-async function runAssistant(messages, controller, encoder, conversationId) {
+async function runAssistant(messages, controller, encoder, conversationId, language = 'fr') {
   let fullText = ''
   const write = (text) => {
     fullText += text
     controller.enqueue(encoder.encode(text))
   }
-  const systemInstruction = buildSystemPrompt()
+  const systemInstruction = buildSystemPrompt(language)
 
   async function persistAssistantReply(modelUsed) {
     if (!conversationId || !fullText) return
@@ -289,6 +289,7 @@ export async function POST(request) {
   if (!messages) {
     return Response.json({ error: 'Requête invalide.' }, { status: 400 })
   }
+  const language = ['fr', 'en', 'es'].includes(body.language) ? body.language : 'fr'
 
   const sessionId = typeof body.sessionId === 'string' && body.sessionId.length <= 100 ? body.sessionId : null
 
@@ -314,7 +315,7 @@ export async function POST(request) {
   const readable = new ReadableStream({
     async start(controller) {
       try {
-        await runAssistant(messages, controller, encoder, conversationId)
+        await runAssistant(messages, controller, encoder, conversationId, language)
       } catch (err) {
         console.error('[Assistant Global POST] Erreur fatale de flux :', err?.message ?? err)
         controller.enqueue(encoder.encode(

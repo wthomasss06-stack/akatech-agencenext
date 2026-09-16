@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, Star, FileText, Lock, Clock, GraduationCap, Wrench, Globe } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
@@ -36,6 +37,7 @@ function BlurReveal({ children, delay = 0, direction = 'up', style = {}, once = 
 ──────────────────────────────────────────────── */
 function HeroPricing() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -73,7 +75,7 @@ function HeroPricing() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text="TARIF" />
+            <GhostTitle text={t('pricingTitle')} />
           TARIF
           
         </motion.h1>
@@ -81,7 +83,7 @@ function HeroPricing() {
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
             <p className="hr-kicker">Pas de frais cachés. Pas de jargon.</p>
-            <p className="hr-desc"> Des prix honnêtes adaptés au marché africain, avec devis gratuit et sans engagement.</p>
+            <p className="hr-desc">{t('pricingHero')}</p>
           </motion.div>
         </div>
       </div>
@@ -123,6 +125,7 @@ function HeroPricing() {
 /* ── GLASSMORPHISM PRICING TABS ── */
 function PricingTabs() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
@@ -141,8 +144,7 @@ function PricingTabs() {
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
               <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
-              Choisissez votre{' '}
-              <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
+              {t('chooseSolution')}
             </h2>
           </BlurReveal>
         </div>

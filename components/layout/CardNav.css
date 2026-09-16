@@ -57,6 +57,15 @@ nav.aka-card-nav {
 
 .aka-nav-right { justify-self: end; display: flex; align-items: center; gap: 8px; }
 
+.aka-language-toggle { display: inline-flex; align-items: center; }
+.aka-language-toggle select {
+  height: 28px; min-width: 48px; padding: 0 5px; border: 2px solid #050505;
+  border-radius: 999px; background: rgba(255,255,255,.12); color: #fff;
+  font: 700 .65rem 'JetBrains Mono', monospace; cursor: pointer; outline: none;
+  box-shadow: 2px 2px 0 #050505;
+}
+.light-mode .aka-language-toggle select { background: rgba(255,255,255,.8); color: #2d5a14; }
+
 .aka-theme-btn {
   width: 28px; height: 28px; border-radius: 999px;
   border: 2px solid #050505;

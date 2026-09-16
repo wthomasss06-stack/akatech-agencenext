@@ -116,6 +116,7 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 }
 
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS, PROJECTS } from '@/lib/data'
@@ -143,6 +144,7 @@ const TIMELINE = [
 ──────────────────────────────────────────────── */
 function HeroAbout() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -187,8 +189,8 @@ function HeroAbout() {
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">Votre croissance digitale</p>
-            <p className="hr-desc"> c'est notre mission.</p>
+            <p className="hr-kicker">{t('aboutTitle')}</p>
+            <p className="hr-desc">{t('aboutHero')}</p>
           </motion.div>
         </div>
       </div>

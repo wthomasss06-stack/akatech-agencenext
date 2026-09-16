@@ -5,6 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation'
 import { motion, useReducedMotion } from 'framer-motion'
 import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 
 const HOUR = new Date().getHours()
 
@@ -66,7 +67,7 @@ const LINK_REGEX = new RegExp(
   'gi'
 )
 
-function renderMessageContent(text, onOpenDevis) {
+function renderMessageContent(text, onOpenDevis, labels = {}) {
   if (!text) return text
 
   // Étape 1 — le modèle enrobe parfois le lien en Markdown
@@ -93,13 +94,13 @@ function renderMessageContent(text, onOpenDevis) {
     const m = part.match(/^\[BUTTON_([A-Z]+):(.+)\]$/)
     if (m) {
       const [, kind, url] = m
-      if (kind === 'WA') return <WhatsAppButton key={i} url={url} />
-      if (kind === 'PORTFOLIO') return <PortfolioButton key={i} url={url} />
-      if (kind === 'SITE') return <SiteButton key={i} url={url} />
-      if (kind === 'DEVIS') return <DevisButton key={i} url={url} onOpen={onOpenDevis} />
-      if (kind === 'LINKEDIN') return <LinkedInButton key={i} url={url} />
-      if (kind === 'GITHUB') return <GitHubButton key={i} url={url} />
-      if (kind === 'GENERIC') return <LinkButton key={i} url={url} label="Voir le lien" />
+      if (kind === 'WA') return <WhatsAppButton key={i} url={url} label={labels.whatsapp} />
+      if (kind === 'PORTFOLIO') return <PortfolioButton key={i} url={url} label={labels.portfolio} />
+      if (kind === 'SITE') return <SiteButton key={i} url={url} label={labels.site} />
+      if (kind === 'DEVIS') return <DevisButton key={i} url={url} onOpen={onOpenDevis} label={labels.quote} />
+      if (kind === 'LINKEDIN') return <LinkedInButton key={i} url={url} label={labels.linkedin} />
+      if (kind === 'GITHUB') return <GitHubButton key={i} url={url} label={labels.github} />
+      if (kind === 'GENERIC') return <LinkButton key={i} url={url} label={labels.link} />
     }
 
     if (part.trim()) return <span key={i}>{part}</span>
@@ -108,7 +109,7 @@ function renderMessageContent(text, onOpenDevis) {
 }
 
 /* ── Boutons stylés ── */
-function WhatsAppButton({ url }) {
+function WhatsAppButton({ url, label = 'Continuer sur WhatsApp' }) {
   return (
     <a
       href={url}
@@ -128,13 +129,13 @@ function WhatsAppButton({ url }) {
       onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(37,211,102,.3)' }}
     >
       <Phone size={15} />
-      Continuer sur WhatsApp
+      {label}
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </a>
   )
 }
 
-function PortfolioButton({ url }) {
+function PortfolioButton({ url, label = "Voir le portfolio d'Aka" }) {
   return (
     <a
       href={url}
@@ -154,13 +155,13 @@ function PortfolioButton({ url }) {
       onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(136,202,83,.3)' }}
     >
       <Globe size={15} />
-      Voir le portfolio d'Aka
+      {label}
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </a>
   )
 }
 
-function SiteButton({ url }) {
+function SiteButton({ url, label = 'Visiter le site AKATech' }) {
   return (
     <a
       href={url}
@@ -180,13 +181,13 @@ function SiteButton({ url }) {
       onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(102,126,234,.3)' }}
     >
       <Globe size={15} />
-      Visiter le site AKATech
+      {label}
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </a>
   )
 }
 
-function DevisButton({ url, onOpen }) {
+function DevisButton({ url, onOpen, label = 'Remplir mon devis' }) {
   return (
     <button
       type="button"
@@ -205,13 +206,13 @@ function DevisButton({ url, onOpen }) {
       onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(136,202,83,.3)' }}
     >
       <FileText size={15} />
-      Remplir mon devis
+      {label}
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </button>
   )
 }
 
-function LinkedInButton({ url }) {
+function LinkedInButton({ url, label = "LinkedIn d'Aka" }) {
   return (
     <a
       href={url}
@@ -231,13 +232,13 @@ function LinkedInButton({ url }) {
       onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,119,181,.3)' }}
     >
       <ExternalLink size={15} />
-      LinkedIn d'Aka
+      {label}
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </a>
   )
 }
 
-function GitHubButton({ url }) {
+function GitHubButton({ url, label = "GitHub d'Aka" }) {
   return (
     <a
       href={url}
@@ -257,7 +258,7 @@ function GitHubButton({ url }) {
       onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,.3)' }}
     >
       <ExternalLink size={15} />
-      GitHub d'Aka
+      {label}
       <ExternalLink size={12} style={{ opacity: .7 }} />
     </a>
   )
@@ -297,6 +298,16 @@ const AI_GAP = 14
 
 export default function AIAssistant() {
   const T = useTheme()
+  const { language, t } = useLanguage()
+  const buttonLabels = {
+    whatsapp: language === 'en' ? 'Continue on WhatsApp' : language === 'es' ? 'Continuar en WhatsApp' : 'Continuer sur WhatsApp',
+    portfolio: language === 'en' ? "View Aka's portfolio" : language === 'es' ? 'Ver el portafolio de Aka' : "Voir le portfolio d'Aka",
+    site: language === 'en' ? 'Visit the AKATech website' : language === 'es' ? 'Visitar el sitio AKATech' : 'Visiter le site AKATech',
+    quote: language === 'en' ? 'Fill in my quote' : language === 'es' ? 'Completar mi presupuesto' : 'Remplir mon devis',
+    linkedin: language === 'en' ? "Aka's LinkedIn" : language === 'es' ? 'LinkedIn de Aka' : "LinkedIn d'Aka",
+    github: language === 'en' ? "Aka's GitHub" : language === 'es' ? 'GitHub de Aka' : "GitHub d'Aka",
+    link: language === 'en' ? 'View link' : language === 'es' ? 'Ver enlace' : 'Voir le lien',
+  }
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const reduceMotion = useReducedMotion()
@@ -310,6 +321,12 @@ export default function AIAssistant() {
   const [questionnaireUrl, setQuestionnaireUrl] = useState(null)
   const listRef = useRef(null)
   const abortRef = useRef(null)
+
+  useEffect(() => {
+    setMessages(current => current.length <= 1 && current[0]?.role === 'assistant'
+      ? [{ role: 'assistant', content: t('assistantGreeting') }]
+      : current)
+  }, [language])
 
   const sessionIdRef = useRef(null)
   if (!sessionIdRef.current) sessionIdRef.current = crypto.randomUUID()
@@ -448,7 +465,7 @@ export default function AIAssistant() {
       const res = await fetch('/api/assistant', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: nextMessages, sessionId: sessionIdRef.current }),
+        body: JSON.stringify({ messages: nextMessages, sessionId: sessionIdRef.current, language }),
         signal: controller.signal,
       })
 
@@ -480,7 +497,7 @@ export default function AIAssistant() {
     } finally {
       setStreaming(false)
     }
-  }, [input, streaming, messages])
+  }, [input, streaming, messages, language])
 
   const onKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -568,10 +585,10 @@ export default function AIAssistant() {
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.1rem', fontWeight: 900, fontStyle: 'italic', textTransform: 'uppercase', color: T.textMain, letterSpacing: '.02em' }}>
-                ASSISTANT AKATECH
+                  {t('assistantTitle')}
               </div>
               <div style={{ fontSize: '.7rem', color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 600 }}>
-                ⚡ Répond en direct
+                ⚡ {t('assistantLive')}
               </div>
             </div>
           </div>
@@ -595,7 +612,7 @@ export default function AIAssistant() {
               }}>
                 {m.role === 'assistant' && m.content === '' && streaming && i === messages.length - 1
                   ? <TypingDots color={T.green} />
-                  : renderMessageContent(m.content, setQuestionnaireUrl)}
+                  : renderMessageContent(m.content, setQuestionnaireUrl, buttonLabels)}
               </div>
             ))}
             {errorMsg && (
@@ -612,11 +629,11 @@ export default function AIAssistant() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={onKeyDown}
-              placeholder="Décrivez votre projet…"
+              placeholder={t('assistantPlaceholder')}
               rows={1}
               disabled={streaming}
               tabIndex={open ? 0 : -1}
-              aria-label="Votre message"
+              aria-label={t('assistantMessage')}
               style={{
                 flex: 1, resize: 'none', minHeight: 42, maxHeight: 90,
                 background: T.light ? '#f7f7f7' : '#040d06',
@@ -631,7 +648,7 @@ export default function AIAssistant() {
               onClick={send}
               disabled={streaming || !input.trim()}
               tabIndex={open ? 0 : -1}
-              aria-label="Envoyer"
+              aria-label={t('send')}
               style={{
                 width: 44, height: 44, minWidth: 44, borderRadius: 6, flexShrink: 0,
                 background: streaming || !input.trim() ? (T.light ? 'rgba(136,202,83,.2)' : '#1a3320') : T.green,
@@ -663,13 +680,13 @@ export default function AIAssistant() {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '.75rem', padding: '.7rem .9rem', borderBottom: `2px solid ${T.green}`, background: T.card }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '.55rem', color: T.textMain, fontWeight: 800, fontSize: '.85rem' }}>
                 <FileText size={16} color={T.green} />
-                Questionnaire de devis
+                {t('quoteQuestionnaire')}
               </div>
               <button type="button" onClick={() => setQuestionnaireUrl(null)} aria-label="Fermer le questionnaire" style={{ width: 36, height: 36, border: '2px solid #050505', borderRadius: 7, background: T.green, color: '#08120a', display: 'grid', placeItems: 'center', cursor: 'pointer' }}>
                 <X size={18} />
               </button>
             </div>
-            <iframe src={`${questionnaireUrl}${questionnaireUrl.includes('?') ? '&' : '?'}embedded=1`} title="Questionnaire de devis AKATech" style={{ flex: 1, width: '100%', border: 0, background: T.bg }} />
+            <iframe src={`${questionnaireUrl}${questionnaireUrl.includes('?') ? '&' : '?'}embedded=1`} title={t('quoteQuestionnaire')} style={{ flex: 1, width: '100%', border: 0, background: T.bg }} />
           </div>
         </div>
       )}

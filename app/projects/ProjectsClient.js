@@ -3,6 +3,7 @@ import { useRef, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { Code, Check, FileText, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
@@ -14,6 +15,7 @@ import { PROJECTS } from '@/lib/data'
 ──────────────────────────────────────────────── */
 function HeroRealisations() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -58,8 +60,8 @@ function HeroRealisations() {
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">+{PROJECTS.length} réalisations livrées · 99% satisfaits</p>
-            <p className="hr-desc">Sites vitrines, e-commerces, SaaS, portfolios… Chaque réalisation est une histoire de transformation digitale réussie.</p>
+            <p className="hr-kicker">+{PROJECTS.length} {t('deliveredProjects')} · 99% {t('satisfied')}</p>
+            <p className="hr-desc">{t('projectsHero')}</p>
           </motion.div>
         </div>
       </div>

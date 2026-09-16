@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { QUESTIONNAIRES, QUESTIONNAIRE_TYPES } from '@/lib/questionnaires-schema'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 
 const VALID_TYPES = Object.keys(QUESTIONNAIRES)
 
@@ -33,6 +34,7 @@ function buildFieldValue(currentValue, field, nextValue) {
 
 export default function DevisTypePage({ params }) {
   const T = useTheme()
+  const { language, t } = useLanguage()
   const searchParams = useSearchParams()
   const embedded = searchParams.get('embedded') === '1'
   const type = String(params?.type || '').toLowerCase()
@@ -132,6 +134,7 @@ export default function DevisTypePage({ params }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           answers,
+          language,
           contactName: answers.full_name_job || answers.company_name || answers.responsible_name_role || null,
           contactHandle: answers.whatsapp || answers.phone || null,
         }),
@@ -201,9 +204,9 @@ export default function DevisTypePage({ params }) {
     return (
       <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#0c1015', color: '#fff', padding: '2rem' }}>
         <div style={{ maxWidth: 520, textAlign: 'center', padding: '2rem', borderRadius: 20, background: 'rgba(255,255,255,.04)', border: '1px solid rgba(255,255,255,.08)' }}>
-          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>Type de devis introuvable</h1>
+          <h1 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{t('quoteMissing')}</h1>
           <p style={{ color: '#c7d0d9', lineHeight: 1.7 }}>
-            Le type de questionnaire demandé n’existe pas. Vérifiez le lien ou choisissez une option valide parmi le portfolio, la vitrine e-commerce ou le SaaS.
+            {t('quoteMissingText')}
           </p>
           <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
             {VALID_TYPES.map((item) => (
@@ -225,16 +228,16 @@ export default function DevisTypePage({ params }) {
             {QUESTIONNAIRE_TYPES[type] || schema.label}
           </div>
           <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', margin: '0.4rem 0 0.8rem', fontWeight: 800 }}>
-            Questionnaire de devis
+            {t('quoteTitle')}
           </h1>
           <p style={{ color: T.textSub, maxWidth: 760, lineHeight: 1.7, margin: 0 }}>
-            {schema.intro || 'Répondez simplement aux questions ci-dessous. Vos réponses aideront Aka à comprendre votre projet et à préparer une proposition adaptée.'}
+            {schema.intro || t('quoteIntro')}
           </p>
         </div>
 
         {!token && (
           <div style={{ background: 'rgba(239,68,68,.12)', border: '1px solid rgba(239,68,68,.35)', borderRadius: 18, padding: '1rem 1.2rem', color: T.textMain, marginBottom: '1.5rem' }}>
-            Ce formulaire est protégé par un token de sécurité. Le lien du questionnaire est invalide ou incomplet.
+            {t('invalidToken')}
           </div>
         )}
 
@@ -250,7 +253,7 @@ export default function DevisTypePage({ params }) {
             <p style={{ margin: '0 0 .8rem', color: T.textSub }}>{success.description}</p>
             {success.quote && (
               <div style={{ background: T.light ? 'rgba(95,145,55,.1)' : 'rgba(6,95,70,.25)', border: `1px solid ${T.border2}`, borderRadius: 12, padding: '.9rem 1rem' }}>
-                <div style={{ fontWeight: 700 }}>Devis estimé</div>
+                <div style={{ fontWeight: 700 }}>{t('estimatedQuote')}</div>
                 <div style={{ fontSize: '1.5rem', fontWeight: 800, marginTop: '.35rem' }}>
                   {success.quote.priceLabel || `${success.quote.priceMinFCFA?.toLocaleString('fr-FR') || 0} FCFA`}
                 </div>
@@ -260,10 +263,10 @@ export default function DevisTypePage({ params }) {
                 {success.status === 'QUOTED' && (
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem', marginTop: '1rem' }}>
                     <button type="button" onClick={() => handleDecision('accepted')} disabled={deciding} style={{ border: 'none', borderRadius: 999, background: T.green, color: '#08120a', fontWeight: 800, padding: '.75rem 1.1rem', cursor: deciding ? 'wait' : 'pointer', opacity: deciding ? .65 : 1 }}>
-                      {deciding ? 'Enregistrement…' : 'J’accepte le devis'}
+                      {deciding ? t('saving') : t('acceptQuote')}
                     </button>
                     <button type="button" onClick={() => handleDecision('declined')} disabled={deciding} style={{ border: `1px solid ${T.border2}`, borderRadius: 999, background: 'transparent', color: T.textMain, fontWeight: 700, padding: '.75rem 1.1rem', cursor: deciding ? 'wait' : 'pointer', opacity: deciding ? .65 : 1 }}>
-                      Je refuse le devis
+                      {t('declineQuote')}
                     </button>
                   </div>
                 )}
@@ -364,12 +367,12 @@ export default function DevisTypePage({ params }) {
               opacity: submitting || !token ? 0.7 : 1,
             }}
           >
-            {submitting ? 'Soumission…' : 'Soumettre le questionnaire'}
+            {submitting ? t('submitting') : t('submitQuestionnaire')}
           </button>
         </div>}
 
         {loading && (
-            <div style={{ textAlign: 'center', color: T.textSub, marginTop: '1rem' }}>Chargement du questionnaire…</div>
+            <div style={{ textAlign: 'center', color: T.textSub, marginTop: '1rem' }}>{t('loadingQuestionnaire')}</div>
         )}
       </div>
     </main>

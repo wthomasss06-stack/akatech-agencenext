@@ -849,6 +849,52 @@ svg[style*="bottom: -10px"] g {
    - <  1024px → version mobile  (.view-mobile)
 ══════════════════════════════════════ */
 
+/* ══════════════════════════════════════
+   DOMAINES — sticky overlapping stack
+   Adaptation de la reference Gemini au langage AKATech.
+══════════════════════════════════════ */
+.domaines-sticky-section { position: relative; overflow: clip; padding-top: clamp(5rem, 9vw, 9rem); }
+.domaines-sticky-heading { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 5% clamp(3rem, 7vw, 6rem); text-align: center; }
+.domaines-sticky-heading h2.domaines-sticky-title { position: relative; text-align: center; font-size: clamp(3.4rem, 6.5vw, 5.6rem); font-weight: 900; font-style: italic; font-family: 'Barlow Condensed', sans-serif; color: var(--text-main); letter-spacing: -.03em; line-height: .95; }
+.domaines-sticky-heading p { max-width: 760px; margin: 1.2rem auto 0; color: var(--text-sub); font-family: 'JetBrains Mono', monospace; font-size: clamp(.9rem, 1.4vw, 1.15rem); line-height: 1.7; }
+.domaines-sticky-stack { position: relative; width: 100%; }
+.domaines-sticky-card { position: sticky; top: 0; display: grid; place-items: center; min-height: 100vh; padding: clamp(2rem, 6vw, 5rem) 5%; overflow: hidden; isolation: isolate; border-radius: 32px 32px 0 0; box-shadow: 0 -40px 100px rgba(0,0,0,.22); }
+.domaines-sticky-card-1 { background: #08130b; color: #f2ede8; }
+.domaines-sticky-card-2 { background: #f4f8f0; color: #111; }
+.domaines-sticky-card-3 { background: #e7f2df; color: #111; }
+.domaines-sticky-card-4 { background: #0b1f10; color: #f2ede8; }
+.domaines-sticky-card-5 { background: #f7f4ed; color: #111; }
+.domaines-sticky-card-6 { background: #102b17; color: #f2ede8; }
+.domaines-sticky-card-7 { background: #dcebd2; color: #111; }
+body.light-mode .domaines-sticky-card-1 { background: #f4f8f0; color: #111; }
+body.light-mode .domaines-sticky-card-2 { background: linear-gradient(135deg,#c6ff3d,#88ca53); color: #08130b; }
+body.light-mode .domaines-sticky-card-3 { background: #ffffff; color: #111; }
+body.light-mode .domaines-sticky-card-4 { background: linear-gradient(160deg,#0b1f10,#173c1e); color: #f2ede8; }
+body.light-mode .domaines-sticky-card-5 { background: #ffffff; color: #111; }
+body.light-mode .domaines-sticky-card-6 { background: linear-gradient(160deg,#102b17,#1b4822); color: #f2ede8; }
+body.light-mode .domaines-sticky-card-7 { background: #e7f2df; color: #111; }
+.domaines-sticky-grid { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .7; background-image: linear-gradient(to right, rgba(136,202,83,.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(136,202,83,.08) 1px, transparent 1px); background-size: 60px 60px; }
+.domaines-sticky-card:nth-child(2) .domaines-sticky-grid, .domaines-sticky-card:nth-child(3) .domaines-sticky-grid { background-image: linear-gradient(to right, rgba(10,36,16,.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,36,16,.08) 1px, transparent 1px); }
+.domaines-sticky-content { position: relative; z-index: 2; width: min(760px, 100%); text-align: left; }
+.domaines-sticky-number { margin-bottom: 1.5rem; color: #88ca53; font: 700 .68rem 'JetBrains Mono', monospace; letter-spacing: .4em; text-transform: uppercase; }
+.domaines-sticky-tag { display: inline-flex; align-items: center; gap: .45rem; margin-bottom: 1.2rem; color: #5f9137; font: 700 .68rem 'JetBrains Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }
+.domaines-sticky-card-1 .domaines-sticky-tag, .domaines-sticky-card-4 .domaines-sticky-tag { color: #b3ee85; }
+.domaines-sticky-content h3 { max-width: 900px; margin: 0 auto .9rem; font-family: 'Barlow Condensed', sans-serif; font-size: clamp(3.6rem, 8vw, 7.5rem); font-weight: 900; font-style: italic; line-height: .9; letter-spacing: -.02em; text-transform: uppercase; }
+.domaines-sticky-content p { max-width: 600px; margin: 0; color: currentColor; opacity: .66; font-size: .83rem; line-height: 1.7; }
+.domaines-sticky-line { width: 100%; height: 2px; margin: 1.6rem 0 0; background: linear-gradient(90deg, transparent, #88ca53, transparent); transform-origin: left; }
+.domaines-sticky-image { position: absolute; right: 5%; bottom: 8%; z-index: 1; width: clamp(140px, 18vw, 270px); aspect-ratio: 1.6; border: 1px solid rgba(136,202,83,.3); border-radius: 14px; opacity: .18; object-fit: cover; transform: rotate(5deg); filter: saturate(.8); }
+.domaines-sticky-card:nth-child(even) .domaines-sticky-image { left: 5%; right: auto; transform: rotate(-5deg); }
+.domaines-sticky-cta { padding: 3rem 5% 6rem; text-align: center; background: var(--bg-dark); }
+body.light-mode .domaines-sticky-cta { background: var(--bg-light); }
+.domaines-sticky-cta p { margin-bottom: 1.2rem; color: var(--text-muted); font: .88rem 'JetBrains Mono', monospace; }
+@media (max-width: 700px) {
+  .domaines-sticky-card { min-height: 78vh; border-radius: 22px 22px 0 0; }
+  .domaines-sticky-heading h2.domaines-sticky-title { font-size: clamp(2.3rem, 8.5vw, 3.6rem); }
+  .domaines-sticky-content h3 { font-size: clamp(3rem, 14vw, 5.5rem); }
+  .domaines-sticky-content p { font-size: .86rem; line-height: 1.65; }
+  .domaines-sticky-image { width: 150px; opacity: .1; }
+}
+
 .view-desktop { display: block; }
 .view-mobile  { display: none;  }
 

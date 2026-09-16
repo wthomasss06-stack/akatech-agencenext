@@ -60,6 +60,13 @@
   transition: background .2s, color .2s, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s cubic-bezier(.34,1.56,.64,1);
   z-index: 10010;
 }
+.sm-header-right .aka-language-toggle select {
+  height: 29px; min-width: 48px; padding: 0 5px; border: 2px solid #050505;
+  border-radius: 999px; background: rgba(255,255,255,.12); color: #fff;
+  font: 700 .65rem 'JetBrains Mono', monospace; cursor: pointer; outline: none;
+  box-shadow: 2px 2px 0 #050505;
+}
+.light-mode .sm-header-right .aka-language-toggle select { background: rgba(255,255,255,.8); color: #2d5a14; }
 .sm-toggle:hover {
   background: rgba(255,255,255,.20);
   transform: translate(-2px,-4px) rotate(-2deg) scale(1.03);

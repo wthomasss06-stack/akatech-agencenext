@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
@@ -10,6 +11,7 @@ import { TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 /* ── HERO ── */
 function HeroPricing() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -48,12 +50,11 @@ function HeroPricing() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
-            <GhostTitle text="DES OFFRES CLAIRES, POUR CHAQUE ÉTAPE." />
-            Des offres claires,<br />
-            <GreenUnderline><span className="text-gradient">pour chaque étape.</span></GreenUnderline>
+            <GhostTitle text={t('pricingTitle')} />
+            {t('pricingTitle')}
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 540, margin: '0 auto 1.5rem' }}>
-            Pas de frais cachés. Pas de jargon. Des prix honnêtes adaptés au marché africain, avec devis gratuit et sans engagement.
+            {t('pricingHero')}
           </p>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.6rem', padding: '.5rem 1.2rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', animation: 'dot-blink 1.4s ease-in-out infinite' }} />

@@ -4,6 +4,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -34,6 +35,7 @@ const TECH_STACK = [
 ──────────────────────────────────────────────── */
 function HeroServices() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -123,6 +125,7 @@ function HeroServices() {
 
 function ServicesList() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [active, setActive] = useState(0)
@@ -135,7 +138,7 @@ function ServicesList() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
             <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
-            Choisissez votre <GreenUnderline><span className="text-gradient">solution</span></GreenUnderline>
+            {t('chooseSolution')}
           </h2>
         </motion.div>
 
@@ -146,7 +149,7 @@ function ServicesList() {
             return (
               <button key={s.title} onClick={() => setActive(i)}
                 style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.5rem 1.1rem', borderRadius: 100, border: '1px solid', borderColor: active === i ? T.green : T.border, background: active === i ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: active === i ? '#fff' : T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 600, cursor: 'pointer', transition: 'all .22s' }}>
-                <Ic size={14} />{s.title}
+                <Ic size={14} />{t(`service_${s.slug}`)}
               </button>
             )
           })}
@@ -180,7 +183,7 @@ function ServicesList() {
                 </div>
                 <div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em' }}>{svc.n}</div>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{svc.title}</h3>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{t(`service_${svc.slug}`)}</h3>
                 </div>
               </div>
 

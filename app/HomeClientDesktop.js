@@ -16,6 +16,7 @@ import {
   Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
@@ -1063,136 +1064,46 @@ function DomaineCard({ n, Icon, title, desc, tag, img, index, inView }) {
 }
 
 function DomainesSection() {
-  const T   = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
-
-  // Scroll-reveal mot par mot + tilt — même mécanique que WordRevealP
-  const sectionRef  = useRef(null)
-  const domTextRef  = useRef(null)
-  const domWordsRef = useRef([])
-  const DOM_TEXT = "De la vitrine au SaaS, de la boutique au portfolio — nous intervenons sur l'ensemble de la chaîne digitale pour concrétiser votre vision."
-  const DOM_GREEN = new Set(['SaaS,', 'portfolio', 'chaîne', 'digitale', 'concrétiser', 'vision.'])
-
-  useEffect(() => {
-    const container = sectionRef.current
-    const textEl    = domTextRef.current
-    if (!container || !textEl) return
-    const onScroll = () => {
-      const rect     = container.getBoundingClientRect()
-      const winH     = window.innerHeight
-      const total    = winH + container.offsetHeight
-      const traveled = winH - rect.top
-      const progress = Math.max(0, Math.min(1, traveled / total))
-      // tilt
-      textEl.style.transform = `rotate(${3 * (1 - Math.min(progress / 0.20, 1))}deg)`
-      textEl.style.opacity   = String(Math.min(1, 0.4 + progress * 1.2))
-      // mots
-      const words = domWordsRef.current
-      if (!words.length) return
-      const wProg = Math.max(0, Math.min(1, progress / 0.40))
-      words.forEach((span, i) => {
-        if (!span) return
-        const local = Math.max(0, Math.min(1, (wProg - (i / (words.length - 1)) * 0.75) / 0.28))
-        span.style.opacity = String(0.08 + local * 0.92)
-        span.style.filter  = `blur(${((1 - local) * 9).toFixed(1)}px)`
-      })
-    }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    onScroll()
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const T = useTheme()
+  const { t } = useLanguage()
+  const cards = DOMAINES
 
   return (
-    <section
-      ref={el => { ref.current = el; sectionRef.current = el }}
-      style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}
-    >
-      {/* Décoration big text */}
-      <div style={{
-        position: 'absolute', left: '-1%', top: '50%', transform: 'translateY(-50%)',
-        fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(10rem,18vw,18rem)', fontWeight: 900,
-        color: T.light ? 'rgba(136,202,83,.04)' : 'rgba(136,202,83,.03)',
-        lineHeight: 1, pointerEvents: 'none', userSelect: 'none', letterSpacing: '-.05em',
-      }}>
-        DOM
+    <section className="domaines-sticky-section" style={{ background: T.bgAlt }}>
+      <div className="domaines-sticky-heading">
+        <BlurReveal delay={0.12}>
+          <h2 className="section-title-big domaines-sticky-title">
+            <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
+            {t('domainesTitle')}
+          </h2>
+        </BlurReveal>
+        <p>{t('domainesIntro')}</p>
       </div>
 
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div className="domaines-sticky-stack">
+        {cards.map((domaine, index) => {
+          const Icon = domaine.Icon
+          return (
+            <article key={domaine.n} className={`domaines-sticky-card domaines-sticky-card-${index + 1}`}>
+              <div className="domaines-sticky-grid" />
+              <div className="domaines-sticky-content">
+                <div className="domaines-sticky-number">{domaine.n} / {String(cards.length).padStart(2, '0')}</div>
+                <div className="domaines-sticky-tag"><Icon size={14} /> {domaine.tag}</div>
+                <h3>{domaine.title}</h3>
+                <p>{domaine.desc}</p>
+                <div className="domaines-sticky-line" />
+              </div>
+              <img className="domaines-sticky-image" src={domaine.img} alt="" aria-hidden="true" />
+            </article>
+          )
+        })}
+      </div>
 
-        {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
-          <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{
-              position: 'relative',
-              fontSize: 'clamp(2.6rem,5vw,4rem)',
-              color: T.textMain,
-              lineHeight: 1,
-            }}>
-              <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
-              Ce que AKATech Studio{' '}
-              <GreenUnderline><span className="text-gradient">conçoit pour vous</span></GreenUnderline>
-            </h2>
-          </BlurReveal>
-          <p
-            ref={domTextRef}
-            style={{
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: 'clamp(1.6rem,3.2vw,2.6rem)',
-              fontWeight: 700,
-              lineHeight: 1.32,
-              color: T.textSub,
-              margin: '1rem 0 0',
-              paddingLeft: 'var(--body-indent)',
-              paddingRight: 'var(--body-indent)',
-              transformOrigin: '0% 50%',
-              transition: 'transform .05s linear',
-            }}
-          >
-            {DOM_TEXT.split(' ').map((word, i) => (
-              <span
-                key={i}
-                ref={el => { domWordsRef.current[i] = el }}
-                style={{
-                  display: 'inline-block',
-                  marginRight: '0.28em',
-                  opacity: 0.08,
-                  filter: 'blur(9px)',
-                  willChange: 'opacity, filter',
-                  color: DOM_GREEN.has(word) ? '#88ca53' : 'inherit',
-                }}
-              >
-                {word}
-              </span>
-            ))}
-          </p>
-        </div>
-
-        {/* Grille — chaque card gère son propre hover + image curseur */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '1px', background: T.border, borderRadius: 20, overflow: 'visible',
-          border: `1px solid ${T.border}`,
-        }}>
-          {DOMAINES.map((domaine, i) => (
-            <DomaineCard key={domaine.n} {...domaine} index={i} inView={inView} />
-          ))}
-        </div>
-
-        {/* CTA bas */}
-        <BlurReveal delay={0.4} style={{ textAlign: 'center', marginTop: '3rem' }}>
-          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textMuted, marginBottom: '1.2rem' }}>
-            Votre projet ne rentre dans aucune case ? On s'adapte.
-          </p>
-          <a
-            href="https://wa.me/2250142507750"
-            target="_blank" rel="noreferrer"
-            className="btn-raised"
-            style={{ fontSize: '.9rem', padding: '.85rem 2rem' }}
-          >
-            <HoverSlideText text="Discuter de mon projet" /> <ArrowRight size={14} />
-          </a>
-        </BlurReveal>
+      <div className="domaines-sticky-cta">
+        <p>{t('domainesCta')}</p>
+        <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised">
+          <HoverSlideText text={t('discussProject')} /> <ArrowRight size={14} />
+        </a>
       </div>
     </section>
   )

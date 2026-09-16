@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Users, Monitor, Code, Heart, Zap, Star, Target, MessageCircle, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -55,6 +56,7 @@ function FlagBadge({ code, primary }) {
 // ── 1. HERO ──────────────────────────────────────────────────
 function HeroAbout() {
   const T = useTheme()
+  const { t } = useLanguage()
   return (
     <section style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', background: T.bg }}>
       <div style={{ position: 'absolute', inset: '-8%', zIndex: 1 }}>
@@ -64,12 +66,11 @@ function HeroAbout() {
       <div style={{ position: 'relative', zIndex: 10, width: '100%', padding: '7rem 5% 4rem' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2rem,7vw,3rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="VOTRE CROISSANCE DIGITALE, C'EST NOTRE MISSION." />
-            Votre croissance digitale,<br />
-            <GreenUnderline><span className="text-gradient">c'est notre mission.</span></GreenUnderline>
+            <GhostTitle text={t('aboutTitle')} />
+            {t('aboutTitle')}
           </h1>
           <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.75, marginBottom: '2rem', maxWidth: 480 }}>
-            AKATech accompagne les entrepreneurs et PME en Côte d'Ivoire qui veulent une présence digitale sérieuse.
+            {t('aboutHero')}
           </p>
         </motion.div>
         {/* Photo grid */}

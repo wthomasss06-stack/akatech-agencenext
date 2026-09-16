@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { Clock, ArrowRight, Tag, Search, BookOpen, TrendingUp, Globe, ShoppingCart, Code, Zap } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, MarqueeStrip, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
@@ -17,6 +18,7 @@ const CAT_ICONS = { 'Stratégie Digitale': TrendingUp, 'E-Commerce': ShoppingCar
 // ── HERO ──────────────────────────────────────────────────────
 function HeroBlog() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -55,12 +57,11 @@ function HeroBlog() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.2rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="INSIGHTS & CONSEILS POUR VOTRE BUSINESS DIGITAL" />
-            Insights & conseils<br />
-            <GreenUnderline><span className="text-gradient">pour votre business digital</span></GreenUnderline>
+            <GhostTitle text={t('blogTitle')} />
+            {t('blogTitle')}
           </h1>
           <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
-            Stratégie digitale, développement web, SEO et e-commerce — des contenus concrets pour les entrepreneurs ivoiriens.
+            {t('blogHero')}
           </p>
           <a
             href="https://www.linkedin.com/in/m-bollo-aka"

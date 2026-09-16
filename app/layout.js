@@ -1,6 +1,7 @@
 ﻿import './globals.css'
 import { Suspense } from 'react'
 import { ThemeProvider } from '@/lib/theme'
+import { LanguageProvider } from '@/lib/language'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import { BackToTop, FloatingWA } from '@/components/ui/index'
@@ -134,9 +135,10 @@ export default function RootLayout({ children }) {
         <SitewideStructuredData organization={ORG_JSON_LD} />
       </head>
       <body>
-        <ThemeProvider>
-          <PageTransitionProvider>
-            <BlobTransitionProvider>
+        <LanguageProvider>
+          <ThemeProvider>
+            <PageTransitionProvider>
+              <BlobTransitionProvider>
               <ScrollToTop />
               <Loader />
               <Suspense fallback={null}><PublicChrome><Navbar /></PublicChrome></Suspense>
@@ -149,9 +151,10 @@ export default function RootLayout({ children }) {
               <VisitorTracker />
               <CookieConsent />
               <Analytics />
-            </BlobTransitionProvider>
-          </PageTransitionProvider>
-        </ThemeProvider>
+              </BlobTransitionProvider>
+            </PageTransitionProvider>
+          </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   )

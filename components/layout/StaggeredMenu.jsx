@@ -4,6 +4,8 @@ import { gsap } from 'gsap'
 import { Moon, Sun } from 'lucide-react'
 import Logo from '@/components/ui/Logo'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
+import LanguageToggle from './LanguageToggle'
 import { HoverSlideText } from '@/components/ui/index'
 import TransitionLink from './TransitionLink'
 import './StaggeredMenu.css'
@@ -45,6 +47,7 @@ function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
 
 export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
   const T = useTheme()
+  const { t } = useLanguage()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const openRef = useRef(false)
@@ -269,10 +272,11 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
           <Logo size={18} showTag={false} animate={false} />
         </TransitionLink>
         <div className="sm-header-right">
+          <LanguageToggle />
           <button
             onClick={T.toggle}
             className="sm-header-theme"
-            title={T.light ? 'Mode sombre' : 'Mode clair'}
+            title={T.light ? t('darkMode') : t('lightMode')}
             type="button"
             aria-label="Basculer le thème"
           >

@@ -8,6 +8,7 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, GreenUnderline, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -216,6 +217,7 @@ function WhatsAppIcon({ size = 16 }) {
 ──────────────────────────────────────────────── */
 function HeroContact() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -260,8 +262,8 @@ function HeroContact() {
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">Devis gratuit en moins de 24h.</p>
-            <p className="hr-desc"> Pas d'engagement, pas de jargon technique — juste une conversation pour comprendre votre besoin.</p>
+            <p className="hr-kicker">{t('freeQuote')} · 24h</p>
+            <p className="hr-desc">{t('contactHero')}</p>
           </motion.div>
         </div>
       </div>

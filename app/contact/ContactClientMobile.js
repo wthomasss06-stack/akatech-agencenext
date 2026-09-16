@@ -7,6 +7,7 @@ import {
   ArrowRight, Shield
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -34,6 +35,7 @@ function WhatsAppIcon({ size = 16 }) {
 /* ── HERO ── */
 function HeroContact() {
   const T = useTheme()
+  const { t } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -72,11 +74,11 @@ function HeroContact() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(1.9rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="PARLONS DE VOTRE PROJET" />
-            Parlons de votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
+            <GhostTitle text={t('contactTitle')} />
+            {t('contactTitle')}
           </h1>
           <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
-            Devis gratuit en moins de 24h. Pas d'engagement, pas de jargon technique — juste une conversation pour comprendre votre besoin.
+            {t('contactHero')}
           </p>
         </motion.div>
       </div>

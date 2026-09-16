@@ -4,6 +4,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
@@ -30,6 +31,7 @@ const TECH_STACK = [
 
 function HeroServices() {
   const T = useTheme()
+  const { t } = useLanguage()
   return (
     <section style={{ height: '100vh', minHeight: 600, width: '100%', background: '#060e09', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
       <AuroraHero labels={[]} />
@@ -41,14 +43,14 @@ function HeroServices() {
             <GreenUnderline><span className="text-gradient">PRESTATIONS</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 620, margin: '0 auto 2.5rem' }}>
-            De la consultation au déploiement, chaque service est conçu pour répondre aux réalités du marché ivoirien — rapide, efficace, rentable.
+            {t('servicesHero')}
           </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem' }}>
-              <HoverSlideText text="Devis gratuit" /> <MessageCircle size={16} />
+              <HoverSlideText text={t('freeQuote')} /> <MessageCircle size={16} />
             </a>
             <a href="#services-list" className="btn-ghost" style={{ fontSize: '1rem' }}>
-              <HoverSlideText text="Voir les services" />
+              <HoverSlideText text={t('viewServices')} />
             </a>
           </div>
         </motion.div>
@@ -59,6 +61,7 @@ function HeroServices() {
 
 function ServicesList() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [active, setActive] = useState(0)
@@ -71,7 +74,7 @@ function ServicesList() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
             <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
-            Choisissez votre <GreenUnderline><span className="text-gradient">solution</span></GreenUnderline>
+            {t('chooseSolution')}
           </h2>
         </motion.div>
 
@@ -82,7 +85,7 @@ function ServicesList() {
             return (
               <button key={s.title} onClick={() => setActive(i)}
                 style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.5rem 1.1rem', borderRadius: 100, border: '1px solid', borderColor: active === i ? T.green : T.border, background: active === i ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: active === i ? '#fff' : T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 600, cursor: 'pointer', transition: 'all .22s' }}>
-                <Ic size={14} />{s.title}
+                <Ic size={14} />{t(`service_${s.slug}`)}
               </button>
             )
           })}
@@ -116,7 +119,7 @@ function ServicesList() {
                 </div>
                 <div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em' }}>{svc.n}</div>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{svc.title}</h3>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{t(`service_${svc.slug}`)}</h3>
                 </div>
               </div>
 

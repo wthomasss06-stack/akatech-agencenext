@@ -2,19 +2,22 @@
 import { usePathname } from 'next/navigation'
 import CardNav from './CardNav'
 import StaggeredMenu from './StaggeredMenu'
+import { useLanguage } from '@/lib/language'
 
 const NAV_LINKS = [
-  { label: 'Accueil',      href: '/'         },
-  { label: 'À propos',     href: '/about'    },
-  { label: 'Services',     href: '/services' },
-  { label: 'Réalisations', href: '/projects' },
-  { label: 'Tarifs',       href: '/pricing'  },
-  { label: 'Blog',         href: '/blog'     },
-  { label: 'Contact',      href: '/contact'  },
+  { key: 'home', href: '/' },
+  { key: 'about', href: '/about' },
+  { key: 'services', href: '/services' },
+  { key: 'projects', href: '/projects' },
+  { key: 'pricing', href: '/pricing' },
+  { key: 'blog', href: '/blog' },
+  { key: 'contact', href: '/contact' },
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
+  const { t } = useLanguage()
+  const translatedLinks = NAV_LINKS.map(link => ({ ...link, label: t(link.key) }))
 
   const isActive = (href) =>
     href === '/' ? pathname === '/' : pathname.startsWith(href)
@@ -41,7 +44,7 @@ export default function Navbar() {
 
       {/* ── Mobile : Staggered Menu (port du portfolio) ── */}
       <div className="nav-mobile-only">
-        <StaggeredMenu items={NAV_LINKS} isActive={isActive} />
+        <StaggeredMenu items={translatedLinks} isActive={isActive} />
       </div>
     </>
   )

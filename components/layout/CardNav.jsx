@@ -6,8 +6,10 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Image from 'next/image'
 import { Moon, Sun, Orbit } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { HoverSlideText } from '@/components/ui/index'
 import TransitionLink from './TransitionLink'
+import LanguageToggle from './LanguageToggle'
 import { useBlobTransition } from './BlobTransition'
 import './CardNav.css'
 
@@ -75,6 +77,7 @@ function CardLinkWithGhost({ href, label, sub, onClick }) {
 
 export default function CardNav() {
   const T = useTheme()
+  const { t } = useLanguage()
   const pathname = usePathname()
   const blobNavigate = useBlobTransition()
   const inExplorer = pathname?.startsWith('/explorer')
@@ -179,14 +182,15 @@ export default function CardNav() {
             <button
               onClick={handleExplorerToggle}
               className={(inExplorer ? 'btn-raised btn-sm' : 'btn-ghost btn-sm')}
-              title={inExplorer ? "Retour au site" : "Mode Explorer — globe des projets"}
+              title={inExplorer ? t('backToSite') : t('explorer')}
               aria-pressed={inExplorer}
               type="button"
             >
               <Orbit size={13} />
-              <span><HoverSlideText text="Explorer" /></span>
+              <span><HoverSlideText text={t('explorer')} /></span>
             </button>
-            <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? 'Mode sombre' : 'Mode clair'} type="button">
+            <LanguageToggle />
+            <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? t('darkMode') : t('lightMode')} type="button">
               {T.light ? <Moon size={13} /> : <Sun size={13} />}
             </button>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised btn-sm">
@@ -207,20 +211,20 @@ export default function CardNav() {
           </div>
 
           <div className="aka-nav-card aka-card-2" ref={el => cardsRef.current[1] = el}>
-            <div className="aka-card-label">Nos réalisations</div>
+            <div className="aka-card-label">{t('ourProjects')}</div>
             <div className="aka-card-links">
-              <CardLinkWithGhost href="/projects" label="Portfolio" sub="Projets sélectionnés" onClick={closeNav} />
-              <CardLinkWithGhost href="/pricing" label="Tarifs" sub="Devis transparents" onClick={closeNav} />
-              <CardLinkWithGhost href="/blog" label="Blog" sub="Conseils & actualités" onClick={closeNav} />
+              <CardLinkWithGhost href="/projects" label={t('portfolio')} sub={t('selectedProjects')} onClick={closeNav} />
+              <CardLinkWithGhost href="/pricing" label={t('pricing')} sub={t('transparentQuotes')} onClick={closeNav} />
+              <CardLinkWithGhost href="/blog" label={t('blog')} sub={t('adviceNews')} onClick={closeNav} />
             </div>
           </div>
 
           <div className="aka-nav-card aka-card-3" ref={el => cardsRef.current[2] = el}>
-            <div className="aka-card-label">Le Studio.</div>
+            <div className="aka-card-label">{t('studio')}</div>
             <div className="aka-card-links">
-              <CardLinkWithGhost href="/services" label="Service" sub="Ce que nous proposons" onClick={closeNav} />
-              <CardLinkWithGhost href="/about" label="À propos" sub="Notre équipe, Abidjan" onClick={closeNav} />
-              <CardLinkWithGhost href="/contact" label="Contact" sub="Parlons de ton projet" onClick={closeNav} />
+              <CardLinkWithGhost href="/services" label={t('service')} sub={t('whatWeOffer')} onClick={closeNav} />
+              <CardLinkWithGhost href="/about" label={t('about')} sub={t('aboutTeam')} onClick={closeNav} />
+              <CardLinkWithGhost href="/contact" label={t('contact')} sub={t('talkProject')} onClick={closeNav} />
             </div>
           </div>
         </div>

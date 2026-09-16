@@ -100,7 +100,7 @@ async function classifyAnswers(type, answers) {
   }
 }
 
-async function buildPitch(type, answers) {
+async function buildPitch(type, answers, language = 'fr') {
   const prompt = buildPositioningPrompt(type, answers)
   if (!prompt) return null
 
@@ -108,7 +108,7 @@ async function buildPitch(type, answers) {
     const hasGroqKey = Boolean(process.env.GROQ_API_KEY)
     if (!hasGroqKey) return null
     const content = await generateGroqContent([
-      { role: 'system', content: prompt.systemInstruction },
+      { role: 'system', content: `${prompt.systemInstruction}\nRéponds exclusivement en ${language === 'en' ? 'anglais' : language === 'es' ? 'espagnol' : 'français'}.` },
       { role: 'user', content: prompt.userContent },
     ])
     return sanitizePitch(content)
@@ -151,6 +151,7 @@ export async function POST(request, { params }) {
     }
 
     const body = await request.json()
+    const language = ['fr', 'en', 'es'].includes(body.language) ? body.language : 'fr'
     const answers = typeof body.answers === 'object' && body.answers ? body.answers : {}
     const sizeError = validateAnswersSize(answers)
     if (sizeError) {
@@ -173,7 +174,7 @@ export async function POST(request, { params }) {
     })
 
     const classification = await classifyAnswers(type, answers)
-    const pitch = await buildPitch(type, answers)
+    const pitch = await buildPitch(type, answers, language)
 
     const quote = await upsertQuestionnaireQuote(updated.id, {
       category: classification.category,
