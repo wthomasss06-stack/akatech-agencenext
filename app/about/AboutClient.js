@@ -125,17 +125,17 @@ import { cld } from '@/lib/cloudinary'
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
 
 const VALUES = [
-  { icon: Target, title: 'Résultats concrets', desc: "Chaque solution est conçue pour générer des résultats mesurables : plus de clients, plus de revenus, moins de tâches manuelles." },
-  { icon: Heart, title: 'Adapté au marché africain', desc: "Je comprends les réalités locales — Mobile Money, coupures internet, faible débit. Vos solutions fonctionnent dans votre contexte." },
-  { icon: Zap, title: 'Livraison rapide', desc: "Pas d'attente de 3 mois. Les projets sont livrés en 5 à 21 jours selon la complexité, avec des jalons clairs à chaque étape." },
-  { icon: Star, title: 'Qualité premium', desc: "Code propre, design sur-mesure, animations soignées. Chaque détail compte pour que votre solution se démarque." },
+  { icon: Target, titleKey: 'about_results', desc: "Chaque solution est conçue pour générer des résultats mesurables : plus de clients, plus de revenus, moins de tâches manuelles." },
+  { icon: Heart, titleKey: 'about_market', desc: "Je comprends les réalités locales — Mobile Money, coupures internet, faible débit. Vos solutions fonctionnent dans votre contexte." },
+  { icon: Zap, titleKey: 'about_delivery', desc: "Pas d'attente de 3 mois. Les projets sont livrés en 5 à 21 jours selon la complexité, avec des jalons clairs à chaque étape." },
+  { icon: Star, titleKey: 'about_quality', desc: "Code propre, design sur-mesure, animations soignées. Chaque détail compte pour que votre solution se démarque." },
 ]
 
 const TIMELINE = [
-  { year: '2022', title: 'Les débuts', desc: "Premier projet freelance livré : un site vitrine pour un commerçant abidjanais. Le début d'une aventure." },
-  { year: '2023', title: 'Premières applications métier', desc: "Développement de LivreurTrack Pro et MonCashJour, des outils de gestion pensés pour les commerçants et livreurs locaux." },
-  { year: '2024', title: 'AKATech Agence', desc: "Transformation en agence officielle. Lancement de services structurés et premiers clients récurrents." },
-  { year: '2025', title: "Aujourd'hui", desc: `+${PROJECTS.length} projets livrés, 100% de clients satisfaits. Le Studio. continue de grandir et d'innover.` },
+  { year: '2022', titleKey: 'about_timeline_2022', desc: "Premier projet freelance livré : un site vitrine pour un commerçant abidjanais. Le début d'une aventure." },
+  { year: '2023', titleKey: 'about_timeline_2023', desc: "Développement de LivreurTrack Pro et MonCashJour, des outils de gestion pensés pour les commerçants et livreurs locaux." },
+  { year: '2024', titleKey: 'about_timeline_2024', desc: "Transformation en agence officielle. Lancement de services structurés et premiers clients récurrents." },
+  { year: '2025', titleKey: 'about_timeline_2025', desc: `+${PROJECTS.length} projets livrés, 100% de clients satisfaits. Le Studio. continue de grandir et d'innover.` },
 ]
 
 

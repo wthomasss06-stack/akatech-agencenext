@@ -23,13 +23,6 @@ const PROCESS_STEPS = [
   { n: '04', title: 'Livraison + Formation', desc: 'Mise en ligne, tests, documentation et formation 2h pour gérer votre solution en autonomie.' },
 ]
 
-const TECH_STACK = [
-  { cat: 'Frontend', items: ['React', 'Next.js', 'Framer Motion', 'Tailwind CSS'] },
-  { cat: 'Backend', items: ['Django', 'Python', 'Node.js', 'Express'] },
-  { cat: 'Base de données', items: ['MySQL', 'Redis'] },
-  { cat: 'Outils', items: ['Git', 'VS Code','Vercel'] },
-]
-
 /* ────────────────────────────────────────────────
    HERO
 ──────────────────────────────────────────────── */
@@ -73,15 +66,14 @@ function HeroServices() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text="SERVICES" />
-          SERVICES
-          
+          <GhostTitle text={t('services').toUpperCase()} />
+          {t('services').toUpperCase()}
         </motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">De la consultation au déploiement</p>
-            <p className="hr-desc">,chaque service est conçu pour répondre aux réalités du marché ivoirien — rapide, efficace, rentable.</p>
+            <p className="hr-kicker">{t('service_hero_kicker')}</p>
+            <p className="hr-desc">{t('service_hero_text')}</p>
           </motion.div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             
@@ -201,11 +193,11 @@ function ServicesList() {
                 <div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{svc.price}</div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Timer size={10} style={{ color: T.green }} />Délai : {svc.del}
+                    <Timer size={10} style={{ color: T.green }} />{t('service_delay')} : {svc.del}
                   </div>
                 </div>
                 <a href={`https://wa.me/2250142507750?text=Bonjour AKATech, je suis intéressé par ${svc.title}`} target="_blank" rel="noreferrer" className="btn-raised">
-                  <HoverSlideText text="Demander un devis" /> <ArrowRight size={14} />
+                  <HoverSlideText text={t('service_cta')} /> <ArrowRight size={14} />
                 </a>
               </div>
             </div>
@@ -217,48 +209,12 @@ function ServicesList() {
 }
 
 
-
-function TechSection() {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
-            <GhostTitle text="DES TECHNOLOGIES ÉPROUVÉES" />
-            Des technologies <GreenUnderline><span className="text-gradient">éprouvées</span></GreenUnderline>
-          </h2>
-        </motion.div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '1rem' }}>
-          {TECH_STACK.map(({ cat, items }, i) => (
-            <motion.div key={cat} className="sku-card"
-              initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .08 }}
-              style={{ padding: '1.4rem' }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '1rem', borderBottom: `1px solid ${T.border}`, paddingBottom: '.6rem' }}>{cat}</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
-                {items.map(item => (
-                  <span key={item} style={{ fontSize: '.82rem', color: T.textSub, display: 'flex', alignItems: 'center', gap: '.4rem' }}>
-                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.green, flexShrink: 0 }} />{item}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 export default function ServicesPage() {
   return (
     <div>
       <HeroServices />
       <ServicesList />
       <ConversionMarquee />
-      <TechSection />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
           src={cld('/images/cta-services-desktop.webp')}

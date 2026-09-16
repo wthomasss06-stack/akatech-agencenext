@@ -190,10 +190,10 @@ function ProjectScrollSlide({ project, index, total, T }) {
           </div>
 
           <div className="fc-meta" style={{ borderColor: 'rgba(136,202,83,.25)' }}>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>Type</span><span className="fc-mv" style={{ color: T.textMain }}>{PROJECT_TYPE_BADGE(project.type, project.live)}</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>Marché</span><span className="fc-mv" style={{ color: T.textMain }}>Côte d'Ivoire</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>Mon rôle</span><span className="fc-mv" style={{ color: T.textMain }}>Conception & Développement</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>Année</span><span className="fc-mv" style={{ color: T.textMain }}>{project.year}</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{PROJECT_TYPE_BADGE(project.type, project.live)}</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_market')}</span><span className="fc-mv" style={{ color: T.textMain }}>Côte d'Ivoire</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_role')}</span><span className="fc-mv" style={{ color: T.textMain }}>Conception & Développement</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_year')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.year}</span></div>
           </div>
 
           <div className="fc-tags">
@@ -210,14 +210,14 @@ function ProjectScrollSlide({ project, index, total, T }) {
               className="btn-ghost btn-sm"
               style={{ alignSelf: 'flex-start' }}
             >
-              <HoverSlideText text="Voir le projet" /> <ArrowUpRight size={15} />
+              <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={15} />
             </a>
           ) : (
             <span
               className="btn-ghost btn-sm"
               style={{ alignSelf: 'flex-start', opacity: .5, pointerEvents: 'none' }}
             >
-              <FileText size={15} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `En cours · ${project.progress}%` : 'Démo locale'} />
+              <FileText size={15} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `${t('project_progress')} · ${project.progress}%` : t('project_demo')} />
             </span>
           )}
         </div>

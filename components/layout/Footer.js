@@ -181,7 +181,6 @@ export default function Footer() {
     ['Services', '/services'],
     ['Réalisations', '/projects'],
     ['À propos', '/about'],
-    ['Contact', '/contact'],
   ]
 
   const SERVICES = [

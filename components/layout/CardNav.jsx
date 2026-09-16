@@ -215,7 +215,6 @@ export default function CardNav() {
             <div className="aka-card-links">
               <CardLinkWithGhost href="/projects" label={t('portfolio')} sub={t('selectedProjects')} onClick={closeNav} />
               <CardLinkWithGhost href="/blog" label={t('blog')} sub={t('adviceNews')} onClick={closeNav} />
-              <CardLinkWithGhost href="/about" label={t('about')} sub={t('aboutTeam')} onClick={closeNav} />
             </div>
           </div>
 
@@ -223,7 +222,7 @@ export default function CardNav() {
             <div className="aka-card-label">{t('studio')}</div>
             <div className="aka-card-links">
               <CardLinkWithGhost href="/services" label={t('service')} sub={t('whatWeOffer')} onClick={closeNav} />
-              <CardLinkWithGhost href="/contact" label={t('contact')} sub={t('talkProject')} onClick={closeNav} />
+              <CardLinkWithGhost href="/about" label={t('about')} sub={t('aboutTeam')} onClick={closeNav} />
             </div>
           </div>
         </div>

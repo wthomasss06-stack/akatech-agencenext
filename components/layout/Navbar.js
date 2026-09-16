@@ -10,7 +10,6 @@ const NAV_LINKS = [
   { key: 'services', href: '/services' },
   { key: 'projects', href: '/projects' },
   { key: 'blog', href: '/blog' },
-  { key: 'contact', href: '/contact' },
 ]
 
 export default function Navbar() {

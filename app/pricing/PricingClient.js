@@ -82,7 +82,7 @@ function HeroPricing() {
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">Pas de frais cachés. Pas de jargon.</p>
+            <p className="hr-kicker">{t('pricing_kicker')}</p>
             <p className="hr-desc">{t('pricingHero')}</p>
           </motion.div>
         </div>
@@ -143,7 +143,7 @@ function PricingTabs() {
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
-              <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
+              <GhostTitle text={t('pricing_tab_title')} />
               {t('chooseSolution')}
             </h2>
           </BlurReveal>
@@ -196,8 +196,8 @@ function PricingTabs() {
                         ))}
                       </div>
                       {plan.popular
-                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
-                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
+                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text={t('pricing_order')} /></a>
+                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text={t('pricing_order')} /></a>
                       }
                     </div>
                   </motion.div>
@@ -214,9 +214,9 @@ function PricingTabs() {
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
               <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: T.textSub, letterSpacing: '.04em', margin: 0 }}>
                 <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
-                  <AlertTriangle size={12} /> 2 créneaux disponibles
+                  <AlertTriangle size={12} /> {t('pricing_urgency')}
                 </span>
-                {' '}ce mois-ci — les projets sont traités dans l'ordre d'arrivée.
+                {' '}{t('pricing_urgency_text')}
               </p>
             </div>
             <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"

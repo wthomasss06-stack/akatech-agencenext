@@ -22,13 +22,6 @@ const PROCESS_STEPS = [
   { n: '04', title: 'Livraison + Formation', desc: 'Mise en ligne, tests, documentation et formation 2h pour gérer votre solution en autonomie.' },
 ]
 
-const TECH_STACK = [
-  { cat: 'Frontend', items: ['React', 'Next.js', 'Framer Motion', 'Tailwind CSS'] },
-  { cat: 'Backend', items: ['Django', 'Python', 'Node.js', 'Express'] },
-  { cat: 'Base de données', items: ['MySQL', 'Redis'] },
-  { cat: 'Outils', items: ['Git', 'VS Code','Vercel'] },
-]
-
 function HeroServices() {
   const T = useTheme()
   const { t } = useLanguage()
@@ -38,9 +31,9 @@ function HeroServices() {
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '72px 5% 0' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text="NOS PRESTATIONS" />
-            NOS{' '}
-            <GreenUnderline><span className="text-gradient">PRESTATIONS</span></GreenUnderline>
+            <GhostTitle text={t('services').toUpperCase()} />
+            {t('services').toUpperCase()}
+            <GreenUnderline><span className="text-gradient">{t('services').toUpperCase()}</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 620, margin: '0 auto 2.5rem' }}>
             {t('servicesHero')}
@@ -151,48 +144,12 @@ function ServicesList() {
     </section>
   )
 }
-
-function TechSection() {
-  const T = useTheme()
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
-  return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DES TECHNOLOGIES ÉPROUVÉES" />
-            Des technologies <GreenUnderline><span className="text-gradient">éprouvées</span></GreenUnderline>
-          </h2>
-        </motion.div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', gap: '1rem' }}>
-          {TECH_STACK.map(({ cat, items }, i) => (
-            <motion.div key={cat} className="sku-card"
-              initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .08 }}
-              style={{ padding: '1.4rem' }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.1em', textTransform: 'uppercase', marginBottom: '1rem', borderBottom: `1px solid ${T.border}`, paddingBottom: '.6rem' }}>{cat}</div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '.4rem' }}>
-                {items.map(item => (
-                  <span key={item} style={{ fontSize: '.82rem', color: T.textSub, display: 'flex', alignItems: 'center', gap: '.4rem' }}>
-                    <span style={{ width: 4, height: 4, borderRadius: '50%', background: T.green, flexShrink: 0 }} />{item}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
-
 export default function ServicesPage() {
   return (
     <div>
       <HeroServices />
       <ServicesList />
       <ConversionMarquee />
-      <TechSection />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
           src={cld('/images/cta-services-mobile.webp')}
