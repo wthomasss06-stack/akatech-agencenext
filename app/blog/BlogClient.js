@@ -12,6 +12,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
+import { cld } from '@/lib/cloudinary'
 
 const CATEGORIES = ['Tous', 'Stratégie Digitale', 'E-Commerce', 'Développement Web', 'SEO']
 const CAT_ICONS = { 'Stratégie Digitale': TrendingUp, 'E-Commerce': ShoppingCart, 'Développement Web': Code, 'SEO': Globe }
@@ -871,7 +872,7 @@ export default function BlogPage() {
 
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-blog-desktop.webp"
+          src={cld('/images/cta-blog-desktop.webp')}
           alt="Vous avez un projet web ? Discutons-en gratuitement."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

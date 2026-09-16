@@ -394,7 +394,7 @@ export default function AboutPageMobile() {
       {/* 7 */}<RayonSection />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-about-mobile.webp"
+          src={cld('/images/cta-about-mobile.webp')}
           alt="Prêt à collaborer avec AKATech ? Discutons de votre projet."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

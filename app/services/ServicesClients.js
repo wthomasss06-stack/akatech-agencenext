@@ -7,6 +7,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
+import { cld } from '@/lib/cloudinary'
 import { SERVICES } from '@/lib/data'
 
 
@@ -257,7 +258,7 @@ export default function ServicesPage() {
       <TechSection />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-services-desktop.webp"
+          src={cld('/images/cta-services-desktop.webp')}
           alt="Prêt à lancer votre projet ? Obtenez un devis gratuit en 24h."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

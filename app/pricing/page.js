@@ -4,7 +4,7 @@ import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'Tarifs — AKATech | Prix Sites Web & Applications Abidjan',
-  description: "Tarifs transparents : portfolio dès 100 000 FCFA, site vitrine dès 220 000 FCFA, e-commerce dès 450 000 FCFA. Mobile Money accepté, paiement en 2 fois.",
+  description: "Tarifs transparents : site vitrine dès 150 000 FCFA (portfolio inclus), e-commerce dès 450 000 FCFA. Mobile Money accepté, paiement en 2 fois.",
   alternates: { canonical: '/pricing' },
   openGraph: { title: 'Tarifs — AKATech', description: "Tarifs transparents pour sites vitrines, e-commerce, applications web et fiches Google. Mobile Money accepté.", locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/pricing' },
 }

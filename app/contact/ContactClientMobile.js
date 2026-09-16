@@ -10,6 +10,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
+import { cld } from '@/lib/cloudinary'
 
 
 
@@ -304,7 +305,8 @@ function ProjectForm() {
                         <option value="e-commerce">E-commerce</option>
                         <option value="application-web">Application Web / SaaS</option>
                         <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                        <option value="api-backend">API & Backend</option>
+                        <option value="chatbot-ia">Intégration IA Chatbot</option>
+                        <option value="paiement-en-ligne">Intégration de Paiement en Ligne</option>
                         <option value="google-my-business">Fiche Google My Business</option>
                         <option value="maintenance">Maintenance & Support</option>
                         <option value="autre">Autre</option>
@@ -373,7 +375,7 @@ export default function ContactPage() {
       <ConversionMarquee />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-contact-mobile.webp"
+          src={cld('/images/cta-contact-mobile.webp')}
           alt="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

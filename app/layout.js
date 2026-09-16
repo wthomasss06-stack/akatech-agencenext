@@ -95,7 +95,7 @@ const ORG_JSON_LD = {
     { '@type': 'Country', name: "Côte d'Ivoire" },
     { '@type': 'Place', name: 'Afrique de l\'Ouest' },
   ],
-  priceRange: '10 000 FCFA - 1 200 000 FCFA',
+  priceRange: '10 000 FCFA - 1 500 000 FCFA',
   telephone: '+225-01-42-50-77-50',
   email: 'wthomasss06@gmail.com',
   sameAs: [

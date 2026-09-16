@@ -7,6 +7,7 @@ import {
   ArrowRight, Star, ExternalLink, ChevronDown,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
+  Calendar, Layers, Receipt, Calculator, MessageCircle, CreditCard,
   Zap, Timer, Check, HelpCircle, Send, Lock,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -432,7 +433,7 @@ const SERVICES_ITEMS = [
       { h: 'Design responsive', d: 'Parfait sur tous les écrans.' },
       { h: 'Optimisation SEO', d: 'Soyez visible, soyez choisi.' },
     ],
-    price: 'À partir de 100 000 FCFA',
+    price: 'À partir de 150 000 FCFA',
   },
   {
     n: '02', Icon: Map, title: 'Cartes Interactives & Dashboards',
@@ -447,19 +448,7 @@ const SERVICES_ITEMS = [
     price: 'Sur devis',
   },
   {
-    n: '03', Icon: Server, title: 'API & Backend Robustes',
-    tagline: 'Connectez et automatisez vos systèmes.',
-    bullets: [
-      { h: 'API REST & GraphQL', d: 'Des interfaces modernes et performantes.' },
-      { h: 'Architecture sécurisée', d: 'Protection des données et des accès.' },
-      { h: 'Intégration de services tiers', d: 'Connectez vos outils et plateformes.' },
-      { h: 'Automatisation des processus', d: 'Gagnez du temps, réduisez les tâches manuelles.' },
-      { h: 'Performance et scalabilité', d: 'Des systèmes conçus pour grandir avec vous.' },
-    ],
-    price: 'Sur devis',
-  },
-  {
-    n: '04', Icon: Wrench, title: 'Maintenance & Support',
+    n: '03', Icon: Wrench, title: 'Maintenance & Support',
     tagline: 'Votre projet sécurisé et toujours performant.',
     bullets: [
       { h: 'Sauvegardes automatiques', d: 'Vos données sont protégées en continu.' },
@@ -471,7 +460,7 @@ const SERVICES_ITEMS = [
     price: 'À partir de 20 000 FCFA',
   },
   {
-    n: '05', Icon: MapPin, title: 'Fiche Google My Business',
+    n: '04', Icon: MapPin, title: 'Fiche Google My Business',
     tagline: 'Soyez visible sur Google Maps et la recherche locale.',
     bullets: [
       { h: 'Optimisation complète', d: 'NAP, catégories, description, photos et services.' },
@@ -482,17 +471,40 @@ const SERVICES_ITEMS = [
     ],
     price: 'À partir de 20 000 FCFA',
   },
+  {
+    n: '05', Icon: MessageCircle, title: 'Intégration IA Chatbot',
+    tagline: "Le même assistant conversationnel que sur akatech.vercel.app.",
+    bullets: [
+      { h: 'Assistant sur-mesure', d: 'Formé sur votre activité, vos services et vos tarifs.' },
+      { h: 'Qualification automatique', d: 'Comprend le besoin du visiteur avant de le transmettre.' },
+      { h: 'Disponible 24h/24', d: 'Répond même quand vous êtes indisponible.' },
+      { h: 'Capture de leads', d: 'Nom, contact et besoin enregistrés automatiquement.' },
+      { h: 'Intégration WhatsApp', d: 'Relais possible vers votre WhatsApp Business.' },
+    ],
+    price: 'Sur devis',
+  },
+  {
+    n: '06', Icon: CreditCard, title: 'Intégration de Paiement en Ligne',
+    tagline: 'Encaissez directement depuis votre site.',
+    bullets: [
+      { h: 'Mobile Money', d: 'Orange Money, MTN MoMo, Wave.' },
+      { h: 'Carte bancaire', d: 'Selon vos besoins et votre clientèle.' },
+      { h: 'Suivi des transactions', d: 'Historique clair de chaque paiement.' },
+      { h: 'Notifications automatiques', d: 'Vous et votre client êtes informés en temps réel.' },
+      { h: 'Flux sécurisés', d: 'Paiements protégés de bout en bout.' },
+    ],
+    price: 'Sur devis',
+  },
 ]
 
 // ── DATA processus — texte complet (remplace les visuels image) ──
 const PROCESS_ITEMS = [
-  { n: '01', title: 'Prise de contact & brief', badge: '1 à 2 jours', desc: "Vous me présentez votre projet et vos besoins. Nous échangeons sur vos références afin de définir le pack le plus adapté." },
-  { n: '02', title: 'Devis & conditions', badge: '1 jour', desc: "Vous recevez un devis détaillé indiquant le montant total, l'acompte de 50%, le solde à la livraison, le délai et les prestations incluses." },
-  { n: '03', title: 'Acompte reçu', badge: 'Feu vert', desc: "Dès réception de l'acompte, je récupère vos contenus — logo, textes, photos — et le développement démarre immédiatement." },
-  { n: '04', title: 'Création du site', badge: 'Délai annoncé', desc: "Je développe votre site : pages, design responsive, animations, formulaire de contact, SEO de base — et je configure l'hébergement et le nom de domaine." },
-  { n: '05', title: 'Livraison & validation', badge: '1 à 2 jours', desc: "Vous recevez un lien de prévisualisation pour tester le site et demander vos retours avant la mise en ligne définitive." },
-  { n: '06', title: 'Solde payé', badge: 'Fichiers transmis', desc: "Une fois le solde réglé, je vous transmets les fichiers sources, les accès à l'hébergement et au nom de domaine, ainsi que le mot de passe d'administration." },
-  { n: '07', title: 'Mise en ligne & support', badge: 'Projet livré', desc: "Votre site est en ligne. Selon le pack, vous bénéficiez d'un mois de support, et je vous accompagne pour le renouvellement après la première année." },
+  { n: '01', title: 'Brief & découverte', badge: 'Échange gratuit', desc: "Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement." },
+  { n: '02', title: 'Devis & contrat', badge: '1 jour', desc: "Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble." },
+  { n: '03', title: 'Acompte & contenus', badge: 'Feu vert', desc: "Vous versez 50% d'acompte et transmettez logo, informations et visuels — le délai démarre à réception." },
+  { n: '04', title: 'Conception & développement', badge: 'Délai annoncé', desc: "Nous concevons et développons votre projet conformément au devis validé." },
+  { n: '05', title: 'Prévisualisation & validation', badge: '1 à 2 jours', desc: "Vous recevez un lien de prévisualisation, testez le projet et nous effectuons les corrections mineures incluses." },
+  { n: '06', title: 'Livraison & suivi', badge: 'Projet livré', desc: "Après le solde, le projet est mis en ligne et les accès transmis — la garantie et le support démarrent ensuite." },
 ]
 
 // ── STATS — chiffres géants éditoriaux (miroir desktop), responsive 2-col mobile ──
@@ -907,12 +919,13 @@ function RevealParagraph({ text, greenWords = [], extraStyle = {}, inView }) {
 
 // ── DOMAINES D'INTERVENTION — grille éditoriale statique (miroir desktop, sans hover-image souris) ──
 const DOMAINES = [
-  { n: '01', Icon: Monitor,         title: 'Sites Vitrine & Landing Pages',    tag: 'Site Vitrine',   desc: "Votre présence digitale professionnelle, optimisée pour convertir vos visiteurs en clients. Design sur mesure, SEO intégré, livré en 7 à 14 jours." },
-  { n: '02', Icon: ShoppingBag,     title: 'E-Commerce & Boutiques en ligne',  tag: 'E-Commerce',     desc: "Boutiques complètes avec paiement Mobile Money (Orange Money, Wave), gestion des stocks, tableau de bord admin et notifications commandes." },
-  { n: '03', Icon: LayoutDashboard, title: 'Applications SaaS & Métier',       tag: 'SaaS',           desc: "Des outils web sur mesure pour automatiser vos processus, gérer vos équipes et économiser des heures de travail chaque semaine." },
-  { n: '04', Icon: Cog,             title: 'Digitalisation de processus',      tag: 'Digitalisation', desc: "Remplacez vos fichiers Excel et WhatsApp par des applications robustes. Suivi en temps réel, rôles utilisateurs, reporting intégré." },
-  { n: '05', Icon: Image,           title: 'Portfolios & Identités créatives', tag: 'Portfolio',      desc: "Des vitrines animées et percutantes pour créatifs, photographes, graphistes et freelances qui veulent décrocher plus de clients." },
-  { n: '06', Icon: Wrench,          title: 'Maintenance & Évolutions',         tag: 'Support',        desc: "Votre investissement sur la durée. Mises à jour, nouvelles fonctionnalités, corrections et support technique réactif sous 48h." },
+  { n: '01', Icon: Monitor,  title: 'Sites vitrines & sites métier',          tag: 'Site Vitrine', desc: "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel." },
+  { n: '02', Icon: ShoppingBag, title: 'E-commerce',                          tag: 'E-Commerce',   desc: "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur." },
+  { n: '03', Icon: Calendar, title: 'Réservation & rendez-vous',              tag: 'Réservation',  desc: "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles." },
+  { n: '04', Icon: Layers,   title: 'Plateformes & marketplaces',             tag: 'Plateforme',   desc: "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards." },
+  { n: '05', Icon: Receipt,  title: 'Gestion commerciale & facturation',      tag: 'Facturation',  desc: "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF." },
+  { n: '06', Icon: Cog,      title: 'Applications web & outils métier',       tag: 'Outil métier', desc: "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure." },
+  { n: '07', Icon: Calculator, title: 'POS & caisse',                        tag: 'Bientôt',      desc: "Système d'encaissement et de caisse physique — bientôt disponible." },
 ]
 
 function DomaineCard({ n, Icon, title, desc, tag, index, inView }) {
@@ -961,9 +974,9 @@ function DomainesSection() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DANS QUEL AXE DE CRÉATION S'INSCRIT VOTRE PROJET ?" />
-            Dans quel axe de création{' '}
-            <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
+            <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
+            Ce que AKATech Studio{' '}
+            <GreenUnderline><span className="text-gradient">conçoit pour vous</span></GreenUnderline>
           </h2>
           <RevealParagraph text={DOM_TEXT} greenWords={DOM_GREEN} extraStyle={{ color: T.textSub }} inView={inView} />
         </motion.div>
@@ -1232,7 +1245,8 @@ function ProjectFormHome() {
                       <option value="e-commerce">E-commerce</option>
                       <option value="application-web">Application Web / SaaS</option>
                       <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                      <option value="api-backend">API & Backend</option>
+                      <option value="chatbot-ia">Intégration IA Chatbot</option>
+                      <option value="paiement-en-ligne">Intégration de Paiement en Ligne</option>
                       <option value="google-my-business">Fiche Google My Business</option>
                       <option value="maintenance">Maintenance & Support</option>
                       <option value="autre">Autre</option>
@@ -1337,7 +1351,7 @@ export default function HomePageMobile() {
       <ProjectFormHome />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-home-mobile.webp"
+          src={cld('/images/cta-home-mobile.webp')}
           alt="Comme eux, donnez à votre activité la présence digitale qu'elle mérite."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

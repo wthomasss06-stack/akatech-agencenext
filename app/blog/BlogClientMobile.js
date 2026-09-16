@@ -7,6 +7,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, MarqueeStrip, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
+import { cld } from '@/lib/cloudinary'
 
 
 
@@ -311,7 +312,7 @@ export default function BlogPage() {
       <Newsletter />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-blog-mobile.webp"
+          src={cld('/images/cta-blog-mobile.webp')}
           alt="Vous avez un projet web ? Discutons-en gratuitement."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

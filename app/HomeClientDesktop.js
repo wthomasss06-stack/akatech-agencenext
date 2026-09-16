@@ -12,6 +12,7 @@ import {
   TrendingUp, Users, Clock, Award,
   MessageCircle, Target, Code, Timer, ChevronLeft, ChevronRight,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
+  Calendar, Layers, Receipt, Calculator, CreditCard,
   Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -541,11 +542,14 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections }) {
 // ── SERVICES — Two-Column Skewed Images (HTML skew-section) ──
 // ═══════════════════════════════════════════════════════════════
 const SERVICES_SKEW = [
-  { n: '01', Icon: Globe,    title: 'Conception de Site Web',          desc: "Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce.", price: 'À partir de 100 000 FCFA', del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
-  { n: '02', Icon: Map,      title: 'Cartes Interactives & Dashboards', desc: "Intégration de cartes Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces actionnables.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
-  { n: '03', Icon: Server,   title: 'API & Backend Robustes',           desc: "Conception d'API RESTful sécurisées avec Django ou Flask. Authentification JWT, gestion des rôles, intégration Mobile Money.", price: 'À partir de 200 000 FCFA', del: '7-14 jours', img: '/images/service/api.webp', slug: 'api-backend' },
-  { n: '04', Icon: Wrench,   title: 'Maintenance & Support',            desc: "Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier.", price: 'À partir de 20 000 FCFA/mois', del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
-  { n: '05', Icon: MapPin,   title: 'Fiche Google My Business',         desc: "Création ou optimisation de votre fiche Google (NAP, photos, SEO local) et suivi mensuel : avis, publications et statistiques.", price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
+  { n: '01', Icon: Globe,        title: 'Conception de Site Web',            desc: "Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce.", price: 'À partir de 150 000 FCFA', del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
+  { n: '02', Icon: Map,          title: 'Cartes Interactives & Dashboards',  desc: "Intégration de cartes Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces actionnables.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
+  { n: '03', Icon: Wrench,       title: 'Maintenance & Support',             desc: "Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier.", price: 'À partir de 20 000 FCFA/mois', del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
+  { n: '04', Icon: MapPin,       title: 'Fiche Google My Business',          desc: "Création ou optimisation de votre fiche Google (NAP, photos, SEO local) et suivi mensuel : avis, publications et statistiques.", price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
+  // Chemins confirmés par l'utilisateur (public/images/service/ia.webp
+  // et .../peiement.webp — orthographe du fichier conservée telle quelle).
+  { n: '05', Icon: MessageCircle, title: 'Intégration IA Chatbot',           desc: "Un chatbot conversationnel intégré à votre site pour interagir avec vos visiteurs et les guider — le même type d'assistant que celui d'akatech.vercel.app, pensé pour augmenter la productivité de votre business.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/ia.webp', slug: 'chatbot-ia' },
+  { n: '06', Icon: CreditCard,    title: 'Intégration de Paiement en Ligne', desc: "Intégration de solutions de paiement directement sur votre site — Mobile Money (Orange Money, MTN MoMo, Wave) et carte bancaire selon vos besoins — pour encaisser sans friction.", price: 'Sur devis', del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
 ]
 
 // ── GHOST SCROLL SHOWCASE — parallax + texte fantôme horizontal ──
@@ -762,13 +766,12 @@ function ServicesPreview() {
 // ── BUILT ON TRUST — 3D Showcase (HTML showcase-section) ─────
 // ═══════════════════════════════════════════════════════════════
 const WHY_PANELS = [
-  { n: '01', title: 'Prise de\ncontact',          sub: 'On vous écoute',              desc: "Vous décrivez votre projet, vos objectifs et votre budget. Premier échange gratuit et sans engagement.", img: '/images/process/prise%20de%20contact.webp' },
-  { n: '02', title: 'Devis &\nconditions',         sub: 'Proposition détaillée',        desc: "Planning, technologies, tarif : tout est posé noir sur blanc avant de démarrer le moindre développement.", img: '/images/process/devis%20et%20condition.webp' },
-  { n: '03', title: 'Acompte\nde démarrage',       sub: '50% pour lancer le projet',    desc: "L'acompte confirme votre commande et permet de démarrer le développement immédiatement.", img: '/images/process/acompte.webp' },
-  { n: '04', title: 'Création\ndu site',           sub: 'Design 100% sur mesure',       desc: "Zéro template, zéro copier-coller — une identité visuelle unique, pensée pour votre activité.", img: '/images/process/creation%20du%20site.webp' },
-  { n: '05', title: 'Livraison\npour validation',  sub: 'Vous testez avant de payer',   desc: "Un lien de prévisualisation vous est partagé pour valider le design et le contenu avant tout paiement final.", img: '/images/process/livraison.webp' },
-  { n: '06', title: 'Solde &\nfacturation',        sub: 'Paiement final',               desc: "Une fois le site validé, le solde est réglé et tous les accès vous sont transmis avec une formation.", img: '/images/process/solde.webp' },
-  { n: '07', title: 'Mise en\nligne',              sub: 'Votre site est officiel',      desc: "Le site est publié en ligne, entre vos mains — avec un support disponible pour les premières semaines.", img: '/images/process/mise%20en%20ligne.webp' },
+  { n: '01', title: 'Brief &\ndécouverte',            sub: 'On vous écoute',              desc: "Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement.", img: cld('/images/process/process_akatech_01_brief.webp') },
+  { n: '02', title: 'Devis &\ncontrat',                sub: 'Périmètre, prix, délai',       desc: "Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble.", img: cld('/images/process/process_akatech_02_devis.webp') },
+  { n: '03', title: 'Acompte &\ncontenus',             sub: '50% pour lancer le projet',    desc: "Vous versez 50% d'acompte et transmettez logo, informations et visuels — le délai démarre à réception.", img: cld('/images/process/process_akatech_03_acompte.webp') },
+  { n: '04', title: 'Conception &\ndéveloppement',     sub: 'Design 100% sur mesure',       desc: "Nous concevons et développons votre projet conformément au devis validé.", img: cld('/images/process/process_akatech_04_conception.webp') },
+  { n: '05', title: 'Prévisualisation &\nvalidation',  sub: 'Vous testez avant de payer',   desc: "Vous recevez un lien de prévisualisation, testez le projet et nous effectuons les corrections mineures incluses.", img: cld('/images/process/process_akatech_05_validation.webp') },
+  { n: '06', title: 'Livraison &\nsuivi',              sub: 'En ligne, avec support',       desc: "Après le solde, le projet est mis en ligne et les accès transmis — la garantie et le support démarrent ensuite.", img: cld('/images/process/process_akatech_06_livraison.webp') },
 ]
 
 function WhyUs() {
@@ -884,45 +887,52 @@ function Testimonials() {
 const DOMAINES = [
   {
     n: '01', Icon: Monitor,
-    title: 'Sites Vitrine & Landing Pages',
-    desc:  "Votre présence digitale professionnelle, optimisée pour convertir vos visiteurs en clients. Design sur mesure, SEO intégré, livré en 7 à 14 jours.",
+    title: 'Sites vitrines & sites métier',
+    desc:  "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel.",
     tag:   'Site Vitrine',
-    img:   '/images/projects/techflow-preview.webp',        // TechFlow — site vitrine
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_01_creation.webp',
   },
   {
     n: '02', Icon: ShoppingBag,
-    title: 'E-Commerce & Boutiques en ligne',
-    desc:  "Boutiques complètes avec paiement Mobile Money (Orange Money, Wave), gestion des stocks, tableau de bord admin et notifications commandes.",
+    title: 'E-commerce',
+    desc:  "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur.",
     tag:   'E-Commerce',
-    img:   '/images/projects/shopci-preview.webp',          // ShopCI — marketplace e-commerce
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_02_ecommerce.webp',
   },
   {
-    n: '03', Icon: LayoutDashboard,
-    title: 'Applications SaaS & Métier',
-    desc:  "Des outils web sur mesure pour automatiser vos processus, gérer vos équipes et économiser des heures de travail chaque semaine.",
-    tag:   'SaaS',
-    img:   '/images/projects/nexura-preview.webp',          // Nexura — app métier full-stack
+    n: '03', Icon: Calendar,
+    title: 'Réservation & rendez-vous',
+    desc:  "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles.",
+    tag:   'Réservation',
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_03_reservation.webp',
   },
   {
-    n: '04', Icon: Cog,
-    title: 'Digitalisation de processus',
-    desc:  "Remplacez vos fichiers Excel et WhatsApp par des applications robustes. Suivi en temps réel, rôles utilisateurs, reporting intégré.",
-    tag:   'Digitalisation',
-    img:   '/images/projects/moncashjour-preview.webp',     // MonCashJour — dashboard gestion ventes
+    n: '04', Icon: Layers,
+    title: 'Plateformes & marketplaces',
+    desc:  "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards.",
+    tag:   'Plateforme',
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_04_plateformes.webp',
   },
   {
-    n: '05', Icon: Image,
-    title: 'Portfolios & Identités créatives',
-    desc:  "Des vitrines animées et percutantes pour créatifs, photographes, graphistes et freelances qui veulent décrocher plus de clients.",
-    tag:   'Portfolio',
-    img:   '/images/projects/jean-edy-preview.webp',        // Jean Edy — portfolio React avancé
+    n: '05', Icon: Receipt,
+    title: 'Gestion commerciale & facturation',
+    desc:  "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF.",
+    tag:   'Facturation',
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_05_gestion.webp',
   },
   {
-    n: '06', Icon: Wrench,
-    title: 'Maintenance & Évolutions',
-    desc:  "Votre investissement sur la durée. Mises à jour, nouvelles fonctionnalités, corrections et support technique réactif sous 48h.",
-    tag:   'Support',
-    img:   '/images/service/maintenence.webp',              // Service maintenance AKATech
+    n: '06', Icon: Cog,
+    title: 'Applications web & outils métier',
+    desc:  "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure.",
+    tag:   'Outil métier',
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_06_applications.webp',
+  },
+  {
+    n: '07', Icon: Calculator,
+    title: 'POS & caisse',
+    desc:  "Système d'encaissement et de caisse physique — bientôt disponible.",
+    tag:   'Bientôt',
+    img:   '/images/ce%20que%20nous%20concevons/types_sites_07_pos.webp',
   },
 ]
 
@@ -1119,9 +1129,9 @@ function DomainesSection() {
               color: T.textMain,
               lineHeight: 1,
             }}>
-              <GhostTitle text="DANS QUEL AXE DE CRÉATION S'INSCRIT VOTRE PROJET ?" />
-              Dans quel axe de création{' '}
-              <GreenUnderline><span className="text-gradient">s'inscrit votre projet ?</span></GreenUnderline>
+              <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
+              Ce que AKATech Studio{' '}
+              <GreenUnderline><span className="text-gradient">conçoit pour vous</span></GreenUnderline>
             </h2>
           </BlurReveal>
           <p
@@ -1690,7 +1700,8 @@ function ProjectFormHome() {
                         <option value="e-commerce">E-commerce</option>
                         <option value="application-web">Application Web / SaaS</option>
                         <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                        <option value="api-backend">API & Backend</option>
+                        <option value="chatbot-ia">Intégration IA Chatbot</option>
+                        <option value="paiement-en-ligne">Intégration de Paiement en Ligne</option>
                         <option value="google-my-business">Fiche Google My Business</option>
                         <option value="maintenance">Maintenance & Support</option>
                         <option value="autre">Autre</option>
@@ -1752,7 +1763,7 @@ export default function HomePageDesktop() {
 
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-home-desktop.webp"
+          src={cld('/images/cta-home-desktop.webp')}
           alt="Comme eux, donnez à votre activité la présence digitale qu'elle mérite."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

@@ -498,6 +498,31 @@ export default function AIAssistant() {
     return () => window.removeEventListener('keydown', handleEscape)
   }, [questionnaireUrl])
 
+  // Réaction du chat à une décision prise dans la modale iframe
+  // (app/devis/[type]/page.js). Message généré ici, sans appel IA
+  // supplémentaire : les données réelles (tier, prix) suffisent à un
+  // message qui sonne juste, pour zéro coût de quota supplémentaire.
+  // Volontairement non persisté en base (juste un ajout local à la
+  // conversation affichée) : si le visiteur recharge la page, il ne
+  // réapparaît pas, mais la décision elle-même reste bien enregistrée
+  // (Questionnaire/Quote), visible dans l'onglet Prospects.
+  useEffect(() => {
+    const handleMessage = (event) => {
+      if (event.origin !== window.location.origin) return
+      const data = event.data
+      if (!data || data.source !== 'akatech-devis' || data.event !== 'decision') return
+
+      const reaction = data.decision === 'accepted'
+        ? `Yes, je vois que tu as validé${data.tier ? ` (${data.tier}${data.priceLabel ? `, ${data.priceLabel}` : ''})` : ''} 🎉 Aka a reçu ton dossier complet et va te recontacter très vite pour la suite.`
+        : `C'est noté, pas de souci. Si des questions restent ou que tu changes d'avis, je suis là.`
+
+      setMessages((current) => [...current, { role: 'assistant', content: reaction }])
+    }
+
+    window.addEventListener('message', handleMessage)
+    return () => window.removeEventListener('message', handleMessage)
+  }, [])
+
   if (pathname?.startsWith('/explorer')) return null
   if (searchParams.get('embedded') === '1') return null
   if (!mounted) return null

@@ -12,6 +12,7 @@ import { Code, FileText, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
+import { cld } from '@/lib/cloudinary'
 import { PROJECTS } from '@/lib/data'
 
 
@@ -344,7 +345,7 @@ export default function RealisationsPage() {
 
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-projects-mobile.webp"
+          src={cld('/images/cta-projects-mobile.webp')}
           alt="Votre réalisation peut être la prochaine ici. Partagez votre idée."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

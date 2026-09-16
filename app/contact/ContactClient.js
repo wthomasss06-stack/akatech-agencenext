@@ -11,6 +11,7 @@ import { useTheme } from '@/lib/theme'
 import { GhostTitle, GreenUnderline, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
+import { cld } from '@/lib/cloudinary'
 
 // ═══════════════════════════════════════════════════════════════
 // ── ANIMATION COMPONENTS ─────────────────────────────────────
@@ -503,7 +504,7 @@ export default function ContactPage() {
 
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
-          src="/images/cta-contact-desktop.webp"
+          src={cld('/images/cta-contact-desktop.webp')}
           alt="Prêt à transformer votre idée en réalité digitale ? Parlons-en maintenant."
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />

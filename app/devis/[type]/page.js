@@ -177,6 +177,19 @@ export default function DevisTypePage({ params }) {
           ? 'Merci. AKATech a bien reçu votre acceptation et reviendra vers vous pour la suite.'
           : 'Votre décision a bien été enregistrée. AKATech pourra revenir vers vous si nécessaire.',
       }))
+
+      // Signale la décision au chat parent (si ouvert dans la modale
+      // iframe de components/ui/AIAssistant.js) pour qu'il puisse réagir.
+      // Sans effet si la page est ouverte hors iframe (window.parent === window).
+      if (window.parent !== window) {
+        window.parent.postMessage({
+          source: 'akatech-devis',
+          event: 'decision',
+          decision,
+          tier: success?.quote?.tier || null,
+          priceLabel: success?.quote?.priceLabel || null,
+        }, window.location.origin)
+      }
     } catch (err) {
       setError(err.message || 'Erreur inconnue')
     } finally {
