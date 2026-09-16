@@ -11,6 +11,7 @@ import {
   Zap, Timer, Check, HelpCircle, Send, Lock,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
@@ -210,12 +211,14 @@ const HERO_SLOGANS = [
 // ── Slogan Hero — cycle auto entre 3 accroches, même traitement
 // Neo-Brutalism (bloc vert + box-shadow blanc dur) sur le mot-clé ──
 function HeroSloganCycle() {
+  const { t } = useLanguage()
   const [index, setIndex] = useState(0)
   useEffect(() => {
     const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
     return () => clearInterval(id)
   }, [])
-  const { before, highlight } = HERO_SLOGANS[index]
+  const before = t(`homeSlogan${index + 1}`)
+  const highlight = t(`homeHighlight${index + 1}`)
 
   return (
     <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -237,6 +240,7 @@ function HeroSloganCycle() {
 // ── HERO (identique au desktop — pin scroll 200vh + parallaxe souris) ──
 function Hero() {
   const T = useTheme()
+  const { t } = useLanguage()
   const wrapRef     = useRef(null)
   const layerBgRef  = useRef(null)
   const layerMidRef = useRef(null)
@@ -339,7 +343,7 @@ function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
           style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.92rem', color: 'rgba(255,255,255,.68)', maxWidth: 420, margin: '0 auto 1.4rem', lineHeight: 1.55 }}>
-          Lancez un site professionnel qui inspire confiance et déclenche des demandes.
+          {t('homeHeroText')}
         </motion.p>
 
         <motion.div
@@ -661,6 +665,7 @@ function Accordion({ items, defaultOpen = 0, renderHeader, renderBody }) {
 // ── SERVICES PREVIEW — accordéon (icône/titre/tarif + détails au clic) ──
 function ServicesPreview() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
   const ICON_BOX = 42
@@ -671,9 +676,9 @@ function ServicesPreview() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
-            <GhostTitle text="NOS prestations, " />
-            NOS,<br />
-            <GreenUnderline><span className="text-gradient">prestations</span></GreenUnderline>
+            <GhostTitle text={t('homeServicesTitle')} />
+            {t('homeServicesTitle').split(' ')[0]}<br />
+            <GreenUnderline><span className="text-gradient">{t('homeServicesTitle').split(' ').slice(1).join(' ')}</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -745,6 +750,7 @@ function ServicesPreview() {
 // ── PROCESS — accordéon (étape/titre/statut + détail au clic) ────
 function Process() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -753,8 +759,8 @@ function Process() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE en ligne" />
-            De l'idée à la <GreenUnderline><span className="text-gradient">mise en ligne</span></GreenUnderline>
+            <GhostTitle text={t('processTitle').toUpperCase()} />
+            {t('processTitle')}
           </h2>
         </motion.div>
 
@@ -1004,21 +1010,22 @@ function DomainesSection() {
 // ── CHOISISSEZ VOTRE FORMULE — pricing callout à onglets (miroir desktop) ──
 function PricingCallout() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
   const d = PRICING[tab]
 
   return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+    <section id="pricing-section" ref={ref} style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
-            Choisissez votre <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
+            <GhostTitle text={t('chooseSolution').toUpperCase()} />
+            {t('chooseSolution')}
           </h2>
-          <RevealParagraph text="Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez." greenWords={['claires,', 'structures', 'freelances', 'choisissez.']} extraStyle={{ color: T.textSub }} inView={inView} />
+          <RevealParagraph text={t('pricingLead')} greenWords={[]} extraStyle={{ color: T.textSub }} inView={inView} />
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}

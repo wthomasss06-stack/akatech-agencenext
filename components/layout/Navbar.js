@@ -9,7 +9,6 @@ const NAV_LINKS = [
   { key: 'about', href: '/about' },
   { key: 'services', href: '/services' },
   { key: 'projects', href: '/projects' },
-  { key: 'pricing', href: '/pricing' },
   { key: 'blog', href: '/blog' },
   { key: 'contact', href: '/contact' },
 ]

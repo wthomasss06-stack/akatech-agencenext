@@ -895,6 +895,42 @@ body.light-mode .domaines-sticky-cta { background: var(--bg-light); }
   .domaines-sticky-image { width: 150px; opacity: .1; }
 }
 
+.process-sticky-section { position: relative; overflow: clip; padding-top: clamp(5rem, 9vw, 9rem); }
+.process-sticky-heading { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 5% clamp(3rem, 7vw, 6rem); text-align: center; }
+.process-sticky-heading h2 { position: relative; color: var(--text-main); font-size: clamp(2.6rem, 5vw, 4rem); line-height: 1; }
+.process-sticky-heading > span { display: block; margin-top: 1.2rem; color: var(--g1); font: 700 .68rem 'JetBrains Mono', monospace; letter-spacing: .42em; text-transform: uppercase; }
+.process-sticky-stack { position: relative; width: 100%; }
+.process-sticky-card { position: sticky; top: 0; display: grid; place-items: center; min-height: 100vh; padding: clamp(2rem, 6vw, 5rem) 5%; overflow: hidden; isolation: isolate; border-radius: 32px 32px 0 0; box-shadow: 0 -40px 100px rgba(0,0,0,.22); }
+.process-sticky-card-1 { background: #08130b; color: #f2ede8; }
+.process-sticky-card-2 { background: #f4f8f0; color: #111; }
+.process-sticky-card-3 { background: #e7f2df; color: #111; }
+.process-sticky-card-4 { background: #0b1f10; color: #f2ede8; }
+.process-sticky-card-5 { background: #f7f4ed; color: #111; }
+.process-sticky-card-6 { background: #102b17; color: #f2ede8; }
+body.light-mode .process-sticky-card-1 { background: #f4f8f0; color: #111; }
+body.light-mode .process-sticky-card-2 { background: linear-gradient(135deg,#c6ff3d,#88ca53); color: #08130b; }
+body.light-mode .process-sticky-card-3 { background: #fff; color: #111; }
+body.light-mode .process-sticky-card-4 { background: linear-gradient(160deg,#0b1f10,#173c1e); color: #f2ede8; }
+body.light-mode .process-sticky-card-5 { background: #fff; color: #111; }
+body.light-mode .process-sticky-card-6 { background: linear-gradient(160deg,#102b17,#1b4822); color: #f2ede8; }
+.process-sticky-grid { position: absolute; inset: 0; z-index: -1; pointer-events: none; opacity: .7; background-image: linear-gradient(to right,rgba(136,202,83,.08) 1px,transparent 1px),linear-gradient(to bottom,rgba(136,202,83,.08) 1px,transparent 1px); background-size: 60px 60px; }
+.process-sticky-card:nth-child(even) .process-sticky-grid { background-image: linear-gradient(to right,rgba(10,36,16,.08) 1px,transparent 1px),linear-gradient(to bottom,rgba(10,36,16,.08) 1px,transparent 1px); }
+.process-sticky-content { position: relative; z-index: 2; width: min(780px,100%); text-align: center; }
+.process-sticky-number { margin-bottom: 1.5rem; color: #88ca53; font: 700 .68rem 'JetBrains Mono',monospace; letter-spacing: .4em; text-transform: uppercase; }
+.process-sticky-tag { display: inline-flex; margin-bottom: 1.2rem; color: #5f9137; font: 700 .68rem 'JetBrains Mono',monospace; letter-spacing: .12em; text-transform: uppercase; }
+.process-sticky-card-1 .process-sticky-tag, .process-sticky-card-4 .process-sticky-tag, .process-sticky-card-6 .process-sticky-tag { color: #b3ee85; }
+.process-sticky-content h3 { max-width: 1000px; margin: 0 auto; font-family: 'Barlow Condensed',sans-serif; font-size: clamp(4rem, 10vw, 9rem); font-style: italic; font-weight: 900; line-height: .88; letter-spacing: -.02em; text-transform: uppercase; }
+.process-sticky-content p { max-width: 620px; margin: 2rem auto 0; color: currentColor; opacity: .68; font-size: clamp(.95rem,1.6vw,1.2rem); line-height: 1.8; }
+.process-sticky-line { width: min(180px,35vw); height: 2px; margin: 2rem auto 0; background: linear-gradient(90deg,transparent,#88ca53,transparent); }
+.process-sticky-image { position: absolute; right: 5%; bottom: 8%; z-index: 1; width: clamp(140px,18vw,270px); aspect-ratio: 1.6; border: 1px solid rgba(136,202,83,.3); border-radius: 14px; opacity: .18; object-fit: cover; transform: rotate(5deg); filter: saturate(.8); }
+.process-sticky-card:nth-child(even) .process-sticky-image { left: 5%; right: auto; transform: rotate(-5deg); }
+@media (max-width: 700px) {
+  .process-sticky-card { min-height: 78vh; border-radius: 22px 22px 0 0; }
+  .process-sticky-content h3 { font-size: clamp(3.2rem,14vw,5.5rem); }
+  .process-sticky-content p { font-size: .86rem; line-height: 1.65; }
+  .process-sticky-image { width: 150px; opacity: .1; }
+}
+
 .view-desktop { display: block; }
 .view-mobile  { display: none;  }
 

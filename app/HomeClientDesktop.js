@@ -145,12 +145,14 @@ const HERO_SLOGANS = [
 ]
 
 function HeroSloganCycle() {
+  const { t } = useLanguage()
   const [index, setIndex] = useState(0)
   useEffect(() => {
     const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
     return () => clearInterval(id)
   }, [])
-  const { before, highlight } = HERO_SLOGANS[index]
+  const before = t(`homeSlogan${index + 1}`)
+  const highlight = t(`homeHighlight${index + 1}`)
 
   return (
     <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -171,6 +173,7 @@ function HeroSloganCycle() {
 
 function Hero() {
   const T = useTheme()
+  const { t } = useLanguage()
   const wrapRef     = useRef(null)
   const layerBgRef  = useRef(null)
   const layerMidRef = useRef(null)
@@ -285,7 +288,7 @@ function Hero() {
         <motion.p
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
           style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.02rem', color: 'rgba(255,255,255,.68)', maxWidth: 560, margin: '0 auto 1.7rem', lineHeight: 1.55 }}>
-          Lancez un site professionnel qui inspire confiance et déclenche des demandes.
+          {t('homeHeroText')}
         </motion.p>
 
         <motion.div
@@ -722,6 +725,7 @@ function GhostScrollShowcase({ items }) {
 
 function ServicesPreview() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
 
   // Tous les services — showcase scroll plein écran, chaque panneau pointe vers son service sur /services
@@ -738,11 +742,11 @@ function ServicesPreview() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1} direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text="NOS prestations." />
-              NOS{' '}
+              <GhostTitle text={t('homeServicesTitle')} />
+              {t('homeServicesTitle').split(' ')[0]}{' '}
               <GreenUnderline>
                 <span className="text-gradient">
-                  prestations.
+                  {t('homeServicesTitle').split(' ').slice(1).join(' ')}
                 </span>
               </GreenUnderline>
             </h2>
@@ -777,39 +781,31 @@ const WHY_PANELS = [
 
 function WhyUs() {
   const T = useTheme()
-  const ref = useRef(null)
-
-  // Étapes du processus — showcase scroll plein écran (même pattern que ServicesPreview)
-  const GHOST_ITEMS = WHY_PANELS.map(p => ({
-    n: p.n, title: p.title, img: p.img, tag: p.sub, desc: p.desc,
-  }))
+  const { t } = useLanguage()
 
   return (
-    <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
-      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
-      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-
-        {/* Header — titre sur trait rouge */}
-        <BlurReveal delay={0.1} direction="left">
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, marginBottom: '3rem' }}>
-            <GhostTitle text="DE L'IDÉE À LA MISE en ligne." />
-            DE L'IDÉE À LA MISE{' '}
-            <GreenUnderline><span className="text-gradient">en ligne.</span></GreenUnderline>
-          </h2>
-        </BlurReveal>
-
-        <BlurReveal delay={0.05}>
-          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.42em', textTransform: 'uppercase', color: '#88ca53', display: 'block', marginBottom: '1.5rem', textAlign: 'center' }}>
-            Notre processus
-          </span>
-        </BlurReveal>
-
-        {/* ── Ghost Scroll Showcase — toutes les étapes, plein écran (sort du conteneur 1200px).
-             Pas de BlurReveal ici, même logique que ServicesPreview : blur réservé au texte. ── */}
-        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
-          <GhostScrollShowcase items={GHOST_ITEMS} />
-        </div>
-
+    <section className="process-sticky-section" style={{ background: T.bg }}>
+      <div className="process-sticky-heading">
+        <h2 className="section-title-big">
+          <GhostTitle text={t('processTitle').toUpperCase()} />
+          {t('processTitle')}
+        </h2>
+        <span>{t('processLabel')}</span>
+      </div>
+      <div className="process-sticky-stack">
+        {WHY_PANELS.map((panel, index) => (
+          <article key={panel.n} className={`process-sticky-card process-sticky-card-${index + 1}`}>
+            <div className="process-sticky-grid" />
+            <div className="process-sticky-content">
+              <div className="process-sticky-number">{panel.n} / 06</div>
+              <div className="process-sticky-tag">{panel.sub}</div>
+              <h3>{panel.title.replace('\n', ' ')}</h3>
+              <p>{panel.desc}</p>
+              <div className="process-sticky-line" />
+            </div>
+            <img className="process-sticky-image" src={panel.img} alt="" aria-hidden="true" />
+          </article>
+        ))}
       </div>
     </section>
   )
@@ -1112,6 +1108,7 @@ function DomainesSection() {
 // ── NOS DERNIÈRES RÉALISATIONS — galerie horizontale auto-scroll ──
 function ArchiveTunnelSection() {
   const T = useTheme()
+  const { t } = useLanguage()
   const [hoveredId, setHoveredId] = useState(null)
   const TUNNEL_ITEMS = [
     ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
@@ -1125,8 +1122,8 @@ function ArchiveTunnelSection() {
     <section style={{ padding: '5rem 0 6rem', background: T.bg }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.4rem', textAlign: 'center' }}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, margin: 0 }}>
-          <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
-          Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+          <GhostTitle text={t('projectsTitle').toUpperCase()} />
+          {t('projectsTitle')}
         </h2>
         <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
           <HoverSlideText text="Voir tous les projets" /> <ArrowRight size={15} />
@@ -1338,6 +1335,7 @@ function FlagBadge({ code, primary }) {
 
 function PricingCallout() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
@@ -1345,20 +1343,20 @@ function PricingCallout() {
   const PRICING_LEAD_GREEN = new Set(['claires,', 'structures', 'freelances', 'choisissez.'])
 
   return (
-    <section ref={ref} style={{ padding: '6rem 5% 7rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
+    <section id="pricing-section" ref={ref} style={{ padding: '6rem 5% 7rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <BlurReveal>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", marginBottom: '.6rem', color: T.textMain }}>
-              <GhostTitle text="CHOISISSEZ VOTRE FORMULE IDÉALE" />
-              Choisissez votre <GreenUnderline><span className="text-gradient">formule idéale</span></GreenUnderline>
+              <GhostTitle text={t('chooseSolution').toUpperCase()} />
+              {t('chooseSolution')}
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.12}>
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1.6rem,3.2vw,2.6rem)', fontWeight: 700, lineHeight: 1.32, color: T.textSub, paddingLeft: 'var(--body-indent)', paddingRight: 'var(--body-indent)' }}>
-              {"Des formules claires, adaptées aux besoins des petites structures et freelances — comparez et choisissez.".split(' ').map((word, i) => (
+              {t('pricingLead').split(' ').map((word, i) => (
                 <span key={i} style={{ color: PRICING_LEAD_GREEN.has(word) ? '#88ca53' : 'inherit' }}>
                   {word}{' '}
                 </span>
