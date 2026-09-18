@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    StaggeredMenu — AKATech (mobile)
    Port du composant portfolio, accent #88ca53,
    fond fixe dark (cohérent avec le thème mobile AKATech)
@@ -451,6 +451,13 @@
 }
 .light-mode .sm-header-theme:hover { color: #88ca53; box-shadow: 4px 4px 0px #050505; }
 .light-mode .sm-header-theme:active { box-shadow: 1px 1px 0px #050505; }
+
+.sm-header .aka-language-toggle select {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 0.72rem;
+}
 
 @media (max-width: 480px) {
   .sm-panel-item   { font-size: clamp(1.8rem, 8.5vw, 2.4rem); }
