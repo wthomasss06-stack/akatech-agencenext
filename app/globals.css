@@ -856,6 +856,14 @@ svg[style*="bottom: -10px"] g {
 .domaines-sticky-section { position: relative; overflow: clip; padding-top: clamp(5rem, 9vw, 9rem); }
 .domaines-sticky-heading { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 5% clamp(3rem, 7vw, 6rem); text-align: center; }
 .domaines-sticky-heading h2.domaines-sticky-title { position: relative; text-align: center; font-size: clamp(3.4rem, 6.5vw, 5.6rem); font-weight: 900; font-style: italic; font-family: 'Barlow Condensed', sans-serif; color: var(--text-main); letter-spacing: -.03em; line-height: .95; }
+/* Bug signalé (captures d'écran sept. 2026) : ce titre restait quasi
+   invisible en mode clair — color:var(--text-main) est fixe (blanc
+   85%) et ne change jamais avec .light-mode, contrairement aux cartes
+   domaines-sticky-card-N juste en dessous qui ont déjà leur variante.
+   Même convention que le reste du fichier (#111 partout ailleurs en
+   mode clair) plutôt que de redéfinir --text-main globalement, pour
+   ne pas risquer d'effet de bord sur un autre usage de cette variable. */
+body.light-mode .domaines-sticky-heading h2.domaines-sticky-title { color: #111111; }
 .domaines-sticky-heading p { max-width: 760px; margin: 1.2rem auto 0; color: var(--text-sub); font-family: 'JetBrains Mono', monospace; font-size: clamp(.9rem, 1.4vw, 1.15rem); line-height: 1.7; }
 .domaines-sticky-stack { position: relative; width: 100%; }
 .domaines-sticky-card { position: sticky; top: 0; display: grid; place-items: center; min-height: 100vh; padding: clamp(2rem, 6vw, 5rem) 5%; overflow: hidden; isolation: isolate; border-radius: 32px 32px 0 0; box-shadow: 0 -40px 100px rgba(0,0,0,.22); }
@@ -898,6 +906,8 @@ body.light-mode .domaines-sticky-cta { background: var(--bg-light); }
 .process-sticky-section { position: relative; overflow: clip; padding-top: clamp(5rem, 9vw, 9rem); }
 .process-sticky-heading { position: relative; z-index: 1; max-width: 980px; margin: 0 auto; padding: 0 5% clamp(3rem, 7vw, 6rem); text-align: center; }
 .process-sticky-heading h2 { position: relative; color: var(--text-main); font-size: clamp(2.6rem, 5vw, 4rem); line-height: 1; }
+/* Même bug, même correctif que domaines-sticky-title juste au-dessus. */
+body.light-mode .process-sticky-heading h2 { color: #111111; }
 .process-sticky-heading > span { display: block; margin-top: 1.2rem; color: var(--g1); font: 700 .68rem 'JetBrains Mono', monospace; letter-spacing: .42em; text-transform: uppercase; }
 .process-sticky-stack { position: relative; width: 100%; }
 .process-sticky-card { position: sticky; top: 0; display: grid; place-items: center; min-height: 100vh; padding: clamp(2rem, 6vw, 5rem) 5%; overflow: hidden; isolation: isolate; border-radius: 32px 32px 0 0; box-shadow: 0 -40px 100px rgba(0,0,0,.22); }

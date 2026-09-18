@@ -7,25 +7,21 @@ import Logo from '@/components/ui/Logo'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { HoverSlideText } from '@/components/ui/index'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import TransitionLink from './TransitionLink'
 import { wireLetterHoverSwap } from '@/lib/hoverImageChars'
 import { STUDIO_LETTER_IMAGE_POOLS } from '@/lib/studioWordmarkImages'
 import './FooterWordmark.css'
 
-/* ── Slogans cycle — footer ──────────────────────────── */
-const FOOTER_SLOGANS = [
-  "Un site pensé pour faire grandir votre activité.",
-  "Votre croissance commence en ligne.",
-  "Transformez votre présence en opportunités.",
-  "Digital, local, rentable.",
-]
+/* ── Slogans cycle — footer (traduits via t(), voir FooterSlogan) ── */
 
-function FooterSlogan({ textMuted }) {
+function FooterSlogan({ textMuted, t }) {
+  const slogans = [t('footerSlogan1'), t('footerSlogan2'), t('footerSlogan3'), t('footerSlogan4')]
   const [i, setI] = useState(0)
   useEffect(() => {
-    const id = setInterval(() => setI(v => (v + 1) % FOOTER_SLOGANS.length), 4000)
+    const id = setInterval(() => setI(v => (v + 1) % slogans.length), 4000)
     return () => clearInterval(id)
-  }, [])
+  }, [slogans.length])
   return (
     <div style={{ position: 'relative', minHeight: '2.6em', overflow: 'hidden' }}>
       <AnimatePresence mode="wait">
@@ -41,7 +37,7 @@ function FooterSlogan({ textMuted }) {
             color: textMuted, margin: 0, fontFamily: "'JetBrains Mono',monospace",
           }}
         >
-          {FOOTER_SLOGANS[i]}
+          {slogans[i]}
         </motion.p>
       </AnimatePresence>
     </div>
@@ -49,9 +45,9 @@ function FooterSlogan({ textMuted }) {
 }
 
 // ── Ask AI — vérifiez AKATech par vous-même (site-wide, footer) ──
-function AskAIStrip({ T }) {
+function AskAIStrip({ T, t }) {
   const [copied, setCopied] = useState(null)
-  const PROMPT = "J'ai un projet web pour mon entreprise et j'hésite sur le bon prestataire. Évalue AKATech (akatech.vercel.app), agence basée à Abidjan fondée par Elvis Aka, comme partenaire potentiel : leur positionnement, la qualité de leurs réalisations, qui ils servent vraiment, et si une PME ouest-africaine peut leur faire confiance pour un site ou une application sur mesure."
+  const PROMPT = t('askAiPrompt')
 
   const PLATFORMS = [
     { id: 'chatgpt', label: 'ChatGPT', icon: '/icons/chatgpt.png', url: `https://chatgpt.com/?q=${encodeURIComponent(PROMPT)}` },
@@ -72,16 +68,16 @@ function AskAIStrip({ T }) {
     <div style={{ padding: '2.2rem 0', textAlign: 'center' }}>
       
       <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: '1rem' }}>
-        Demandez à l'IA ce qu'elle pense d'AKATech
+        {t('askAiHeading')}
       </p>
       <div style={{ display: 'flex', gap: '.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         {PLATFORMS.map(p => (
-          <button key={p.id} onClick={() => handleClick(p)} title={`Demander à ${p.label}`}
+          <button key={p.id} onClick={() => handleClick(p)} title={`${t('askPlatform')} ${p.label}`}
             className="aka-ask-btn"
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'transparent', border: 'none', cursor: 'pointer', minWidth: 70 }}>
             <img src={p.icon} alt={p.label} width={22} height={22} style={{ borderRadius: 0, display: 'block' }} />
             <span style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.5)' }}>
-              <HoverSlideText text={copied === p.id ? 'Copié !' : p.label} />
+              <HoverSlideText text={copied === p.id ? t('copied') : p.label} />
             </span>
           </button>
         ))}
@@ -157,6 +153,7 @@ function StudioWordmark() {
 // en fond plein écran, nav-grid + AskAI en bas, wordmark géant en clôture.
 export default function Footer() {
   const T = useTheme()
+  const { t } = useLanguage()
   const pathname = usePathname()
   const year = new Date().getFullYear()
   const border = 'rgba(255,255,255,.16)'
@@ -177,23 +174,23 @@ export default function Footer() {
   ]
 
   const NAV = [
-    ['Accueil', '/'],
-    ['Services', '/services'],
-    ['Réalisations', '/projects'],
-    ['À propos', '/about'],
+    [t('home'), '/'],
+    [t('services'), '/services'],
+    [t('projects'), '/projects'],
+    [t('about'), '/about'],
   ]
 
   const SERVICES = [
-    ['Site Vitrine', '/services'],
-    ['E-Commerce', '/services'],
-    ['Application SaaS', '/services'],
-    ['Maintenance', '/services'],
+    [t('footerServiceVitrine'), '/services'],
+    [t('footerServiceEcommerce'), '/services'],
+    [t('footerServiceSaas'), '/services'],
+    [t('footerServiceMaintenance'), '/services'],
   ]
 
   const LEGAL = [
-    ['Mentions légales', '/mentions-legales'],
-    ['Confidentialité', '/confidentialite'],
-    ['Conditions d’utilisation', '/conditions-utilisation'],
+    [t('legalMentions'), '/mentions-legales'],
+    [t('legalPrivacy'), '/confidentialite'],
+    [t('legalTerms'), '/conditions-utilisation'],
   ]
 
   return (
@@ -222,7 +219,7 @@ export default function Footer() {
       <div style={{ position: 'relative', zIndex: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1.5rem', padding: 'clamp(1.5rem,3vw,2.2rem) 5% 0', flexWrap: 'wrap' }}>
         <Logo size={30} animate={false} showTag={false} />
         <div style={{ maxWidth: 280 }}>
-          <FooterSlogan textMuted={muted} />
+          <FooterSlogan textMuted={muted} t={t} />
         </div>
       </div>
 
@@ -240,7 +237,7 @@ export default function Footer() {
           {/* Menu */}
           <div>
             <h3 style={{ fontSize: '.72rem', textTransform: 'uppercase', letterSpacing: '.14em', marginBottom: '1.1rem', fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono',monospace" }}>
-              Menu
+              {t('menu')}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {NAV.map(([label, href]) => (
@@ -256,7 +253,7 @@ export default function Footer() {
           {/* Services */}
           <div>
             <h3 style={{ fontSize: '.72rem', textTransform: 'uppercase', letterSpacing: '.14em', marginBottom: '1.1rem', fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono',monospace" }}>
-              Services
+              {t('services')}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {SERVICES.map(([label, href]) => (
@@ -272,7 +269,7 @@ export default function Footer() {
           {/* Legal */}
           <div>
             <h3 style={{ fontSize: '.72rem', textTransform: 'uppercase', letterSpacing: '.14em', marginBottom: '1.1rem', fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono',monospace" }}>
-              Légal
+              {t('legal')}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {LEGAL.map(([label, href]) => (
@@ -289,7 +286,7 @@ export default function Footer() {
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1.5rem' }}>
             <div style={{ width: '100%' }}>
               <h3 style={{ fontSize: '.72rem', textTransform: 'uppercase', letterSpacing: '.14em', marginBottom: '1.1rem', fontWeight: 700, color: '#fff', fontFamily: "'JetBrains Mono',monospace" }}>
-                Contact
+                {t('contact')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.3rem' }}>
                 <a href="tel:+2250142507750" style={lk}
@@ -303,7 +300,7 @@ export default function Footer() {
                 <a href="mailto:wthomasss06@gmail.com" style={lk}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
-                  <HoverSlideText text="Email" />
+                  <HoverSlideText text={t('emailLabel')} />
                 </a>
                 {SOCIALS.map(({ label, href }) => (
                   <a key={label} href={href} target="_blank" rel="noreferrer" style={lk}
@@ -315,12 +312,12 @@ export default function Footer() {
               </div>
             </div>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-ghost" style={{ fontSize: '.8rem', padding: '.7rem 1.6rem' }}>
-              <Send size={14} /> <HoverSlideText text="Envoyer un message" />
+              <Send size={14} /> <HoverSlideText text={t('sendMessageBtn')} />
             </a>
           </div>
         </div>
 
-        <AskAIStrip T={T} />
+        <AskAIStrip T={T} t={t} />
       </div>
 
       {/* ── Wordmark géant — AKATECH STUDIO. (hoverable) ──────── */}

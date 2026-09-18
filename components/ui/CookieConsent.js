@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Cookie } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { HoverSlideText } from '@/components/ui/index'
 
 const STORAGE_KEY = 'akatech_cookie_consent'
@@ -30,6 +31,7 @@ function sendConsent(consent) {
    accepté / refusé. */
 export default function CookieConsent() {
   const T = useTheme()
+  const { t } = useLanguage()
   const [visible, setVisible] = useState(false)
   const [expanded, setExpanded] = useState(false)
   const [analyticsOn, setAnalyticsOn] = useState(true)
@@ -78,26 +80,26 @@ export default function CookieConsent() {
               <Cookie size={18} color="#c6ff3d" />
             </div>
             <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.15rem', color: cardText, letterSpacing: '-.01em', paddingTop: '.2rem' }}>
-              On peut parler cookies deux secondes ?
+              {t('cookieHeading')}
             </h2>
           </div>
 
           {!expanded ? (
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', lineHeight: 1.65, color: cardSub, marginBottom: '1.3rem' }}>
-              Des cookies essentiels font tourner le site et nous permettent de mesurer la fréquentation de façon anonyme. Avec votre accord, on active aussi des cookies analytiques pour mieux comprendre votre navigation.
+              {t('cookieIntro')}
             </p>
           ) : (
             <div style={{ marginBottom: '1.3rem', display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
               <PrefRow
-                title="Cookies essentiels"
-                desc="Nécessaires au fonctionnement du site — toujours actifs."
+                title={t('cookieEssentialTitle')}
+                desc={t('cookieEssentialDesc')}
                 locked
                 cardText={cardText}
                 cardSub={cardSub}
               />
               <PrefRow
-                title="Cookies analytiques"
-                desc="Nous aident à comprendre comment le site est utilisé."
+                title={t('cookieAnalyticsTitle')}
+                desc={t('cookieAnalyticsDesc')}
                 value={analyticsOn}
                 onChange={setAnalyticsOn}
                 cardText={cardText}
@@ -110,18 +112,18 @@ export default function CookieConsent() {
             {!expanded ? (
               <>
                 <button onClick={() => decide('accepted', true)} className="cookie-btn cookie-btn-raised">
-                  <HoverSlideText text="Tout accepter" />
+                  <HoverSlideText text={t('acceptAll')} />
                 </button>
                 <button onClick={() => decide('rejected', false)} className="cookie-btn cookie-btn-ghost">
-                  <HoverSlideText text="Refuser les cookies optionnels" />
+                  <HoverSlideText text={t('rejectOptional')} />
                 </button>
                 <button onClick={() => setExpanded(true)} style={btnStyle('transparent', cardSub, true)}>
-                  <HoverSlideText text="Gérer mes préférences" />
+                  <HoverSlideText text={t('managePrefs')} />
                 </button>
               </>
             ) : (
               <button onClick={() => decide(analyticsOn ? 'accepted' : 'rejected', analyticsOn)} className="cookie-btn cookie-btn-raised">
-                <HoverSlideText text="Enregistrer mes préférences" />
+                <HoverSlideText text={t('savePrefs')} />
               </button>
             )}
           </div>
@@ -135,12 +137,12 @@ export default function CookieConsent() {
                 cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px',
               }}
             >
-              <HoverSlideText text="← Retour" />
+              <HoverSlideText text={t('backBtn')} />
             </button>
           )}
 
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.66rem', lineHeight: 1.6, color: 'rgba(255,255,255,.4)', marginTop: '1.1rem' }}>
-            Vous pouvez changer d&apos;avis à tout moment. Des questions sur vos données&nbsp;? Écrivez à{' '}
+            {t('cookieFooterText')}{' '}
             <a href="mailto:wthomasss06@gmail.com" style={{ color: 'rgba(255,255,255,.6)' }}>wthomasss06@gmail.com</a>.
           </p>
         </motion.div>

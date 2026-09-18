@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 
 function buildStyles(T) {
   return {
@@ -87,6 +88,7 @@ export default function LegalPage({ eyebrow, title, intro, sections }) {
   // des règles ciblées dans globals.css, pas --bg-dark elle-même) — les
   // pages légales restaient donc toujours sombres même en mode clair.
   const T = useTheme()
+  const { t } = useLanguage()
   const styles = buildStyles(T)
 
   return (
@@ -103,7 +105,7 @@ export default function LegalPage({ eyebrow, title, intro, sections }) {
             </section>
           ))}
         </div>
-        <Link href="/" style={styles.back}>← Retour à l'accueil</Link>
+        <Link href="/" style={styles.back}>← {t('backToHome')}</Link>
       </div>
     </main>
   )
