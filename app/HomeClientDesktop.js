@@ -783,30 +783,119 @@ const WHY_PANELS = [
 function WhyUs() {
   const T = useTheme()
   const { t } = useLanguage()
+  const [activeIdx, setActiveIdx] = useState(0)
+  const itemRefs = useRef([])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.index)
+            if (!isNaN(idx)) setActiveIdx(idx)
+          }
+        })
+      },
+      { threshold: 0.5, rootMargin: '-15% 0px -25% 0px' }
+    )
+
+    itemRefs.current.forEach((el) => {
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <section className="process-sticky-section" style={{ background: T.bg }}>
-      <div className="process-sticky-heading">
-        <h2 className="section-title-big">
-          <GhostTitle text={t('processTitle').toUpperCase()} />
-          {t('processTitle')}
-        </h2>
-        <span>{t('processLabel')}</span>
-      </div>
-      <div className="process-sticky-stack">
-        {WHY_PANELS.map((panel, index) => (
-          <article key={panel.n} className={`process-sticky-card process-sticky-card-${index + 1}`}>
-            <div className="process-sticky-grid" />
-            <div className="process-sticky-content">
-              <div className="process-sticky-number">{panel.n} / 06</div>
-              <div className="process-sticky-tag">{panel.sub}</div>
-              <h3>{panel.title.replace('\n', ' ')}</h3>
-              <p>{panel.desc}</p>
-              <div className="process-sticky-line" />
-            </div>
-            <img className="process-sticky-image" src={panel.img} alt="" aria-hidden="true" />
-          </article>
-        ))}
+    <section style={{ padding: '7rem 5%', background: T.bg, position: 'relative' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <BlurReveal delay={0.1}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(3rem,5.5vw,4.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
+              <GhostTitle text={t('processTitle').toUpperCase()} />
+              {t('processTitle')}
+            </h2>
+          </BlurReveal>
+          <span style={{ display: 'inline-block', marginTop: '1rem', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, letterSpacing: '.35em', textTransform: 'uppercase' }}>
+            {t('processLabel')}
+          </span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '3.5rem', alignItems: 'start' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
+            {WHY_PANELS.map((panel, idx) => {
+              const isActive = activeIdx === idx
+              return (
+                <div
+                  key={panel.n}
+                  ref={(el) => (itemRefs.current[idx] = el)}
+                  data-index={idx}
+                  style={{
+                    padding: '2.2rem',
+                    borderRadius: 20,
+                    background: isActive ? (T.light ? '#eaf5e2' : '#0d2112') : T.card,
+                    border: isActive ? '2px solid #88ca53' : `1.5px solid ${T.border}`,
+                    boxShadow: isActive ? '0 10px 30px rgba(136,202,83,.15)' : 'none',
+                    transition: 'all 0.35s ease',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => setActiveIdx(idx)}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 800, color: '#88ca53', letterSpacing: '.2em' }}>
+                      {panel.n} / 06
+                    </span>
+                    <span style={{ padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53' }}>
+                      {panel.sub}
+                    </span>
+                  </div>
+                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 900, fontStyle: 'italic', color: T.textMain, margin: '0 0 .8rem', textTransform: 'uppercase', lineHeight: 1.1 }}>
+                    {panel.title.replace('\n', ' ')}
+                  </h3>
+                  <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textSub, lineHeight: 1.65, margin: 0 }}>
+                    {panel.desc}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+
+          <div style={{ position: 'sticky', top: 100, width: '100%', aspectRatio: '1 / 1', borderRadius: 28, overflow: 'hidden', border: 'none', boxShadow: T.light ? '0 25px 70px rgba(0,0,0,.15)' : '0 30px 90px rgba(0,0,0,.65)', background: '#050c07' }}>
+            {WHY_PANELS.map((panel, idx) => (
+              <motion.div
+                key={panel.n}
+                initial={false}
+                animate={{
+                  opacity: activeIdx === idx ? 1 : 0,
+                  scale: activeIdx === idx ? 1 : 1.05,
+                }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: activeIdx === idx ? 'auto' : 'none',
+                }}
+              >
+                <img
+                  src={panel.img}
+                  alt={panel.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.88) 0%, transparent 55%)' }} />
+                <div style={{ position: 'absolute', bottom: 20, left: 24, right: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.15em' }}>
+                      ÉTAPE {panel.n}
+                    </div>
+                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.4rem', fontWeight: 900, fontStyle: 'italic', color: '#fff', textTransform: 'uppercase' }}>
+                      {panel.title.replace('\n', ' ')}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   )
@@ -1063,44 +1152,129 @@ function DomaineCard({ n, Icon, title, desc, tag, img, index, inView }) {
 function DomainesSection() {
   const T = useTheme()
   const { t } = useLanguage()
-  const cards = DOMAINES
+  const [activeIdx, setActiveIdx] = useState(0)
+  const itemRefs = useRef([])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = Number(entry.target.dataset.index)
+            if (!isNaN(idx)) setActiveIdx(idx)
+          }
+        })
+      },
+      { threshold: 0.5, rootMargin: '-15% 0px -25% 0px' }
+    )
+
+    itemRefs.current.forEach((el) => {
+      if (el) observer.observe(el)
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   return (
-    <section className="domaines-sticky-section" style={{ background: T.bgAlt }}>
-      <div className="domaines-sticky-heading">
-        <BlurReveal delay={0.12}>
-          <h2 className="section-title-big domaines-sticky-title">
-            <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
-            {t('domainesTitle')}
-          </h2>
-        </BlurReveal>
-        <p>{t('domainesIntro')}</p>
-      </div>
+    <section style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative' }}>
+      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+          <BlurReveal delay={0.12}>
+            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(3rem,5.5vw,4.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
+              <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
+              {t('domainesTitle')}
+            </h2>
+          </BlurReveal>
+          <p style={{ maxWidth: 680, margin: '1.2rem auto 0', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.95rem', lineHeight: 1.7 }}>
+            {t('domainesIntro')}
+          </p>
+        </div>
 
-      <div className="domaines-sticky-stack">
-        {cards.map((domaine, index) => {
-          const Icon = domaine.Icon
-          return (
-            <article key={domaine.n} className={`domaines-sticky-card domaines-sticky-card-${index + 1}`}>
-              <div className="domaines-sticky-grid" />
-              <div className="domaines-sticky-content">
-                <div className="domaines-sticky-number">{domaine.n} / {String(cards.length).padStart(2, '0')}</div>
-                <div className="domaines-sticky-tag"><Icon size={14} /> {domaine.tag}</div>
-                <h3>{domaine.title}</h3>
-                <p>{domaine.desc}</p>
-                <div className="domaines-sticky-line" />
-              </div>
-              <img className="domaines-sticky-image" src={domaine.img} alt="" aria-hidden="true" />
-            </article>
-          )
-        })}
-      </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '3.5rem', alignItems: 'start' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem' }}>
+            {DOMAINES.map((domaine, idx) => {
+              const Icon = domaine.Icon
+              const isActive = activeIdx === idx
+              return (
+                <div
+                  key={domaine.n}
+                  ref={(el) => (itemRefs.current[idx] = el)}
+                  data-index={idx}
+                  style={{
+                    padding: '2rem',
+                    borderRadius: 20,
+                    background: isActive ? (T.light ? '#eaf5e2' : '#0d2112') : T.card,
+                    border: isActive ? '2px solid #88ca53' : `1.5px solid ${T.border}`,
+                    boxShadow: isActive ? '0 10px 30px rgba(136,202,83,.15)' : 'none',
+                    transition: 'all 0.35s ease',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => setActiveIdx(idx)}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.9rem' }}>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 800, color: '#88ca53', letterSpacing: '.2em' }}>
+                      {domaine.n} / {String(DOMAINES.length).padStart(2, '0')}
+                    </span>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53' }}>
+                      <Icon size={13} /> {domaine.tag}
+                    </span>
+                  </div>
+                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.9rem', fontWeight: 900, fontStyle: 'italic', color: T.textMain, margin: '0 0 .6rem', textTransform: 'uppercase', lineHeight: 1.1 }}>
+                    {domaine.title}
+                  </h3>
+                  <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', color: T.textSub, lineHeight: 1.65, margin: 0 }}>
+                    {domaine.desc}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
 
-      <div className="domaines-sticky-cta">
-        <p>{t('domainesCta')}</p>
-        <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised">
-          <HoverSlideText text={t('discussProject')} /> <ArrowRight size={14} />
-        </a>
+          <div style={{ position: 'sticky', top: 100, width: '100%', aspectRatio: '1 / 1', borderRadius: 28, overflow: 'hidden', border: 'none', boxShadow: T.light ? '0 25px 70px rgba(0,0,0,.15)' : '0 30px 90px rgba(0,0,0,.65)', background: '#050c07' }}>
+            {DOMAINES.map((domaine, idx) => (
+              <motion.div
+                key={domaine.n}
+                initial={false}
+                animate={{
+                  opacity: activeIdx === idx ? 1 : 0,
+                  scale: activeIdx === idx ? 1 : 1.05,
+                }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  pointerEvents: activeIdx === idx ? 'auto' : 'none',
+                }}
+              >
+                <img
+                  src={domaine.img}
+                  alt={domaine.title}
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.88) 0%, transparent 55%)' }} />
+                <div style={{ position: 'absolute', bottom: 20, left: 24, right: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.15em' }}>
+                      {domaine.tag.toUpperCase()}
+                    </div>
+                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.4rem', fontWeight: 900, fontStyle: 'italic', color: '#fff', textTransform: 'uppercase' }}>
+                      {domaine.title}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ marginTop: '4rem', textAlign: 'center' }}>
+          <p style={{ marginBottom: '1.2rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem' }}>
+            {t('domainesCta')}
+          </p>
+          <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised">
+            <HoverSlideText text={t('discussProject')} /> <ArrowRight size={14} />
+          </a>
+        </div>
       </div>
     </section>
   )

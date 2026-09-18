@@ -43,34 +43,36 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  height: 36px;
   background: rgba(255,255,255,.12);
-  border: 2px solid #050505;
+  border: 2.5px solid #050505;
   border-radius: 999px;
-  padding: 8px 16px 8px 14px;
+  padding: 0 16px;
   cursor: pointer;
   color: #ffffff;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: .68rem;
+  font-size: .72rem;
   font-weight: 900;
   font-style: italic;
   letter-spacing: .08em;
   text-transform: uppercase;
   line-height: 1;
-  box-shadow: 3px 3px 0px #050505;
+  box-shadow: 3.5px 3.5px 0px #050505;
   transition: background .2s, color .2s, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s cubic-bezier(.34,1.56,.64,1);
   z-index: 10010;
 }
 .sm-header-right .aka-language-toggle select {
-  height: 29px; min-width: 48px; padding: 0 5px; border: 2px solid #050505;
-  border-radius: 999px; background: rgba(255,255,255,.12); color: #fff;
-  font: 700 .65rem 'JetBrains Mono', monospace; cursor: pointer; outline: none;
-  box-shadow: 2px 2px 0 #050505;
+  height: 36px; min-width: 48px; padding: 0 10px; border: 2.5px solid #050505;
+  border-radius: 14px; background: rgba(255,255,255,.12); color: #88ca53;
+  font: 800 .72rem 'JetBrains Mono', monospace; cursor: pointer; outline: none;
+  box-shadow: 3.5px 3.5px 0 #050505; text-align: center; text-align-last: center;
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
 }
-.light-mode .sm-header-right .aka-language-toggle select { background: rgba(255,255,255,.8); color: #2d5a14; }
+.light-mode .sm-header-right .aka-language-toggle select { background: #f0f5ec; color: #5f9137; border-color: #050505; box-shadow: 3.5px 3.5px 0px #050505; }
 .sm-toggle:hover {
   background: rgba(255,255,255,.20);
-  transform: translate(-2px,-4px) rotate(-2deg) scale(1.03);
-  box-shadow: 5px 7px 0px #050505, 0 0 20px rgba(198,255,61,.4);
+  transform: translate(-2px,-3px) scale(1.03);
+  box-shadow: 5px 5px 0px #050505, 0 0 20px rgba(198,255,61,.4);
 }
 .sm-toggle:active { transform: translate(1px,1px) rotate(0deg) scale(.97); box-shadow: 1px 1px 0px #050505; }
 
@@ -85,18 +87,18 @@
 
 /* Light mode : le bouton passe vert foncé, lisible sur fond clair */
 .light-mode .sm-toggle {
-  background: rgba(255,255,255,.75);
+  background: #f0f5ec;
   border-color: #050505;
-  box-shadow: 3px 3px 0px #050505;
+  box-shadow: 3.5px 3.5px 0px #050505;
   color: #2d5a14;
 }
 .light-mode .sm-toggle:hover {
-  background: rgba(255,255,255,.95);
+  background: #f8fcf5;
   box-shadow: 5px 5px 0px #050505;
 }
 .light-mode .sm-toggle:active { box-shadow: 1px 1px 0px #050505; }
 .light-mode .sm-header--scrolled .sm-toggle {
-  background: rgba(95,145,55,0.10);
+  background: #f0f5ec;
   color: #2d5a14;
 }
 
@@ -411,29 +413,29 @@
 }
 
 .sm-header-theme {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  border: 2px solid #050505;
+  width: 38px;
+  height: 36px;
+  border-radius: 14px;
+  border: 2.5px solid #050505;
   background: rgba(255,255,255,.12);
   color: #88ca53;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 2px 2px 0px #050505;
+  box-shadow: 3.5px 3.5px 0px #050505;
   transition: color 0.2s, background 0.2s, transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .3s cubic-bezier(.34,1.56,.64,1);
   flex-shrink: 0;
 }
 .sm-header-theme:hover {
   color: #88ca53;
   background: rgba(255,255,255,.22);
-  transform: translate(-2px,-4px) rotate(-8deg) scale(1.08);
-  box-shadow: 4px 5px 0px #050505, 0 0 16px rgba(198,255,61,.4);
+  transform: translate(-2px,-3px) scale(1.03);
+  box-shadow: 5px 5px 0px #050505, 0 0 16px rgba(198,255,61,.4);
 }
 .sm-header-theme:active { transform: translate(1px,1px) rotate(0deg) scale(.94); box-shadow: 1px 1px 0px #050505; }
 
-/* Scrolled → style vert (bordure/ombre restent neo-brutalist) */
+/* Scrolled → style vert */
 .sm-header--scrolled .sm-header-theme {
   background: rgba(136, 202, 83, 0.07);
   color: #88ca53;
@@ -444,18 +446,18 @@
 }
 
 .light-mode .sm-header-theme {
-  color: #88ca53;
+  color: #5f9137;
   border-color: #050505;
-  box-shadow: 2px 2px 0px #050505;
-  background: rgba(95, 145, 55, 0.07);
+  box-shadow: 3.5px 3.5px 0px #050505;
+  background: #f0f5ec;
 }
-.light-mode .sm-header-theme:hover { color: #88ca53; box-shadow: 4px 4px 0px #050505; }
+.light-mode .sm-header-theme:hover { color: #5f9137; background: #f8fcf5; box-shadow: 5px 5px 0px #050505; }
 .light-mode .sm-header-theme:active { box-shadow: 1px 1px 0px #050505; }
 
 .sm-header .aka-language-toggle select {
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
+  height: 36px;
+  min-width: 48px;
+  border-radius: 14px;
   font-size: 0.72rem;
 }
 
