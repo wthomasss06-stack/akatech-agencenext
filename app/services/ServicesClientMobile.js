@@ -66,7 +66,7 @@ function ServicesList() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
+            <GhostTitle text={t('chooseSolution').toUpperCase()} />
             {t('chooseSolution')}
           </h2>
         </motion.div>
@@ -130,11 +130,11 @@ function ServicesList() {
                 <div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green }}>{svc.price}</div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: 4 }}>
-                    <Timer size={10} style={{ color: T.green }} />Délai : {svc.del}
+                    <Timer size={10} style={{ color: T.green }} />{t('service_delay')} : {svc.del}
                   </div>
                 </div>
                 <a href={`https://wa.me/2250142507750?text=Bonjour AKATech, je suis intéressé par ${svc.title}`} target="_blank" rel="noreferrer" className="btn-raised">
-                  <HoverSlideText text="Demander un devis" /> <ArrowRight size={14} />
+                  <HoverSlideText text={t('service_cta')} /> <ArrowRight size={14} />
                 </a>
               </div>
             </div>

@@ -20,7 +20,7 @@ import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
-import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
+import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
 
 if (typeof window !== 'undefined') {
@@ -118,20 +118,19 @@ function CircularProjectsGallery() {
 
 // Hauteur du Hero en dvh — volontairement < 100 pour laisser apparaître
 // un aperçu de la CIRCULAR PROJECTS GALLERY en bas de viewport sur desktop.
-const HERO_VH = 103
+const HERO_VH = 92
 
-// ── Slogan Hero — accroche fixe et bénéfice-driven (plus de cycle),
-// même traitement Neo-Brutalism (bloc vert + box-shadow blanc dur) ──
 function HeroSlogan() {
+  const { t } = useLanguage()
   return (
-    <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ marginBottom: '1.8rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(3.8rem,9vw,6.4rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <motion.p
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
         transition={{ duration: .45, ease: 'easeOut' }}
-        style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
-        On convertit, vous {' '}
+        style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.8rem,4vw,3rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+        {t('hero_copy_intro')}{' '}
         <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, var(--pop-lime), var(--g1))', color: '#050505', padding: '.1em .35em', border: '3px solid #050505', borderRadius: '.18em', boxShadow: '5px 5px 0px #fff, 0 0 32px var(--pop-lime-glow)', textShadow: 'none', transform: 'rotate(-2deg)' }}>
-          encaissez.
+          {t('hero_copy_goal')}
         </span>
       </motion.p>
     </div>
@@ -139,9 +138,9 @@ function HeroSlogan() {
 }
 
 const HERO_SLOGANS = [
-  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
-  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
-  { before: 'Développez votre activité ', highlight: 'sereinement' },
+  { beforeKey: 'homeSlogan1', highlightKey: 'homeHighlight1' },
+  { beforeKey: 'homeSlogan2', highlightKey: 'homeHighlight2' },
+  { beforeKey: 'homeSlogan3', highlightKey: 'homeHighlight3' },
 ]
 
 function HeroSloganCycle() {
@@ -151,16 +150,16 @@ function HeroSloganCycle() {
     const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
     return () => clearInterval(id)
   }, [])
-  const before = t(`homeSlogan${index + 1}`)
-  const highlight = t(`homeHighlight${index + 1}`)
+  const before = t(HERO_SLOGANS[index].beforeKey)
+  const highlight = t(HERO_SLOGANS[index].highlightKey)
 
   return (
-    <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div style={{ marginBottom: '1.8rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(3.8rem,9vw,6.4rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
       <AnimatePresence mode="wait">
         <motion.p key={index}
           initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }}
           transition={{ duration: .45, ease: 'easeOut' }}
-          style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.9rem,4.4vw,3.2rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
+          style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.8rem,4vw,3rem)', lineHeight: 1.18, letterSpacing: '-.02em', textTransform: 'uppercase', color: '#fff', textShadow: '4px 4px 0px rgba(0,0,0,.55)', textAlign: 'center', margin: 0 }}>
           {before}
           <span style={{ display: 'inline-block', background: 'linear-gradient(135deg, var(--pop-lime), var(--g1))', color: '#050505', padding: '.1em .35em', border: '3px solid #050505', borderRadius: '.18em', boxShadow: '5px 5px 0px #fff, 0 0 32px var(--pop-lime-glow)', textShadow: 'none', transform: 'rotate(-2deg)' }}>
             {highlight}
@@ -279,7 +278,7 @@ function Hero() {
         <div className="halftone-bg" style={{ position: 'absolute', top: 0, right: 0, width: '45%', height: '55%', opacity: .14, WebkitMaskImage: 'radial-gradient(circle at 100% 0%, black, transparent 70%)', maskImage: 'radial-gradient(circle at 100% 0%, black, transparent 70%)' }} />
       </div>
 
-      <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '4rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
+      <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '3rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
         
 
@@ -305,10 +304,10 @@ function Hero() {
           </AvatarGroup>
           <div style={{ textAlign: 'left' }}>
             <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.85rem', color: '#fff', lineHeight: 1.15 }}>
-              Ils nous ont fait confiance
+              {t('heroTrust')}
             </div>
             <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', color: '#88ca53' }}>
-              {PROJECTS.length}+ projets livrés
+              {PROJECTS.length}+ {t('stats_projects_label')}
             </div>
           </div>
         </motion.div>
@@ -322,7 +321,7 @@ function Hero() {
             whileTap={{ x: 1, y: 1, rotate: 0, scale: .97, boxShadow: '2px 2px 0px #050505' }}
             transition={{ type: 'spring', stiffness: 400, damping: 18 }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#050505', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', padding: '1rem 2.1rem', borderRadius: 999, border: '3px solid #fff' }}>
-            <HoverSlideText text="Démarrer mon projet" /> <ArrowRight size={16} />
+            <HoverSlideText text={t('heroStartProject')} /> <ArrowRight size={16} />
           </motion.a>
           <motion.a
             href="https://wa.me/2250142507750"
@@ -333,7 +332,7 @@ function Hero() {
             whileTap={{ x: 1, y: 1, rotate: 0, scale: .97, boxShadow: '2px 2px 0px #050505' }}
             transition={{ type: 'spring', stiffness: 400, damping: 18 }}
             style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#c6ff3d', background: 'transparent', border: '3px solid #c6ff3d', borderRadius: 999, padding: 'calc(1rem - 3px) calc(2.1rem - 3px)' }}>
-            <HoverSlideText text="Prenez RDV" />
+            <HoverSlideText text={t('heroBookCall')} />
           </motion.a>
         </motion.div>
 
@@ -347,8 +346,8 @@ function Hero() {
           layerMidRef) pour porter les mutations impératives parallax/
           scroll sans entrer en conflit avec l'anim Framer d'entrée,
           isolée sur le motion.div enfant. */}
-      <div ref={galleryRef} style={{ position: 'absolute', left: 0, right: 0, bottom: '-123px', zIndex: 11, willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }}>
+      <div ref={galleryRef} style={{ position: 'absolute', left: 0, right: 0, bottom: '-78px', zIndex: 11, willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
+        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}>
           <CircularProjectsGallery />
         </motion.div>
       </div>
@@ -546,15 +545,13 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections }) {
 // ═══════════════════════════════════════════════════════════════
 // ── SERVICES — Two-Column Skewed Images (HTML skew-section) ──
 // ═══════════════════════════════════════════════════════════════
-const SERVICES_SKEW = [
-  { n: '01', Icon: Globe,        title: 'Conception de Site Web',            desc: "Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce.", price: 'À partir de 150 000 FCFA', del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
-  { n: '02', Icon: Map,          title: 'Cartes Interactives & Dashboards',  desc: "Intégration de cartes Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces actionnables.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
-  { n: '03', Icon: Wrench,       title: 'Maintenance & Support',             desc: "Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier.", price: 'À partir de 20 000 FCFA/mois', del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
-  { n: '04', Icon: MapPin,       title: 'Fiche Google My Business',          desc: "Création ou optimisation de votre fiche Google (NAP, photos, SEO local) et suivi mensuel : avis, publications et statistiques.", price: 'À partir de 10 000 FCFA/mois', del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
-  // Chemins confirmés par l'utilisateur (public/images/service/ia.webp
-  // et .../peiement.webp — orthographe du fichier conservée telle quelle).
-  { n: '05', Icon: MessageCircle, title: 'Intégration IA Chatbot',           desc: "Un chatbot conversationnel intégré à votre site pour interagir avec vos visiteurs et les guider — le même type d'assistant que celui d'akatech.vercel.app, pensé pour augmenter la productivité de votre business.", price: 'Sur devis', del: '7-14 jours', img: '/images/service/ia.webp', slug: 'chatbot-ia' },
-  { n: '06', Icon: CreditCard,    title: 'Intégration de Paiement en Ligne', desc: "Intégration de solutions de paiement directement sur votre site — Mobile Money (Orange Money, MTN MoMo, Wave) et carte bancaire selon vos besoins — pour encaisser sans friction.", price: 'Sur devis', del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
+const getServicesSkew = (t) => [
+  { n: '01', Icon: Globe,        title: t('service_site_vitrine'),            desc: t('service_site_vitrine_desc'), price: t('pricing_from_150k'), del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
+  { n: '02', Icon: Map,          title: t('service_cartes_dashboards'),        desc: t('service_cartes_dashboards_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
+  { n: '03', Icon: Wrench,       title: t('service_maintenance'),              desc: t('service_maintenance_desc'), price: t('pricing_from_20000_month'), del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
+  { n: '04', Icon: MapPin,       title: t('service_google_my_business'),       desc: t('service_google_my_business_desc'), price: t('pricing_from_10000_month'), del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
+  { n: '05', Icon: MessageCircle, title: t('service_chatbot_ia'),               desc: t('service_chatbot_ia_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/ia.webp', slug: 'chatbot-ia' },
+  { n: '06', Icon: CreditCard,    title: t('service_paiement_en_ligne'),        desc: t('service_paiement_en_ligne_desc'), price: t('pricing_quote'), del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
 ]
 
 // ── GHOST SCROLL SHOWCASE — parallax + texte fantôme horizontal ──
@@ -566,6 +563,7 @@ const SERVICES_SKEW = [
 // titre lisible, tag, description, lien) pour garder l'information
 // exploitable — remplace HoverImageReveal pour Prestations et Processus.
 function GhostScrollShowcase({ items }) {
+  const { t } = useLanguage()
   const containerRef = useRef(null)
   const panelRefs = useRef([])
   const bgRefs = useRef([])
@@ -708,7 +706,7 @@ function GhostScrollShowcase({ items }) {
                     display: 'inline-flex', alignItems: 'center', gap: '.5rem', marginTop: '1.3rem',
                     fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: '#88ca53',
                   }}>
-                    Voir le service
+                    {t('viewService')}
                     <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
                       <path d="M2 12L12 2M12 2H5M12 2V9" stroke="#88ca53" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -727,6 +725,7 @@ function ServicesPreview() {
   const T = useTheme()
   const { t } = useLanguage()
   const ref = useRef(null)
+  const SERVICES_SKEW = getServicesSkew(t)
 
   // Tous les services — showcase scroll plein écran, chaque panneau pointe vers son service sur /services
   const GHOST_ITEMS = SERVICES_SKEW.map(s => ({
@@ -763,18 +762,19 @@ function ServicesPreview() {
   )
 }
 
-const WHY_PANELS = [
-  { n: '01', title: 'Brief &\ndécouverte',            sub: 'On vous écoute',              desc: "Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement.", img: cld('/images/process/process_akatech_01_brief.webp') },
-  { n: '02', title: 'Devis &\ncontrat',                sub: 'Périmètre, prix, délai',       desc: "Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble.", img: cld('/images/process/process_akatech_02_devis.webp') },
-  { n: '03', title: 'Acompte &\ncontenus',             sub: '50% pour lancer le projet',    desc: "Vous versez 50% d'acompte et transmettez logo, informations et visuels — le délai démarre à réception.", img: cld('/images/process/process_akatech_03_acompte.webp') },
-  { n: '04', title: 'Conception &\ndéveloppement',     sub: 'Design 100% sur mesure',       desc: "Nous concevons et développons votre projet conformément au devis validé.", img: cld('/images/process/process_akatech_04_conception.webp') },
-  { n: '05', title: 'Prévisualisation &\nvalidation',  sub: 'Vous testez avant de payer',   desc: "Vous recevez un lien de prévisualisation, testez le projet et nous effectuons les corrections mineures incluses.", img: cld('/images/process/process_akatech_05_validation.webp') },
-  { n: '06', title: 'Livraison &\nsuivi',              sub: 'En ligne, avec support',       desc: "Après le solde, le projet est mis en ligne et les accès transmis — la garantie et le support démarrent ensuite.", img: cld('/images/process/process_akatech_06_livraison.webp') },
+const getWhyPanels = (t) => [
+  { n: '01', title: t('process_brief'),             sub: t('process_sub_brief'),       desc: t('process_desc_brief'), img: cld('/images/process/process_akatech_01_brief.webp') },
+  { n: '02', title: t('process_devis'),             sub: t('process_sub_devis'),       desc: t('process_desc_devis'), img: cld('/images/process/process_akatech_02_devis.webp') },
+  { n: '03', title: t('process_acompte'),          sub: t('process_sub_acompte'),     desc: t('process_desc_acompte'), img: cld('/images/process/process_akatech_03_acompte.webp') },
+  { n: '04', title: t('process_conception'),       sub: t('process_sub_conception'),  desc: t('process_desc_conception'), img: cld('/images/process/process_akatech_04_conception.webp') },
+  { n: '05', title: t('process_validation'),       sub: t('process_sub_validation'),  desc: t('process_desc_validation'), img: cld('/images/process/process_akatech_05_validation.webp') },
+  { n: '06', title: t('process_livraison'),        sub: t('process_sub_livraison'),   desc: t('process_desc_livraison'), img: cld('/images/process/process_akatech_06_livraison.webp') },
 ]
 
 function WhyUs() {
   const T = useTheme()
   const { t } = useLanguage()
+  const WHY_PANELS = getWhyPanels(t)
 
   const PROCESS_GHOST_ITEMS = WHY_PANELS.map(p => ({
     n: p.n,
@@ -813,10 +813,11 @@ function WhyUs() {
 // ── TESTIMONIALS (inchangé) ───────────────────────────────────
 function Testimonials() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [idx, setIdx] = useState(0)
-  const t = TESTIMONIALS[idx]
+  const currentTestimonial = TESTIMONIALS[idx]
 
   useEffect(() => {
     const timer = setInterval(() => setIdx(i => (i + 1) % TESTIMONIALS.length), 5000)
@@ -832,8 +833,8 @@ function Testimonials() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text="CE QUE DISENT NOS CLIENTS" />
-              Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
+              <GhostTitle text={t('homeTestimonialsUpper')} />
+              {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('testimonials_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -849,16 +850,16 @@ function Testimonials() {
               {[1,2,3,4,5].map(s => <Star key={s} size={18} fill="#88ca53" style={{ color: '#88ca53' }} />)}
             </div>
             <blockquote style={{ fontSize: '1.05rem', color: T.textMain, lineHeight: 1.75, fontStyle: 'italic', marginBottom: '2rem', maxWidth: 640, margin: '0 auto 2rem' }}>
-              "{t.text}"
+              "{currentTestimonial.text}"
             </blockquote>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem' }}>
               <div style={{ width: 52, height: 52, borderRadius: '50%', overflow: 'hidden', border: '2px solid rgba(136,202,83,.35)' }}>
-                <LazyImg src={t.img} alt={t.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>{t.name[0]}</div>} />
+                <LazyImg src={currentTestimonial.img} alt={currentTestimonial.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  placeholder={<div style={{ width: 52, height: 52, background: 'rgba(136,202,83,.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>{currentTestimonial.name[0]}</div>} />
               </div>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem' }}>{t.name}</div>
-                <div style={{ color: T.textSub, fontSize: '.78rem', fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
+                <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem' }}>{currentTestimonial.name}</div>
+                <div style={{ color: T.textSub, fontSize: '.78rem', fontFamily: "'JetBrains Mono',monospace" }}>{currentTestimonial.role}</div>
               </div>
             </div>
           </motion.div>
@@ -869,52 +870,52 @@ function Testimonials() {
   )
 }
 
-const DOMAINES = [
+const getDomaines = (t) => [
   {
     n: '01', Icon: Monitor,
-    title: 'Sites vitrines & sites métier',
+    title: t('domaines_site_vitrine'),
     desc:  "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel.",
     tag:   'Site Vitrine',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_01_creation.webp',
   },
   {
     n: '02', Icon: ShoppingBag,
-    title: 'E-commerce',
+    title: t('domaines_ecommerce'),
     desc:  "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur.",
     tag:   'E-Commerce',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_02_ecommerce.webp',
   },
   {
     n: '03', Icon: Calendar,
-    title: 'Réservation & rendez-vous',
+    title: t('domaines_reservation'),
     desc:  "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles.",
     tag:   'Réservation',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_03_reservation.webp',
   },
   {
     n: '04', Icon: Layers,
-    title: 'Plateformes & marketplaces',
+    title: t('domaines_plateforme'),
     desc:  "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards.",
     tag:   'Plateforme',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_04_plateformes.webp',
   },
   {
     n: '05', Icon: Receipt,
-    title: 'Gestion commerciale & facturation',
+    title: t('domaines_facturation'),
     desc:  "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF.",
     tag:   'Facturation',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_05_gestion.webp',
   },
   {
     n: '06', Icon: Cog,
-    title: 'Applications web & outils métier',
+    title: t('domaines_applications'),
     desc:  "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure.",
     tag:   'Outil métier',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_06_applications.webp',
   },
   {
     n: '07', Icon: Calculator,
-    title: 'POS & caisse',
+    title: t('domaines_pos'),
     desc:  "Système d'encaissement et de caisse physique — bientôt disponible.",
     tag:   'Bientôt',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_07_pos.webp',
@@ -925,17 +926,25 @@ const DOMAINES = [
 // gèrent leur propre conversion dans GhostScrollShowcase (avec repli sur le
 // fichier local si Cloudinary ne répond pas), donc on ne les mute plus en
 // place ici pour ne pas perdre l'accès au chemin local d'origine.
-for (const arr of [DOMAINES]) {
-  for (const item of arr) {
-    if (item.img && typeof item.img === 'string' && item.img.startsWith('/images/')) {
-      item.img = cld(item.img)
-    }
+const DOMAINES_CLOUD = [
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_01_creation.webp' },
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_02_ecommerce.webp' },
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_03_reservation.webp' },
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_04_plateformes.webp' },
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_05_gestion.webp' },
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_06_applications.webp' },
+  { img: '/images/ce%20que%20nous%20concevons/types_sites_07_pos.webp' },
+]
+for (const item of DOMAINES_CLOUD) {
+  if (item.img && typeof item.img === 'string' && item.img.startsWith('/images/')) {
+    item.img = cld(item.img)
   }
 }
 
 function DomainesSection() {
   const T = useTheme()
   const { t } = useLanguage()
+  const DOMAINES = getDomaines(t)
 
   const DOMAINES_GHOST_ITEMS = DOMAINES.map(d => ({
     n: d.n,
@@ -952,7 +961,7 @@ function DomainesSection() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
+              <GhostTitle text={t('domainesTitle').toUpperCase()} />
               {t('domainesTitle')}
             </h2>
           </BlurReveal>
@@ -999,7 +1008,7 @@ function ArchiveTunnelSection() {
           {t('projectsTitle')}
         </h2>
         <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-          <HoverSlideText text="Voir tous les projets" /> <ArrowRight size={15} />
+          <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={15} />
         </Link>
       </div>
 
@@ -1037,12 +1046,12 @@ function ArchiveTunnelSection() {
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: hoveredId === p.id ? 'translate(-50%, -50%)' : 'translate(-50%, -30%)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease, transform .25s ease', width: 'calc(100% - 40px)', display: 'flex', justifyContent: 'center' }}>
                   {p.url ? (
                     <a href={p.url} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', maxWidth: 260, justifyContent: 'center' }}>
-                      <HoverSlideText text="Voir le projet" />
+                      <HoverSlideText text={t('project_view')} />
                       <ArrowRight size={16} />
                     </a>
                   ) : (
                     <div style={{ width: '100%', maxWidth: 260, textAlign: 'center', padding: '.95rem 1rem', borderRadius: 999, border: '2px solid #050505', boxShadow: '4px 4px 0px #050505', background: 'rgba(255,255,255,.12)', color: '#fff', fontFamily: "'JetBrains Mono',monospace", fontSize: '.79rem' }}>
-                      Bientôt en ligne
+                      {t('comingSoon')}
                     </div>
                   )}
                 </div>
@@ -1065,14 +1074,15 @@ function ArchiveTunnelSection() {
 
 // ── STATS — chiffres géants éditoriaux, quinconce (ref web_design_result) ──
 const HOME_STATS = [
-  { target: PROJECTS.length,  suffix: '',  label: 'Projets livrés',                  sub: 'Du concept au déploiement', col: 1, row: 1 },
-  { target: 99,  suffix: '%', label: 'Clients satisfaits',              sub: 'Livrés dans les délais',    col: 3, row: 1 },
-  { target: 10,  suffix: '+', label: 'Clients accompagnés',             sub: 'Startups, PME, créatifs',   col: 5, row: 1 },
-  { target: 3,   suffix: '+', label: "Années d'expérience",             sub: 'En développement web',      col: 2, row: 2 },
+  { target: PROJECTS.length,  suffix: '',  label: 'stats_projects_label',                  sub: 'Du concept au déploiement', col: 1, row: 1 },
+  { target: 99,  suffix: '%', label: 'stats_clients_label',              sub: 'Livrés dans les délais',    col: 3, row: 1 },
+  { target: 10,  suffix: '+', label: 'stats_support_label',             sub: 'Startups, PME, créatifs',   col: 5, row: 1 },
+  { target: 3,   suffix: '+', label: 'stats_experience_label',             sub: 'En développement web',      col: 2, row: 2 },
 ]
 
 function StatsSection() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-80px' })
 
@@ -1152,7 +1162,7 @@ function StatsSection() {
                 letterSpacing: '.02em',
                 marginBottom: '.2rem',
               }}>
-                {s.label}
+                {t(s.label)}
               </div>
 
               {/* Sous-label */}
@@ -1208,11 +1218,12 @@ function FlagBadge({ code, primary }) {
 
 function PricingCallout() {
   const T = useTheme()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
-  const d = PRICING[tab]
+  const localized = getLocalizedData(language)
+  const d = localized.PRICING[tab]
   const PRICING_LEAD_GREEN = new Set(['claires,', 'structures', 'freelances', 'choisissez.'])
 
   return (
@@ -1240,7 +1251,7 @@ function PricingCallout() {
 
         {/* Tabs */}
         <BlurReveal delay={0.15} style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-          {Object.entries(PRICING).map(([k, v]) => (
+          {Object.entries(localized.PRICING).map(([k, v]) => (
             <motion.button key={k} onClick={() => setTab(k)}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               style={{ padding: '.55rem 1.4rem', borderRadius: 100, border: '1px solid', borderColor: tab === k ? T.green : T.border, background: tab === k ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: tab === k ? '#fff' : T.textSub, fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.82rem', fontWeight: 900, cursor: 'pointer', transition: 'all .22s' }}>
@@ -1263,7 +1274,7 @@ function PricingCallout() {
                     style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', background: plan.popular ? 'linear-gradient(145deg,rgba(136,202,83,.18),rgba(136,202,83,.06))' : T.light ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: plan.popular ? '1px solid rgba(136,202,83,.5)' : `1px solid ${T.light ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.1)'}`, boxShadow: plan.popular ? '0 8px 40px rgba(136,202,83,.2),inset 0 1px 0 rgba(255,255,255,.15)' : T.light ? '0 4px 24px rgba(0,0,0,.08)' : '0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)', padding: plan.popular ? '0 0 2rem' : '2rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
                     {plan.popular && (
                       <div style={{ padding: '.5rem', background: 'linear-gradient(90deg,#5f9137,#88ca53)', textAlign: 'center', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#fff', letterSpacing: '.1em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem', borderRadius: '19px 19px 0 0' }}>
-                        <Zap size={10} />LE PLUS POPULAIRE
+                        <Zap size={10} />{t('pricing_popular')}
                       </div>
                     )}
                     <div style={{ padding: plan.popular ? '1.8rem 2rem 0' : 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -1285,8 +1296,8 @@ function PricingCallout() {
                         ))}
                       </div>
                       {plan.popular
-                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
-                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
+                        ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text={t('pricing_order')} /></a>
+                        : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text={t('pricing_order')} /></a>
                       }
                     </div>
                   </motion.div>
@@ -1303,14 +1314,14 @@ function PricingCallout() {
               <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#88ca53', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
               <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: T.textSub, letterSpacing: '.04em', margin: 0 }}>
                 <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
-                  <Clock size={12} /> Projets pris dans l'ordre d'arrivée
+                  <Clock size={12} /> {t('pricing_urgency')}
                 </span>
-                {' '}— le délai de démarrage dépend de la charge du moment. Plus tôt vous écrivez, plus tôt on commence.
+                {' '}{t('pricing_urgency_text')}
               </p>
             </div>
             <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
               className="btn-raised" style={{ padding: '.55rem 1.2rem', fontSize: '.78rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
-              <HoverSlideText text="Réserver ma place →" />
+              <HoverSlideText text={t('pricing_order')} />
             </a>
           </div>
         </BlurReveal>
@@ -1321,6 +1332,8 @@ function PricingCallout() {
 
 function FAQSectionHome() {
   const T = useTheme()
+  const { t, language } = useLanguage()
+  const localized = getLocalizedData(language)
   const [open, setOpen] = useState(null)
   return (
     <section style={{ padding: '7rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
@@ -1328,14 +1341,14 @@ function FAQSectionHome() {
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="QUESTIONS FRÉQUENTES" />
-            Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
+            <GhostTitle text={t('faqUpper')} />
+            {t('faqTitle')}
           </h2>
         </BlurReveal>
       </div>
       <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-          {FAQ_ITEMS.slice(0, 6).map(({ q, a }, i) => (
+          {localized.FAQ_ITEMS.slice(0, 6).map(({ q, a }, i) => (
             <BlurReveal key={q} delay={i * 0.06} direction={i % 2 === 0 ? 'left' : 'right'}>
               <motion.div className="sku-card" whileHover={{ borderColor: 'rgba(136,202,83,.25)' }} style={{ overflow: 'hidden' }}>
                 <button onClick={() => setOpen(open === i ? null : i)}
@@ -1367,6 +1380,7 @@ function FAQSectionHome() {
 
 function GeoSectionHome() {
   const T = useTheme()
+  const { t } = useLanguage()
   const sectionRef = useRef(null)
   return (
     <section ref={sectionRef} style={{ padding: '5rem 5%', background: T.bg, position: 'relative', overflow: 'hidden' }}>
@@ -1375,14 +1389,14 @@ function GeoSectionHome() {
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
-              Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
+              <GhostTitle text={t('geoUpper')} />
+              {t('geoTitle')}
             </h2>
           </BlurReveal>
           <WordRevealP
             sectionRef={sectionRef}
-            text="Basés à Abidjan, on travaille 100% remote avec des clients partout en Afrique de l'Ouest et la diaspora."
-            greenWords={['Abidjan,', 'remote', "l'Afrique", "l'Ouest", 'diaspora.']}
+            text={t('geoLead')}
+            greenWords={['Abidjan', 'remote', 'West Africa', 'diaspora', 'Abiyán', 'Afri', 'occidental', 'diáspora']}
             extraStyle={{ color: T.textSub, marginTop: '.75rem' }}
           />
         </div>
@@ -1408,6 +1422,7 @@ const FORM_PANEL_W = 680
 
 function ProjectFormHome() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const sectionRef = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
@@ -1415,21 +1430,21 @@ function ProjectFormHome() {
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
-  const inputStyle = { width: '100%', padding: '.6rem 0', background: 'transparent', border: 'none', borderBottom: `1px solid ${T.border}`, borderRadius: 0, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', outline: 'none', transition: 'border-color .25s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark' }
+  const inputStyle = { width: '100%', padding: '.6rem 0', background: T.light ? 'transparent' : 'rgba(10,16,12,0.92)', border: 'none', borderBottom: `1px solid ${T.border}`, borderRadius: 0, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', outline: 'none', transition: 'border-color .25s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark', WebkitAppearance: 'none', appearance: 'none' }
   const focusOn = e => { e.target.style.borderBottomColor = '#88ca53' }
   const focusOff = e => { e.target.style.borderBottomColor = T.border }
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.message) { setError('Merci de renseigner au moins votre nom, votre email et votre besoin.'); return }
+    if (!form.name || !form.email || !form.message) { setError(t('formRequired')); return }
     setSending(true)
     setError('')
     try {
       const res = await fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, projectType: form.service }) })
       const data = await res.json()
-      if (!res.ok) throw new Error(data?.error || "Erreur lors de l'envoi")
+      if (!res.ok) throw new Error(data?.error || t('formErrorGeneric'))
       setSent(true)
     } catch (err) {
-      setError(err.message || "Une erreur est survenue. Réessayez ou contactez-nous sur WhatsApp.")
+      setError(err.message || t('formErrorGeneric'))
     } finally { setSending(false) }
   }
 
@@ -1438,11 +1453,11 @@ function ProjectFormHome() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <BlurReveal style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-            <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
-            Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
+            <GhostTitle text={t('formUpper')} />
+            {t('formTitle')}
           </h2>
         </BlurReveal>
-        <WordRevealP sectionRef={sectionRef} text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit." greenWords={['formulaire', 'email', '24h', 'gratuit.']} extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />
+        <WordRevealP sectionRef={sectionRef} text={t('formLead')} greenWords={['form', 'email', '24h', 'free quote', 'formulario', '24 horas', 'presupuesto'] } extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />
 
         <BlurReveal delay={0.15}>
           <div style={{ maxWidth: FORM_PANEL_W, margin: '0 auto', background: T.card, border: `1px solid ${T.border}`, borderRadius: 22, padding: '2rem', boxSizing: 'border-box' }}>
@@ -1452,46 +1467,46 @@ function ProjectFormHome() {
                   <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 64, height: 64, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.5rem' }}>
                     <Check size={30} style={{ color: '#88ca53' }} />
                   </motion.div>
-                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.3rem', color: T.textMain, marginBottom: '.8rem' }}>Message envoyé !</h3>
-                  <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
-                  <button type="button" onClick={() => { setSent(false); setError(''); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }} style={{ marginTop: '1.6rem', background: 'transparent', border: `1px solid ${T.border}`, borderRadius: 999, padding: '.55rem 1.3rem', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', cursor: 'pointer' }}>Envoyer un autre message</button>
+                  <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.3rem', color: T.textMain, marginBottom: '.8rem' }}>{t('messageSent')}</h3>
+                  <p style={{ color: T.textSub, fontSize: '.88rem', lineHeight: 1.7 }}>{t('formSuccess')}</p>
+                  <button type="button" onClick={() => { setSent(false); setError(''); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }} style={{ marginTop: '1.6rem', background: 'transparent', border: `1px solid ${T.border}`, borderRadius: 999, padding: '.55rem 1.3rem', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', cursor: 'pointer' }}>{t('sendAnother')}</button>
                 </motion.div>
               ) : (
                 <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.4rem', color: T.textMain, marginBottom: '1.4rem' }}>Nous écrire</h3>
+                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.4rem', color: T.textMain, marginBottom: '1.4rem' }}>{t('writeUs')}</h3>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('yourName')}</label>
                       <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('emailLabel')}</label>
                       <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                     </div>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1.4rem', marginBottom: '1.4rem' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('formPhoneLabel')}</label>
                       <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                     </div>
                     <div>
-                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
+                      <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('formProjectTypeLabel')}</label>
                       <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
-                        <option value="">Choisir...</option>
-                        <option value="site-vitrine">Conception de Site Web</option>
-                        <option value="e-commerce">E-commerce</option>
-                        <option value="application-web">Application Web / SaaS</option>
-                        <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
-                        <option value="chatbot-ia">Intégration IA Chatbot</option>
-                        <option value="paiement-en-ligne">Intégration de Paiement en Ligne</option>
-                        <option value="google-my-business">Fiche Google My Business</option>
-                        <option value="maintenance">Maintenance & Support</option>
-                        <option value="autre">Autre</option>
+                        <option value="">{t('chooseLabel')}</option>
+                        <option value="site-vitrine">{t('service_site_vitrine')}</option>
+                        <option value="e-commerce">{t('service_ecommerce')}</option>
+                        <option value="application-web">{t('service_application_web')}</option>
+                        <option value="cartes-dashboards">{t('service_cartes_dashboards')}</option>
+                        <option value="chatbot-ia">{t('service_chatbot_ia')}</option>
+                        <option value="paiement-en-ligne">{t('service_paiement_en_ligne')}</option>
+                        <option value="google-my-business">{t('service_google_my_business')}</option>
+                        <option value="maintenance">{t('service_maintenance')}</option>
+                        <option value="autre">{t('service_other')}</option>
                       </select>
                     </div>
                   </div>
                   <div style={{ marginBottom: '1.6rem' }}>
-                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
+                    <label style={{ display: 'block', fontSize: '.68rem', color: T.textMuted, marginBottom: '.5rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('formNeedLabel')}</label>
                     <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
                       value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                   </div>
@@ -1511,7 +1526,7 @@ function ProjectFormHome() {
                       }}
                     >
                       {sending ? <span style={{ width: 16, height: 16, border: '2px solid rgba(5,5,5,.3)', borderTopColor: '#050505', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={16} />}
-                      <HoverSlideText text="Recevoir mon devis en 24h" />
+                      <HoverSlideText text={t('receiveQuote')} />
                     </button>
                   </div>
                 </motion.div>

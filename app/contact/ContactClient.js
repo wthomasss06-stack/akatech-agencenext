@@ -255,9 +255,8 @@ function HeroContact() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text="CONTACT" />
-          CONTACT
-          
+          <GhostTitle text={t('contactTitle').toUpperCase()} />
+          {t('contactTitle').toUpperCase()}
         </motion.h1>
 
         <div className="hr-side">
@@ -305,10 +304,10 @@ function HeroContact() {
 // ── CONTACT CHANNELS — AnimatedBeamGrid + TiltCard ───────────
 // ═══════════════════════════════════════════════════════════════
 const CHANNELS = [
-  { id: 'cnt-n-0', icon: MessageCircle, label: 'WhatsApp', val: '+225 01 42 50 77 50', href: 'https://wa.me/2250142507750', color: '#25d366', desc: 'Réponse en moins de 2h' },
-  { id: 'cnt-n-1', icon: Mail,          label: 'Email',    val: 'wthomasss06@gmail.com', href: 'mailto:wthomasss06@gmail.com', color: '#88ca53', desc: 'Réponse sous 24h' },
-  { id: 'cnt-n-2', icon: Phone,         label: 'Téléphone',val: '+225 01 42 50 77 50', href: 'tel:+2250142507750', color: '#88ca53', desc: 'Lun–Ven, 8h–18h' },
-  { id: 'cnt-n-3', icon: MapPin,        label: 'Localisation', val: "Abidjan, Côte d'Ivoire", href: null, color: '#88ca53', desc: 'Déplacements possibles' },
+  { id: 'cnt-n-0', icon: MessageCircle, labelKey: 'contactWhatsApp', val: '+225 01 42 50 77 50', href: 'https://wa.me/2250142507750', color: '#25d366', descKey: 'contactResponseFast' },
+  { id: 'cnt-n-1', icon: Mail,          labelKey: 'contactEmail', val: 'wthomasss06@gmail.com', href: 'mailto:wthomasss06@gmail.com', color: '#88ca53', descKey: 'contactResponse24h' },
+  { id: 'cnt-n-2', icon: Phone,         labelKey: 'contactPhone', val: '+225 01 42 50 77 50', href: 'tel:+2250142507750', color: '#88ca53', descKey: 'contactOpenHours' },
+  { id: 'cnt-n-3', icon: MapPin,        labelKey: 'contactLocation', val: "Abidjan, Côte d'Ivoire", href: null, color: '#88ca53', descKey: 'contactMovePossible' },
 ]
 
 function ChannelIcon({ Icon, color, T }) {
@@ -330,6 +329,7 @@ function ChannelInfo({ label, val, desc, T }) {
 
 function ContactChannels() {
   const T = useTheme()
+  const { t } = useLanguage()
   const sectionRef = useRef(null)
   const beamContainerRef = useRef(null)
 
@@ -348,14 +348,14 @@ function ContactChannels() {
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-              <GhostTitle text="COMMENT NOUS CONTACTER" />
-              Comment nous <GreenUnderline><span className="text-gradient">contacter</span></GreenUnderline>
+              <GhostTitle text={t('contactChannelsTitle').toUpperCase()} />
+              {t('contactChannelsTitle')}
             </h2>
           </BlurReveal>
           <WordRevealP
             sectionRef={sectionRef}
-            text="Choisissez le canal qui vous convient. WhatsApp est le plus rapide — on répond en moins de 2h."
-            greenWords={['WhatsApp', 'rapide', '2h.']}
+            text={t('contactChannelsIntro')}
+            greenWords={['WhatsApp', 'rapide', '2h.', 'faster', '2h.', 'rápido', '2h.']}
             extraStyle={{ color: T.textSub }}
           />
         </div>
@@ -371,13 +371,13 @@ function ContactChannels() {
             />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2,1fr) auto repeat(2,1fr)', alignItems: 'center', gap: '1rem', position: 'relative', zIndex: 2 }}>
               {/* Left 2 */}
-              {CHANNELS.slice(0, 2).map(({ id, icon: Icon, label, color }) => (
+              {CHANNELS.slice(0, 2).map(({ id, icon: Icon, labelKey, color }) => (
                 <div key={id} id={id}
                   style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.45rem', padding: '.85rem', borderRadius: 14, background: T.light ? 'rgba(255,255,255,.9)' : 'rgba(11,26,16,.8)', border: `1px solid ${T.border}`, backdropFilter: 'blur(8px)', justifySelf: 'center' }}>
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} style={{ color }} />
                   </div>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{t(labelKey)}</span>
                 </div>
               ))}
               {/* Center */}
@@ -386,13 +386,13 @@ function ContactChannels() {
                 <Image src="/images/logo.webp" alt="AKATech" width={52} height={52} style={{ objectFit: 'contain', filter: 'drop-shadow(0 0 6px rgba(136,202,83,.5))' }} />
               </div>
               {/* Right 2 */}
-              {CHANNELS.slice(2).map(({ id, icon: Icon, label, color }) => (
+              {CHANNELS.slice(2).map(({ id, icon: Icon, labelKey, color }) => (
                 <div key={id} id={id}
                   style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.45rem', padding: '.85rem', borderRadius: 14, background: T.light ? 'rgba(255,255,255,.9)' : 'rgba(11,26,16,.8)', border: `1px solid ${T.border}`, backdropFilter: 'blur(8px)', justifySelf: 'center' }}>
                   <div style={{ width: 40, height: 40, borderRadius: 12, background: 'rgba(136,202,83,.12)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                     <Icon size={18} style={{ color }} />
                   </div>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{label}</span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 600, color: T.textMuted, whiteSpace: 'nowrap' }}>{t(labelKey)}</span>
                 </div>
               ))}
             </div>
@@ -401,7 +401,10 @@ function ContactChannels() {
 
         {/* ── Channel cards — TiltCard ── */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(220px,100%),1fr))', gap: '1rem' }}>
-          {CHANNELS.map(({ id, icon: Icon, label, val, href, color, desc }, i) => (
+          {CHANNELS.map(({ id, icon: Icon, labelKey, val, href, color, descKey }, i) => {
+            const label = t(labelKey)
+            const desc = t(descKey)
+            return (
             <BlurReveal key={label} delay={i * 0.08} direction={['right','up','left','up'][i]}>
               <TiltCard style={{
                 borderRadius: 16, overflow: 'hidden',
@@ -428,13 +431,14 @@ function ContactChannels() {
                 )}
               </TiltCard>
             </BlurReveal>
-          ))}
+            )
+          })}
         </div>
 
         {/* Social row */}
         <BlurReveal delay={0.5}>
           <div style={{ marginTop: '1.5rem', padding: '1rem 1.3rem', borderRadius: 14, background: 'rgba(136,202,83,.04)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.textMuted }}>Réseaux sociaux</span>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.textMuted }}>{t('contactSocials')}</span>
             <div style={{ display: 'flex', gap: '.6rem' }}>
               {[
                 { Icon: FacebookIcon, href: 'https://web.facebook.com/profile.php?id=61577494705852', label: 'Facebook', color: '#1877f2' },

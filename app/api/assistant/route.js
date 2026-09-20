@@ -12,7 +12,7 @@ import {
   GROQ_MODEL,
   MAX_TOKENS 
 } from '@/lib/ai-providers'
-import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK } from '@/lib/assistant'
+import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK, detectAssistantLanguage } from '@/lib/assistant'
 import { PROJECT_TYPE_LABELS } from '@/lib/data'
 import { getOrCreateConversation, saveMessage, saveLead, createQuestionnaire } from '@/lib/db'
 
@@ -111,7 +111,10 @@ async function runAssistant(messages, controller, encoder, conversationId, langu
     fullText += text
     controller.enqueue(encoder.encode(text))
   }
-  const systemInstruction = buildSystemPrompt(language)
+
+  const lastUserText = [...messages].reverse().find((msg) => msg?.role === 'user' && typeof msg?.content === 'string')?.content || ''
+  const inferredLanguage = detectAssistantLanguage(lastUserText, language)
+  const systemInstruction = buildSystemPrompt(inferredLanguage)
 
   async function persistAssistantReply(modelUsed) {
     if (!conversationId || !fullText) return

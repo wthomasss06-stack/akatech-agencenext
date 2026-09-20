@@ -4,6 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowLeft, Clock, Tag, ArrowRight, MessageCircle } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
+import { useLanguage } from '@/lib/language'
 import { cld } from '@/lib/cloudinary'
 import { LazyImg } from '@/components/ui/index'
 import { BLOG_POSTS } from '@/lib/data'
@@ -136,13 +137,25 @@ const defaultContent = (post) => [
   { type: 'cta', text: 'Discutons de votre projet', href: '/contact' },
 ]
 
-export default function BlogArticleClient({ slug }) {
+function blocksFromAdminContent(post) {
+  if (!post?.content) return null
+  return post.content.split(/\n{2,}/).map((part) => {
+    const text = part.trim()
+    if (!text) return null
+    if (text.startsWith('## ')) return { type: 'h2', text: text.slice(3) }
+    if (text.startsWith('# ')) return { type: 'h2', text: text.slice(2) }
+    return { type: 'p', text }
+  }).filter(Boolean)
+}
+
+export default function BlogArticleClient({ slug, initialPost }) {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
 
-  const post = BLOG_POSTS.find(p => p.slug === slug) || BLOG_POSTS[0]
-  const content = FULL_ARTICLES[post.slug] || defaultContent(post)
+  const post = initialPost || BLOG_POSTS.find(p => p.slug === slug) || BLOG_POSTS[0]
+  const content = blocksFromAdminContent(post) || FULL_ARTICLES[post.slug] || defaultContent(post)
   const related = BLOG_POSTS.filter(p => p.slug !== post.slug).slice(0, 2)
 
   return (
@@ -156,7 +169,7 @@ export default function BlogArticleClient({ slug }) {
               style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', fontSize: '.8rem', color: T.textMuted, marginBottom: '1.5rem', textDecoration: 'none', transition: 'color .2s' }}
               onMouseEnter={e => e.currentTarget.style.color = T.green}
               onMouseLeave={e => e.currentTarget.style.color = T.textMuted}>
-              <ArrowLeft size={14} /> Retour au blog
+              <ArrowLeft size={14} /> {t('backToBlog')}
             </Link>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '.8rem', marginBottom: '1.2rem', flexWrap: 'wrap' }}>
@@ -164,7 +177,7 @@ export default function BlogArticleClient({ slug }) {
                 <Tag size={10} />{post.category}
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: '.3rem', fontSize: '.72rem', color: T.textMuted }}>
-                <Clock size={11} />{post.readTime} de lecture
+                <Clock size={11} />{post.readTime} {t('readingTime')}
               </span>
               <span style={{ fontSize: '.72rem', color: T.textMuted }}>
                 {new Date(post.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -193,7 +206,7 @@ export default function BlogArticleClient({ slug }) {
                   onMouseEnter={e => e.currentTarget.style.color = T.green}
                   onMouseLeave={e => e.currentTarget.style.color = T.textMuted}
                 >
-                  Founder, AKATech · Suivre sur LinkedIn ↗
+                  {t('founderLabel')} · {t('followLinkedIn')} ↗
                 </a>
               </div>
             </div>
@@ -234,7 +247,7 @@ export default function BlogArticleClient({ slug }) {
                 <div style={{ margin: '2.5rem 0', padding: '2rem', borderRadius: 16, background: T.light ? 'rgba(95,145,55,.05)' : 'rgba(136,202,83,.05)', border: `1px solid ${T.border}`, textAlign: 'center' }}>
                   <p style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, color: T.textMain, marginBottom: '1.2rem', fontSize: '1.05rem' }}>{block.text}</p>
                   <Link href={block.href} className="btn-raised" style={{ display: 'inline-flex', padding: '.8rem 2rem' }}>
-                    Nous contacter <ArrowRight size={14} />
+                    {t('contact')} <ArrowRight size={14} />
                   </Link>
                 </div>
               )}
@@ -250,7 +263,7 @@ export default function BlogArticleClient({ slug }) {
         <section style={{ padding: '4rem 5%', background: T.bgAlt }}>
           <div style={{ maxWidth: 1200, margin: '0 auto' }}>
             <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.4rem', color: T.textMain, marginBottom: '2rem' }}>
-              Articles similaires
+              {t('relatedArticles')}
             </h2>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(300px,1fr))', gap: '1.5rem' }}>
               {related.map((p, i) => (
@@ -270,7 +283,7 @@ export default function BlogArticleClient({ slug }) {
                     <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.92rem', color: T.textMain, lineHeight: 1.4, marginBottom: '.9rem' }}>{p.title}</h3>
                     <Link href={`/blog/${p.slug}`}
                       style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontSize: '.8rem', fontWeight: 700, color: T.green, textDecoration: 'none' }}>
-                      Lire <ArrowRight size={12} />
+                      {t('readArticle')} <ArrowRight size={12} />
                     </Link>
                   </div>
                 </motion.article>

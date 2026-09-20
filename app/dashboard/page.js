@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
-  Trash2, AlertTriangle, Cookie, Receipt, ClipboardList,
+  Trash2, AlertTriangle, Cookie, Receipt, ClipboardList, Newspaper,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -12,6 +12,7 @@ import {
 import { HoverSlideText } from '@/components/ui/index'
 import Logo from '@/components/ui/Logo'
 import InvoicesTab from '@/components/dashboard/InvoicesTab'
+import BlogTab from '@/components/dashboard/BlogTab'
 
 /* ────────────────────────────────────────────────────────────
    Ce dashboard n'utilise ni Tailwind ni shadcn/ui : ce projet ne les
@@ -82,6 +83,7 @@ const TABS = [
   { id: 'leads', label: 'Leads', icon: Users },
   { id: 'prospects', label: 'Prospects', icon: ClipboardList },
   { id: 'invoices', label: 'Factures', icon: Receipt },
+  { id: 'blog', label: 'Blog', icon: Newspaper },
 ]
 
 const STATUS_LABELS = {
@@ -899,6 +901,7 @@ export default function DashboardPage() {
             )}
 
             {tab === 'invoices' && <InvoicesTab T={T} CARD={CARD} />}
+            {tab === 'blog' && <BlogTab T={T} CARD={CARD} />}
           </>
         )}
       </div>

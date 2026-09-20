@@ -29,6 +29,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowLeft } from 'lucide-react'
 import { PROJECTS } from '@/lib/data'
+import { useLanguage } from '@/lib/language'
 import { useBlobTransition } from '@/components/layout/BlobTransition'
 import Logo from '@/components/ui/Logo'
 import ProjectModal from './ProjectModal'
@@ -43,6 +44,7 @@ const LOOP_CYCLES = 20    // même cadence que 500vh/4 cycles (125vh/cycle), jus
 
 export default function ProjectsTunnel() {
   const blobNavigate = useBlobTransition()
+  const { t } = useLanguage()
   const outerRef = useRef(null)
   const sectionRef = useRef(null)
   const containerRef = useRef(null)
@@ -484,26 +486,26 @@ export default function ProjectsTunnel() {
   return (
     <div ref={outerRef} className="pt-outer" style={{ height: `${SECTION_VH}vh` }}>
       <section ref={sectionRef} className="pt-section">
-        <button className="pt-logo" onClick={handleBack} aria-label="Retour au site">
+        <button className="pt-logo" onClick={handleBack} aria-label={t('backToSiteShort')}>
           <Logo size={11} animate={false} />
         </button>
 
         <div className="pt-section-label">
-          <span className="pt-eyebrow">Mode Explorer</span>
+          <span className="pt-eyebrow">{t('explorerMode')}</span>
           <span className="pt-count">{PROJECTS.length} réalisations — boucle infinie</span>
         </div>
 
         <div ref={containerRef} className="pt-webgl-container" />
 
         <div className="pt-ui-overlay">
-          <h2 ref={titleRef} className="pt-ui-title">NOS PROJETS</h2>
+          <h2 ref={titleRef} className="pt-ui-title">{t('explorerTitle')}</h2>
           <h2 className={'pt-hover-title' + (hoveredProject ? ' is-visible' : '')}>
             {hoveredProject ? hoveredProject.title : ''}
           </h2>
         </div>
 
         <div className="pt-hint">
-          <strong>Scrollez</strong> pour traverser le tunnel · <strong>Cliquez</strong> sur un projet pour le découvrir
+          {t('explorerHint')}
         </div>
 
         {selectedProject && (

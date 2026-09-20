@@ -298,9 +298,9 @@ function HeroBlog() {
 // ═══════════════════════════════════════════════════════════════
 // ── FEATURED POST — BlurReveal + TiltCard ─────────────────────
 // ═══════════════════════════════════════════════════════════════
-function FeaturedPost() {
+function FeaturedPost({ posts }) {
   const T = useTheme()
-  const post = BLOG_POSTS[0]
+  const post = posts[0]
   const ref  = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -549,7 +549,7 @@ function HashtagCloud() {
   )
 }
 
-function BlogGrid() {
+function BlogGrid({ posts }) {
   const T = useTheme()
   const ref = useRef(null)
   const beamContainerRef = useRef(null)
@@ -563,7 +563,7 @@ function BlogGrid() {
     cy: i < 3 ? 20 : -20,
   }))
 
-  const filtered = BLOG_POSTS.filter(p => {
+  const filtered = posts.filter(p => {
     const matchCat = activeCategory === 'Tous' || p.category === activeCategory
     const matchSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
     return matchCat && matchSearch
@@ -862,13 +862,13 @@ function ProcessBlog() {
 // ═══════════════════════════════════════════════════════════════
 // ── PAGE ─────────────────────────────────────────────────────
 // ═══════════════════════════════════════════════════════════════
-export default function BlogPage() {
+export default function BlogPage({ posts = BLOG_POSTS }) {
   return (
     <div>
       <HeroBlog />
-      <FeaturedPost />
+      <FeaturedPost posts={posts} />
       <HashtagCloud />
-      <BlogGrid />
+      <BlogGrid posts={posts} />
       <Newsletter />
       <ProcessBlog />
 

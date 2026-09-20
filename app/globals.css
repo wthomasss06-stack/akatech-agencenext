@@ -562,14 +562,24 @@ body.light-mode input::placeholder,
 body.light-mode textarea::placeholder {
   color: #999 !important;
 }
-body.light-mode select option {
+body.light-mode select option,
+body:not(.light-mode) select option {
   background: #ffffff;
   color: #111111;
 }
 body.light-mode input,
 body.light-mode textarea,
-body.light-mode select {
+body.light-mode select,
+body:not(.light-mode) input,
+body:not(.light-mode) textarea,
+body:not(.light-mode) select {
   color-scheme: light;
+}
+body:not(.light-mode) select,
+body:not(.light-mode) input,
+body:not(.light-mode) textarea {
+  background: rgba(10,16,12,0.92);
+  color: #f4f8f1;
 }
 
 /* ── HERO IMAGE CAROUSEL ── */

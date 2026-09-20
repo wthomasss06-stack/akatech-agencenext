@@ -59,10 +59,10 @@ nav.aka-card-nav {
 
 .aka-language-toggle { display: inline-flex; align-items: center; }
 .aka-language-toggle select {
-  width: 28px; height: 28px; padding: 0;
+  width: 42px; min-width: 42px; height: 28px; padding: 0 6px;
   border: 2px solid #050505; border-radius: 999px;
   background: linear-gradient(135deg, #c6ff3d, #88ca53);
-  color: #04140a; font: 800 .65rem 'JetBrains Mono', monospace;
+  color: #050505 !important; font: 800 .62rem 'JetBrains Mono', monospace;
   text-align: center; text-align-last: center;
   cursor: pointer; outline: none;
   box-shadow: 2px 2px 0px #050505;
@@ -78,7 +78,18 @@ nav.aka-card-nav {
   box-shadow: 1px 1px 0px #050505;
 }
 .aka-language-toggle select option {
-  background: #0d1a11; color: #ffffff; font-weight: 700;
+  background: #0f1712; color: #f3f9f0; font-weight: 700;
+}
+body.light-mode .aka-language-toggle select,
+.light-mode .aka-language-toggle select {
+  background: linear-gradient(135deg, #dff7bb, #bfe66a);
+  color: #050505 !important;
+  border-color: #050505;
+  box-shadow: 2px 2px 0px #050505;
+}
+body.light-mode .aka-language-toggle select option,
+.light-mode .aka-language-toggle select option {
+  background: #f7faf2; color: #111111;
 }
 
 .aka-theme-btn {
@@ -101,6 +112,13 @@ nav.aka-card-nav {
   display: grid; grid-template-columns: repeat(3, 1fr);
   gap: 14px; padding: 14px;
 }
+.aka-nav-panel-controls {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: flex-end; gap: 9px;
+  color: var(--card-text); font: 700 .68rem 'JetBrains Mono', monospace;
+  padding: 0 4px 2px;
+}
+.aka-nav-panel-controls .aka-language-toggle { display: inline-flex; }
 
 .aka-nav-card {
   border-radius: 18px; padding: 24px 22px; min-height: 230px;

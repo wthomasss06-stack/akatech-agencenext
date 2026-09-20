@@ -6,7 +6,7 @@ import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GhostTitle, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
-import { TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
+import { TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData } from '@/lib/data'
 
 /* ─── BlurReveal ─────────────────────────────────────────── */
 function BlurReveal({ children, delay = 0, direction = 'up', style = {}, once = true }) {
@@ -125,11 +125,12 @@ function HeroPricing() {
 /* ── GLASSMORPHISM PRICING TABS ── */
 function PricingTabs() {
   const T = useTheme()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true })
   const [tab, setTab] = useState('vitrine')
-  const d = PRICING[tab]
+  const localized = getLocalizedData(language)
+  const d = localized.PRICING[tab]
 
   return (
     <section ref={ref} style={{ padding: '2rem 5% 7rem', background: T.bg, position: 'relative', overflow: 'hidden' }}>
@@ -151,7 +152,7 @@ function PricingTabs() {
 
         {/* Tabs */}
         <BlurReveal delay={0.15} style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
-          {Object.entries(PRICING).map(([k, v]) => (
+          {Object.entries(localized.PRICING).map(([k, v]) => (
             <motion.button key={k} onClick={() => setTab(k)}
               whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}
               style={{ padding: '.55rem 1.4rem', borderRadius: 100, border: '1px solid', borderColor: tab === k ? T.green : T.border, background: tab === k ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: tab === k ? '#fff' : T.textSub, fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.82rem', fontWeight: 900, cursor: 'pointer', transition: 'all .22s' }}>
@@ -174,7 +175,7 @@ function PricingTabs() {
                     style={{ position: 'relative', borderRadius: 20, overflow: 'hidden', background: plan.popular ? 'linear-gradient(145deg,rgba(136,202,83,.18),rgba(136,202,83,.06))' : T.light ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: plan.popular ? '1px solid rgba(136,202,83,.5)' : `1px solid ${T.light ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.1)'}`, boxShadow: plan.popular ? '0 8px 40px rgba(136,202,83,.2),inset 0 1px 0 rgba(255,255,255,.15)' : T.light ? '0 4px 24px rgba(0,0,0,.08)' : '0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)', padding: plan.popular ? '0 0 2rem' : '2rem', height: '100%', display: 'flex', flexDirection: 'column' }}>
                     {plan.popular && (
                       <div style={{ padding: '.5rem', background: 'linear-gradient(90deg,#5f9137,#88ca53)', textAlign: 'center', fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#fff', letterSpacing: '.1em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem', borderRadius: '19px 19px 0 0' }}>
-                        <Zap size={10} />LE PLUS POPULAIRE
+                        <Zap size={10} />{t('pricing_popular')}
                       </div>
                     )}
                     <div style={{ padding: plan.popular ? '1.8rem 2rem 0' : 0, display: 'flex', flexDirection: 'column', flex: 1 }}>
@@ -221,7 +222,7 @@ function PricingTabs() {
             </div>
             <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
               className="btn-raised" style={{ padding: '.55rem 1.2rem', fontSize: '.78rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
-              <HoverSlideText text="Réserver ma place →" />
+              <HoverSlideText text={t('pricing_order')} />
             </a>
           </div>
         </BlurReveal>
@@ -464,16 +465,15 @@ function FAQSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="QUESTIONS FRÉQUENTES" />
-            Questions{' '}
-            <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
+            <GhostTitle text={t('faqUpper')} />
+            {t('faqTitle')}
           </h2>
         </BlurReveal>
       </div>
       <div style={{ maxWidth: 800, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.75rem' }}>
-          {FAQ_ITEMS.map(({ q, a }, i) => (
+          {localized.FAQ_ITEMS.map(({ q, a }, i) => (
             <BlurReveal key={q} delay={i * 0.06} direction={i % 2 === 0 ? 'left' : 'right'}>
               <motion.div className="sku-card"
                 whileHover={{ borderColor: 'rgba(136,202,83,.25)' }}

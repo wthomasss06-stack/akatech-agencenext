@@ -10,6 +10,7 @@
  */
 import { useState, useEffect } from 'react'
 import TransitionLink from '@/components/layout/TransitionLink'
+import { useLanguage } from '@/lib/language'
 import ProjectsTunnel from '@/components/explorer/ProjectsTunnel'
 import '@/components/explorer/ProjectsTunnel.css'
 
@@ -17,6 +18,7 @@ export default function ExplorerClient() {
   const [ready, setReady] = useState(false)
   const [mobile, setMobile] = useState(false)
   const [reduceMotion, setReduceMotion] = useState(false)
+  const { t } = useLanguage()
 
   useEffect(() => {
     const check = () => setMobile(window.innerWidth < 1024)
@@ -43,13 +45,13 @@ export default function ExplorerClient() {
         <div className="pt-grid-overlay" />
         <div className="pt-glow" />
         <div className="pt-mobile-card">
-          <h2>Mode Explorer</h2>
+          <h2>{t('explorerMode')}</h2>
           <p>
             {!mobile && reduceMotion
-              ? "Le tunnel 3D utilise un défilement immersif que ton système est réglé pour limiter. Découvre nos réalisations dans la vue classique."
-              : "Le tunnel 3D des projets est conçu pour le grand écran. Sur mobile, découvrez nos réalisations dans la vue classique."}
+              ? t('explorerReducedMotion')
+              : t('explorerMobile')}
           </p>
-          <TransitionLink href="/projects">Voir nos réalisations</TransitionLink>
+          <TransitionLink href="/projects">{t('viewProjects')}</TransitionLink>
         </div>
       </div>
     )
@@ -57,4 +59,3 @@ export default function ExplorerClient() {
 
   return <ProjectsTunnel />
 }
-

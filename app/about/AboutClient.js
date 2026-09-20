@@ -556,8 +556,8 @@ function RayonSection() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
           <BlurReveal direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, marginBottom: '1.2rem' }}>
-              <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
-              Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
+              <GhostTitle text={t('geoUpper')} />
+              {t('geoTitle')}
             </h2>
             <WordRevealP
               sectionRef={sectionRef}

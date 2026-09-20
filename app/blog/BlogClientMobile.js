@@ -85,11 +85,11 @@ function HeroBlog() {
 }
 
 // ── FEATURED POST ─────────────────────────────────────────────
-function FeaturedPost() {
+function FeaturedPost({ posts }) {
   const T = useTheme()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
-  const post = BLOG_POSTS[0]
+  const post = posts[0]
 
   return (
     <section ref={ref} style={{ padding: '3rem 5%', background: T.bgAlt }}>
@@ -135,14 +135,14 @@ function FeaturedPost() {
 }
 
 // ── BLOG GRID ─────────────────────────────────────────────────
-function BlogGrid() {
+function BlogGrid({ posts }) {
   const T = useTheme()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [activeCategory, setActiveCategory] = useState('Tous')
   const [searchQuery, setSearchQuery] = useState('')
 
-  const filtered = BLOG_POSTS.filter(p => {
+  const filtered = posts.filter(p => {
     const matchCat = activeCategory === 'Tous' || p.category === activeCategory
     const matchSearch = !searchQuery || p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.excerpt.toLowerCase().includes(searchQuery.toLowerCase())
     return matchCat && matchSearch
@@ -304,12 +304,12 @@ function Newsletter() {
   )
 }
 
-export default function BlogPage() {
+export default function BlogPage({ posts = BLOG_POSTS }) {
   return (
     <div>
       <HeroBlog />
-      <FeaturedPost />
-      <BlogGrid />
+      <FeaturedPost posts={posts} />
+      <BlogGrid posts={posts} />
       <Newsletter />
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg

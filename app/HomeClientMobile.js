@@ -202,10 +202,10 @@ function CircularProjectsGallery({ items, draggable = false, cardW = 220, interv
   )
 }
 
-const HERO_SLOGANS = [
-  { before: 'Un site qui travaille pour vous ', highlight: '24h/24' },
-  { before: 'Attirez des clients, gagnez en ', highlight: 'crédibilité' },
-  { before: 'Développez votre activité ', highlight: 'sereinement' },
+const getHeroSlogans = (t) => [
+  { before: t('homeSlogan1'), highlight: t('homeHighlight1') },
+  { before: t('homeSlogan2'), highlight: t('homeHighlight2') },
+  { before: t('homeSlogan3'), highlight: t('homeHighlight3') },
 ]
 
 // ── Slogan Hero — cycle auto entre 3 accroches, même traitement
@@ -213,12 +213,13 @@ const HERO_SLOGANS = [
 function HeroSloganCycle() {
   const { t } = useLanguage()
   const [index, setIndex] = useState(0)
+  const HERO_SLOGANS = getHeroSlogans(t)
   useEffect(() => {
     const id = setInterval(() => setIndex(i => (i + 1) % HERO_SLOGANS.length), 3500)
     return () => clearInterval(id)
-  }, [])
-  const before = t(`homeSlogan${index + 1}`)
-  const highlight = t(`homeHighlight${index + 1}`)
+  }, [HERO_SLOGANS.length])
+  const before = HERO_SLOGANS[index].before
+  const highlight = HERO_SLOGANS[index].highlight
 
   return (
     <div style={{ marginBottom: '2.2rem', maxWidth: 800, marginLeft: 'auto', marginRight: 'auto', minHeight: 'clamp(4.5rem,11vw,7.6rem)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -360,10 +361,10 @@ function Hero() {
           </AvatarGroup>
           <div style={{ textAlign: 'left' }}>
             <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.78rem', color: '#fff', lineHeight: 1.15 }}>
-              Ils nous ont fait confiance
+              {t('heroTrust')}
             </div>
             <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.63rem', color: '#88ca53' }}>
-              {PROJECTS.length}+ projets livrés
+              {PROJECTS.length}+ {t('stats_projects_label')}
             </div>
           </div>
         </motion.div>
@@ -377,7 +378,7 @@ function Hero() {
             whileTap={{ x: 1, y: 1, rotate: 0, scale: .97, boxShadow: '2px 2px 0px #050505' }}
             transition={{ type: 'spring', stiffness: 400, damping: 18 }}
             style={{ display: 'inline-flex', alignItems: 'center', gap: 8, fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#050505', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', padding: '1rem 2.1rem', borderRadius: 999, border: '3px solid #fff' }}>
-            <HoverSlideText text="Démarrer mon projet" /> <ArrowRight size={16} />
+            <HoverSlideText text={t('heroStartProject')} /> <ArrowRight size={16} />
           </motion.a>
           <motion.a
             href="https://wa.me/2250142507750"
@@ -388,7 +389,7 @@ function Hero() {
             whileTap={{ x: 1, y: 1, rotate: 0, scale: .97, boxShadow: '2px 2px 0px #050505' }}
             transition={{ type: 'spring', stiffness: 400, damping: 18 }}
             style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#c6ff3d', background: 'transparent', border: '3px solid #c6ff3d', borderRadius: 999, padding: 'calc(1rem - 3px) calc(2.1rem - 3px)' }}>
-            <HoverSlideText text="Prenez RDV" />
+            <HoverSlideText text={t('heroBookCall')} />
           </motion.a>
         </motion.div>
 
@@ -415,7 +416,7 @@ function Hero() {
       </div>
 
       <div style={{ position: 'absolute', bottom: '1.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', opacity: .28, zIndex: 15, pointerEvents: 'none' }}>
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>Scroll</span>
+        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', letterSpacing: '.18em', textTransform: 'uppercase', marginBottom: '.4rem', color: '#fff' }}>{t('pricing_scroll')}</span>
         <motion.div animate={{ scaleY: [1, 1.4, 1], opacity: [.5, 1, .5] }} transition={{ duration: 1.6, repeat: Infinity }}
           style={{ width: 1, height: 36, background: 'linear-gradient(to bottom, rgba(255,255,255,.8), transparent)' }} />
       </div>
@@ -426,102 +427,103 @@ function Hero() {
 }
 
 // ── DATA prestations — texte complet (remplace les visuels image) ──
-const SERVICES_ITEMS = [
+const getServicesItems = (t) => [
   {
-    n: '01', Icon: Globe, title: 'Création de Sites Web',
-    tagline: 'Votre présence en ligne professionnelle.',
+    n: '01', Icon: Globe, title: t('service_site_vitrine'),
+    tagline: t('service_site_vitrine_tagline'),
     bullets: [
-      { h: 'Site vitrine moderne', d: 'Design attractif et performant.' },
-      { h: 'Boutique e-commerce', d: 'Vendez vos produits en ligne.' },
-      { h: 'Portfolio créatif', d: 'Mettez en valeur vos réalisations.' },
-      { h: 'Application SaaS sur mesure', d: 'Solutions adaptées à vos besoins.' },
-      { h: 'Design responsive', d: 'Parfait sur tous les écrans.' },
-      { h: 'Optimisation SEO', d: 'Soyez visible, soyez choisi.' },
+      { h: t('service_site_vitrine_b1'), d: t('service_site_vitrine_b1_d') },
+      { h: t('service_site_vitrine_b2'), d: t('service_site_vitrine_b2_d') },
+      { h: t('service_site_vitrine_b3'), d: t('service_site_vitrine_b3_d') },
+      { h: t('service_site_vitrine_b4'), d: t('service_site_vitrine_b4_d') },
+      { h: t('service_site_vitrine_b5'), d: t('service_site_vitrine_b5_d') },
+      { h: t('service_site_vitrine_b6'), d: t('service_site_vitrine_b6_d') },
     ],
-    price: 'À partir de 150 000 FCFA',
+    price: t('pricing_from_150k'),
   },
   {
-    n: '02', Icon: Map, title: 'Cartes Interactives & Dashboards',
-    tagline: 'Visualisez vos données avec puissance.',
+    n: '02', Icon: Map, title: t('service_cartes_dashboards'),
+    tagline: t('service_cartes_dashboards_tagline'),
     bullets: [
-      { h: 'Cartes Mapbox interactives', d: 'Explorez vos données en temps réel.' },
-      { h: 'Géolocalisation avancée', d: 'Suivi précis et analyse spatiale.' },
-      { h: 'Dashboards analytiques', d: 'Indicateurs clés et visualisations claires.' },
-      { h: 'Données temps réel', d: 'Toujours à jour pour de meilleures décisions.' },
-      { h: 'Rapports personnalisés', d: 'Sur mesure selon vos besoins.' },
+      { h: t('service_dashboard_b1'), d: t('service_dashboard_b1_d') },
+      { h: t('service_dashboard_b2'), d: t('service_dashboard_b2_d') },
+      { h: t('service_dashboard_b3'), d: t('service_dashboard_b3_d') },
+      { h: t('service_dashboard_b4'), d: t('service_dashboard_b4_d') },
+      { h: t('service_dashboard_b5'), d: t('service_dashboard_b5_d') },
     ],
-    price: 'Sur devis',
+    price: t('pricing_quote'),
   },
   {
-    n: '03', Icon: Wrench, title: 'Maintenance & Support',
-    tagline: 'Votre projet sécurisé et toujours performant.',
+    n: '03', Icon: Wrench, title: t('service_maintenance'),
+    tagline: t('service_maintenance_tagline'),
     bullets: [
-      { h: 'Sauvegardes automatiques', d: 'Vos données sont protégées en continu.' },
-      { h: 'Mises à jour régulières', d: 'Plus de sécurité et de stabilité.' },
-      { h: 'Surveillance 24h/24', d: 'Monitoring temps réel, incidents anticipés.' },
-      { h: 'Support WhatsApp', d: 'Une assistance rapide et à portée de main.' },
-      { h: 'Assistance rapide', d: 'Notre équipe réactive pour vos problèmes.' },
+      { h: t('service_maintenance_b1'), d: t('service_maintenance_b1_d') },
+      { h: t('service_maintenance_b2'), d: t('service_maintenance_b2_d') },
+      { h: t('service_maintenance_b3'), d: t('service_maintenance_b3_d') },
+      { h: t('service_maintenance_b4'), d: t('service_maintenance_b4_d') },
+      { h: t('service_maintenance_b5'), d: t('service_maintenance_b5_d') },
     ],
-    price: 'À partir de 20 000 FCFA',
+    price: t('pricing_from_20000_month'),
   },
   {
-    n: '04', Icon: MapPin, title: 'Fiche Google My Business',
-    tagline: 'Soyez visible sur Google Maps et la recherche locale.',
+    n: '04', Icon: MapPin, title: t('service_google_my_business'),
+    tagline: t('service_google_my_business_tagline'),
     bullets: [
-      { h: 'Optimisation complète', d: 'NAP, catégories, description, photos et services.' },
-      { h: 'Gestion des avis', d: 'Réponses rapides pour votre e-réputation.' },
-      { h: 'Publications régulières', d: 'Actualités, offres et événements.' },
-      { h: 'Suivi des performances', d: 'Statistiques claires pour mesurer vos résultats.' },
-      { h: 'Plus de visibilité', d: 'Attirez plus de clients locaux chaque mois.' },
+      { h: t('service_gmb_b1'), d: t('service_gmb_b1_d') },
+      { h: t('service_gmb_b2'), d: t('service_gmb_b2_d') },
+      { h: t('service_gmb_b3'), d: t('service_gmb_b3_d') },
+      { h: t('service_gmb_b4'), d: t('service_gmb_b4_d') },
+      { h: t('service_gmb_b5'), d: t('service_gmb_b5_d') },
     ],
-    price: 'À partir de 20 000 FCFA',
+    price: t('pricing_from_10000_month'),
   },
   {
-    n: '05', Icon: MessageCircle, title: 'Intégration IA Chatbot',
-    tagline: "Le même assistant conversationnel que sur akatech.vercel.app.",
+    n: '05', Icon: MessageCircle, title: t('service_chatbot_ia'),
+    tagline: t('service_chatbot_ia_tagline'),
     bullets: [
-      { h: 'Assistant sur-mesure', d: 'Formé sur votre activité, vos services et vos tarifs.' },
-      { h: 'Qualification automatique', d: 'Comprend le besoin du visiteur avant de le transmettre.' },
-      { h: 'Disponible 24h/24', d: 'Répond même quand vous êtes indisponible.' },
-      { h: 'Capture de leads', d: 'Nom, contact et besoin enregistrés automatiquement.' },
-      { h: 'Intégration WhatsApp', d: 'Relais possible vers votre WhatsApp Business.' },
+      { h: t('service_chatbot_b1'), d: t('service_chatbot_b1_d') },
+      { h: t('service_chatbot_b2'), d: t('service_chatbot_b2_d') },
+      { h: t('service_chatbot_b3'), d: t('service_chatbot_b3_d') },
+      { h: t('service_chatbot_b4'), d: t('service_chatbot_b4_d') },
+      { h: t('service_chatbot_b5'), d: t('service_chatbot_b5_d') },
     ],
-    price: 'Sur devis',
+    price: t('pricing_quote'),
   },
   {
-    n: '06', Icon: CreditCard, title: 'Intégration de Paiement en Ligne',
-    tagline: 'Encaissez directement depuis votre site.',
+    n: '06', Icon: CreditCard, title: t('service_paiement_en_ligne'),
+    tagline: t('service_paiement_en_ligne_tagline'),
     bullets: [
-      { h: 'Mobile Money', d: 'Orange Money, MTN MoMo, Wave.' },
-      { h: 'Carte bancaire', d: 'Selon vos besoins et votre clientèle.' },
-      { h: 'Suivi des transactions', d: 'Historique clair de chaque paiement.' },
-      { h: 'Notifications automatiques', d: 'Vous et votre client êtes informés en temps réel.' },
-      { h: 'Flux sécurisés', d: 'Paiements protégés de bout en bout.' },
+      { h: t('service_payment_b1'), d: t('service_payment_b1_d') },
+      { h: t('service_payment_b2'), d: t('service_payment_b2_d') },
+      { h: t('service_payment_b3'), d: t('service_payment_b3_d') },
+      { h: t('service_payment_b4'), d: t('service_payment_b4_d') },
+      { h: t('service_payment_b5'), d: t('service_payment_b5_d') },
     ],
-    price: 'Sur devis',
+    price: t('pricing_quote'),
   },
 ]
 
 // ── DATA processus — texte complet (remplace les visuels image) ──
-const PROCESS_ITEMS = [
-  { n: '01', title: 'Brief & découverte', badge: 'Échange gratuit', desc: "Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement." },
-  { n: '02', title: 'Devis & contrat', badge: '1 jour', desc: "Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble." },
-  { n: '03', title: 'Acompte & contenus', badge: 'Feu vert', desc: "Vous versez 50% d'acompte et transmettez logo, informations et visuels — le délai démarre à réception." },
-  { n: '04', title: 'Conception & développement', badge: 'Délai annoncé', desc: "Nous concevons et développons votre projet conformément au devis validé." },
-  { n: '05', title: 'Prévisualisation & validation', badge: '1 à 2 jours', desc: "Vous recevez un lien de prévisualisation, testez le projet et nous effectuons les corrections mineures incluses." },
-  { n: '06', title: 'Livraison & suivi', badge: 'Projet livré', desc: "Après le solde, le projet est mis en ligne et les accès transmis — la garantie et le support démarrent ensuite." },
+const getProcessItems = (t) => [
+  { n: '01', title: t('process_brief'), badge: t('process_sub_brief'), desc: t('process_desc_brief') },
+  { n: '02', title: t('process_devis'), badge: t('process_sub_devis'), desc: t('process_desc_devis') },
+  { n: '03', title: t('process_acompte'), badge: t('process_sub_acompte'), desc: t('process_desc_acompte') },
+  { n: '04', title: t('process_conception'), badge: t('process_sub_conception'), desc: t('process_desc_conception') },
+  { n: '05', title: t('process_validation'), badge: t('process_sub_validation'), desc: t('process_desc_validation') },
+  { n: '06', title: t('process_livraison'), badge: t('process_sub_livraison'), desc: t('process_desc_livraison') },
 ]
 
 // ── STATS — chiffres géants éditoriaux (miroir desktop), responsive 2-col mobile ──
-const HOME_STATS = [
-  { target: PROJECTS.length,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
-  { target: 99,  suffix: '%', label: 'Clients satisfaits',  sub: 'Livrés dans les délais'    },
-  { target: 10,  suffix: '+', label: 'Clients accompagnés', sub: 'Startups, PME, créatifs'   },
-  { target: 3,   suffix: '+', label: "Années d'expérience", sub: 'En développement web'       },
+const getHomeStats = (t) => [
+  { target: PROJECTS.length,  suffix: '',  label: 'stats_projects_label',      sub: t('stats_sub_concept') },
+  { target: 99,  suffix: '%', label: 'stats_clients_label',  sub: t('stats_sub_delivery') },
+  { target: 10,  suffix: '+', label: 'stats_support_label', sub: t('stats_sub_market') },
+  { target: 3,   suffix: '+', label: 'stats_experience_label', sub: t('stats_sub_web') },
 ]
 
 function StatsSection() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -543,7 +545,7 @@ function StatsSection() {
           }
         `}</style>
         <div className="stats-editorial-mobile">
-          {HOME_STATS.map((s, i) => (
+          {getHomeStats(t).map((s, i) => (
             <motion.div key={s.label}
               initial={{ opacity: 0, y: 32 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -576,7 +578,7 @@ function StatsSection() {
                 letterSpacing: '.02em',
                 marginBottom: '.15rem',
               }}>
-                {s.label}
+                {t(s.label)}
               </div>
 
               {/* Sous-label */}
@@ -685,7 +687,7 @@ function ServicesPreview() {
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}>
           <Accordion
-            items={SERVICES_ITEMS}
+            items={getServicesItems(t)}
             renderHeader={(s, isOpen) => {
               const SIcon = s.Icon
               return (
@@ -730,7 +732,7 @@ function ServicesPreview() {
                   ))}
                 </div>
                 <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.78rem', padding: '.7rem 1.3rem', width: '100%', justifyContent: 'center' }}>
-                  <HoverSlideText text="Demander un devis" /> <ArrowRight size={13} />
+                  <HoverSlideText text={t('service_cta')} /> <ArrowRight size={13} />
                 </a>
               </div>
             )}
@@ -740,7 +742,7 @@ function ServicesPreview() {
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .35 }}
           style={{ textAlign: 'center', marginTop: '2.5rem' }}>
           <Link href="/services" className="btn-ghost" style={{ fontSize: '.9rem' }}>
-            <HoverSlideText text="Voir tous les services" /> <ArrowRight size={14} />
+            <HoverSlideText text={t('viewServices')} /> <ArrowRight size={14} />
           </Link>
         </motion.div>
       </div>
@@ -767,7 +769,7 @@ function Process() {
 
         <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }}>
           <Accordion
-            items={PROCESS_ITEMS}
+            items={getProcessItems(t)}
             renderHeader={(s, isOpen) => (
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '.4rem', minWidth: 0 }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: '.7rem' }}>
@@ -804,6 +806,7 @@ function Process() {
 // swipe tactile, cartes avec badges type / live / result
 function ProjectsSection() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref     = useRef(null)
   const inView  = useInView(ref, { once: true, margin: '-60px' })
 
@@ -820,11 +823,11 @@ function ProjectsSection() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
-          <GhostTitle text="NOS DERNIÈRES RÉALISATIONS" />
-          Nos dernières <GreenUnderline><span className="text-gradient">réalisations</span></GreenUnderline>
+          <GhostTitle text={t('homeProjectsUpper')} />
+          {t('projects_latest_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('projects_latest_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
         </h2>
         <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
-          — glissez pour naviguer
+          {t('projects_hint')}
         </p>
       </motion.div>
 
@@ -836,7 +839,7 @@ function ProjectsSection() {
       <div style={{ padding: '2.5rem 0 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 }}>
           <Link href="/projects" className="btn-ghost" style={{ fontSize: '.88rem', padding: '.8rem 1.8rem' }}>
-            <HoverSlideText text="Toutes les réalisations" /> <ArrowRight size={13} />
+            <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={13} />
           </Link>
         </motion.div>
       </div>
@@ -863,8 +866,8 @@ function Testimonials() {
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="CE QUE DISENT NOS CLIENTS" />
-            Ce que disent nos <GreenUnderline><span className="text-gradient">clients</span></GreenUnderline>
+            <GhostTitle text={t('homeTestimonialsUpper')} />
+            {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('testimonials_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
           </h2>
         </motion.div>
 
@@ -925,14 +928,14 @@ function RevealParagraph({ text, greenWords = [], extraStyle = {}, inView }) {
 }
 
 // ── DOMAINES D'INTERVENTION — grille éditoriale statique (miroir desktop, sans hover-image souris) ──
-const DOMAINES = [
-  { n: '01', Icon: Monitor,  title: 'Sites vitrines & sites métier',          tag: 'Site Vitrine', desc: "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel." },
-  { n: '02', Icon: ShoppingBag, title: 'E-commerce',                          tag: 'E-Commerce',   desc: "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur." },
-  { n: '03', Icon: Calendar, title: 'Réservation & rendez-vous',              tag: 'Réservation',  desc: "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles." },
-  { n: '04', Icon: Layers,   title: 'Plateformes & marketplaces',             tag: 'Plateforme',   desc: "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards." },
-  { n: '05', Icon: Receipt,  title: 'Gestion commerciale & facturation',      tag: 'Facturation',  desc: "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF." },
-  { n: '06', Icon: Cog,      title: 'Applications web & outils métier',       tag: 'Outil métier', desc: "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure." },
-  { n: '07', Icon: Calculator, title: 'POS & caisse',                        tag: 'Bientôt',      desc: "Système d'encaissement et de caisse physique — bientôt disponible." },
+const getDomaines = (t) => [
+  { n: '01', Icon: Monitor,  title: t('domaines_site_vitrine'),          tag: 'Site Vitrine', desc: "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel." },
+  { n: '02', Icon: ShoppingBag, title: t('domaines_ecommerce'),              tag: 'E-Commerce',   desc: "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur." },
+  { n: '03', Icon: Calendar, title: t('domaines_reservation'),            tag: 'Réservation',  desc: "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles." },
+  { n: '04', Icon: Layers,   title: t('domaines_plateforme'),            tag: 'Plateforme',   desc: "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards." },
+  { n: '05', Icon: Receipt,  title: t('domaines_facturation'),            tag: 'Facturation',  desc: "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF." },
+  { n: '06', Icon: Cog,      title: t('domaines_applications'),          tag: 'Outil métier', desc: "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure." },
+  { n: '07', Icon: Calculator, title: t('domaines_pos'),                 tag: 'Bientôt',      desc: "Système d'encaissement et de caisse physique — bientôt disponible." },
 ]
 
 function DomaineCard({ n, Icon, title, desc, tag, index, inView }) {
@@ -969,11 +972,11 @@ function DomaineCard({ n, Icon, title, desc, tag, index, inView }) {
 
 function DomainesSection() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
-  const DOM_TEXT = "De la vitrine au SaaS, de la boutique au portfolio — nous intervenons sur l'ensemble de la chaîne digitale pour concrétiser votre vision."
-  const DOM_GREEN = ['SaaS,', 'portfolio', 'chaîne', 'digitale', 'concrétiser', 'vision.']
+  const DOMAINES = getDomaines(t)
 
   return (
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative', overflow: 'hidden' }}>
@@ -981,11 +984,10 @@ function DomainesSection() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
-            Ce que AKATech Studio{' '}
-            <GreenUnderline><span className="text-gradient">conçoit pour vous</span></GreenUnderline>
+            <GhostTitle text={t('domainesTitle').toUpperCase()} />
+            {t('domainesTitle')}
           </h2>
-          <RevealParagraph text={DOM_TEXT} greenWords={DOM_GREEN} extraStyle={{ color: T.textSub }} inView={inView} />
+          <RevealParagraph text={t('domainesIntro')} extraStyle={{ color: T.textSub }} inView={inView} />
         </motion.div>
 
         <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1px', background: T.border, borderRadius: 16, overflow: 'hidden', border: `1px solid ${T.border}` }}>
@@ -996,10 +998,10 @@ function DomainesSection() {
 
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 }} style={{ textAlign: 'center', marginTop: '2rem' }}>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', color: T.textMuted, marginBottom: '1rem' }}>
-            Votre projet ne rentre dans aucune case ? On s'adapte.
+            {t('domainesCta')}
           </p>
           <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.85rem', padding: '.8rem 1.6rem' }}>
-            <HoverSlideText text="Discuter de mon projet" /> <ArrowRight size={13} />
+            <HoverSlideText text={t('discussProject')} /> <ArrowRight size={13} />
           </a>
         </motion.div>
 
@@ -1051,7 +1053,7 @@ function PricingCallout() {
                   style={{ position: 'relative', borderRadius: 18, overflow: 'hidden', background: plan.popular ? 'linear-gradient(145deg,rgba(136,202,83,.18),rgba(136,202,83,.06))' : T.light ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,.04)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)', border: plan.popular ? '1px solid rgba(136,202,83,.5)' : `1px solid ${T.light ? 'rgba(0,0,0,.1)' : 'rgba(255,255,255,.1)'}`, boxShadow: plan.popular ? '0 8px 40px rgba(136,202,83,.2),inset 0 1px 0 rgba(255,255,255,.15)' : T.light ? '0 4px 24px rgba(0,0,0,.08)' : '0 8px 32px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06)', padding: plan.popular ? '0 0 1.8rem' : '1.8rem' }}>
                   {plan.popular && (
                     <div style={{ padding: '.45rem', background: 'linear-gradient(90deg,#5f9137,#88ca53)', textAlign: 'center', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', fontWeight: 700, color: '#fff', letterSpacing: '.1em', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem' }}>
-                      <Zap size={10} />LE PLUS POPULAIRE
+                      <Zap size={10} />{t('pricing_popular')}
                     </div>
                   )}
                   <div style={{ padding: plan.popular ? '1.6rem 1.8rem 0' : 0, position: 'relative' }}>
@@ -1073,8 +1075,8 @@ function PricingCallout() {
                       ))}
                     </div>
                     {plan.popular
-                      ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}><HoverSlideText text="Commander →" /></a>
-                      : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}><HoverSlideText text="Commander →" /></a>
+                      ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}><HoverSlideText text={t('pricing_order')} /></a>
+                      : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex' }}><HoverSlideText text={t('pricing_order')} /></a>
                     }
                   </div>
                 </motion.div>
@@ -1089,14 +1091,14 @@ function PricingCallout() {
             <div style={{ width: 9, height: 9, borderRadius: '50%', background: '#88ca53', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: T.textSub, letterSpacing: '.03em', margin: 0 }}>
               <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
-                <Timer size={11} /> Projets pris dans l'ordre d'arrivée
+                <Timer size={11} /> {t('pricing_urgency')}
               </span>
-              {' '}— le délai dépend de la charge du moment. Plus tôt vous écrivez, plus tôt on commence.
+              {' '}{t('pricing_urgency_text')}
             </p>
           </div>
           <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
             className="btn-raised" style={{ padding: '.7rem 1.2rem', fontSize: '.8rem', justifyContent: 'center', display: 'flex' }}>
-            <HoverSlideText text="Réserver ma place →" />
+            <HoverSlideText text={t('pricing_order')} />
           </a>
         </motion.div>
       </div>
@@ -1135,6 +1137,7 @@ function FlagBadge({ code, primary }) {
 
 function GeoSectionHome() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -1144,12 +1147,12 @@ function GeoSectionHome() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="OÙ INTERVENONS-NOUS ?" />
-            Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
+            <GhostTitle text={t('geoUpper')} />
+            {t('geoTitle')}
           </h2>
           <RevealParagraph
-            text="Basés à Abidjan, on travaille 100% remote avec des clients partout en Afrique de l'Ouest et la diaspora."
-            greenWords={['Abidjan,', 'remote', "l'Afrique", "l'Ouest", 'diaspora.']}
+            text={t('geoLead')}
+            greenWords={['Abidjan', 'remote', 'West Africa', 'diaspora', 'Abiyán', 'Afri', 'occidental', 'diáspora']}
             extraStyle={{ color: T.textSub }}
             inView={inView}
           />
@@ -1177,27 +1180,28 @@ const FORM_PANEL_W = 420
 
 function ProjectFormHome() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [form, setForm] = useState({ name: '', email: '', phone: '', service: '', message: '' })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
   const [error, setError] = useState('')
-  const inputStyle = { width: '100%', padding: '.6rem 0', background: 'transparent', border: 'none', borderBottom: `1px solid ${T.border}`, borderRadius: 0, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', outline: 'none', transition: 'border-color .25s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark' }
+  const inputStyle = { width: '100%', padding: '.6rem 0', background: T.light ? 'transparent' : 'rgba(10,16,12,0.92)', border: 'none', borderBottom: `1px solid ${T.border}`, borderRadius: 0, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '1rem', outline: 'none', transition: 'border-color .25s', boxSizing: 'border-box', colorScheme: T.light ? 'light' : 'dark', WebkitAppearance: 'none', appearance: 'none' }
   const focusOn = e => { e.target.style.borderBottomColor = '#88ca53' }
   const focusOff = e => { e.target.style.borderBottomColor = T.border }
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.message) { setError('Merci de renseigner au moins votre nom, votre email et votre besoin.'); return }
+    if (!form.name || !form.email || !form.message) { setError(t('formRequired')); return }
     setSending(true)
     setError('')
     try {
       const res = await fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, projectType: form.service }) })
       const data = await res.json()
-      if (!res.ok) throw new Error(data?.error || "Erreur lors de l'envoi")
+      if (!res.ok) throw new Error(data?.error || t('formErrorGeneric'))
       setSent(true)
     } catch (err) {
-      setError(err.message || "Une erreur est survenue. Réessayez ou contactez-nous sur WhatsApp.")
+      setError(err.message || t('formErrorGeneric'))
     } finally { setSending(false) }
   }
 
@@ -1206,12 +1210,12 @@ function ProjectFormHome() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '1.6rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="DÉCRIVEZ VOTRE PROJET" />
-            Décrivez votre <GreenUnderline><span className="text-gradient">projet</span></GreenUnderline>
+            <GhostTitle text={t('formUpper')} />
+            {t('formTitle')}
           </h2>
           <RevealParagraph
-            text="Remplissez le formulaire — on vous recontacte par email sous 24h avec un devis gratuit."
-            greenWords={['formulaire', 'email', '24h', 'gratuit.']}
+            text={t('formLead')}
+            greenWords={['form', 'email', '24h', 'free quote', 'formulario', '24 horas', 'presupuesto']}
             extraStyle={{ color: T.textSub }}
             inView={inView}
           />
@@ -1225,31 +1229,31 @@ function ProjectFormHome() {
                 <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', stiffness: 300, damping: 18 }} style={{ width: 58, height: 58, borderRadius: '50%', border: '1.5px solid rgba(136,202,83,.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.4rem' }}>
                   <Check size={26} style={{ color: '#88ca53' }} />
                 </motion.div>
-                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.1rem', color: T.textMain, marginBottom: '.7rem' }}>Message envoyé !</h3>
-                <p style={{ color: T.textSub, fontSize: '.85rem', lineHeight: 1.7 }}>Votre demande a bien été reçue. On répond en moins de 24h directement par email — à très vite !</p>
-                <button type="button" onClick={() => { setSent(false); setError(''); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }} style={{ marginTop: '1.4rem', background: 'transparent', border: `1px solid ${T.border}`, borderRadius: 999, padding: '.5rem 1.2rem', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.76rem', cursor: 'pointer' }}>Envoyer un autre message</button>
+                <h3 style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1.1rem', color: T.textMain, marginBottom: '.7rem' }}>{t('messageSent')}</h3>
+                <p style={{ color: T.textSub, fontSize: '.85rem', lineHeight: 1.7 }}>{t('formSuccess')}</p>
+                <button type="button" onClick={() => { setSent(false); setError(''); setForm({ name: '', email: '', phone: '', service: '', message: '' }) }} style={{ marginTop: '1.4rem', background: 'transparent', border: `1px solid ${T.border}`, borderRadius: 999, padding: '.5rem 1.2rem', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.76rem', cursor: 'pointer' }}>{t('sendAnother')}</button>
               </motion.div>
             ) : (
               <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.25rem', color: T.textMain, marginBottom: '1.2rem' }}>Nous écrire</h3>
+                <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '1.25rem', color: T.textMain, marginBottom: '1.2rem' }}>{t('writeUs')}</h3>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1.2rem', marginBottom: '1.2rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre nom</label>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('yourName')}</label>
                     <input style={inputStyle} placeholder="Elvis Aka" value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Email</label>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('emailLabel')}</label>
                     <input type="email" style={inputStyle} placeholder="vous@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>WhatsApp / Tél</label>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('formPhoneLabel')}</label>
                     <input style={inputStyle} placeholder="+225 07 XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Type de projet</label>
+                    <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('formProjectTypeLabel')}</label>
                     <select style={{ ...inputStyle, cursor: 'pointer' }} value={form.service} onChange={e => setForm(f => ({ ...f, service: e.target.value }))} onFocus={focusOn} onBlur={focusOff}>
-                      <option value="">Choisir...</option>
-                      <option value="site-vitrine">Conception de Site Web</option>
+                      <option value="">{t('chooseLabel')}</option>
+                      <option value="site-vitrine">{t('service_site_vitrine')}</option>
                       <option value="e-commerce">E-commerce</option>
                       <option value="application-web">Application Web / SaaS</option>
                       <option value="cartes-dashboards">Cartes Interactives & Dashboards</option>
@@ -1262,13 +1266,13 @@ function ProjectFormHome() {
                   </div>
                 </div>
                 <div style={{ marginBottom: '1.4rem' }}>
-                  <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>Votre besoin en une phrase</label>
+                  <label style={{ display: 'block', fontSize: '.66rem', color: T.textMuted, marginBottom: '.4rem', fontFamily: "'JetBrains Mono',monospace", letterSpacing: '.1em', textTransform: 'uppercase' }}>{t('formNeedLabel')}</label>
                   <input style={inputStyle} placeholder="Ex: Boutique en ligne avec paiement Mobile Money"
                     value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} onFocus={focusOn} onBlur={focusOff} />
                 </div>
                 {error && <p style={{ textAlign: 'left', fontSize: '.76rem', color: '#ff6b6b', marginBottom: '.8rem' }}>{error}</p>}
                 <p style={{ textAlign: 'left', fontSize: '.7rem', color: T.textMuted, display: 'flex', alignItems: 'center', gap: '.35rem' }}>
-                  <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> Vos données restent confidentielles. Aucun spam.
+                  <Lock size={11} style={{ color: T.textMuted, flexShrink: 0 }} /> {t('privacyNote')}
                 </p>
                 <button
                   type="button"
@@ -1281,7 +1285,7 @@ function ProjectFormHome() {
                   }}
                 >
                   {sending ? <span style={{ width: 15, height: 15, border: '2px solid rgba(5,5,5,.3)', borderTopColor: '#050505', borderRadius: '50%', animation: 'spin .6s linear infinite', display: 'inline-block' }} /> : <Send size={17} />}
-                  <HoverSlideText text="Recevoir mon devis en 24h" />
+                  <HoverSlideText text={t('receiveQuote')} />
                 </button>
               </motion.div>
             )}
@@ -1295,6 +1299,7 @@ function ProjectFormHome() {
 // ── QUESTIONS FRÉQUENTES — accordéon (réutilise Accordion générique) ──
 function FAQSectionHome() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
@@ -1304,8 +1309,8 @@ function FAQSectionHome() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="QUESTIONS FRÉQUENTES" />
-            Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
+            <GhostTitle text={t('faqUpper')} />
+            {t('faqTitle')}
           </h2>
         </motion.div>
 

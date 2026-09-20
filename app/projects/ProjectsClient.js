@@ -53,8 +53,8 @@ function HeroRealisations() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text="REALISATIONS" />
-          REALISATIONS
+          <GhostTitle text={t('projectsTitleUpper')} />
+          {t('projectsTitleUpper')}
           
         </motion.h1>
 
@@ -102,8 +102,6 @@ function HeroRealisations() {
 /* ────────────────────────────────────────────────
    HELPERS — mêmes utilitaires que App.jsx
 ──────────────────────────────────────────────── */
-const PROJECT_TYPE_BADGE = (type, live) => live ? `${type} — en ligne` : `${type} — En cours`
-
 function getDisplayUrl(url) {
   const m = /^https?:\/\/([^/]+)/.exec(url || '')
   return m ? m[1] : (url || 'Démo locale')
@@ -116,6 +114,7 @@ function getDisplayUrl(url) {
    ProjectScrollSlide (App.jsx / elvis-portfolio).
 ──────────────────────────────────────────────── */
 function ProjectScrollSlide({ project, index, total, T }) {
+  const { t } = useLanguage()
   const desktopImg = project.img
   const displayUrl = getDisplayUrl(project.url)
 
@@ -190,9 +189,9 @@ function ProjectScrollSlide({ project, index, total, T }) {
           </div>
 
           <div className="fc-meta" style={{ borderColor: 'rgba(136,202,83,.25)' }}>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{PROJECT_TYPE_BADGE(project.type, project.live)}</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_market')}</span><span className="fc-mv" style={{ color: T.textMain }}>Côte d'Ivoire</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_role')}</span><span className="fc-mv" style={{ color: T.textMain }}>Conception & Développement</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.type} — {project.live ? t('online') : t('project_progress')}</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_market')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_country')}</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_role')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_design')}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_year')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.year}</span></div>
           </div>
 
@@ -279,10 +278,10 @@ function StackedRealisations() {
         {/* Heading flottant dans le sticky */}
         <div className="fcx-section-label">
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.45em', textTransform: 'uppercase', marginBottom: '.6rem' }}>
-            // Scroll pour parcourir
+            // {t('projectsScrollHint')}
           </p>
           <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.1rem,1.8vw,1.6rem)', color: T.textMain, letterSpacing: '-.02em', margin: 0 }}>
-            {total} réalisations, une par une.
+            {t('projectsCountHeading').replace('{count}', total)}
           </h2>
         </div>
 
@@ -473,8 +472,8 @@ function ProjectsIntro() {
           color: T.textMain,
           marginBottom: '2.5rem',
         }}>
-          <GhostTitle text="VOTRE PROJET, NOTRE PROCHAIN SUCCÈS ?" />
-          Votre projet, <GreenUnderline><span className="text-gradient">notre prochain succès&nbsp;?</span></GreenUnderline>
+          <GhostTitle text={t('projectsCtaTitle')} />
+          {t('projectsCtaLead')} <GreenUnderline><span className="text-gradient">{t('projectsCtaHighlight')}</span></GreenUnderline>
         </h2>
 
         {/* Texte principal avec effet blur-reveal */}

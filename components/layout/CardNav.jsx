@@ -14,20 +14,36 @@ import { useBlobTransition } from './BlobTransition'
 import './CardNav.css'
 
 /* ── Slogans cycle — navJAX ─────────────────────────── */
-const NAV_SLOGANS = [
-  "Des sites web qui\nfont grandir votre activité.",
-  "Votre croissance\ncommence en ligne.",
-  "Transformez votre\nprésence en opportunités.",
-  "Digital, local,\nrentable.",
-]
+const NAV_SLOGANS = {
+  fr: [
+    "Des sites web qui\nfont grandir votre activité.",
+    "Votre croissance\ncommence en ligne.",
+    "Transformez votre\nprésence en opportunités.",
+    "Digital, local,\nrentable.",
+  ],
+  en: [
+    "Websites that\nhelp your business grow.",
+    "Your growth\nstarts online.",
+    "Turn your presence\ninto opportunities.",
+    "Digital, local,\nprofitable.",
+  ],
+  es: [
+    "Sitios web que\nhacen crecer tu negocio.",
+    "Tu crecimiento\nempieza en línea.",
+    "Convierte tu presencia\nen oportunidades.",
+    "Digital, local,\nrentable.",
+  ],
+}
 
 function NavSlogan() {
+  const { language } = useLanguage()
+  const slogans = NAV_SLOGANS[language] || NAV_SLOGANS.fr
   const [i, setI] = useState(0)
   useEffect(() => {
-    const id = setInterval(() => setI(v => (v + 1) % NAV_SLOGANS.length), 4000)
+    const id = setInterval(() => setI(v => (v + 1) % slogans.length), 4000)
     return () => clearInterval(id)
-  }, [])
-  const lines = NAV_SLOGANS[i].split('\n')
+  }, [slogans.length])
+  const lines = slogans[i].split('\n')
   return (
     <div style={{ position: 'relative', minHeight: '2.8em', overflow: 'hidden' }}>
       <AnimatePresence mode="wait">
@@ -189,17 +205,19 @@ export default function CardNav() {
               <Orbit size={13} />
               <span><HoverSlideText text={t('explorer')} /></span>
             </button>
-            <LanguageToggle />
-            <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? t('darkMode') : t('lightMode')} type="button">
-              {T.light ? <Moon size={13} /> : <Sun size={13} />}
-            </button>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised btn-sm">
-              <HoverSlideText text="DEMARRER MON PROJET" />
+              <HoverSlideText text={t('startProject')} />
             </a>
           </div>
         </div>
 
         <div className="aka-nav-content" ref={contentRef}>
+          <div className="aka-nav-panel-controls">
+            <LanguageToggle />
+            <button onClick={T.toggle} className="aka-theme-btn" title={T.light ? t('darkMode') : t('lightMode')} type="button">
+              {T.light ? <Moon size={13} /> : <Sun size={13} />}
+            </button>
+          </div>
           <div className="aka-nav-card aka-card-1" ref={el => cardsRef.current[0] = el}>
             <div className="aka-card-label">AKATech studio.</div>
             <div className="aka-card-brand">

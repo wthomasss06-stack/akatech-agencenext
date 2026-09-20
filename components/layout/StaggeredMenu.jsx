@@ -272,16 +272,6 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
           <Logo size={18} showTag={false} animate={false} />
         </TransitionLink>
         <div className="sm-header-right">
-          <LanguageToggle />
-          <button
-            onClick={T.toggle}
-            className="sm-header-theme"
-            title={T.light ? t('darkMode') : t('lightMode')}
-            type="button"
-            aria-label="Basculer le thème"
-          >
-            {T.light ? <Moon size={14} /> : <Sun size={14} />}
-          </button>
           <button
             ref={toggleBtnRef}
             className="sm-toggle"
@@ -330,6 +320,12 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
               aria-label="Fermer le menu"
             >
               ×
+            </button>
+          </div>
+          <div className="sm-panel-controls">
+            <LanguageToggle />
+            <button onClick={T.toggle} className="sm-panel-theme" title={T.light ? t('darkMode') : t('lightMode')} type="button">
+              {T.light ? <Moon size={14} /> : <Sun size={14} />}
             </button>
           </div>
 

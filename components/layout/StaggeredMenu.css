@@ -63,12 +63,22 @@
 }
 .sm-header-right .aka-language-toggle select {
   height: 36px; min-width: 48px; padding: 0 10px; border: 2.5px solid #050505;
-  border-radius: 14px; background: rgba(255,255,255,.12); color: #88ca53;
+  border-radius: 14px; background: linear-gradient(135deg, #c6ff3d, #88ca53); color: #050505;
   font: 800 .72rem 'JetBrains Mono', monospace; cursor: pointer; outline: none;
   box-shadow: 3.5px 3.5px 0 #050505; text-align: center; text-align-last: center;
   appearance: none; -webkit-appearance: none; -moz-appearance: none;
 }
-.light-mode .sm-header-right .aka-language-toggle select { background: #f0f5ec; color: #5f9137; border-color: #050505; box-shadow: 3.5px 3.5px 0px #050505; }
+.sm-header-right .aka-language-toggle select option {
+  background: #0f1712; color: #f3f9f0;
+}
+body.light-mode .sm-header-right .aka-language-toggle select,
+.light-mode .sm-header-right .aka-language-toggle select {
+  background: linear-gradient(135deg, #dff7bb, #bfe66a); color: #050505; border-color: #050505; box-shadow: 3.5px 3.5px 0px #050505;
+}
+body.light-mode .sm-header-right .aka-language-toggle select option,
+.light-mode .sm-header-right .aka-language-toggle select option {
+  background: #f7faf2; color: #111111;
+}
 .sm-toggle:hover {
   background: rgba(255,255,255,.20);
   transform: translate(-2px,-3px) scale(1.03);
@@ -186,6 +196,19 @@
   gap: 1rem;
   margin-bottom: 2.5rem;
 }
+
+.sm-panel-controls {
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  margin: -1rem 0 2rem; color: #88ca53;
+  font: 700 .68rem 'JetBrains Mono', monospace; text-transform: uppercase;
+}
+.sm-panel-theme {
+  width: 36px; height: 36px; border-radius: 14px; border: 2px solid #050505;
+  background: rgba(136,202,83,.12); color: #88ca53; display: inline-flex;
+  align-items: center; justify-content: center; cursor: pointer; box-shadow: 3px 3px 0 #050505;
+}
+.light-mode .sm-panel-controls { color: #5f9137; }
+.light-mode .sm-panel-theme { background: #f0f5ec; color: #2d5a14; }
 
 .sm-panel-logo-link {
   display: inline-flex;

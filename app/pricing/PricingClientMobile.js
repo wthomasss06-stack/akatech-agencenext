@@ -59,7 +59,7 @@ function HeroPricing() {
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '.6rem', padding: '.5rem 1.2rem', borderRadius: 100, background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)' }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
             <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, letterSpacing: '.06em' }}>
-              Paiement Mobile Money accepté
+              {t('pricing_urgency')}
             </span>
           </div>
         </motion.div>
@@ -104,13 +104,7 @@ function PricingTabs() {
         {/* Intro */}
         <motion.p initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .05 }}
           style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, textAlign: 'center', marginBottom: '1.8rem' }}>
-          {'Pas de '}
-          <span style={{ color: '#88ca53' }}>frais cachés</span>
-          {'. Des prix '}
-          <span style={{ color: '#88ca53' }}>honnêtes</span>
-          {' adaptés au marché africain — devis '}
-          <span style={{ color: '#88ca53' }}>gratuit</span>
-          {' et sans engagement.'}
+          {t('pricing_kicker')}
         </motion.p>
 
         {/* Tabs */}
@@ -165,7 +159,7 @@ function PricingTabs() {
                       display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '.4rem',
                       borderRadius: '19px 19px 0 0',
                     }}>
-                      <Zap size={10} />LE PLUS POPULAIRE
+                      <Zap size={10} />{t('pricing_popular')}
                     </div>
                   )}
 
@@ -202,8 +196,8 @@ function PricingTabs() {
                     </div>
 
                     {plan.popular
-                      ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
-                      : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text="Commander →" /></a>
+                      ? <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text={t('pricing_order')} /></a>
+                      : <a href={`https://wa.me/2250142507750?text=${wa}`} target="_blank" rel="noreferrer" className="btn-ghost" style={{ width: '100%', justifyContent: 'center', display: 'flex', marginTop: 'auto' }}><HoverSlideText text={t('pricing_order')} /></a>
                     }
                   </div>
                 </motion.div>
@@ -219,14 +213,14 @@ function PricingTabs() {
             <div style={{ width: 10, height: 10, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', boxShadow: '0 0 8px rgba(136,202,83,.8)', animation: 'dot-blink 1.4s ease-in-out infinite', flexShrink: 0 }} />
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.72rem', color: T.textSub, letterSpacing: '.04em', margin: 0 }}>
               <span style={{ color: '#b3ee85', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '.3rem' }}>
-                <AlertTriangle size={12} /> 2 créneaux disponibles
+                <AlertTriangle size={12} /> {t('pricing_urgency')}
               </span>
-              {' '}ce mois-ci — les projets sont traités dans l'ordre d'arrivée.
+              {' '}{t('pricing_urgency_text')}
             </p>
           </div>
           <a href="https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+réserver+mon+projet+!" target="_blank" rel="noreferrer"
             className="btn-raised" style={{ padding: '.55rem 1.2rem', fontSize: '.78rem', flexShrink: 0, whiteSpace: 'nowrap' }}>
-            <HoverSlideText text="Réserver ma place →" />
+            <HoverSlideText text={t('pricing_order')} />
           </a>
         </motion.div>
       </div>
@@ -353,8 +347,8 @@ function FAQSection() {
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="QUESTIONS FRÉQUENTES" />
-            Questions <GreenUnderline><span className="text-gradient">fréquentes</span></GreenUnderline>
+            <GhostTitle text={t('faqUpper')} />
+            {t('faqTitle')}
           </h2>
           <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
             style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginTop: '1rem' }}>

@@ -124,6 +124,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="fr">
       <head>
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
         <link rel="icon" href="/favicon.ico" sizes="48x48" />
         <link rel="icon" href="/favicon.png" type="image/png" sizes="96x96" />
         <link rel="icon" href="/icon-512.png" type="image/png" sizes="512x512" />

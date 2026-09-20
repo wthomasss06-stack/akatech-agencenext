@@ -62,7 +62,7 @@ function HeroRealisations() {
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 900, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text={`+${PROJECTS.length} RÉALISATIONS LIVRÉES, 99% SATISFAITS.`} />
+            <GhostTitle text={`+${PROJECTS.length} ${t('deliveredProjects').toUpperCase()}, 99% ${t('satisfied').toUpperCase()}.`} />
             +{PROJECTS.length} {t('deliveredProjects')},<br /><GreenUnderline><span className="text-gradient">99% {t('satisfied')}.</span></GreenUnderline>
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
@@ -86,6 +86,7 @@ function HeroRealisations() {
    utiliser les hooks useTransform)
 ──────────────────────────────────────────────── */
 function StackedCard({ project, index, total, scrollYProgress, T }) {
+  const { t } = useLanguage()
   const segStart = index / total
   const segEnd   = Math.min((index + 1) / total, 1)
 
@@ -177,7 +178,7 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                 {project.live && (
                   <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                    en ligne
+                    {t('online')}
                   </div>
                 )}
               </div>
@@ -204,14 +205,14 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
                   className="btn-ghost btn-sm"
                   style={{ marginBottom: '1.2rem' }}
                 >
-                  <HoverSlideText text="Voir le projet" /> <ArrowUpRight size={12} />
+                  <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={12} />
                 </a>
               ) : (
                 <span
                   className="btn-ghost btn-sm"
                   style={{ marginBottom: '1.2rem', opacity: .5, pointerEvents: 'none' }}
                 >
-                  <FileText size={12} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `En cours · ${project.progress}%` : 'Démo locale'} />
+                  <FileText size={12} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `${t('project_progress')} · ${project.progress}%` : t('project_demo')} />
                 </span>
               )}
 
@@ -290,10 +291,11 @@ function StackedRealisations() {
 ──────────────────────────────────────────────── */
 function ProjectsIntro() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
-  const TEXT = "Ci‑dessous : des projets réalisés pour des PME, startups et créateurs. Vous trouverez les objectifs initiaux, les technologies mises en œuvre et les résultats obtenus (augmentation du trafic, conversions, productivité). Chaque réalisation est le fruit d’une démarche centrée utilisateur et d’un développement sur mesure."
+  const TEXT = t('projectsIntro')
   const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'objectifs', 'technologies', 'conversions,', 'productivité).', 'utilisateur', 'mesure.'])
 
   return (
@@ -313,8 +315,8 @@ function ProjectsIntro() {
             color: T.textMain, letterSpacing: '-.03em',
             marginBottom: '1.5rem',
           }}>
-          <GhostTitle text="VOTRE PROJET, NOTRE PROCHAIN SUCCÈS ?" />
-          Votre projet, <span className="text-gradient">notre prochain succès&nbsp;?</span>
+          <GhostTitle text={t('projectsCtaTitle')} />
+          {t('projectsCtaLead')} <span className="text-gradient">{t('projectsCtaHighlight')}</span>
         </motion.h2>
 
         <motion.p initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}

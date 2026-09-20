@@ -11,15 +11,17 @@
 import { useEffect } from 'react'
 import { X, ArrowUpRight } from 'lucide-react'
 import { HoverSlideText } from '@/components/ui/index'
+import { useLanguage } from '@/lib/language'
 import '@/components/explorer/ProjectModal.css'
 
-function statusInfo(p) {
-  if (p.live && p.url) return { label: 'En ligne', offline: false }
-  if (p.progress != null && p.progress < 100) return { label: `En cours · ${p.progress}%`, offline: true }
-  return { label: 'Hors ligne', offline: true }
+function statusInfo(p, t) {
+  if (p.live && p.url) return { label: t('online'), offline: false }
+  if (p.progress != null && p.progress < 100) return { label: `${t('project_progress')} · ${p.progress}%`, offline: true }
+  return { label: t('offline'), offline: true }
 }
 
 export default function CaseStudyModal({ project, onClose }) {
+  const { t } = useLanguage()
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
@@ -27,12 +29,12 @@ export default function CaseStudyModal({ project, onClose }) {
   }, [onClose])
 
   if (!project) return null
-  const status = statusInfo(project)
+  const status = statusInfo(project, t)
 
   return (
     <div className="pgm-backdrop" onClick={onClose}>
       <div className="pgm-modal" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="pgm-close" onClick={onClose} aria-label="Fermer">
+        <button type="button" className="pgm-close" onClick={onClose} aria-label={t('close')}>
           <X size={16} />
         </button>
 
@@ -48,15 +50,15 @@ export default function CaseStudyModal({ project, onClose }) {
 
           <div className="pgm-meta">
             <div className="pgm-meta-item">
-              <span>Année</span>
+              <span>{t('project_year')}</span>
               <span>{project.year}</span>
             </div>
             <div className="pgm-meta-item">
-              <span>Marché</span>
-              <span>Côte d'Ivoire</span>
+              <span>{t('project_market')}</span>
+              <span>{t('project_country')}</span>
             </div>
             <div className="pgm-meta-item">
-              <span>Statut</span>
+              <span>{t('status')}</span>
               <span>
                 <em style={{
                   width: 6, height: 6, borderRadius: '50%', fontStyle: 'normal',
@@ -77,19 +79,19 @@ export default function CaseStudyModal({ project, onClose }) {
 
           {project.problem && (
             <div className="pgm-case-block">
-              <span className="pgm-case-label">Problème</span>
+              <span className="pgm-case-label">{t('caseProblem')}</span>
               <p className="pgm-case-text">{project.problem}</p>
             </div>
           )}
           {project.solution && (
             <div className="pgm-case-block">
-              <span className="pgm-case-label">Solution</span>
+              <span className="pgm-case-label">{t('caseSolution')}</span>
               <p className="pgm-case-text">{project.solution}</p>
             </div>
           )}
           {project.impact && (
             <div className="pgm-case-block">
-              <span className="pgm-case-label">Résultat</span>
+              <span className="pgm-case-label">{t('caseResult')}</span>
               <p className="pgm-case-text">{project.impact}</p>
             </div>
           )}
@@ -103,11 +105,11 @@ export default function CaseStudyModal({ project, onClose }) {
           <div className="pgm-actions">
             {project.live && project.url ? (
               <a href={project.url} target="_blank" rel="noreferrer" className="btn-raised">
-                <HoverSlideText text="Voir le projet" /> <ArrowUpRight size={15} />
+                <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={15} />
               </a>
             ) : (
               <span className="pgm-cta-muted">
-                {project.progress != null && project.progress < 100 ? `En cours — ${project.progress}%` : 'Démo locale'}
+                {project.progress != null && project.progress < 100 ? `${t('project_progress')} — ${project.progress}%` : t('project_demo')}
               </span>
             )}
           </div>

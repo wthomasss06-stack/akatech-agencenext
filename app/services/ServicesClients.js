@@ -9,7 +9,7 @@ import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
-import { SERVICES } from '@/lib/data'
+import { getLocalizedData } from '@/lib/data'
 
 
 
@@ -117,11 +117,12 @@ function HeroServices() {
 
 function ServicesList() {
   const T = useTheme()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [active, setActive] = useState(0)
-  const svc = SERVICES[active]
+  const services = getLocalizedData(language).SERVICES
+  const svc = services[active]
   const Icon = ICON_MAP[svc.icon] || Globe
 
   return (
@@ -129,14 +130,14 @@ function ServicesList() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
-            <GhostTitle text="CHOISISSEZ VOTRE SOLUTION" />
+            <GhostTitle text={t('chooseSolution').toUpperCase()} />
             {t('chooseSolution')}
           </h2>
         </motion.div>
 
         {/* Tabs */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem', justifyContent: 'center', marginBottom: '3rem' }}>
-          {SERVICES.map((s, i) => {
+          {services.map((s, i) => {
             const Ic = ICON_MAP[s.icon] || Globe
             return (
               <button key={s.title} onClick={() => setActive(i)}
