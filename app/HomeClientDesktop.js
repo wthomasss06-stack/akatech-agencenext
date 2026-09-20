@@ -723,7 +723,6 @@ function GhostScrollShowcase({ items }) {
   )
 }
 
-
 function ServicesPreview() {
   const T = useTheme()
   const { t } = useLanguage()
@@ -754,9 +753,7 @@ function ServicesPreview() {
           </BlurReveal>
         </div>
 
-        {/* ── Ghost Scroll Showcase — tous les services, plein écran (sort du conteneur 1200px).
-             Pas de BlurReveal ici : le blur d'entrée reste réservé au texte, jamais aux images
-             (showcase déjà "révélé" par son propre scroll GSAP, pas besoin d'un 2e effet dessus). */}
+        {/* ── Ghost Scroll Showcase — tous les services, plein écran ── */}
         <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
           <GhostScrollShowcase items={GHOST_ITEMS} />
         </div>
@@ -766,11 +763,6 @@ function ServicesPreview() {
   )
 }
 
-
-
-// ═══════════════════════════════════════════════════════════════
-// ── BUILT ON TRUST — 3D Showcase (HTML showcase-section) ─────
-// ═══════════════════════════════════════════════════════════════
 const WHY_PANELS = [
   { n: '01', title: 'Brief &\ndécouverte',            sub: 'On vous écoute',              desc: "Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement.", img: cld('/images/process/process_akatech_01_brief.webp') },
   { n: '02', title: 'Devis &\ncontrat',                sub: 'Périmètre, prix, délai',       desc: "Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble.", img: cld('/images/process/process_akatech_02_devis.webp') },
@@ -783,118 +775,35 @@ const WHY_PANELS = [
 function WhyUs() {
   const T = useTheme()
   const { t } = useLanguage()
-  const [activeIdx, setActiveIdx] = useState(0)
-  const itemRefs = useRef([])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.dataset.index)
-            if (!isNaN(idx)) setActiveIdx(idx)
-          }
-        })
-      },
-      { threshold: 0.5, rootMargin: '-15% 0px -25% 0px' }
-    )
-
-    itemRefs.current.forEach((el) => {
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
-  }, [])
+  const PROCESS_GHOST_ITEMS = WHY_PANELS.map(p => ({
+    n: p.n,
+    title: p.title.replace('\n', ' '),
+    img: p.img,
+    tag: p.sub,
+    desc: p.desc,
+  }))
 
   return (
-    <section style={{ padding: '7rem 5%', background: T.bg, position: 'relative' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+    <section style={{ padding: '7rem 5%', background: T.bg, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(3rem,5.5vw,4.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
               <GhostTitle text={t('processTitle').toUpperCase()} />
               {t('processTitle')}
             </h2>
           </BlurReveal>
-          <span style={{ display: 'inline-block', marginTop: '1rem', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, letterSpacing: '.35em', textTransform: 'uppercase' }}>
-            {t('processLabel')}
-          </span>
+          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+            <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.35em', textTransform: 'uppercase' }}>
+              {t('processLabel')}
+            </span>
+          </div>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '3.5rem', alignItems: 'start' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.8rem' }}>
-            {WHY_PANELS.map((panel, idx) => {
-              const isActive = activeIdx === idx
-              return (
-                <div
-                  key={panel.n}
-                  ref={(el) => (itemRefs.current[idx] = el)}
-                  data-index={idx}
-                  style={{
-                    padding: '2.2rem',
-                    borderRadius: 20,
-                    background: isActive ? (T.light ? '#eaf5e2' : '#0d2112') : T.card,
-                    border: isActive ? '2px solid #88ca53' : `1.5px solid ${T.border}`,
-                    boxShadow: isActive ? '0 10px 30px rgba(136,202,83,.15)' : 'none',
-                    transition: 'all 0.35s ease',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => setActiveIdx(idx)}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 800, color: '#88ca53', letterSpacing: '.2em' }}>
-                      {panel.n} / 06
-                    </span>
-                    <span style={{ padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53' }}>
-                      {panel.sub}
-                    </span>
-                  </div>
-                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '2rem', fontWeight: 900, fontStyle: 'italic', color: T.textMain, margin: '0 0 .8rem', textTransform: 'uppercase', lineHeight: 1.1 }}>
-                    {panel.title.replace('\n', ' ')}
-                  </h3>
-                  <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem', color: T.textSub, lineHeight: 1.65, margin: 0 }}>
-                    {panel.desc}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-
-          <div style={{ position: 'sticky', top: 100, width: '100%', aspectRatio: '1 / 1', borderRadius: 28, overflow: 'hidden', border: 'none', boxShadow: T.light ? '0 25px 70px rgba(0,0,0,.15)' : '0 30px 90px rgba(0,0,0,.65)', background: '#050c07' }}>
-            {WHY_PANELS.map((panel, idx) => (
-              <motion.div
-                key={panel.n}
-                initial={false}
-                animate={{
-                  opacity: activeIdx === idx ? 1 : 0,
-                  scale: activeIdx === idx ? 1 : 1.05,
-                }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  pointerEvents: activeIdx === idx ? 'auto' : 'none',
-                }}
-              >
-                <img
-                  src={panel.img}
-                  alt={panel.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.88) 0%, transparent 55%)' }} />
-                <div style={{ position: 'absolute', bottom: 20, left: 24, right: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.15em' }}>
-                      ÉTAPE {panel.n}
-                    </div>
-                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.4rem', fontWeight: 900, fontStyle: 'italic', color: '#fff', textTransform: 'uppercase' }}>
-                      {panel.title.replace('\n', ' ')}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+          <GhostScrollShowcase items={PROCESS_GHOST_ITEMS} />
         </div>
       </div>
     </section>
@@ -949,28 +858,17 @@ function Testimonials() {
               </div>
               <div style={{ textAlign: 'left' }}>
                 <div style={{ fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem' }}>{t.name}</div>
-                <div style={{ fontSize: '.72rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
+                <div style={{ color: T.textSub, fontSize: '.78rem', fontFamily: "'JetBrains Mono',monospace" }}>{t.role}</div>
               </div>
-              <span className="no-pill-mobile" style={{ marginLeft: 'auto', padding: '.3rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.12)', border: '1px solid rgba(136,202,83,.25)', color: '#88ca53', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600 }}>{t.result}</span>
             </div>
           </motion.div>
         </AnimatePresence>
-
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '.5rem', marginTop: '1.5rem' }}>
-          {TESTIMONIALS.map((_, i) => (
-            <button key={i} onClick={() => setIdx(i)}
-              style={{ width: i === idx ? 24 : 8, height: 8, borderRadius: 4, background: i === idx ? '#88ca53' : 'rgba(136,202,83,.2)', border: 'none', cursor: 'pointer', transition: 'all .3s' }} />
-          ))}
-        </div>
         </BlurReveal>
       </div>
     </section>
   )
 }
 
-// ═══════════════════════════════════════════════════════════════
-// ── DOMAINES D'INTERVENTION — inspiré V-labs ─────────────────
-// ═══════════════════════════════════════════════════════════════
 const DOMAINES = [
   {
     n: '01', Icon: Monitor,
@@ -1035,236 +933,36 @@ for (const arr of [DOMAINES]) {
   }
 }
 
-// ── DOMAINE CARD — gère son propre hover + image curseur rectangulaire ──
-function DomaineCard({ n, Icon, title, desc, tag, img, index, inView }) {
-  const T = useTheme()
-  const [isHovered, setIsHovered] = useState(false)
-  const [pos, setPos] = useState({ x: 0, y: 0 })
-  const [rot, setRot] = useState(0)
-  const cardRef = useRef(null)
-  const rafRef  = useRef(null)
-
-  const onMouseMove = (e) => {
-    cancelAnimationFrame(rafRef.current)
-    rafRef.current = requestAnimationFrame(() => {
-      const rect = cardRef.current?.getBoundingClientRect()
-      if (!rect) return
-      setPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
-    })
-  }
-
-  const onEnter = () => { setIsHovered(true); setRot((Math.random() - 0.5) * 8) }
-  const onLeave = () => setIsHovered(false)
-
-  return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 24 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.55, delay: index * 0.07, ease: [.22,1,.36,1] }}
-      onMouseEnter={onEnter}
-      onMouseLeave={onLeave}
-      onMouseMove={onMouseMove}
-      style={{ background: T.card, padding: '2.2rem', position: 'relative', overflow: 'visible', cursor: 'default' }}
-    >
-      {/* Glow hover */}
-      <div style={{
-        position: 'absolute', inset: 0, pointerEvents: 'none',
-        background: 'radial-gradient(400px circle at 30% 30%, rgba(136,202,83,.07), transparent 65%)',
-        opacity: isHovered ? 1 : 0, transition: 'opacity .25s',
-      }} />
-
-      {/* Numéro + Tag */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.4rem', position: 'relative', zIndex: 1 }}>
-        <span style={{
-          fontFamily: "'JetBrains Mono',monospace", fontSize: '2.8rem', fontWeight: 900,
-          color: T.light ? 'rgba(136,202,83,.18)' : 'rgba(136,202,83,.15)',
-          lineHeight: 1, letterSpacing: '-.05em',
-        }}>
-          {n}
-        </span>
-        <span style={{
-          padding: '.22rem .72rem', borderRadius: 100,
-          background: 'rgba(136,202,83,.08)', border: '1px solid rgba(136,202,83,.2)',
-          fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700,
-          color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase',
-        }}>
-          {tag}
-        </span>
-      </div>
-
-      {/* Icône + Titre */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '.75rem', marginBottom: '.9rem', position: 'relative', zIndex: 1 }}>
-        <div style={{
-          width: 42, height: 42, borderRadius: 11,
-          background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.18)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-        }}>
-          <Icon size={20} style={{ color: '#88ca53' }} />
-        </div>
-        <h3 style={{
-          fontFamily: "'JetBrains Mono',monospace", fontSize: '.97rem', fontWeight: 800,
-          color: T.textMain, lineHeight: 1.25, letterSpacing: '-.02em',
-        }}>
-          {title}
-        </h3>
-      </div>
-
-      {/* Description */}
-      <p style={{ fontSize: '.83rem', color: T.textSub, lineHeight: 1.7, position: 'relative', zIndex: 1 }}>
-        {desc}
-      </p>
-
-      {/* Barre verte bas au hover */}
-      <div style={{
-        position: 'absolute', bottom: 0, left: 0, right: 0, height: 2,
-        background: 'linear-gradient(90deg, transparent, #88ca53, transparent)',
-        transformOrigin: 'left',
-        transform: isHovered ? 'scaleX(1)' : 'scaleX(0)',
-        transition: 'transform .3s ease',
-      }} />
-
-      {/* ── Image capture d'écran qui suit le curseur — rectangulaire, propre à cette card ── */}
-      {img && (
-        <div style={{
-          position: 'absolute', top: 0, left: 0,
-          width: 280, height: 178,                 // ratio ~16:10, format capture d'écran PC
-          borderRadius: 12, overflow: 'hidden',
-          pointerEvents: 'none', zIndex: 30,
-          transform: `translate(${pos.x - 140}px, ${pos.y - 215}px) rotate(${rot}deg) scale(${isHovered ? 1 : 0.7})`,
-          opacity: isHovered ? 1 : 0,
-          transition: 'opacity .22s ease, transform .18s cubic-bezier(.22,1,.36,1)',
-          boxShadow: '0 24px 70px rgba(0,0,0,.55)',
-          border: '1.5px solid rgba(136,202,83,.35)',
-          willChange: 'transform, opacity',
-        }}>
-          <img
-            src={img}
-            alt={title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
-        </div>
-      )}
-    </motion.div>
-  )
-}
-
 function DomainesSection() {
   const T = useTheme()
   const { t } = useLanguage()
-  const [activeIdx, setActiveIdx] = useState(0)
-  const itemRefs = useRef([])
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const idx = Number(entry.target.dataset.index)
-            if (!isNaN(idx)) setActiveIdx(idx)
-          }
-        })
-      },
-      { threshold: 0.5, rootMargin: '-15% 0px -25% 0px' }
-    )
-
-    itemRefs.current.forEach((el) => {
-      if (el) observer.observe(el)
-    })
-
-    return () => observer.disconnect()
-  }, [])
+  const DOMAINES_GHOST_ITEMS = DOMAINES.map(d => ({
+    n: d.n,
+    title: d.title,
+    img: d.img,
+    tag: d.tag,
+    desc: d.desc,
+  }))
 
   return (
-    <section style={{ padding: '7rem 5%', background: T.bgAlt, position: 'relative' }}>
-      <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
+    <section style={{ padding: '7rem 5%', background: T.bgAlt, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
+      <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
+      <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', fontSize: 'clamp(3rem,5.5vw,4.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
               <GhostTitle text="CE QUE AKATECH STUDIO CONÇOIT" />
               {t('domainesTitle')}
             </h2>
           </BlurReveal>
-          <p style={{ maxWidth: 680, margin: '1.2rem auto 0', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.95rem', lineHeight: 1.7 }}>
+          <p style={{ maxWidth: 680, margin: '1.2rem auto 0', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.95rem', lineHeight: 1.7, textAlign: 'center' }}>
             {t('domainesIntro')}
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.1fr', gap: '3.5rem', alignItems: 'start' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.6rem' }}>
-            {DOMAINES.map((domaine, idx) => {
-              const Icon = domaine.Icon
-              const isActive = activeIdx === idx
-              return (
-                <div
-                  key={domaine.n}
-                  ref={(el) => (itemRefs.current[idx] = el)}
-                  data-index={idx}
-                  style={{
-                    padding: '2rem',
-                    borderRadius: 20,
-                    background: isActive ? (T.light ? '#eaf5e2' : '#0d2112') : T.card,
-                    border: isActive ? '2px solid #88ca53' : `1.5px solid ${T.border}`,
-                    boxShadow: isActive ? '0 10px 30px rgba(136,202,83,.15)' : 'none',
-                    transition: 'all 0.35s ease',
-                    cursor: 'pointer',
-                  }}
-                  onClick={() => setActiveIdx(idx)}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '.9rem' }}>
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 800, color: '#88ca53', letterSpacing: '.2em' }}>
-                      {domaine.n} / {String(DOMAINES.length).padStart(2, '0')}
-                    </span>
-                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', padding: '.25rem .75rem', borderRadius: 100, background: 'rgba(136,202,83,.1)', border: '1px solid rgba(136,202,83,.25)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#88ca53' }}>
-                      <Icon size={13} /> {domaine.tag}
-                    </span>
-                  </div>
-                  <h3 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.9rem', fontWeight: 900, fontStyle: 'italic', color: T.textMain, margin: '0 0 .6rem', textTransform: 'uppercase', lineHeight: 1.1 }}>
-                    {domaine.title}
-                  </h3>
-                  <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', color: T.textSub, lineHeight: 1.65, margin: 0 }}>
-                    {domaine.desc}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-
-          <div style={{ position: 'sticky', top: 100, width: '100%', aspectRatio: '1 / 1', borderRadius: 28, overflow: 'hidden', border: 'none', boxShadow: T.light ? '0 25px 70px rgba(0,0,0,.15)' : '0 30px 90px rgba(0,0,0,.65)', background: '#050c07' }}>
-            {DOMAINES.map((domaine, idx) => (
-              <motion.div
-                key={domaine.n}
-                initial={false}
-                animate={{
-                  opacity: activeIdx === idx ? 1 : 0,
-                  scale: activeIdx === idx ? 1 : 1.05,
-                }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  pointerEvents: activeIdx === idx ? 'auto' : 'none',
-                }}
-              >
-                <img
-                  src={domaine.img}
-                  alt={domaine.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(3,8,6,.88) 0%, transparent 55%)' }} />
-                <div style={{ position: 'absolute', bottom: 20, left: 24, right: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.15em' }}>
-                      {domaine.tag.toUpperCase()}
-                    </div>
-                    <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontSize: '1.4rem', fontWeight: 900, fontStyle: 'italic', color: '#fff', textTransform: 'uppercase' }}>
-                      {domaine.title}
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
+        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
+          <GhostScrollShowcase items={DOMAINES_GHOST_ITEMS} />
         </div>
 
         <div style={{ marginTop: '4rem', textAlign: 'center' }}>
