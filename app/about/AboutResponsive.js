@@ -7,10 +7,10 @@ export default function AboutResponsive() {
   const [ready, setReady]   = useState(false)
   const [mobile, setMobile] = useState(false)
   useEffect(() => {
-    const check = () => setMobile(window.innerWidth < 1024)
-    check(); setReady(true)
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
+    // Le viewport mobile émet des resize lors de l'affichage des barres
+    // d'adresse et du clavier. Ne pas remonter la page pendant une interaction.
+    setMobile(window.matchMedia('(max-width: 1023px)').matches)
+    setReady(true)
   }, [])
   if (!ready) return null
   return mobile ? <AboutClientMobile /> : <AboutClient />

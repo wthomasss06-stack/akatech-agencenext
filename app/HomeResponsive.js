@@ -8,11 +8,10 @@ export default function HomeResponsive() {
   const [mobile, setMobile] = useState(false)
 
   useEffect(() => {
-    const check = () => setMobile(window.innerWidth < 1024)
-    check()
+    // Le viewport mobile émet des resize lors de l'affichage des barres
+    // d'adresse et du clavier. Ne pas remonter la page pendant une interaction.
+    setMobile(window.matchMedia('(max-width: 1023px)').matches)
     setReady(true)
-    window.addEventListener('resize', check)
-    return () => window.removeEventListener('resize', check)
   }, [])
 
   // Avant hydratation → rien (évite flash + conflit useScroll)
