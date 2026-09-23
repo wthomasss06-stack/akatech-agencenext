@@ -994,6 +994,42 @@ function ArchiveTunnelSection() {
   const TUNNEL_ITEMS = PROJECTS.filter(p => p.id >= 18 && p.id <= 24)
   const LOOP_ITEMS = [...TUNNEL_ITEMS, ...TUNNEL_ITEMS]
 
+  // Défilement — même mécanique que RecentProjects dans Appdesktop.jsx
+  // (portfolio perso) : scroll réel (scrollLeft + rAF sur piste dupliquée
+  // x2), pas une animation CSS — ça permet les boutons prev/next ci-dessous
+  // et une vraie pause au survol/clic, au lieu d'un défilement figé.
+  const trackWrapRef = useRef(null)
+  const pausedRef = useRef(false)
+  const nudgeTimerRef = useRef(null)
+
+  useEffect(() => {
+    const wrap = trackWrapRef.current
+    if (!wrap) return
+    const SPEED = 1.2 // px / frame (~72px/s à 60fps)
+    let raf
+    const step = () => {
+      if (!pausedRef.current) {
+        wrap.scrollLeft += SPEED
+        const half = wrap.scrollWidth / 2
+        if (wrap.scrollLeft >= half) wrap.scrollLeft -= half
+      }
+      raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+
+  const pause = () => { pausedRef.current = true }
+  const resume = () => { pausedRef.current = false }
+  const nudge = (dir) => {
+    const wrap = trackWrapRef.current
+    if (!wrap) return
+    pause()
+    wrap.scrollBy({ left: dir * wrap.clientWidth * 0.7, behavior: 'smooth' })
+    window.clearTimeout(nudgeTimerRef.current)
+    nudgeTimerRef.current = window.setTimeout(resume, 2200)
+  }
+
   return (
     <section style={{ padding: '5rem 0 6rem', background: T.bg }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.4rem', textAlign: 'center' }}>
@@ -1001,23 +1037,32 @@ function ArchiveTunnelSection() {
           <GhostTitle text={t('projectsTitle').toUpperCase()} />
           {t('projectsTitle')}
         </h2>
-        <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-          <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={15} />
-        </Link>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
+            <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={15} />
+          </Link>
+          <div style={{ display: 'flex', gap: '.6rem' }}>
+            <button type="button" onClick={() => nudge(-1)} aria-label="Précédent"
+              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.surface, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              <ChevronLeft size={18} />
+            </button>
+            <button type="button" onClick={() => nudge(1)} aria-label="Suivant"
+              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.surface, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              <ChevronRight size={18} />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div style={{ marginTop: '3rem', overflowX: 'hidden', overflowY: 'hidden', padding: '1rem 5%', WebkitOverflowScrolling: 'touch' }}>
+      <div
+        ref={trackWrapRef}
+        className="archive-track-wrap"
+        style={{ marginTop: '3rem', overflowX: 'auto', overflowY: 'hidden', padding: '1rem 5%', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
         <style jsx>{`
-          @keyframes projectsMarquee {
-            from { transform: translateX(0); }
-            to { transform: translateX(calc(-50% - 0.75rem)); }
-          }
-          .projects-marquee-track {
-            animation: projectsMarquee 22s linear infinite;
-            will-change: transform;
-          }
+          .archive-track-wrap::-webkit-scrollbar { display: none; }
         `}</style>
-        <div className="projects-marquee-track" style={{ display: 'flex', gap: '1.5rem', width: 'max-content', paddingBottom: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1.5rem', width: 'max-content', paddingBottom: '1rem' }}>
           {LOOP_ITEMS.map((p, i) => (
             <div key={`${p.id}-${i}`}
               onMouseEnter={() => setHoveredId(p.id)}
