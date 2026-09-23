@@ -9,7 +9,10 @@ export default function AboutResponsive() {
   useEffect(() => {
     // Le viewport mobile émet des resize lors de l'affichage des barres
     // d'adresse et du clavier. Ne pas remonter la page pendant une interaction.
-    setMobile(window.matchMedia('(max-width: 1023px)').matches)
+    const isMobile = typeof window.matchMedia === 'function'
+      ? window.matchMedia('(max-width: 1023px)').matches
+      : window.innerWidth < 1024
+    setMobile(isMobile)
     setReady(true)
   }, [])
   if (!ready) return null

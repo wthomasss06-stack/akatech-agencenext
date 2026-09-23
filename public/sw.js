@@ -1,4 +1,4 @@
-const CACHE_NAME = 'akatech-pwa-v3'
+const CACHE_NAME = 'akatech-pwa-v4'
 const STATIC_ASSETS = [
   '/',
   '/manifest.json',
