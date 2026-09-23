@@ -929,13 +929,13 @@ function RevealParagraph({ text, greenWords = [], extraStyle = {}, inView }) {
 
 // ── DOMAINES D'INTERVENTION — grille éditoriale statique (miroir desktop, sans hover-image souris) ──
 const getDomaines = (t) => [
-  { n: '01', Icon: Monitor,  title: t('domaines_site_vitrine'),          tag: 'Site Vitrine', desc: "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel." },
-  { n: '02', Icon: ShoppingBag, title: t('domaines_ecommerce'),              tag: 'E-Commerce',   desc: "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur." },
-  { n: '03', Icon: Calendar, title: t('domaines_reservation'),            tag: 'Réservation',  desc: "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles." },
-  { n: '04', Icon: Layers,   title: t('domaines_plateforme'),            tag: 'Plateforme',   desc: "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards." },
-  { n: '05', Icon: Receipt,  title: t('domaines_facturation'),            tag: 'Facturation',  desc: "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF." },
-  { n: '06', Icon: Cog,      title: t('domaines_applications'),          tag: 'Outil métier', desc: "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure." },
-  { n: '07', Icon: Calculator, title: t('domaines_pos'),                 tag: 'Bientôt',      desc: "Système d'encaissement et de caisse physique — bientôt disponible." },
+  { n: '01', Icon: Monitor,  title: t('domaines_site_vitrine'), tag: t('domaines_site_vitrine'), desc: t('domaines_site_vitrine_desc') },
+  { n: '02', Icon: ShoppingBag, title: t('domaines_ecommerce'), tag: t('domaines_ecommerce'), desc: t('domaines_ecommerce_desc') },
+  { n: '03', Icon: Calendar, title: t('domaines_reservation'), tag: t('domaines_reservation'), desc: t('domaines_reservation_desc') },
+  { n: '04', Icon: Layers, title: t('domaines_plateforme'), tag: t('domaines_plateforme'), desc: t('domaines_plateforme_desc') },
+  { n: '05', Icon: Receipt, title: t('domaines_facturation'), tag: t('domaines_facturation'), desc: t('domaines_facturation_desc') },
+  { n: '06', Icon: Cog, title: t('domaines_applications'), tag: t('domaines_applications'), desc: t('domaines_applications_desc') },
+  { n: '07', Icon: Calculator, title: t('domaines_pos'), tag: t('domaines_pos'), desc: t('domaines_pos_desc') },
 ]
 
 function DomaineCard({ n, Icon, title, desc, tag, index, inView }) {

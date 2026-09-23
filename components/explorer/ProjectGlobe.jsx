@@ -17,10 +17,11 @@
  */
 import { useEffect, useRef, useState, useMemo } from 'react'
 import { ArrowLeft } from 'lucide-react'
-import { PROJECTS } from '@/lib/data'
+import { PROJECTS, getLocalizedData } from '@/lib/data'
 import { useBlobTransition } from '@/components/layout/BlobTransition'
 import ProjectGlobeModal from './ProjectGlobeModal'
 import './ProjectGlobe.css'
+import { useLanguage } from '@/lib/language'
 
 const NODE_W = 132
 const NODE_H = 178
@@ -45,6 +46,8 @@ function useFibonacciLayout(count, radius) {
 }
 
 export default function ProjectGlobe() {
+  const { t, language } = useLanguage()
+  const localizedProjects = getLocalizedData(language).PROJECTS
   const blobNavigate = useBlobTransition()
   const sceneRef = useRef(null)
   const worldRef = useRef(null)
@@ -57,7 +60,7 @@ export default function ProjectGlobe() {
   const [radius, setRadius] = useState(340)
   const [selected, setSelected] = useState(null)
 
-  const positions = useFibonacciLayout(PROJECTS.length, radius)
+  const positions = useFibonacciLayout(localizedProjects.length, radius)
 
   // Rayon un peu adapté à la fenêtre (desktop uniquement)
   useEffect(() => {
@@ -127,16 +130,16 @@ export default function ProjectGlobe() {
       <div className="pg-glow" />
 
       <button className="pg-back-btn" onClick={handleBack} type="button">
-        <ArrowLeft size={13} /> Retour au site
+        <ArrowLeft size={13} /> {t('backToSiteShort')}
       </button>
 
       <div className="pg-chrome-top">
-        <span className="pg-eyebrow">Mode Explorer</span>
-        <h1 className="pg-title">L'univers <em>AKATech</em></h1>
+        <span className="pg-eyebrow">{t('uiExploreMode')}</span>
+        <h1 className="pg-title">{t('explorerMode')} <em>AKATech</em></h1>
       </div>
 
       <div className="pg-count">
-        <strong>{PROJECTS.length}</strong>projets
+        <strong>{localizedProjects.length}</strong> {t('projects')}
       </div>
 
       <div
@@ -148,7 +151,7 @@ export default function ProjectGlobe() {
         onPointerLeave={onPointerUp}
       >
         <div ref={worldRef} className="pg-world">
-          {PROJECTS.map((p, i) => {
+          {localizedProjects.map((p, i) => {
             const pos = positions[i]
             if (!pos) return null
             return (
@@ -180,7 +183,7 @@ export default function ProjectGlobe() {
       </div>
 
       <div className="pg-hint">
-        <strong>Glissez</strong> pour tourner le globe · <strong>Cliquez</strong> sur un projet pour le découvrir
+        {t('uiSlideHint')}
       </div>
 
       {selected && (

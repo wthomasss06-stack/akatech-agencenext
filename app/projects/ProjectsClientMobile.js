@@ -14,7 +14,7 @@ import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
-import { PROJECTS } from '@/lib/data'
+import { PROJECTS, getLocalizedData } from '@/lib/data'
 
 
 
@@ -249,6 +249,8 @@ function StackedCard({ project, index, total, scrollYProgress, T }) {
 ──────────────────────────────────────────────── */
 function StackedRealisations() {
   const T = useTheme()
+  const { language } = useLanguage()
+  const localizedProjects = getLocalizedData(language).PROJECTS
   const containerRef = useRef(null)
 
   const { scrollYProgress } = useScroll({
@@ -263,17 +265,17 @@ function StackedRealisations() {
       <div
         ref={containerRef}
         style={{
-          height: `${PROJECTS.length * 90 + 30}vh`,
+          height: `${localizedProjects.length * 90 + 30}vh`,
           position: 'relative',
           padding: '0 5%',
         }}
       >
-        {PROJECTS.map((project, i) => (
+        {localizedProjects.map((project, i) => (
           <StackedCard
             key={project.title}
             project={project}
             index={i}
-            total={PROJECTS.length}
+            total={localizedProjects.length}
             scrollYProgress={scrollYProgress}
             T={T}
           />
@@ -341,6 +343,7 @@ function ProjectsIntro() {
    PAGE EXPORT
 ──────────────────────────────────────────────── */
 export default function RealisationsPage() {
+  const { t } = useLanguage()
   return (
     <div>
       <HeroRealisations />
@@ -350,7 +353,7 @@ export default function RealisationsPage() {
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg
           src={cld('/images/cta-projects-mobile.webp')}
-          alt="Votre réalisation peut être la prochaine ici. Partagez votre idée."
+          alt={t('projectsCtaLead')}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
         <motion.a

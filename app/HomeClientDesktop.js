@@ -874,49 +874,49 @@ const getDomaines = (t) => [
   {
     n: '01', Icon: Monitor,
     title: t('domaines_site_vitrine'),
-    desc:  "Pour présenter votre activité et transformer vos visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel.",
+    desc:  t('domaines_site_vitrine_desc'),
     tag:   'Site Vitrine',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_01_creation.webp',
   },
   {
     n: '02', Icon: ShoppingBag,
     title: t('domaines_ecommerce'),
-    desc:  "Pour vendre vos produits directement en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur.",
+    desc:  t('domaines_ecommerce_desc'),
     tag:   'E-Commerce',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_02_ecommerce.webp',
   },
   {
     n: '03', Icon: Calendar,
     title: t('domaines_reservation'),
-    desc:  "Pour permettre à vos clients de réserver sans vous appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles.",
+    desc:  t('domaines_reservation_desc'),
     tag:   'Réservation',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_03_reservation.webp',
   },
   {
     n: '04', Icon: Layers,
     title: t('domaines_plateforme'),
-    desc:  "Pour une vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards.",
+    desc:  t('domaines_plateforme_desc'),
     tag:   'Plateforme',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_04_plateformes.webp',
   },
   {
     n: '05', Icon: Receipt,
     title: t('domaines_facturation'),
-    desc:  "Pour digitaliser la gestion quotidienne de votre activité : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF.",
+    desc:  t('domaines_facturation_desc'),
     tag:   'Facturation',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_05_gestion.webp',
   },
   {
     n: '06', Icon: Cog,
     title: t('domaines_applications'),
-    desc:  "Pour automatiser un processus propre à votre entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure.",
+    desc:  t('domaines_applications_desc'),
     tag:   'Outil métier',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_06_applications.webp',
   },
   {
     n: '07', Icon: Calculator,
     title: t('domaines_pos'),
-    desc:  "Système d'encaissement et de caisse physique — bientôt disponible.",
+    desc:  t('domaines_pos_desc'),
     tag:   'Bientôt',
     img:   '/images/ce%20que%20nous%20concevons/types_sites_07_pos.webp',
   },
@@ -1074,10 +1074,10 @@ function ArchiveTunnelSection() {
 
 // ── STATS — chiffres géants éditoriaux, quinconce (ref web_design_result) ──
 const HOME_STATS = [
-  { target: PROJECTS.length,  suffix: '',  label: 'stats_projects_label',                  sub: 'Du concept au déploiement', col: 1, row: 1 },
-  { target: 99,  suffix: '%', label: 'stats_clients_label',              sub: 'Livrés dans les délais',    col: 3, row: 1 },
-  { target: 10,  suffix: '+', label: 'stats_support_label',             sub: 'Startups, PME, créatifs',   col: 5, row: 1 },
-  { target: 3,   suffix: '+', label: 'stats_experience_label',             sub: 'En développement web',      col: 2, row: 2 },
+  { target: PROJECTS.length,  suffix: '',  label: 'stats_projects_label',                  sub: 'stats_sub_concept', col: 1, row: 1 },
+  { target: 99,  suffix: '%', label: 'stats_clients_label',              sub: 'stats_sub_delivery',    col: 3, row: 1 },
+  { target: 10,  suffix: '+', label: 'stats_support_label',             sub: 'stats_sub_market',   col: 5, row: 1 },
+  { target: 3,   suffix: '+', label: 'stats_experience_label',             sub: 'stats_sub_web',      col: 2, row: 2 },
 ]
 
 function StatsSection() {
@@ -1172,7 +1172,7 @@ function StatsSection() {
                 color: T.textMuted,
                 letterSpacing: '.02em',
               }}>
-                {s.sub}
+                {t(s.sub)}
               </div>
             </motion.div>
           ))}

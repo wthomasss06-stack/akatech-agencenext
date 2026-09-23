@@ -7,7 +7,7 @@ import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
-import { PROJECTS } from '@/lib/data'
+import { PROJECTS, getLocalizedData } from '@/lib/data'
 
 
 /* ────────────────────────────────────────────────
@@ -239,10 +239,12 @@ function ProjectScrollSlide({ project, index, total, T }) {
 ──────────────────────────────────────────────── */
 function StackedRealisations() {
   const T = useTheme()
+  const { language, t } = useLanguage()
+  const localizedProjects = getLocalizedData(language).PROJECTS
   const sectionRef = useRef(null)
   const trackRef    = useRef(null)
   const fillRef     = useRef(null)
-  const total = PROJECTS.length
+  const total = localizedProjects.length
 
   useEffect(() => {
     const section = sectionRef.current
@@ -286,7 +288,7 @@ function StackedRealisations() {
         </div>
 
         <ul ref={trackRef} className="fcx-track">
-          {PROJECTS.map((project, i) => (
+          {localizedProjects.map((project, i) => (
             <ProjectScrollSlide key={project.id} project={project} index={i} total={total} T={T} />
           ))}
         </ul>
@@ -395,11 +397,12 @@ function StackedRealisations() {
 ──────────────────────────────────────────────── */
 function ProjectsIntro() {
   const T = useTheme()
+  const { t } = useLanguage()
   const containerRef = useRef(null)
   const textRef      = useRef(null)
   const wordsRef     = useRef([])
 
-  const TEXT = "Ci‑dessous : des projets réalisés pour des PME, startups et créateurs. Vous trouverez les objectifs initiaux, les technologies mises en œuvre et les résultats obtenus (augmentation du trafic, conversions, productivité). Chaque réalisation est le fruit d’une démarche centrée utilisateur et d’un développement sur mesure."
+  const TEXT = t('projectsIntro')
 
   useEffect(() => {
     const container = containerRef.current
@@ -521,6 +524,7 @@ function ProjectsIntro() {
    PAGE EXPORT
 ──────────────────────────────────────────────── */
 export default function RealisationsPage() {
+  const { t } = useLanguage()
   return (
     <div>
       <HeroRealisations />
@@ -530,7 +534,7 @@ export default function RealisationsPage() {
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
           src={cld('/images/cta-projects-desktop.webp')}
-          alt="Votre réalisation peut être la prochaine ici. Partagez votre idée."
+          alt={t('projectsCtaLead')}
           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
         />
         <motion.a

@@ -275,7 +275,7 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
           <button
             ref={toggleBtnRef}
             className="sm-toggle"
-            aria-label={open ? 'Fermer le menu' : 'Ouvrir le menu'}
+            aria-label={open ? t('close') : t('menu')}
             aria-expanded={open}
             aria-controls="sm-panel"
             onClick={toggleMenu}
@@ -307,17 +307,17 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
         ))}
       </div>
 
-      <aside id="sm-panel" ref={panelRef} className="sm-panel" aria-hidden={!open} aria-label="Navigation">
+      <aside id="sm-panel" ref={panelRef} className="sm-panel" aria-hidden={!open} aria-label={t('menu')}>
         <div className="sm-panel-inner">
           <div className="sm-panel-head">
-            <TransitionLink href="/" className="sm-panel-logo-link" onClick={closeMenu} aria-label="Retour à l'accueil">
+            <TransitionLink href="/" className="sm-panel-logo-link" onClick={closeMenu} aria-label={t('homeAria')}>
               <Logo size={26} showTag={false} animate={false} />
             </TransitionLink>
             <button
               type="button"
               className="sm-panel-close"
               onClick={closeMenu}
-              aria-label="Fermer le menu"
+              aria-label={t('close')}
             >
               ×
             </button>
@@ -350,10 +350,10 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
               style={{ width: '100%', justifyContent: 'center' }}
               onClick={closeMenu}
             >
-              <HoverSlideText text="Démarrer un projet" />
+              <HoverSlideText text={t('uiStartProject')} />
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="19" x2="19" y2="5" /><polyline points="9 5 19 5 19 15" /></svg>
             </a>
-            <p className="sm-panel-footer-sub">Devis gratuit · Réponse en moins de 24h</p>
+            <p className="sm-panel-footer-sub">{t('uiFreeQuote24')}</p>
           </div>
         </div>
       </aside>

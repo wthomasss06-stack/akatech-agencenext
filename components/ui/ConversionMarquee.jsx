@@ -8,19 +8,14 @@
 import { ArrowRight, Bolt, Clock3, PhoneCall } from 'lucide-react'
 import { HoverSlideText } from '@/components/ui/index'
 import './ConversionMarquee.css'
-
-const ITEMS = [
-  { Icon: Bolt, pre: '', strong: '3 créneaux', post: ' dispo ce mois' },
-  { Icon: Clock3, pre: 'Délai moyen ', strong: '7 jours', post: '' },
-  { Icon: PhoneCall, pre: 'Réponse en ', strong: 'moins de 2h', post: '' },
-]
+import { useLanguage } from '@/lib/language'
 
 const WA_HREF = "https://wa.me/2250142507750?text=Bonjour+AKATech,+je+veux+démarrer+mon+projet+!"
 
-function TickerSet({ hidden }) {
+function TickerSet({ hidden, items }) {
   return (
     <div className="ccta-set" aria-hidden={hidden || undefined}>
-      {ITEMS.map((it, i) => (
+      {items.map((it, i) => (
         <span className="ccta-item" key={i}>
           <it.Icon size={16} strokeWidth={2.4} aria-hidden="true" />
           {it.pre}<strong>{it.strong}</strong>{it.post}
@@ -32,20 +27,26 @@ function TickerSet({ hidden }) {
 }
 
 export default function ConversionMarquee() {
+  const { t } = useLanguage()
+  const items = [
+    { Icon: Bolt, pre: '', strong: t('tickerSlots'), post: t('tickerSlotsPost') },
+    { Icon: Clock3, pre: `${t('tickerLead')} `, strong: t('tickerSevenDays'), post: '' },
+    { Icon: PhoneCall, pre: `${t('tickerReply')} `, strong: t('tickerReplyPost'), post: '' },
+  ]
   return (
-    <section className="ccta-section" aria-label="Créneaux disponibles — démarrer un projet">
+    <section className="ccta-section" aria-label={t('uiStartProject')}>
       <div className="ccta-band">
         <div className="ccta-track-wrap">
           <div className="ccta-track">
-            <TickerSet hidden={false} />
-            <TickerSet hidden={true} />
+            <TickerSet hidden={false} items={items} />
+            <TickerSet hidden={true} items={items} />
           </div>
         </div>
       </div>
 
       <div className="ccta-fixed">
         <a href={WA_HREF} target="_blank" rel="noreferrer" className="btn-raised btn-sm">
-          <HoverSlideText text="Démarrer mon projet" />
+          <HoverSlideText text={t('uiStartMyProject')} />
           <ArrowRight size={15} strokeWidth={2.4} />
         </a>
       </div>

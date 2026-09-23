@@ -16,6 +16,7 @@
  */
 import { Truck, Palette, Search, Smartphone, Headset, ShieldCheck } from 'lucide-react'
 import './TrustStacksMarquee.css'
+import { useLanguage } from '@/lib/language'
 
 const STACK = [
   { name: 'React',           icon: '/icons/react.svg' },
@@ -33,20 +34,20 @@ const STACK = [
 ]
 
 const BADGES = [
-  { label: 'Livraison 5-7 jours',  Icon: Truck },
-  { label: 'Design sur mesure',    Icon: Palette },
-  { label: 'SEO intégré',          Icon: Search },
-  { label: 'Mobile Money',         Icon: Smartphone },
-  { label: 'Support 48h',          Icon: Headset },
-  { label: 'Hébergement offert',   Icon: ShieldCheck },
+  { labelKey: 'badgeDelivery',  Icon: Truck },
+  { labelKey: 'badgeDesign',    Icon: Palette },
+  { labelKey: 'badgeSeo',       Icon: Search },
+  { labelKey: 'service_payment_b1', Icon: Smartphone },
+  { labelKey: 'badgeSupport',   Icon: Headset },
+  { labelKey: 'badgeHosting',   Icon: ShieldCheck },
 ]
 
 const METRICS = [
-  { value: '95+',  label: 'Score Lighthouse' },
-  { value: '<2s',  label: 'Chargement moyen' },
-  { value: '100%', label: 'Responsive' },
-  { value: 'SEO',  label: 'Optimisé dès le code' },
-  { value: 'SSL',  label: 'Gratuit inclus' },
+  { value: '95+',  labelKey: 'metricLighthouse' },
+  { value: '<2s',  labelKey: 'metricLoad' },
+  { value: '100%', labelKey: 'metricResponsive' },
+  { value: 'SEO',  labelKey: 'metricSeo' },
+  { value: 'SSL',  labelKey: 'metricSsl' },
 ]
 
 function StackBand() {
@@ -75,13 +76,13 @@ function StackBand() {
   )
 }
 
-function BadgesBand() {
+function BadgesBand({ t }) {
   const set = (keySuffix, hidden) => (
     <div className="ts-band-set" aria-hidden={hidden || undefined}>
       {BADGES.map((b, i) => (
         <span className="ts-badge-item" key={`${keySuffix}-${i}`}>
           <b.Icon size={18} strokeWidth={2.4} />
-          {b.label}
+          {t(b.labelKey)}
           <span className="ts-badge-sep">•</span>
         </span>
       ))}
@@ -97,12 +98,12 @@ function BadgesBand() {
   )
 }
 
-function MetricsBand() {
+function MetricsBand({ t }) {
   const set = (keySuffix, hidden) => (
     <div className="ts-band-set" aria-hidden={hidden || undefined}>
       {METRICS.map((m, i) => (
         <span className="ts-metric" key={`${keySuffix}-${i}`}>
-          <strong>{m.value}</strong>{m.label}
+          <strong>{m.value}</strong>{t(m.labelKey)}
           <span className="ts-metric-sep">•</span>
         </span>
       ))}
@@ -120,15 +121,16 @@ function MetricsBand() {
 }
 
 export default function TrustStacksMarquee() {
+  const { t } = useLanguage()
   return (
-    <section className="ts-section" aria-label="Stack technique et avantages AKATech">
+    <section className="ts-section" aria-label={t('uiStack')}>
       <div className="ts-glow" />
 
-      <span className="ts-eyebrow">Notre stack · Nos avantages · Nos performances</span>
+      <span className="ts-eyebrow">{t('uiStack')}</span>
 
       <StackBand />
-      <BadgesBand />
-      <MetricsBand />
+      <BadgesBand t={t} />
+      <MetricsBand t={t} />
     </section>
   )
 }

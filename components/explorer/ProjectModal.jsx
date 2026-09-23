@@ -54,7 +54,7 @@ export default function ProjectModal({ project, onClose }) {
             </div>
             <div className="pgm-meta-item">
               <span>{t('market')}</span>
-              <span>Côte d'Ivoire</span>
+              <span>{t('uiCountry')}</span>
             </div>
             <div className="pgm-meta-item">
               <span>{t('status')}</span>

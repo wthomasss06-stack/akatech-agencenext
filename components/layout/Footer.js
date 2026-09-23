@@ -50,11 +50,12 @@ function AskAIStrip({ T, t }) {
   const PROMPT = t('askAiPrompt')
 
   const PLATFORMS = [
-    { id: 'chatgpt', label: 'ChatGPT', icon: '/icons/chatgpt.png', url: `https://chatgpt.com/?q=${encodeURIComponent(PROMPT)}` },
-    { id: 'claude', label: 'Claude', icon: '/icons/claude.png', url: 'https://claude.ai/new' },
-    { id: 'perplexity', label: 'Perplexity', icon: '/icons/perplexity.png', url: `https://www.perplexity.ai/?q=${encodeURIComponent(PROMPT)}` },
-    { id: 'gemini', label: 'Gemini', icon: '/icons/gemini.png', url: 'https://gemini.google.com/app' },
-    { id: 'grok', label: 'Grok', icon: '/icons/grok.png', url: `https://grok.com/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'chatgpt', label: 'ChatGPT', icon: '/icons/chatgpt-vitamin.png', url: `https://chatgpt.com/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'claude', label: 'Claude', icon: '/icons/claude-vitamin.png', url: 'https://claude.ai/new' },
+    { id: 'perplexity', label: 'Perplexity', icon: '/icons/perplexity-vitamin.png', url: `https://www.perplexity.ai/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'gemini', label: 'Gemini', icon: '/icons/gemini-vitamin.png', url: 'https://gemini.google.com/app' },
+    { id: 'grok', label: 'Grok', icon: '/icons/grok-vitamin.png', url: `https://grok.com/?q=${encodeURIComponent(PROMPT)}` },
+    { id: 'manus', label: 'Manus', icon: '/icons/manus-vitamin.png', url: `https://manus.im/?q=${encodeURIComponent(PROMPT)}` },
   ]
 
   const handleClick = async (platform) => {
@@ -67,16 +68,19 @@ function AskAIStrip({ T, t }) {
   return (
     <div style={{ padding: '2.2rem 0', textAlign: 'center' }}>
       
-      <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: '1rem' }}>
+      <p id="ask-ai-heading" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', letterSpacing: '.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,.5)', marginBottom: '1rem' }}>
         {t('askAiHeading')}
       </p>
       <div style={{ display: 'flex', gap: '.6rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         {PLATFORMS.map(p => (
-          <button key={p.id} onClick={() => handleClick(p)} title={`${t('askPlatform')} ${p.label}`}
+          <button key={p.id} type="button" onClick={() => handleClick(p)} title={`${t('askPlatform')} ${p.label}`}
+            aria-label={`${t('askPlatform')} ${p.label}`} aria-describedby="ask-ai-heading"
             className="aka-ask-btn"
             style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '.5rem', padding: '.75rem .95rem', borderRadius: 14, background: 'transparent', border: 'none', cursor: 'pointer', minWidth: 70 }}>
-            <img src={p.icon} alt={p.label} width={22} height={22} style={{ borderRadius: 0, display: 'block' }} />
-            <span style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.5)' }}>
+            <span style={{ width: 36, height: 36, display: 'grid', placeItems: 'center', background: 'transparent', boxShadow: 'none', overflow: 'visible' }}>
+              <img src={p.icon} alt={p.label} width={28} height={28} style={{ display: 'block', filter: 'none', objectFit: 'contain' }} />
+            </span>
+            <span aria-live="polite" style={{ fontSize: '.6rem', fontFamily: "'JetBrains Mono',monospace", color: 'rgba(255,255,255,.5)' }}>
               <HoverSlideText text={copied === p.id ? t('copied') : p.label} />
             </span>
           </button>

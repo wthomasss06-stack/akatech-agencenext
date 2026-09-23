@@ -9,14 +9,16 @@
 import { useEffect } from 'react'
 import { X, ArrowUpRight } from 'lucide-react'
 import './ProjectGlobeModal.css'
+import { useLanguage } from '@/lib/language'
 
-function statusInfo(p) {
-  if (p.live && p.url) return { label: 'En ligne', offline: false }
-  if (p.progress != null && p.progress < 100) return { label: `En cours · ${p.progress}%`, offline: true }
-  return { label: 'Hors ligne', offline: true }
+function statusInfo(p, t) {
+  if (p.live && p.url) return { label: t('online'), offline: false }
+  if (p.progress != null && p.progress < 100) return { label: `${t('inProgressLabel')} · ${p.progress}%`, offline: true }
+  return { label: t('offline'), offline: true }
 }
 
 export default function ProjectGlobeModal({ project, onClose }) {
+  const { t } = useLanguage()
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') onClose() }
     window.addEventListener('keydown', onKey)
@@ -24,12 +26,12 @@ export default function ProjectGlobeModal({ project, onClose }) {
   }, [onClose])
 
   if (!project) return null
-  const status = statusInfo(project)
+  const status = statusInfo(project, t)
 
   return (
     <div className="pgm-backdrop" onClick={onClose}>
       <div className="pgm-modal" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="pgm-close" onClick={onClose} aria-label="Fermer">
+        <button type="button" className="pgm-close" onClick={onClose} aria-label={t('uiClose')}>
           <X size={16} />
         </button>
 
@@ -45,15 +47,15 @@ export default function ProjectGlobeModal({ project, onClose }) {
 
           <div className="pgm-meta">
             <div className="pgm-meta-item">
-              <span>Année</span>
+              <span>{t('uiYear')}</span>
               <span>{project.year}</span>
             </div>
             <div className="pgm-meta-item">
-              <span>Marché</span>
-              <span>Côte d'Ivoire</span>
+              <span>{t('uiMarket')}</span>
+              <span>{t('uiCountry')}</span>
             </div>
             <div className="pgm-meta-item">
-              <span>Statut</span>
+              <span>{t('uiStatus')}</span>
               <span>
                 <em style={{
                   width: 6, height: 6, borderRadius: '50%', fontStyle: 'normal',

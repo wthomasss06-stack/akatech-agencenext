@@ -14,17 +14,17 @@ import { cld } from '@/lib/cloudinary'
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
 
 const VALUES = [
-  { icon: Target, titleKey: 'about_results', desc: "Chaque solution est conçue pour générer des résultats mesurables : plus de clients, plus de revenus, moins de tâches manuelles." },
-  { icon: Heart, titleKey: 'about_market', desc: "Je comprends les réalités locales — Mobile Money, coupures internet, faible débit. Vos solutions fonctionnent dans votre contexte." },
-  { icon: Zap, titleKey: 'about_delivery', desc: "Pas d'attente de 3 mois. Les projets sont livrés en 5 à 21 jours selon la complexité, avec des jalons clairs à chaque étape." },
-  { icon: Star, titleKey: 'about_quality', desc: "Code propre, design sur-mesure, animations soignées. Chaque détail compte pour que votre solution se démarque." },
+  { icon: Target, titleKey: 'about_results', descKey: 'about_results_desc' },
+  { icon: Heart, titleKey: 'about_market', descKey: 'about_market_desc' },
+  { icon: Zap, titleKey: 'about_delivery', descKey: 'about_delivery_desc' },
+  { icon: Star, titleKey: 'about_quality', descKey: 'about_quality_desc' },
 ]
 
 const TIMELINE = [
-  { year: '2022', titleKey: 'about_timeline_2022', desc: "Premier projet freelance livré : un site vitrine pour un commerçant abidjanais. Le début d'une aventure." },
-  { year: '2023', titleKey: 'about_timeline_2023', desc: "Développement de LivreurTrack Pro et MonCashJour, des outils de gestion pensés pour les commerçants et livreurs locaux." },
-  { year: '2024', titleKey: 'about_timeline_2024', desc: "Transformation en agence officielle. Lancement de services structurés et premiers clients récurrents." },
-  { year: '2025', titleKey: 'about_timeline_2025', desc: `+${PROJECTS.length} projets livrés, 100% de clients satisfaits. Le Studio. continue de grandir et d'innover.` },
+  { year: '2022', titleKey: 'about_timeline_2022', descKey: 'about_timeline_2022_desc' },
+  { year: '2023', titleKey: 'about_timeline_2023', descKey: 'about_timeline_2023_desc' },
+  { year: '2024', titleKey: 'about_timeline_2024', descKey: 'about_timeline_2024_desc' },
+  { year: '2025', titleKey: 'about_timeline_2025', descKey: 'about_timeline_2025_desc' },
 ]
 
 const PAYS = [
@@ -56,7 +56,7 @@ function FlagBadge({ code, primary }) {
 // ── 1. HERO ──────────────────────────────────────────────────
 function HeroAbout() {
   const T = useTheme()
-  const { t } = useLanguage()
+  const { t: tFr } = useLanguage()
   return (
     <section style={{ minHeight: '100vh', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center', background: T.bg }}>
       <div style={{ position: 'absolute', inset: '-8%', zIndex: 1 }}>
@@ -66,11 +66,11 @@ function HeroAbout() {
       <div style={{ position: 'relative', zIndex: 10, width: '100%', padding: '7rem 5% 4rem' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
           <h1 style={{ position: 'relative', fontSize: 'clamp(2rem,7vw,3rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text={t('aboutTitle')} />
-            {t('aboutTitle')}
+            <GhostTitle text={tFr('aboutTitle')} />
+            {tFr('aboutTitle')}
           </h1>
           <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.75, marginBottom: '2rem', maxWidth: 480 }}>
-            {t('aboutHero')}
+            {tFr('aboutHero')}
           </p>
         </motion.div>
         {/* Photo grid */}
@@ -244,6 +244,7 @@ function FounderSection() {
 // ── 4. HISTOIRE ──────────────────────────────────────────────
 function TimelineSection() {
   const T = useTheme()
+  const { t: tFr } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   return (
@@ -258,15 +259,15 @@ function TimelineSection() {
         </motion.div>
         <div style={{ position: 'relative', paddingLeft: '1.5rem' }}>
           <div style={{ position: 'absolute', left: 0, top: 0, bottom: 0, width: 1, background: `linear-gradient(to bottom, transparent, ${T.green}, transparent)` }} />
-          {TIMELINE.map(({ year, title, desc }, i) => (
+          {TIMELINE.map(({ year, titleKey, descKey }, i) => (
             <motion.div key={year}
               initial={{ opacity: 0, x: -20 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: i * .12 }}
               style={{ position: 'relative', marginBottom: '2rem' }}>
               <div style={{ position: 'absolute', left: '-1.8rem', top: '1.1rem', width: 12, height: 12, borderRadius: '50%', background: 'linear-gradient(135deg, #c6ff3d, #88ca53)', border: '2.5px solid rgba(136,202,83,.3)', boxShadow: '0 0 10px rgba(136,202,83,.4)' }} />
               <div className="sku-card" style={{ padding: '1.2rem 1.4rem' }}>
                 <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.35rem' }}>{year}</div>
-                <h3 style={{ fontSize: '.92rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.3rem' }}>{title}</h3>
-                <p style={{ fontSize: '.78rem', color: T.textSub, lineHeight: 1.6 }}>{desc}</p>
+                <h3 style={{ fontSize: '.92rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.3rem' }}>{tFr(titleKey)}</h3>
+                <p style={{ fontSize: '.78rem', color: T.textSub, lineHeight: 1.6 }}>{tFr(descKey).replace('{count}', String(PROJECTS.length))}</p>
               </div>
             </motion.div>
           ))}
@@ -279,6 +280,7 @@ function TimelineSection() {
 // ── 5. VALEURS ───────────────────────────────────────────────
 function ValuesSection() {
   const T = useTheme()
+  const { t: tFr } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   return (
@@ -290,15 +292,15 @@ function ValuesSection() {
         </h2>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
-        {VALUES.map(({ icon: Icon, title, desc }, i) => (
-          <motion.div key={title} className="sku-card"
+        {VALUES.map(({ icon: Icon, titleKey, descKey }, i) => (
+          <motion.div key={titleKey} className="sku-card"
             initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * .1 }}
             style={{ padding: '1.5rem' }}>
             <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(136,202,83,.1)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1rem' }}>
               <Icon size={20} style={{ color: T.green }} />
             </div>
-            <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}>{title}</h3>
-            <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65 }}>{desc}</p>
+            <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}>{tFr(titleKey)}</h3>
+            <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.65 }}>{tFr(descKey)}</p>
           </motion.div>
         ))}
       </div>

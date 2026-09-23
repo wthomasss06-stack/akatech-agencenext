@@ -69,7 +69,7 @@ function HeroBlog() {
             rel="noreferrer"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', marginTop: '1.1rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 600, color: T.green, textDecoration: 'none' }}
           >
-            Suivez le founder sur LinkedIn ↗
+            {t('followLinkedIn')} ↗
           </a>
         </motion.div>
       </div>
@@ -87,6 +87,7 @@ function HeroBlog() {
 // ── FEATURED POST ─────────────────────────────────────────────
 function FeaturedPost({ posts }) {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const post = posts[0]
@@ -101,7 +102,7 @@ function FeaturedPost({ posts }) {
             <img src={post.img} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
             <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(3,8,6,.3),transparent)' }} />
             <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', left: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(136,202,83,.2)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.35)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
-              ⭐ Article vedette
+              ⭐ {t('blogTitle')}
             </div>
           </div>
           {/* Content */}
@@ -120,11 +121,11 @@ function FeaturedPost({ posts }) {
             <p style={{ fontSize: '.85rem', color: T.textSub, lineHeight: 1.7, marginBottom: '1.8rem' }}>{post.excerpt}</p>
             {post.linkedinUrl ? (
               <a href={post.linkedinUrl} target="_blank" rel="noreferrer" className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
-                <HoverSlideText text="Voir sur LinkedIn" /> <ArrowRight size={14} />
+                <HoverSlideText text={t('followLinkedIn')} /> <ArrowRight size={14} />
               </a>
             ) : (
               <Link href={`/blog/${post.slug}`} className="btn-raised" style={{ display: 'inline-flex', padding: '.7rem 1.5rem', fontSize: '.84rem', width: 'fit-content' }}>
-                <HoverSlideText text="Lire l'article" /> <ArrowRight size={14} />
+                <HoverSlideText text={t('readArticle')} /> <ArrowRight size={14} />
               </Link>
             )}
           </div>
@@ -137,6 +138,7 @@ function FeaturedPost({ posts }) {
 // ── BLOG GRID ─────────────────────────────────────────────────
 function BlogGrid({ posts }) {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [activeCategory, setActiveCategory] = useState('Tous')
@@ -154,8 +156,8 @@ function BlogGrid({ posts }) {
         {/* Section header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '1rem' }}>
-            <GhostTitle text="TOUS LES ARTICLES" />
-            Tous les <GreenUnderline><span className="text-gradient">articles</span></GreenUnderline>
+            <GhostTitle text={t('blogTitle')} />
+            {t('blogTitle')}
           </h2>
           <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
             style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain }}>
@@ -186,7 +188,7 @@ function BlogGrid({ posts }) {
             <Search size={14} style={{ position: 'absolute', left: '.9rem', top: '50%', transform: 'translateY(-50%)', color: T.textMuted, pointerEvents: 'none' }} />
             <input
               style={{ padding: '.6rem 1rem .6rem 2.4rem', borderRadius: 100, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', outline: 'none', width: 220 }}
-              placeholder="Rechercher..."
+              placeholder={t('uiSearch')}
               value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
               onFocus={e => e.target.style.borderColor = '#88ca53'}
               onBlur={e => e.target.style.borderColor = T.border}
@@ -198,7 +200,7 @@ function BlogGrid({ posts }) {
         {filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem', color: T.textMuted }}>
             <BookOpen size={40} style={{ margin: '0 auto 1rem', opacity: .3 }} />
-            <p>Aucun article trouvé pour cette recherche.</p>
+            <p>{t('uiNoResults')}</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: '1.5rem' }}>
@@ -238,14 +240,14 @@ function BlogGrid({ posts }) {
                         style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                         onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                         onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
-                        Voir sur LinkedIn <ArrowRight size={13} />
+                          {t('followLinkedIn')} <ArrowRight size={13} />
                       </a>
                     ) : (
                       <Link href={`/blog/${post.slug}`}
                         style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                         onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                         onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
-                        Lire l'article <ArrowRight size={13} />
+                          {t('readArticle')} <ArrowRight size={13} />
                       </Link>
                     )}
                   </div>
@@ -262,6 +264,7 @@ function BlogGrid({ posts }) {
 // ── NEWSLETTER ────────────────────────────────────────────────
 function Newsletter() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   const [email, setEmail] = useState('')
@@ -275,16 +278,16 @@ function Newsletter() {
             <Zap size={24} style={{ color: T.green }} />
           </div>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem' }}>
-            <GhostTitle text="RESTEZ INFORMÉ DES DERNIÈRES TENDANCES" />
-            Restez informé des dernières tendances
+              <GhostTitle text={t('blogTitle')} />
+              {t('blogTitle')}
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '2rem' }}>
-            Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail.
+            {t('blogHero')}
           </p>
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
               style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
-              ✅ Merci ! Vous êtes abonné.
+              {t('messageSent')}
             </motion.div>
           ) : (
             <div style={{ display: 'flex', gap: '.8rem' }}>
@@ -294,7 +297,7 @@ function Newsletter() {
                 onBlur={e => e.target.style.borderColor = T.border}
               />
               <button className="btn-raised" onClick={() => email && setDone(true)} style={{ flexShrink: 0, padding: '.85rem 1.4rem', fontSize: '.84rem' }}>
-                <HoverSlideText text="S'abonner" />
+                <HoverSlideText text={t('uiSubscribe')} />
               </button>
             </div>
           )}

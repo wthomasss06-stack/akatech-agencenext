@@ -17,6 +17,12 @@ import { cld } from '@/lib/cloudinary'
 
 const CATEGORIES = ['Tous', 'Stratégie Digitale', 'E-Commerce', 'Développement Web', 'SEO']
 const CAT_ICONS = { 'Stratégie Digitale': TrendingUp, 'E-Commerce': ShoppingCart, 'Développement Web': Code, 'SEO': Globe }
+const BLOG_LABELS = {
+  fr: { all: 'Tous', featured: 'Article vedette', viewLinkedIn: 'Voir sur LinkedIn', read: "Lire l'article", followFounder: 'Suivez le founder sur LinkedIn', newsletterTitle: 'Restez informé des dernières tendances', newsletterLead: 'Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail.', subscribed: 'Merci ! Vous êtes abonné.', subscribe: "S'abonner", processTitle: 'DU BLOG AU PROJET CONCRET', processLead: 'Du blog au', processHighlight: 'projet concret', readStep: 'Vous lisez', learnStep: 'Vous apprenez', testStep: 'Vous testez', buildStep: 'On construit ensemble' },
+  en: { all: 'All', featured: 'Featured article', viewLinkedIn: 'View on LinkedIn', read: 'Read article', followFounder: 'Follow the founder on LinkedIn', newsletterTitle: 'Stay informed about the latest trends', newsletterLead: 'Digital advice, new technologies and resources for entrepreneurs in Côte d’Ivoire — delivered to your inbox.', subscribed: 'Thank you! You are subscribed.', subscribe: 'Subscribe', processTitle: 'FROM BLOG TO REAL PROJECT', processLead: 'From the blog to', processHighlight: 'a real project', readStep: 'You read', learnStep: 'You learn', testStep: 'You test', buildStep: 'We build together' },
+  es: { all: 'Todos', featured: 'Artículo destacado', viewLinkedIn: 'Ver en LinkedIn', read: 'Leer el artículo', followFounder: 'Sigue al fundador en LinkedIn', newsletterTitle: 'Mantente al día de las últimas tendencias', newsletterLead: 'Consejos digitales, nuevas tecnologías y recursos para emprendedores marfileños — directamente en tu correo.', subscribed: '¡Gracias! Ya estás suscrito.', subscribe: 'Suscribirse', processTitle: 'DEL BLOG AL PROYECTO REAL', processLead: 'Del blog al', processHighlight: 'proyecto real', readStep: 'Lees', learnStep: 'Aprendes', testStep: 'Pruebas', buildStep: 'Construimos juntos' },
+}
+function blogText(language, key) { return BLOG_LABELS[language]?.[key] || BLOG_LABELS.fr[key] || key }
 
 // ═══════════════════════════════════════════════════════════════
 // ── ANIMATION COMPONENTS ─────────────────────────────────────
@@ -202,7 +208,7 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections, animKey = 'beam'
 ──────────────────────────────────────────────── */
 function HeroBlog() {
   const T = useTheme()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const layerBgRef   = useRef(null)
   const layerMidRef  = useRef(null)
   const layerForeRef = useRef(null)
@@ -255,7 +261,7 @@ function HeroBlog() {
               rel="noreferrer"
               style={{ display: 'inline-flex', alignItems: 'center', gap: '.4rem', marginTop: '1rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 600, color: T.green, textDecoration: 'none' }}
             >
-              Suivez le founder sur LinkedIn ↗
+              {blogText(language, 'followFounder')} ↗
             </a>
           </motion.div>
         </div>
@@ -300,6 +306,7 @@ function HeroBlog() {
 // ═══════════════════════════════════════════════════════════════
 function FeaturedPost({ posts }) {
   const T = useTheme()
+  const { language } = useLanguage()
   const post = posts[0]
   const ref  = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
@@ -358,7 +365,7 @@ function FeaturedPost({ posts }) {
               fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700,
               color: '#88ca53', letterSpacing: '.06em', textTransform: 'uppercase',
             }}>
-              ⭐ Article vedette
+                  ⭐ {blogText(language, 'featured')}
             </div>
 
             {/* Date bas gauche */}
@@ -472,7 +479,7 @@ function FeaturedPost({ posts }) {
                   className="btn-raised"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.7rem 1.5rem', fontSize: '.82rem', width: 'fit-content' }}
                 >
-                  <HoverSlideText text="Voir sur LinkedIn" /> <ArrowRight size={13} />
+                  <HoverSlideText text={blogText(language, 'viewLinkedIn')} /> <ArrowRight size={13} />
                 </a>
               ) : (
                 <Link
@@ -480,7 +487,7 @@ function FeaturedPost({ posts }) {
                   className="btn-raised"
                   style={{ display: 'inline-flex', alignItems: 'center', gap: '.5rem', padding: '.7rem 1.5rem', fontSize: '.82rem', width: 'fit-content' }}
                 >
-                  <HoverSlideText text="Lire l'article" /> <ArrowRight size={13} />
+                  <HoverSlideText text={blogText(language, 'read')} /> <ArrowRight size={13} />
                 </Link>
               )}
             </motion.div>
@@ -522,13 +529,14 @@ const HASHTAGS = [
 
 function HashtagCloud() {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
   return (
     <section ref={ref} style={{ padding: '3rem 5%', background: T.bgAlt, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.1em', flexShrink: 0 }}>Sujets</span>
+          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.1em', flexShrink: 0 }}>{t('uiTopics')}</span>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
             {HASHTAGS.map((tag, i) => (
               <motion.span
@@ -551,6 +559,7 @@ function HashtagCloud() {
 
 function BlogGrid({ posts }) {
   const T = useTheme()
+  const { t } = useLanguage()
   const ref = useRef(null)
   const beamContainerRef = useRef(null)
   const inView = useInView(ref, { once: true, margin: '-60px' })
@@ -640,7 +649,7 @@ function BlogGrid({ posts }) {
               <Search size={14} style={{ position: 'absolute', left: '.9rem', top: '50%', transform: 'translateY(-50%)', color: T.textMuted, pointerEvents: 'none' }} />
               <input
                 style={{ padding: '.6rem 1rem .6rem 2.4rem', borderRadius: 100, border: `1px solid ${T.border}`, background: T.light ? '#f5f5f5' : 'rgba(136,202,83,.04)', color: T.textMain, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', outline: 'none', width: 220 }}
-                placeholder="Rechercher..."
+                placeholder={t('uiSearch')}
                 value={searchQuery} onChange={e => setSearchQuery(e.target.value)}
                 onFocus={e => e.target.style.borderColor = '#88ca53'}
                 onBlur={e => e.target.style.borderColor = T.border}
@@ -653,7 +662,7 @@ function BlogGrid({ posts }) {
         {filtered.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '4rem', color: T.textMuted }}>
             <BookOpen size={40} style={{ margin: '0 auto 1rem', opacity: .3 }} />
-            <p>Aucun article trouvé pour cette recherche.</p>
+            <p>{t('uiNoResults')}</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(320px,1fr))', gap: '1.5rem' }}>
@@ -692,14 +701,14 @@ function BlogGrid({ posts }) {
                           style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                           onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                           onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
-                          Voir sur LinkedIn <ArrowRight size={13} />
+                          {t('followLinkedIn')} <ArrowRight size={13} />
                         </a>
                       ) : (
                         <Link href={`/blog/${post.slug}`}
                           style={{ display: 'flex', alignItems: 'center', gap: '.4rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.green, textDecoration: 'none', transition: 'gap .2s' }}
                           onMouseEnter={e => e.currentTarget.style.gap = '.7rem'}
                           onMouseLeave={e => e.currentTarget.style.gap = '.4rem'}>
-                          Lire l'article <ArrowRight size={13} />
+                          {t('readArticle')} <ArrowRight size={13} />
                         </Link>
                       )}
                     </div>
@@ -719,6 +728,7 @@ function BlogGrid({ posts }) {
 // ═══════════════════════════════════════════════════════════════
 function Newsletter() {
   const T = useTheme()
+  const { language } = useLanguage()
   const sectionRef = useRef(null)
   const [email, setEmail] = useState('')
   const [done, setDone] = useState(false)
@@ -731,20 +741,20 @@ function Newsletter() {
             <Zap size={24} style={{ color: T.green }} />
           </div>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem', textAlign: 'left' }}>
-            <GhostTitle text="RESTEZ INFORMÉ DES DERNIÈRES TENDANCES" />
-            Restez informé des <GreenUnderline><span className="text-gradient">dernières tendances</span></GreenUnderline>
+            <GhostTitle text={blogText(language, 'newsletterTitle')} />
+            {blogText(language, 'newsletterTitle')}
           </h2>
         </BlurReveal>
         <WordRevealP
           sectionRef={sectionRef}
-          text="Conseils digitaux, nouvelles technologies et ressources pour entrepreneurs ivoiriens — directement dans votre boîte mail."
-          greenWords={['digitaux,', 'technologies', 'ivoiriens', 'mail.']}
+          text={blogText(language, 'newsletterLead')}
+          greenWords={[]}
           extraStyle={{ color: T.textSub, marginBottom: '2rem' }}
         />
           {done ? (
             <motion.div initial={{ scale: .8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }}
               style={{ padding: '1.2rem 2rem', borderRadius: 14, background: 'rgba(136,202,83,.08)', border: `1px solid ${T.border}`, color: T.green, fontFamily: "'JetBrains Mono',monospace", fontWeight: 700 }}>
-              ✅ Merci ! Vous êtes abonné.
+              {blogText(language, 'subscribed')}
             </motion.div>
           ) : (
             <div style={{ display: 'flex', gap: '.8rem', maxWidth: 520, margin: '0 auto' }}>
@@ -754,7 +764,7 @@ function Newsletter() {
                 onBlur={e => e.target.style.borderColor = T.border}
               />
               <button className="btn-raised" onClick={() => email && setDone(true)} style={{ flexShrink: 0, padding: '.85rem 1.4rem', fontSize: '.84rem' }}>
-                <HoverSlideText text="S'abonner" />
+                <HoverSlideText text={blogText(language, 'subscribe')} />
               </button>
             </div>
           )}
@@ -768,32 +778,33 @@ function Newsletter() {
 // ═══════════════════════════════════════════════════════════════
 function ProcessBlog() {
   const T = useTheme()
+  const { language } = useLanguage()
 
   const steps = [
     {
       n: '01', icon: BookOpen,
-      title: 'Vous lisez',
+      title: blogText(language, 'readStep'),
       desc: "Explorez nos articles concrets sur la stratégie digitale, le SEO et l'e-commerce — pensés pour le marché ivoirien.",
       bg: T.light ? '#f4faf5' : '#030c06',
       shadow: false,
     },
     {
       n: '02', icon: Zap,
-      title: 'Vous apprenez',
+      title: blogText(language, 'learnStep'),
       desc: "Chaque ressource est taillée pour les entrepreneurs qui veulent passer à l'action — pas de jargon, du concret.",
       bg: T.light ? '#ffffff' : '#051208',
       shadow: true,
     },
     {
       n: '03', icon: Target,
-      title: 'Vous testez',
+      title: blogText(language, 'testStep'),
       desc: "Appliquez les conseils à votre business dès aujourd'hui. Pas besoin d'être un expert — juste de la méthode.",
       bg: T.light ? '#f4faf5' : '#030c06',
       shadow: true,
     },
     {
       n: '04', icon: Rocket,
-      title: 'On construit ensemble',
+      title: blogText(language, 'buildStep'),
       desc: "Vous avez un projet ? On le transforme en réalité digitale. Devis gratuit, réponse en moins de 24h.",
       bg: T.light ? '#e8f8ec' : '#061a0a',
       shadow: true,
@@ -806,11 +817,11 @@ function ProcessBlog() {
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'left', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
-            <GhostTitle text="DU BLOG AU PROJET CONCRET" />
-            Du blog au{' '}
+            <GhostTitle text={blogText(language, 'processTitle')} />
+            {blogText(language, 'processLead')}{' '}
             <GreenUnderline>
               <span className="text-gradient">
-                projet concret
+                {blogText(language, 'processHighlight')}
               </span>
             </GreenUnderline>
           </h2>
