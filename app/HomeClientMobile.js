@@ -84,12 +84,9 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
 // ── CIRCULAR PROJECTS GALLERY — adapté mobile (ratio 16:9, largeur réduite) ──
 function CircularProjectsGallery({ items, draggable = false, cardW = 220, intervalMs = 2800 }) {
   const T = useTheme()
-  const DEFAULT_ITEMS = [
-    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
-    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
-    ...PROJECTS.filter(p => p.id === 12),
-    ...PROJECTS.filter(p => p.id === 19),
-  ]
+  // 6 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
+  // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
+  const DEFAULT_ITEMS = PROJECTS.filter(p => p.id >= 19 && p.id <= 24)
   const GALLERY_ITEMS = items || DEFAULT_ITEMS
   const [active, setActive] = useState(0)
   const pausedRef = useRef(false)
@@ -810,12 +807,7 @@ function ProjectsSection() {
   const ref     = useRef(null)
   const inView  = useInView(ref, { once: true, margin: '-60px' })
 
-  const ITEMS = [
-    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
-    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
-    ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
-    ...PROJECTS.filter(p => p.id === 19),
-  ]
+  const ITEMS = PROJECTS.filter(p => p.id >= 18 && p.id <= 24)
 
   return (
     <section ref={ref} style={{ background: T.bg, position: 'relative', padding: '7rem 5% 5rem' }}>

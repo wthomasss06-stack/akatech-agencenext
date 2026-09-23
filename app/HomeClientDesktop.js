@@ -33,12 +33,9 @@ const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPi
 // ── CIRCULAR PROJECTS GALLERY (inspiré Aeline/Catalis) ────────
 function CircularProjectsGallery() {
   const T = useTheme()
-  const GALLERY_ITEMS = [
-    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
-    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
-    ...PROJECTS.filter(p => p.id === 12),
-    ...PROJECTS.filter(p => p.id === 19),
-  ]
+  // 6 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
+  // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
+  const GALLERY_ITEMS = PROJECTS.filter(p => p.id >= 19 && p.id <= 24)
   const [active, setActive] = useState(0)
   const reduceMotion = useReducedMotion()
 
@@ -992,12 +989,9 @@ function ArchiveTunnelSection() {
   const T = useTheme()
   const { t } = useLanguage()
   const [hoveredId, setHoveredId] = useState(null)
-  const TUNNEL_ITEMS = [
-    ...PROJECTS.filter(p => p.id === 15 || p.id === 18),
-    ...PROJECTS.filter(p => p.id === 17 || p.id === 16),
-    ...PROJECTS.filter(p => p.id === 12 || p.id === 11),
-    ...PROJECTS.filter(p => p.id === 19),
-  ]
+  // 7 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
+  // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
+  const TUNNEL_ITEMS = PROJECTS.filter(p => p.id >= 18 && p.id <= 24)
   const LOOP_ITEMS = [...TUNNEL_ITEMS, ...TUNNEL_ITEMS]
 
   return (
