@@ -116,6 +116,7 @@ model VisitSession {
   consent        String? // 'accepted' | 'rejected' | null = pas encore décidé (bannière cookies)
 
   pageViews PageView[]
+  actions   VisitorAction[]
 
   @@index([startedAt])
 }
@@ -129,6 +130,26 @@ model PageView {
 
   @@index([sessionId])
   @@index([viewedAt])
+}
+
+// Clics d'action (boutons WhatsApp/téléphone, ouverture du chat IA,
+// envoi du formulaire de contact...) — complète PageView, qui ne capture
+// que les changements de page. `type` est une valeur whitelistée
+// côté serveur (voir ACTION_TYPES dans lib/db.js) : jamais une chaîne
+// arbitraire envoyée par le navigateur. `path` est dérivé de l'en-tête
+// Referer (chemin seul) — jamais les paramètres d'URL ni le contenu
+// d'un champ saisi.
+model VisitorAction {
+  id        String       @id @default(cuid())
+  sessionId String
+  session   VisitSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  type      String
+  path      String?
+  createdAt DateTime     @default(now())
+
+  @@index([sessionId])
+  @@index([type])
+  @@index([createdAt])
 }
 
 // ═══════════════════════════════════════════

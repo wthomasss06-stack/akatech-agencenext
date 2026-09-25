@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useTheme } from '@/lib/theme'
+import { trackAction } from '@/lib/track-action'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -345,6 +346,7 @@ export function FloatingWA() {
       <motion.a
         href="https://wa.me/2250142507750?text=Bonjour+AKATech+!"
         target="_blank" rel="noreferrer"
+        onClick={() => trackAction('whatsapp_click')}
         title="Démarrer sur WhatsApp"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -406,6 +408,7 @@ export function SectionCTA({ message, cta, href = 'https://wa.me/2250142507750',
           {message}
         </motion.h2>
         <motion.a href={href} target="_blank" rel="noreferrer" className="btn-raised"
+          onClick={() => trackAction(href.includes('wa.me') ? 'whatsapp_click' : 'cta_click')}
           initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .25 }}
           style={{ fontSize: '1rem', padding: '1rem 2.4rem' }}>
           {cta} →
@@ -419,7 +422,7 @@ export function SectionCTA({ message, cta, href = 'https://wa.me/2250142507750',
       style={{ padding: '3rem 5%', background: T.bgAlt, borderTop: `1px solid ${T.border}`, borderBottom: `1px solid ${T.border}` }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1rem' }}>
         <p style={{ fontSize: '.92rem', color: T.textSub, maxWidth: 500, lineHeight: 1.6 }}>{message}</p>
-        <a href={href} target="_blank" rel="noreferrer" className="btn-raised" style={{ flexShrink: 0 }}>{cta}</a>
+        <a href={href} target="_blank" rel="noreferrer" className="btn-raised" style={{ flexShrink: 0 }} onClick={() => trackAction(href.includes('wa.me') ? 'whatsapp_click' : 'cta_click')}>{cta}</a>
       </div>
     </motion.section>
   )
@@ -449,7 +452,7 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
           <GhostTitle text={message} />
           {message}
         </h2>
-        <a href={href} target="_blank" rel="noreferrer" className="btn-raised btn-xl">
+        <a href={href} target="_blank" rel="noreferrer" className="btn-raised btn-xl" onClick={() => trackAction(href.includes('wa.me') ? 'whatsapp_click' : 'cta_click')}>
           <HoverSlideText text={cta} />
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"
             stroke="currentColor" strokeWidth="2.2"

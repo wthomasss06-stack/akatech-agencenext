@@ -9,6 +9,7 @@ import {
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GhostTitle, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
+import { trackAction } from '@/lib/track-action'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
@@ -234,6 +235,7 @@ function ProjectForm() {
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || t('formErrorGeneric'))
+      trackAction('contact_submit')
       setSent(true)
     } catch (err) {
       setError(err.message || t('formErrorGeneric'))

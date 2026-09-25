@@ -4,6 +4,7 @@ import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
   Trash2, AlertTriangle, Cookie, Receipt, ClipboardList, Newspaper,
+  MousePointerClick, Repeat,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -262,6 +263,62 @@ function ProspectDetailModal({ prospect, onClose, onStatus, onDelete, saving, T 
   )
 }
 
+// Parcours d'un visiteur récurrent : ses dernières sessions, pages vues
+// et clics fusionnés et triés chronologiquement. Chargé à la demande
+// (/api/stats/visitor/[id]), jamais en masse avec le reste des stats.
+// Le cookie visitorId n'est jamais affiché en entier — seulement son
+// shortId (8 premiers caractères), qui suffit à distinguer les lignes.
+function VisitorJourneyModal({ visitor, journey, loading, onClose, T }) {
+  if (!visitor) return null
+  return (
+    <div onClick={onClose} style={{ position: 'fixed', inset: 0, zIndex: 10, background: 'rgba(0,0,0,.6)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 'clamp(.75rem, 4vw, 2rem)' }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 20, width: 'min(640px, 100%)', maxHeight: '82vh', overflow: 'hidden', display: 'flex', flexDirection: 'column', boxShadow: '0 8px 24px rgba(0,0,0,.3)' }}>
+        <div style={{ padding: '1.1rem 1.3rem', borderBottom: `1px solid ${T.border}`, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
+          <div>
+            <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.95rem', fontWeight: 900, color: T.textMain }}>
+              Visiteur {visitor.shortId}…
+            </div>
+            <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 3 }}>
+              {visitor.visits} visite{visitor.visits > 1 ? 's' : ''} · {visitor.pageViews} pages vues · {visitor.actions} clic{visitor.actions > 1 ? 's' : ''}
+            </div>
+          </div>
+          <button onClick={onClose} aria-label="Fermer le parcours" style={{ background: 'none', border: 'none', color: T.textSub, cursor: 'pointer', padding: 8 }}><X size={20} /></button>
+        </div>
+        <div style={{ padding: '1.2rem 1.3rem', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
+          {loading ? (
+            <div style={{ color: T.textMuted, fontSize: '.8rem' }}>Chargement du parcours…</div>
+          ) : !journey || journey.sessions.length === 0 ? (
+            <div style={{ color: T.textMuted, fontSize: '.8rem' }}>Aucun détail de parcours disponible.</div>
+          ) : journey.sessions.map((s) => (
+            <div key={s.id}>
+              <div style={{ fontSize: '.7rem', fontWeight: 700, color: T.textMuted, marginBottom: 8, textTransform: 'uppercase', letterSpacing: '.04em' }}>
+                {new Date(s.startedAt).toLocaleString('fr-FR')} · {s.device || 'appareil inconnu'}
+                {s.consent && <span> · cookies {s.consent === 'accepted' ? 'acceptés' : 'refusés'}</span>}
+              </div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
+                {s.events.map((ev, i) => (
+                  <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    <span style={{
+                      fontSize: '.72rem', padding: '4px 9px', borderRadius: 100,
+                      background: ev.kind === 'action' ? 'rgba(224,168,62,.15)' : (T.light ? '#eef1f3' : 'rgba(255,255,255,.06)'),
+                      border: `1px solid ${ev.kind === 'action' ? 'rgba(224,168,62,.4)' : T.border}`,
+                      color: ev.kind === 'action' ? '#b8842a' : T.textMain,
+                      whiteSpace: 'nowrap',
+                    }}>
+                      {ev.kind === 'action' ? `⚡ ${ev.label}` : ev.label}
+                    </span>
+                    {i < s.events.length - 1 && <span style={{ color: T.textMuted, fontSize: '.7rem' }}>→</span>}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Confirmation custom (remplace window.confirm natif, non stylable) —
 // affiche le libellé de l'élément visé pour éviter un mauvais clic,
 // et désactive le bouton pendant l'appel réseau pour éviter un double-submit.
@@ -333,6 +390,7 @@ const EMPTY_VISITORS = {
   bounceRate: 0, avgSessionDurationSeconds: 0,
   devices: [], sources: [], topPages: [], activeHours: [],
   consent: { accepted: 0, rejected: 0, pending: 0 },
+  visitorsByDay: [], actionsByType: [], topVisitors: [],
 }
 
 function normalizeStats(d) {
@@ -386,6 +444,10 @@ export default function DashboardPage() {
   const [selectedProspect, setSelectedProspect] = useState(null)
   const [prospectSaving, setProspectSaving] = useState(false)
 
+  const [journeyVisitor, setJourneyVisitor] = useState(null)
+  const [journey, setJourney] = useState(null)
+  const [journeyLoading, setJourneyLoading] = useState(false)
+
   const loadStats = useCallback(() => {
     setLoading(true)
     fetch('/api/stats')
@@ -393,6 +455,19 @@ export default function DashboardPage() {
       .then(d => setStats(normalizeStats(d)))
       .catch(err => console.error('Erreur chargement stats:', err))
       .finally(() => setLoading(false))
+  }, [])
+
+  // Parcours chargé à la demande (clic sur un visiteur récurrent dans
+  // l'onglet Analytics) — jamais préchargé pour toute la liste.
+  const openJourney = useCallback((visitorRow) => {
+    setJourneyVisitor(visitorRow)
+    setJourney(null)
+    setJourneyLoading(true)
+    fetch(`/api/stats/visitor/${visitorRow.id}`)
+      .then(r => r.json())
+      .then(setJourney)
+      .catch(err => console.error('Erreur chargement parcours:', err))
+      .finally(() => setJourneyLoading(false))
   }, [])
 
   const loadConversations = useCallback(() => {
@@ -613,6 +688,35 @@ export default function DashboardPage() {
 
             {tab === 'analytics' && v && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+                <div style={{ ...CARD, padding: '1.2rem', gridColumn: '1 / -1' }}>
+                  <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 14 }}>Visiteurs uniques par jour — 30 derniers jours</div>
+                  {v.visitorsByDay.length === 0 ? (
+                    <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de données</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={200}>
+                      <AreaChart data={v.visitorsByDay} margin={{ top: 6, right: 6, left: -20, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="visitorsGradient" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="#5b8def" stopOpacity={0.35} />
+                            <stop offset="100%" stopColor="#5b8def" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke={T.border} vertical={false} />
+                        <XAxis
+                          dataKey="date"
+                          tick={{ fontSize: 10, fill: T.textMuted }}
+                          tickFormatter={(d) => d.slice(5)}
+                          axisLine={{ stroke: T.border }}
+                          tickLine={false}
+                          interval="preserveStartEnd"
+                        />
+                        <YAxis tick={{ fontSize: 10, fill: T.textMuted }} axisLine={false} tickLine={false} allowDecimals={false} width={28} />
+                        <RTooltip content={<ChartTooltip T={T} />} />
+                        <Area type="monotone" dataKey="count" name="Visiteurs" stroke="#5b8def" strokeWidth={2} fill="url(#visitorsGradient)" />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
                 <div style={{ ...CARD, padding: '1.2rem' }}>
                   <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 14 }}>Appareils</div>
                   {v.devices.length === 0 ? (
@@ -731,6 +835,53 @@ export default function DashboardPage() {
                       <RBar dataKey="count" name="Pages vues" fill={T.green} radius={[3, 3, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
+                </div>
+                <div style={{ ...CARD, padding: '1.2rem' }}>
+                  <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 14 }}>Clics & actions</div>
+                  {v.actionsByType.length === 0 ? (
+                    <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de données</div>
+                  ) : (
+                    <ResponsiveContainer width="100%" height={Math.max(v.actionsByType.length * 32, 60)}>
+                      <BarChart data={v.actionsByType} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
+                        <XAxis type="number" hide allowDecimals={false} />
+                        <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: T.textSub }} axisLine={false} tickLine={false} width={110} />
+                        <RTooltip content={<ChartTooltip T={T} />} cursor={{ fill: T.border, opacity: .3 }} />
+                        <RBar dataKey="count" name="Clics" fill="#e0a83e" radius={[0, 4, 4, 0]} barSize={14} />
+                      </BarChart>
+                    </ResponsiveContainer>
+                  )}
+                </div>
+                <div style={{ ...CARD, padding: '1.2rem', gridColumn: '1 / -1' }}>
+                  <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 4 }}>Visiteurs récurrents</div>
+                  <div style={{ fontSize: '.7rem', color: T.textMuted, marginBottom: 14 }}>
+                    Classés par nombre de visites distinctes sur 30 jours. Clique une ligne pour voir son parcours (pages vues + clics).
+                  </div>
+                  {v.topVisitors.length === 0 ? (
+                    <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de visiteurs récurrents</div>
+                  ) : (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                      {v.topVisitors.map((tv) => (
+                        <button
+                          key={tv.id}
+                          onClick={() => openJourney(tv)}
+                          style={{
+                            display: 'flex', alignItems: 'center', gap: 10, width: '100%',
+                            background: 'none', border: 'none', borderRadius: 10, cursor: 'pointer',
+                            padding: '.55rem .6rem', textAlign: 'left', color: T.textMain,
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = T.light ? '#f6f8f9' : 'rgba(255,255,255,.04)' }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
+                        >
+                          <Repeat size={14} color={T.textMuted} style={{ flexShrink: 0 }} />
+                          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textSub, flexShrink: 0 }}>{tv.shortId}…</span>
+                          <span style={{ fontSize: '.72rem', color: T.textMuted, flex: 1 }}>{new Date(tv.lastSeenAt).toLocaleDateString('fr-FR')}</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}><Repeat size={11} />{tv.visits}</span>
+                          <span style={{ fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}>{tv.pageViews} pages</span>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}><MousePointerClick size={11} />{tv.actions}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             )}
@@ -916,6 +1067,7 @@ export default function DashboardPage() {
         T={T}
       />
       <ConfirmModal target={confirmTarget} onCancel={() => !deleting && setConfirmTarget(null)} onConfirm={confirmDeletion} deleting={deleting} T={T} />
+      <VisitorJourneyModal visitor={journeyVisitor} journey={journey} loading={journeyLoading} onClose={() => setJourneyVisitor(null)} T={T} />
     </div>
   )
 }

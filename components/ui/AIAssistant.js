@@ -6,6 +6,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { Bot, X, Send, MessageCircleWarning, ExternalLink, Phone, Globe, Mail, FileText } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
+import { trackAction } from '@/lib/track-action'
 
 const HOUR = new Date().getHours()
 
@@ -381,6 +382,7 @@ export default function AIAssistant() {
     : { w: Math.min(AI_PANEL_W, window.innerWidth - 38), h: Math.min(AI_PANEL_H, window.innerHeight - 128) })
 
   const openPanel = () => {
+    if (!openRef.current) trackAction('chat_open')
     const { w, h } = getPanelSize()
     panelAnim.current.targetW = w
     panelAnim.current.targetH = h

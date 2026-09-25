@@ -4,7 +4,7 @@
 
 # AKATech — Agence Web Abidjan
 
-**Sites Vitrine · E-Commerce · Applications SaaS · API & Backend · Fiches Google My Business**
+**Sites Vitrine · E-Commerce · Applications SaaS · Chatbot IA · Paiement en ligne · Fiches Google My Business**
 
 Développé par **M'Bollo Aka Elvis** — Développeur Full-Stack basé à Abidjan, Côte d'Ivoire 🇨🇮
 
@@ -25,7 +25,7 @@ Développé par **M'Bollo Aka Elvis** — Développeur Full-Stack basé à Abidj
 
 ## 📖 À propos
 
-**AKATech** est une agence web freelance basée à **Abidjan, Côte d'Ivoire**, spécialisée dans la conception de solutions digitales sur-mesure pour les entrepreneurs, PME et créatifs d'Afrique de l'Ouest : sites vitrines, e-commerce, applications SaaS, API/backend et fiches Google My Business.
+**AKATech** est une agence web freelance basée à **Abidjan, Côte d'Ivoire**, spécialisée dans la conception de solutions digitales sur-mesure pour les entrepreneurs, PME et créatifs d'Afrique de l'Ouest : sites vitrines, e-commerce, applications SaaS, chatbots IA, paiement en ligne et fiches Google My Business.
 
 Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., construite avec **Next.js 14**, **GSAP** et **Three.js** — ainsi qu'un **assistant IA conversationnel** intégré au site public. Le SEO est pensé au-delà du référencement classique : données structurées **JSON-LD** taillées pour le SEO, l'**AEO** (moteurs de réponse type Google AI Overviews) et le **GEO** (recommandation par les LLM comme ChatGPT ou Perplexity).
 
@@ -46,7 +46,7 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 | **Resend** | 4.0 | Envoi d'e-mails (formulaire de contact) |
 | **@google/genai** | 2.11 | Assistant IA — fournisseur principal (Gemini, gratuit) |
 | **groq-sdk** | 1.3 | Assistant IA — fournisseur de secours (Llama 3.1 8B, gratuit) |
-| **Prisma** + PostgreSQL (Neon) | 6.19 | Conversations, leads, questionnaires, devis, articles — alimente le dashboard admin |
+| **Prisma** + PostgreSQL (Neon) | 6.19 | Conversations, leads, questionnaires, devis, articles, analytics visiteurs — alimente le dashboard admin |
 | **@vercel/analytics** | 2.0 | Pageviews + Web Vitals (en complément du tracking interne visiteurs) |
 | **Recharts** | 3.9 | Graphiques du dashboard admin |
 
@@ -65,7 +65,7 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 akatech-nextjs/
 ├── middleware.js               # Basic Auth (/dashboard + API admin) + cookies de tracking visiteurs
 ├── prisma/
-│   └── schema.prisma            # Conversation, Message, Lead, Visitor, VisitSession, PageView, Questionnaire, Quote, BlogPost, Invoice
+│   └── schema.prisma            # Conversation, Message, Lead, Visitor, VisitSession, PageView, VisitorAction, Questionnaire, Quote, BlogPost, Invoice
 │
 ├── app/
 │   ├── page.js · HomeClientDesktop.js · HomeClientMobile.js · HomeResponsive.js
@@ -74,14 +74,14 @@ akatech-nextjs/
 │   ├── robots.js · sitemap.js
 │   │
 │   ├── about/                 # Équipe, stats animées, valeurs
-│   ├── services/               # 5 domaines d'expertise, visuels WebP locaux
+│   ├── services/               # 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes
 │   ├── projects/               # Galerie filtrée (19 réalisations)
-│   ├── pricing/                 # 5 grilles tarifaires + FAQ
+│   ├── pricing/                 # 4 grilles tarifaires (Vitrine, E-commerce, SaaS, GBP) + FAQ
 │   ├── devis/ · devis/[type]/   # Questionnaire de devis dynamique (portfolio, vitrine/e-commerce, SaaS)
 │   ├── blog/[slug]/            # Articles (modèle BlogPost) + recherche + newsletter
 │   ├── contact/                 # Formulaire + canaux directs
 │   ├── explorer/                # Tunnel 3D WebGL des projets (NEW)
-│   ├── dashboard/                # Admin — leads, prospects/devis, conversations, analytics, factures (protégé par middleware)
+│   ├── dashboard/                # Admin — leads, prospects/devis, conversations, analytics visiteurs, factures (protégé par middleware)
 │   │
 │   └── api/
 │       ├── contact/             # Route Resend + rate-limit anti-spam
@@ -92,18 +92,20 @@ akatech-nextjs/
 │       ├── invoices/            # CRUD factures (dashboard)
 │       ├── blog/                # Articles (CRUD, modèle BlogPost)
 │       ├── leads/ · conversations/ · stats/  # Lecture dashboard (leads, historique chat, stats agrégées)
-│       ├── track/                # Écrit visiteur/session/page vue en base (cookies posés par middleware.js)
+│       ├── stats/visitor/[visitorId]/  # Parcours détaillé d'un visiteur (à la demande, dashboard uniquement)
+│       ├── track/                # Écrit page vue / clic d'action en base (cookies posés par middleware.js)
 │       │
 │
 ├── components/
 │   ├── layout/    # Navbar, Footer, CardNav, StaggeredMenu, PageTransition, BlobTransition
-│   ├── ui/        # AuroraHero, OrbHero, Loader, ConversionMarquee, TrustStacksMarquee, AIAssistant, VisitorTracker…
+│   ├── ui/        # AuroraHero, OrbHero, Loader, ConversionMarquee, TrustStacksMarquee, AIAssistant, VisitorTracker, CookieConsent…
 │   ├── dashboard/ # Onglets admin — ProspectsTab, InvoicesTab, etc.
 │   ├── explorer/  # ProjectsTunnel (Three.js live), ProjectModal, ProjectGlobe (dormant)
 │   └── responsive/# ResponsiveLoader — bascule desktop/mobile par composant
 │
 ├── lib/
-│   ├── data.js         # SERVICES, PROJECTS (19), PRICING, TESTIMONIALS, TEAM, STATS, BLOG_POSTS, FAQ_ITEMS, PROJECT_TYPE_LABELS
+│   ├── data.js         # SERVICES (6), PROJECTS (19), PRICING, WHAT_WE_BUILD (7), PROCESS_STEPS (6), TESTIMONIALS, TEAM, STATS, BLOG_POSTS, FAQ_ITEMS, PROJECT_TYPE_LABELS
+│   ├── db.js           # Couche Prisma — conversations, leads, questionnaires/devis, factures, analytics visiteurs (visiteurs/jour, clics, parcours)
 │   ├── theme.js         # useTheme — dark/light + View Transitions
 │   ├── language.js       # useLanguage — bilingue FR/EN, persisté localStorage
 │   ├── assistant.js     # Prompt de qualification + tools start_questionnaire/capture_lead
@@ -111,6 +113,7 @@ akatech-nextjs/
 │   ├── questionnaires-schema.js  # Source unique des 3 questionnaires (champs, types, conditions d'affichage)
 │   ├── quote-calc.js · market-positioning.js  # Classification tarifaire + argumentaire du devis, générés par LLM
 │   ├── questionnaire-pdf.js  # Génération du PDF de devis + envoi email
+│   ├── track-action.js  # Helper client — envoie un clic d'action (WhatsApp, tel, chat, formulaire) à /api/track
 │   │
 │
 ├── public/
@@ -127,10 +130,10 @@ akatech-nextjs/
 |---|---|---|
 | `/` | Accueil | Hero animé, services, marquees de confiance, projets récents, témoignages |
 | `/about` | À propos | Équipe, stats animées, valeurs |
-| `/services` | Services | 5 domaines d'expertise, processus en 7 étapes |
+| `/services` | Services | 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes |
 | `/projects` | Projets | Galerie filtrée par catégorie — 19 réalisations |
 | `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 19 projets — desktop uniquement, repli vers `/projects` sur mobile |
-| `/pricing` | Tarifs | 5 grilles (Portfolio, Vitrine, E-commerce, SaaS, GBP), FAQ, témoignages |
+| `/pricing` | Tarifs | 4 grilles (Vitrine — incluant le portfolio —, E-commerce, SaaS, GBP), FAQ, témoignages |
 | `/devis` + `/devis/[type]` | Devis | Formulaire de questionnaire dynamique (portfolio, vitrine/e-commerce, SaaS), généré depuis `lib/questionnaires-schema.js` — accessible depuis l'assistant IA ou directement par lien |
 | `/blog` + `/blog/[slug]` | Blog | Articles stockés en base (modèle `BlogPost`), recherche, tags, newsletter |
 | `/contact` | Contact | Formulaire (Resend), canaux directs, FAQ |
@@ -164,7 +167,24 @@ Fichiers clés : `lib/ai-providers.js` (cascade + rate-limiting, partagé), `lib
 
 ---
 
+## 📊 Analytics visiteurs
 
+Tracking interne (dashboard, onglet **Analytics**), en complément de Vercel Analytics — pensé pour rester anonyme et léger, sans dépendance externe.
+
+**Comment ça fonctionne :**
+
+1. **À l'arrivée sur une page publique**, le navigateur envoie un événement `page_view` à `/api/track`. Les pages `/dashboard` et les routes `/api/*` sont exclues (pas de cookie posé, pas d'événement).
+2. **`middleware.js` pose deux cookies techniques** dès la première requête : `akatech_visitor` (1 an, identifie le navigateur — pas une personne) et `akatech_session` (30 min glissantes, se prolonge à chaque page vue). Un retour après 30 min d'inactivité crée une nouvelle session, comptée comme une nouvelle "visite".
+3. **Les clics d'action** sont suivis via `lib/track-action.js` sur les points d'entrée principaux du site (badge WhatsApp flottant, liens WhatsApp/téléphone du footer, ouverture du chat IA, envoi réussi du formulaire de contact). Chaque clic est classé dans une whitelist serveur (`ACTION_TYPES` dans `lib/db.js`) — jamais une valeur arbitraire envoyée par le navigateur — et la page/section concernée est déduite de l'en-tête `Referer` (chemin seul, jamais les paramètres d'URL ni le contenu d'un champ saisi).
+4. **Dans le dashboard**, les visiteurs par jour sont comptés comme des `visitorId` distincts ce jour-là (courbe Recharts). Le nombre de fois qu'un visiteur est revenu correspond à son nombre de sessions distinctes, pas à son nombre de pages vues. La liste "Visiteurs récurrents" est cliquable et ouvre le **parcours** détaillé (pages vues + clics fusionnés et triés chronologiquement, session par session) via `/api/stats/visitor/[visitorId]`, chargé à la demande.
+
+**Limites à garder en tête :** cela compte des navigateurs, pas des personnes. Effacer les cookies ou changer d'appareil crée une autre identité de suivi ; plusieurs personnes partageant un appareil peuvent être regroupées.
+
+**Point important sur le consentement :** la bannière cookies (`components/ui/CookieConsent.js`) enregistre un choix ("Tout accepter" / "Refuser l'optionnel") côté session, pour que le dashboard affiche la vraie répartition accepté/refusé — mais que le choix soit accepter ou refuser, la mesure d'audience anonyme posée par `middleware.js` continue de tourner : elle n'attend pas la décision de la bannière pour démarrer. Autrement dit, le consentement ne sert pas aujourd'hui à activer ou couper ce tracking, seulement à l'enregistrer.
+
+Aucune purge automatique des événements (`PageView`, `VisitorAction`) n'existe dans le code actuel — à prévoir si le volume ou la durée de rétention le justifie.
+
+---
 
 ## 🗄️ Base de données
 
@@ -175,7 +195,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 | `Conversation` | Une session de chat — statut ACTIVE / ENDED / CONVERTED |
 | `Message` | Chaque tour de la conversation, avec le fournisseur IA utilisé |
 | `Lead` | Prospect capturé par l'assistant — score, statut, notes |
-| `Visitor` / `VisitSession` / `PageView` | Analytics visiteurs pour le dashboard |
+| `Visitor` / `VisitSession` / `PageView` / `VisitorAction` | Analytics visiteurs (pages vues + clics d'action) pour le dashboard — voir section dédiée plus haut |
 | `Questionnaire` | Réponses au formulaire de devis (`/devis/[type]`) — lien public par token, statut STARTED → SUBMITTED → QUOTED → accepted/declined |
 | `Quote` | Devis généré pour un `Questionnaire` : formule tarifaire, fourchette de prix, justification et argumentaire générés par LLM |
 | `BlogPost` | Articles du blog (titre, contenu, catégorie, image, publication) |
@@ -189,6 +209,8 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 
 > **Prisma 6.x, pas 7.x** — la version 7 a changé la façon de déclarer `datasource.url` dans le schéma (système d'adaptateurs). `package.json` est volontairement figé sur `^6.19.3`.
 
+> **Après avoir tiré cette mise à jour** : le modèle `VisitorAction` est nouveau — pense à lancer `npx prisma db push` (ou `prisma migrate`) sur ta branche dev avant de relancer le site, sinon le tracking des clics échoue silencieusement (le dashboard reste fonctionnel, juste sans ces données) et l'onglet Analytics affiche des sections vides pour "Clics & actions" et "Visiteurs récurrents".
+
 ---
 
 ## 💼 Services proposés
@@ -196,89 +218,67 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 > **Toutes ces prestations sont réalisées et livrées directement par AKATech.**
 
 ### 01 · Conception de Site Web
-<img src="./public/images/service/creation%20de%20site%20web.webp" alt="Création de site web AKATech" width="720" />
-
-Sites modernes, responsive et optimisés conversion — du portfolio à l'e-commerce.
+Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce, chaque page est conçue avec soin.
 **À partir de 150 000 FCFA · 5 à 7 jours**
 
 ### 02 · Cartes Interactives & Dashboards
-<img src="./public/images/service/dasbord.webp" alt="Cartes interactives et dashboards AKATech" width="720" />
-
-Cartes Mapbox / Leaflet et dashboards de data en temps réel.
+Intégration de cartes interactives Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces lisibles et actionnables.
 **Sur devis · 7 à 14 jours**
 
 ### 03 · Maintenance & Support
-<img src="./public/images/service/maintenence.webp" alt="Maintenance et support AKATech" width="720" />
-
-Mises à jour, corrections, sauvegardes, support prioritaire.
+Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier, AKATech s'occupe du reste.
 **À partir de 20 000 FCFA/mois**
 
 ### 04 · Fiche Google My Business
-<img src="./public/images/service/fiche-google.webp" alt="Fiche Google Business Profile AKATech" width="720" />
-
-Création ou optimisation, SEO local, suivi mensuel des avis.
+Création ou optimisation de votre fiche Google (NAP, catégories, photos, description SEO local) et suivi mensuel : réponse aux avis, publications et statistiques.
 **À partir de 20 000 FCFA · 1 à 2 jours**
 
 ### 05 · Intégration IA Chatbot
-<img src="./public/images/service/ia.webp" alt="Chatbot IA AKATech" width="720" />
-
-Assistant conversationnel sur-mesure intégré à votre site — qualification des visiteurs, réponses sur vos services et tarifs, capture de leads 24h/24 (le même type d'assistant que celui d'akatech.vercel.app).
+Un chatbot conversationnel intégré à votre site pour interagir avec vos visiteurs et les guider — le même type d'assistant que celui d'akatech.vercel.app, pensé pour augmenter la productivité de votre business.
 **Sur devis · 7 à 14 jours**
 
 ### 06 · Intégration de Paiement en Ligne
-<img src="./public/images/service/peiement.webp" alt="Paiement en ligne AKATech" width="720" />
-
-Mobile Money (Orange Money, MTN MoMo, Wave) et carte bancaire selon vos besoins, avec suivi des transactions et notifications.
+Intégration de solutions de paiement directement sur votre site — Mobile Money (Orange Money, MTN MoMo, Wave) et carte bancaire selon vos besoins — pour encaisser sans friction.
 **Sur devis · 5 à 10 jours**
 
 ---
 
-## 🧩 Ce que nous concevons
+## 🧩 Types de solutions conçues
 
-> Distinct des Services ci-dessus : ces familles décrivent le *type* de projet livré (une même famille peut couvrir plusieurs paliers de prix — voir Tarifs). Source : `WHAT_WE_BUILD` dans `lib/data.js`.
+Familles de projets présentées sur `/services` et l'accueil — une même famille peut couvrir plusieurs paliers de prix (voir Tarifs ci-dessous), et une famille peut ne pas encore avoir de palier dédié.
 
-| Famille | Pour | Exemples |
-|---|---|---|
-| 🌐 Sites vitrines & sites métier | Présenter une activité, convertir les visiteurs | MD Laverie Pressing, Chez Florence |
-| 🛒 E-commerce | Vendre en ligne (catalogue, panier, Mobile Money, stock) | ShopCI, ElvisMarket |
-| 📅 Réservation & rendez-vous | Réserver sans appeler (résidences, salons, véhicules…) | New Horizon Service |
-| 🏢 Plateformes & marketplaces | Multi-utilisateurs, géolocalisation, KYC, paiements répartis | Nexura |
-| 🧾 Gestion commerciale & facturation | Devis, factures (TVA, numérotation auto), export PDF | *(à venir)* |
-| ⚙️ Applications web & outils métier | Dashboard, CRM, stocks, suivi logistique, SaaS sur-mesure | MonCashJour, LivreurTrack Pro |
-| 🧮 POS & caisse | Encaissement et caisse physique | *(bientôt disponible)* |
+| # | Solution | Pour qui / pour quoi | Exemples livrés |
+|---|---|---|---|
+| 01 | 🌐 Sites vitrines & sites métier | Présenter une activité et convertir les visiteurs en clients : entreprise, agence, cabinet, école, pressing, salon, restaurant, portfolio professionnel | MD Laverie Pressing, Chez Florence |
+| 02 | 🛒 E-commerce | Vendre des produits en ligne : catalogue, panier, paiement Mobile Money, livraison, gestion des stocks, tableau de bord vendeur | ShopCI, ElvisMarket |
+| 03 | 📅 Réservation & rendez-vous | Réserver sans appeler : résidences, hôtels, salons, restaurants, prestations, location de véhicules, salles | New Horizon Service |
+| 04 | 🏢 Plateformes & marketplaces | Vraie plateforme multi-utilisateurs : comptes clients/vendeurs, géolocalisation, KYC, paiements répartis, dashboards | Nexura |
+| 05 | 🧾 Gestion commerciale & facturation | Digitaliser la gestion quotidienne : devis, factures avec TVA et numérotation automatique, clients, historique des ventes, export PDF | — |
+| 06 | ⚙️ Applications web & outils métier | Automatiser un processus propre à l'entreprise : dashboard métier, CRM, gestion de stocks, suivi logistique, portail client, SaaS sur-mesure | MonCashJour, LivreurTrack Pro |
+| 07 | 🧮 POS & caisse | Système d'encaissement et de caisse physique | *à venir* |
+
+> Source unique : `WHAT_WE_BUILD` dans `lib/data.js`.
 
 ---
 
 ## 🤝 Processus de travail
 
-> Les 6 étapes du contrat de prestation AKATech — source canonique : `PROCESS_STEPS` dans `lib/data.js`.
-
-<img src="./public/images/process/prise%20de%20contact.webp" alt="Brief et découverte AKATech" width="720" />
+6 étapes, alignées sur le contrat de prestation AKATech Studio (source unique : `PROCESS_STEPS` dans `lib/data.js`) :
 
 ### 01 · Brief & découverte
 Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement.
 
-<img src="./public/images/process/devis%20et%20condition.webp" alt="Devis et contrat AKATech" width="720" />
-
 ### 02 · Devis & contrat
 Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble.
-
-<img src="./public/images/process/acompte.webp" alt="Acompte et contenus AKATech" width="720" />
 
 ### 03 · Acompte & contenus
 Vous versez 50 % d'acompte et transmettez les éléments nécessaires (logo, informations, visuels...). Le délai démarre lorsque l'acompte et les contenus sont reçus.
 
-<img src="./public/images/process/creation%20du%20site.webp" alt="Conception et développement AKATech" width="720" />
-
 ### 04 · Conception & développement
 Nous concevons et développons votre projet conformément au devis.
 
-<img src="./public/images/process/livraison.webp" alt="Prévisualisation et validation AKATech" width="720" />
-
 ### 05 · Prévisualisation & validation
 Vous recevez un lien de prévisualisation, testez le projet, et nous effectuons les corrections mineures incluses.
-
-<img src="./public/images/process/mise%20en%20ligne.webp" alt="Livraison et suivi AKATech" width="720" />
 
 ### 06 · Livraison & suivi
 Après paiement du solde, le projet est mis en ligne et les accès sont transmis. La période de garantie/support commence ensuite.
@@ -287,9 +287,11 @@ Après paiement du solde, le projet est mis en ligne et les accès sont transmis
 
 ## 💰 Tarifs AKATech
 
-> Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine + hébergement offerts la 1ère année sur la majorité des formules. Le Portfolio n'a plus de grille dédiée : il applique la grille Site Vitrine.
+> Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine + hébergement offerts la 1ère année sur toutes les formules
+>
+> Le **portfolio** n'a plus sa propre grille : c'est une déclinaison du Site Vitrine (questionnaire dédié sur `/devis/portfolio`, mais devis piochant dans la même grille de prix).
 
-### 🖥️ Site Vitrine
+### 🖥️ Site Vitrine (portfolio inclus)
 | Formule | Prix | Délai |
 |---|---|---|
 | LANDING | 150 000 FCFA | 5 à 7 jours |
@@ -358,7 +360,7 @@ DATABASE_URL=postgresql://...   # même branche "development" que ci-dessus,
 
 Puis, si tu utilises la base de données :
 ```bash
-npx prisma db push   # crée les tables dans la branche dev de Neon
+npx prisma db push   # crée/synchronise les tables dans la branche dev de Neon
 ```
 
 ```bash
@@ -406,6 +408,7 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Thème clair/sombre** en transition circulaire via **View Transitions API** (repli instantané si non supporté)
 - **Bilingue FR/EN** — sélecteur navbar, persisté en `localStorage`, ~200 clés de traduction (`lib/language.js`)
 - **Devis en ligne** (`/devis/[type]`) — questionnaire dynamique, classification tarifaire et argumentaire générés par LLM, PDF envoyé par email, décision (accepter/décliner) trackée — voir section Assistant IA
+- **Analytics visiteurs interne** — visiteurs uniques/jour (courbe Recharts), clics d'action trackés (WhatsApp, téléphone, chat, formulaire), parcours détaillé par visiteur récurrent — voir section dédiée plus haut
 - **SEO structuré JSON-LD** (`ProfessionalService`) pensé SEO + AEO + GEO — citable par Google AI Overviews et les LLM
 - **`public/llms.txt`** — résumé structuré du site (services, tarifs, pages, contact) au format markdown conventionnel, pour que les LLM (ChatGPT, Perplexity, Claude…) décrivent Studio. avec des informations à jour plutôt que des suppositions
 - **Footer "Demander à l'IA"** — liens pré-remplis vers ChatGPT, Claude, Perplexity, Gemini, Grok
@@ -413,8 +416,6 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Marquees de confiance** (`TrustStacksMarquee`, `ConversionMarquee`) sur Accueil / À propos / Services
 - **Assistant IA** conversationnel, double fournisseur (Gemini → Groq), capture de leads — voir section dédiée plus haut
 - **Factures** (`/dashboard`, onglet Factures) — création, historique et export PNG/PDF (html2canvas + jsPDF, générés à la demande depuis les données de la facture, rien n'est stocké en fichier) ; totaux toujours recalculés côté serveur avant écriture en base
-
-
 
 ---
 

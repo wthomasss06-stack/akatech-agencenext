@@ -8,6 +8,7 @@ import AuroraHero from '@/components/ui/AuroraHero'
 import { HoverSlideText } from '@/components/ui/index'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
+import { trackAction } from '@/lib/track-action'
 import TransitionLink from './TransitionLink'
 import { wireLetterHoverSwap } from '@/lib/hoverImageChars'
 import { STUDIO_LETTER_IMAGE_POOLS } from '@/lib/studioWordmarkImages'
@@ -293,7 +294,7 @@ export default function Footer() {
                 {t('contact')}
               </h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '.3rem' }}>
-                <a href="tel:+2250142507750" style={lk}
+                <a href="tel:+2250142507750" style={lk} onClick={() => trackAction('phone_click')}
                   onMouseEnter={e => { e.currentTarget.style.color = '#fff'; e.currentTarget.style.paddingLeft = '4px' }}
                   onMouseLeave={e => { e.currentTarget.style.color = muted; e.currentTarget.style.paddingLeft = '0' }}>
                   <Phone size={12} style={{ flexShrink: 0 }} /><HoverSlideText text="+225 01 42 50 77 50" />
@@ -315,7 +316,7 @@ export default function Footer() {
                 ))}
               </div>
             </div>
-            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-ghost" style={{ fontSize: '.8rem', padding: '.7rem 1.6rem' }}>
+            <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-ghost" style={{ fontSize: '.8rem', padding: '.7rem 1.6rem' }} onClick={() => trackAction('whatsapp_click')}>
               <Send size={14} /> <HoverSlideText text={t('sendMessageBtn')} />
             </a>
           </div>

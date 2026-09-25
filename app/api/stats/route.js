@@ -1,6 +1,6 @@
 // app/api/stats/route.js
 // Protégée par middleware.js (Basic Auth).
-import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage } from '@/lib/db'
+import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage, getActionStats, getTopVisitors } from '@/lib/db'
 import { NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -17,7 +17,7 @@ export async function GET() {
       todayConversations, weekConversations, monthConversations,
       totalLeads, qualifiedLeads, contactedLeads, convertedLeads,
       avgLeadScore, totalMessages, avgMessagesPerConversation,
-      leadsByProjectType, activity, visitorStats, aiUsage,
+      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, topVisitors,
     ] = await Promise.all([
       prisma.conversation.count(),
       prisma.conversation.count({ where: { status: 'ACTIVE' } }),
@@ -36,6 +36,8 @@ export async function GET() {
       getConversationActivity(30),
       getVisitorStats(30),
       getTodayAiUsage(),
+      getActionStats(30),
+      getTopVisitors(30),
     ])
 
     return NextResponse.json({
@@ -60,7 +62,7 @@ export async function GET() {
       },
       byProjectType: leadsByProjectType.map(p => ({ type: p.projectType || 'Non précisé', count: p._count.id })),
       activity,
-      visitors: visitorStats,
+      visitors: { ...visitorStats, actionsByType: actionStats, topVisitors },
       aiUsage,
     })
   } catch (error) {
