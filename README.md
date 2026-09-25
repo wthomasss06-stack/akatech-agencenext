@@ -46,9 +46,11 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 | **Resend** | 4.0 | Envoi d'e-mails (formulaire de contact) |
 | **@google/genai** | 2.11 | Assistant IA — fournisseur principal (Gemini, gratuit) |
 | **groq-sdk** | 1.3 | Assistant IA — fournisseur de secours (Llama 3.1 8B, gratuit) |
-| **Prisma** + PostgreSQL (Neon) | 6.19 | Conversations, leads, visiteurs — alimente le dashboard admin |
+| **Prisma** + PostgreSQL (Neon) | 6.19 | Conversations, leads, questionnaires, devis, articles — alimente le dashboard admin |
 | **@vercel/analytics** | 2.0 | Pageviews + Web Vitals (en complément du tracking interne visiteurs) |
 | **Recharts** | 3.9 | Graphiques du dashboard admin |
+
+**Site bilingue FR/EN** — `lib/language.js` (contexte + ~200 clés de traduction), `useLanguage()` consommé dans une trentaine de composants/pages ; sélecteur FR/EN dans la navbar, préférence persistée en `localStorage` (`akatech-language`).
 
 **Design system :**
 - Vert de marque `#88ca53` (dark mode) / `#5f9137` (light mode)
@@ -63,7 +65,7 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 akatech-nextjs/
 ├── middleware.js               # Basic Auth (/dashboard + API admin) + cookies de tracking visiteurs
 ├── prisma/
-│   └── schema.prisma            # Conversation, Message, Lead, Visitor, VisitSession, PageView
+│   └── schema.prisma            # Conversation, Message, Lead, Visitor, VisitSession, PageView, Questionnaire, Quote, BlogPost, Invoice
 │
 ├── app/
 │   ├── page.js · HomeClientDesktop.js · HomeClientMobile.js · HomeResponsive.js
@@ -75,30 +77,41 @@ akatech-nextjs/
 │   ├── services/               # 5 domaines d'expertise, visuels WebP locaux
 │   ├── projects/               # Galerie filtrée (19 réalisations)
 │   ├── pricing/                 # 5 grilles tarifaires + FAQ
-│   ├── blog/[slug]/            # 4 articles + recherche + newsletter
+│   ├── devis/ · devis/[type]/   # Questionnaire de devis dynamique (portfolio, vitrine/e-commerce, SaaS)
+│   ├── blog/[slug]/            # Articles (modèle BlogPost) + recherche + newsletter
 │   ├── contact/                 # Formulaire + canaux directs
 │   ├── explorer/                # Tunnel 3D WebGL des projets (NEW)
-│   ├── dashboard/                # Admin — leads, conversations, analytics (protégé par middleware)
+│   ├── dashboard/                # Admin — leads, prospects/devis, conversations, analytics, factures (protégé par middleware)
 │   │
 │   └── api/
 │       ├── contact/             # Route Resend + rate-limit anti-spam
-│       ├── assistant/           # Chat IA — Gemini → Groq, tool use capture_lead
+│       ├── assistant/           # Chat IA — Gemini → Groq, tool use start_questionnaire/capture_lead
 │       ├── assistant/end/       # Clôture une conversation en base (sans appel IA)
+│       ├── questionnaire/       # Soumission du devis + décision (accepter/décliner)
+│       ├── prospects/           # Lecture/recherche des questionnaires (dashboard)
+│       ├── invoices/            # CRUD factures (dashboard)
+│       ├── blog/                # Articles (CRUD, modèle BlogPost)
+│       ├── leads/ · conversations/ · stats/  # Lecture dashboard (leads, historique chat, stats agrégées)
 │       ├── track/                # Écrit visiteur/session/page vue en base (cookies posés par middleware.js)
-│       
+│       │
 │
 ├── components/
 │   ├── layout/    # Navbar, Footer, CardNav, StaggeredMenu, PageTransition, BlobTransition
 │   ├── ui/        # AuroraHero, OrbHero, Loader, ConversionMarquee, TrustStacksMarquee, AIAssistant, VisitorTracker…
+│   ├── dashboard/ # Onglets admin — ProspectsTab, InvoicesTab, etc.
 │   ├── explorer/  # ProjectsTunnel (Three.js live), ProjectModal, ProjectGlobe (dormant)
 │   └── responsive/# ResponsiveLoader — bascule desktop/mobile par composant
 │
 ├── lib/
 │   ├── data.js         # SERVICES, PROJECTS (19), PRICING, TESTIMONIALS, TEAM, STATS, BLOG_POSTS, FAQ_ITEMS, PROJECT_TYPE_LABELS
 │   ├── theme.js         # useTheme — dark/light + View Transitions
+│   ├── language.js       # useLanguage — bilingue FR/EN, persisté localStorage
 │   ├── assistant.js     # Prompt de qualification + tools start_questionnaire/capture_lead
 │   ├── ai-providers.js  # Cascade de modèles Gemini, fallback Groq, rate-limiting, validation — partagé entre les routes assistant
-│   
+│   ├── questionnaires-schema.js  # Source unique des 3 questionnaires (champs, types, conditions d'affichage)
+│   ├── quote-calc.js · market-positioning.js  # Classification tarifaire + argumentaire du devis, générés par LLM
+│   ├── questionnaire-pdf.js  # Génération du PDF de devis + envoi email
+│   │
 │
 ├── public/
 ├── next.config.js · vercel.json · jsconfig.json · package.json
@@ -118,7 +131,8 @@ akatech-nextjs/
 | `/projects` | Projets | Galerie filtrée par catégorie — 19 réalisations |
 | `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 19 projets — desktop uniquement, repli vers `/projects` sur mobile |
 | `/pricing` | Tarifs | 5 grilles (Portfolio, Vitrine, E-commerce, SaaS, GBP), FAQ, témoignages |
-| `/blog` + `/blog/[slug]` | Blog | Articles, recherche, tags, newsletter |
+| `/devis` + `/devis/[type]` | Devis | Formulaire de questionnaire dynamique (portfolio, vitrine/e-commerce, SaaS), généré depuis `lib/questionnaires-schema.js` — accessible depuis l'assistant IA ou directement par lien |
+| `/blog` + `/blog/[slug]` | Blog | Articles stockés en base (modèle `BlogPost`), recherche, tags, newsletter |
 | `/contact` | Contact | Formulaire (Resend), canaux directs, FAQ |
 
 
@@ -128,7 +142,9 @@ akatech-nextjs/
 
 Widget de chat flottant (bouton bas-gauche — le bas-droit est déjà pris par le bouton WhatsApp), présent sur tout le site public.
 
-**Ce qu'il fait** : répond aux questions sur AKATech, qualifie brièvement le visiteur puis lance le questionnaire de devis adapté (`start_questionnaire`) pour les projets portfolio, vitrine/e-commerce et SaaS. Le prix est calculé après le questionnaire. Pour les besoins hors parcours, il utilise `capture_lead` pour enregistrer le prospect et envoyer un email à l'admin.
+**Ce qu'il fait** : répond aux questions sur AKATech, qualifie brièvement le visiteur puis lance le questionnaire de devis adapté (`start_questionnaire`) pour les projets portfolio, vitrine/e-commerce et SaaS. Pour les besoins hors parcours, il utilise `capture_lead` pour enregistrer le prospect et envoyer un email à l'admin.
+
+**Questionnaire → Devis, jusqu'à la décision** : le questionnaire (rempli sur `/devis/[type]`, dans ou hors du chat) est persisté (modèle `Questionnaire`, lien public via token non devinable). Une fois soumis, `lib/quote-calc.js` classe la demande dans une formule tarifaire (`lib/data.js` → `PRICING`) et un LLM génère une justification lisible (jamais le prix lui-même) ainsi qu'un texte de positionnement optionnel (`lib/market-positioning.js`, Groq) — le tout stocké dans le modèle `Quote`. Un PDF est généré et envoyé par email (`lib/questionnaire-pdf.js`). Le prospect accepte ou décline ensuite le devis (`/api/questionnaire/[token]/decision`) ; une acceptation déclenche un email de confirmation. Le dashboard (onglet **Prospects**) affiche l'ensemble des réponses et décisions.
 
 **Double fournisseur, cascade automatique** :
 ```
@@ -144,7 +160,7 @@ Les deux fournisseurs sont sur des paliers **gratuits** (voir `.env.example`) �
 
 
 
-Fichiers clés : `lib/ai-providers.js` (cascade + rate-limiting, partagé), `lib/assistant.js` (prompt + tool), `app/api/assistant/route.js`, `components/ui/AIAssistant.js`.
+Fichiers clés : `lib/ai-providers.js` (cascade + rate-limiting, partagé), `lib/assistant.js` (prompt + tool), `lib/quote-calc.js` + `lib/market-positioning.js` (classification et argumentaire du devis), `lib/questionnaire-pdf.js` (génération PDF + email), `app/api/assistant/route.js`, `app/api/questionnaire/`, `components/ui/AIAssistant.js`.
 
 ---
 
@@ -160,6 +176,9 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 | `Message` | Chaque tour de la conversation, avec le fournisseur IA utilisé |
 | `Lead` | Prospect capturé par l'assistant — score, statut, notes |
 | `Visitor` / `VisitSession` / `PageView` | Analytics visiteurs pour le dashboard |
+| `Questionnaire` | Réponses au formulaire de devis (`/devis/[type]`) — lien public par token, statut STARTED → SUBMITTED → QUOTED → accepted/declined |
+| `Quote` | Devis généré pour un `Questionnaire` : formule tarifaire, fourchette de prix, justification et argumentaire générés par LLM |
+| `BlogPost` | Articles du blog (titre, contenu, catégorie, image, publication) |
 | `Invoice` | Factures émises par AKATech — créées, modifiées et téléchargées (PNG/PDF) depuis l'onglet **Factures** du dashboard |
 
 > ⚠️ La connexion à la base est **facultative** : sans `DATABASE_URL`, le chat continue de fonctionner normalement (juste sans historique ni dashboard) plutôt que de planter.
@@ -180,7 +199,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 <img src="./public/images/service/creation%20de%20site%20web.webp" alt="Création de site web AKATech" width="720" />
 
 Sites modernes, responsive et optimisés conversion — du portfolio à l'e-commerce.
-**À partir de 100 000 FCFA · 5 à 7 jours**
+**À partir de 150 000 FCFA · 5 à 7 jours**
 
 ### 02 · Cartes Interactives & Dashboards
 <img src="./public/images/service/dasbord.webp" alt="Cartes interactives et dashboards AKATech" width="720" />
@@ -188,94 +207,108 @@ Sites modernes, responsive et optimisés conversion — du portfolio à l'e-comm
 Cartes Mapbox / Leaflet et dashboards de data en temps réel.
 **Sur devis · 7 à 14 jours**
 
-### 03 · API & Backend Robustes
-<img src="./public/images/service/api.webp" alt="API et backend AKATech" width="720" />
-
-API REST sécurisées (Django / Flask), JWT, Mobile Money, déploiement cloud.
-**À partir de 200 000 FCFA · 7 à 14 jours**
-
-### 04 · Maintenance & Support
+### 03 · Maintenance & Support
 <img src="./public/images/service/maintenence.webp" alt="Maintenance et support AKATech" width="720" />
 
 Mises à jour, corrections, sauvegardes, support prioritaire.
 **À partir de 20 000 FCFA/mois**
 
-### 05 · Fiche Google My Business
+### 04 · Fiche Google My Business
 <img src="./public/images/service/fiche-google.webp" alt="Fiche Google Business Profile AKATech" width="720" />
 
 Création ou optimisation, SEO local, suivi mensuel des avis.
 **À partir de 20 000 FCFA · 1 à 2 jours**
 
+### 05 · Intégration IA Chatbot
+<img src="./public/images/service/ia.webp" alt="Chatbot IA AKATech" width="720" />
+
+Assistant conversationnel sur-mesure intégré à votre site — qualification des visiteurs, réponses sur vos services et tarifs, capture de leads 24h/24 (le même type d'assistant que celui d'akatech.vercel.app).
+**Sur devis · 7 à 14 jours**
+
+### 06 · Intégration de Paiement en Ligne
+<img src="./public/images/service/peiement.webp" alt="Paiement en ligne AKATech" width="720" />
+
+Mobile Money (Orange Money, MTN MoMo, Wave) et carte bancaire selon vos besoins, avec suivi des transactions et notifications.
+**Sur devis · 5 à 10 jours**
+
+---
+
+## 🧩 Ce que nous concevons
+
+> Distinct des Services ci-dessus : ces familles décrivent le *type* de projet livré (une même famille peut couvrir plusieurs paliers de prix — voir Tarifs). Source : `WHAT_WE_BUILD` dans `lib/data.js`.
+
+| Famille | Pour | Exemples |
+|---|---|---|
+| 🌐 Sites vitrines & sites métier | Présenter une activité, convertir les visiteurs | MD Laverie Pressing, Chez Florence |
+| 🛒 E-commerce | Vendre en ligne (catalogue, panier, Mobile Money, stock) | ShopCI, ElvisMarket |
+| 📅 Réservation & rendez-vous | Réserver sans appeler (résidences, salons, véhicules…) | New Horizon Service |
+| 🏢 Plateformes & marketplaces | Multi-utilisateurs, géolocalisation, KYC, paiements répartis | Nexura |
+| 🧾 Gestion commerciale & facturation | Devis, factures (TVA, numérotation auto), export PDF | *(à venir)* |
+| ⚙️ Applications web & outils métier | Dashboard, CRM, stocks, suivi logistique, SaaS sur-mesure | MonCashJour, LivreurTrack Pro |
+| 🧮 POS & caisse | Encaissement et caisse physique | *(bientôt disponible)* |
+
 ---
 
 ## 🤝 Processus de travail
 
-<img src="./public/images/process/prise%20de%20contact.webp" alt="Prise de contact AKATech" width="720" />
+> Les 6 étapes du contrat de prestation AKATech — source canonique : `PROCESS_STEPS` dans `lib/data.js`.
 
-### 01 · Prise de contact
-On vous écoute : vous présentez votre activité, vos objectifs et votre besoin. Le premier échange est gratuit et sans engagement.
+<img src="./public/images/process/prise%20de%20contact.webp" alt="Brief et découverte AKATech" width="720" />
 
-<img src="./public/images/process/devis%20et%20condition.webp" alt="Devis et conditions AKATech" width="720" />
+### 01 · Brief & découverte
+Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échange gratuit et sans engagement.
 
-### 02 · Devis & conditions
-Nous vous envoyons un devis détaillé avec la solution proposée, les technologies, le périmètre, le délai et les conditions.
+<img src="./public/images/process/devis%20et%20condition.webp" alt="Devis et contrat AKATech" width="720" />
 
-<img src="./public/images/process/acompte.webp" alt="Acompte de démarrage AKATech" width="720" />
+### 02 · Devis & contrat
+Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble.
 
-### 03 · Acompte de démarrage
-Un acompte de 50 % confirme la commande et permet de lancer le projet dans un cadre clair.
+<img src="./public/images/process/acompte.webp" alt="Acompte et contenus AKATech" width="720" />
 
-<img src="./public/images/process/creation%20du%20site.webp" alt="Création du site AKATech" width="720" />
+### 03 · Acompte & contenus
+Vous versez 50 % d'acompte et transmettez les éléments nécessaires (logo, informations, visuels...). Le délai démarre lorsque l'acompte et les contenus sont reçus.
 
-### 04 · Création du site
-Nous concevons et développons le site sur mesure : architecture, design responsive, contenu, animations, fonctionnalités et intégrations prévues au devis.
+<img src="./public/images/process/creation%20du%20site.webp" alt="Conception et développement AKATech" width="720" />
 
-<img src="./public/images/process/livraison.webp" alt="Livraison pour validation AKATech" width="720" />
+### 04 · Conception & développement
+Nous concevons et développons votre projet conformément au devis.
 
-### 05 · Livraison pour validation
-Vous recevez un lien de prévisualisation pour tester le site, demander vos retours et valider le résultat avant la mise en ligne définitive.
+<img src="./public/images/process/livraison.webp" alt="Prévisualisation et validation AKATech" width="720" />
 
-<img src="./public/images/process/solde.webp" alt="Solde et transmission des fichiers AKATech" width="720" />
+### 05 · Prévisualisation & validation
+Vous recevez un lien de prévisualisation, testez le projet, et nous effectuons les corrections mineures incluses.
 
-### 06 · Solde & transmission
-Une fois le projet validé, le solde est réglé. Les fichiers sources, les accès à l’hébergement et au domaine ainsi que les informations d’administration sont transmis.
+<img src="./public/images/process/mise%20en%20ligne.webp" alt="Livraison et suivi AKATech" width="720" />
 
-<img src="./public/images/process/mise%20en%20ligne.webp" alt="Mise en ligne et support AKATech" width="720" />
-
-### 07 · Mise en ligne & support
-Le site est publié. Une période de suivi accompagne le démarrage et les corrections de bugs liées à la livraison sont prises en charge gratuitement pendant le mois suivant.
+### 06 · Livraison & suivi
+Après paiement du solde, le projet est mis en ligne et les accès sont transmis. La période de garantie/support commence ensuite.
 
 ---
 
 ## 💰 Tarifs AKATech
 
-> Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine + hébergement offerts la 1ère année sur la majorité des formules
-
-### 🎨 Portfolio
-| Formule | Prix | Délai |
-|---|---|---|
-| STARTER | 100 000 FCFA | 3 à 5 jours |
-| **STANDARD** ⭐ | 175 000 FCFA | 5 à 7 jours |
-| PREMIUM | 275 000 FCFA | 7 à 10 jours |
+> Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine + hébergement offerts la 1ère année sur la majorité des formules. Le Portfolio n'a plus de grille dédiée : il applique la grille Site Vitrine.
 
 ### 🖥️ Site Vitrine
 | Formule | Prix | Délai |
 |---|---|---|
-| STARTER | 220 000 FCFA | 5 à 7 jours |
-| **PRO** ⭐ | 350 000 FCFA | 7 à 10 jours |
-| ELITE | 550 000 FCFA | 10 à 14 jours |
+| LANDING | 150 000 FCFA | 5 à 7 jours |
+| **STARTER** ⭐ | 250 000 FCFA | 7 à 10 jours |
+| PREMIUM | 550 000 FCFA | 10 à 14 jours |
 
 ### 🛒 E-commerce
 | Formule | Prix | Délai |
 |---|---|---|
-| STARTER | 450 000 FCFA | 14 jours |
-| **PRO** ⭐ | 750 000 FCFA | 21 jours |
-| ELITE | 1 200 000 FCFA | 30 jours |
+| STARTER | 450 000 FCFA | 1 mois à 1 mois 2 semaines |
+| **PRO** ⭐ | 750 000 FCFA | 1 mois à 1 mois 2 semaines |
+| ELITE | 1 500 000 FCFA | 1 mois à 1 mois 2 semaines |
 
 ### ⚙️ App Web / SaaS
 | Formule | Prix | Délai |
 |---|---|---|
-| SUR DEVIS | Étude personnalisée | Diagnostic gratuit sous 48h |
+| MVP / Outil métier | 600 000 – 1 000 000 FCFA | 3 à 5 semaines |
+| **Plateforme + abonnement** ⭐ | 1 200 000 – 2 200 000 FCFA | 6 à 10 semaines |
+| Marketplace multi-acteurs | 2 500 000 – 4 500 000 FCFA | 10 à 16 semaines |
 
 ### 📍 Fiche Google My Business
 | Formule | Prix | Délai |
@@ -371,6 +404,8 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 
 - **Tunnel 3D WebGL** (`/explorer`) — Three.js + GSAP ScrollTrigger, parcourt les 19 projets, textures = vraies captures d'écran
 - **Thème clair/sombre** en transition circulaire via **View Transitions API** (repli instantané si non supporté)
+- **Bilingue FR/EN** — sélecteur navbar, persisté en `localStorage`, ~200 clés de traduction (`lib/language.js`)
+- **Devis en ligne** (`/devis/[type]`) — questionnaire dynamique, classification tarifaire et argumentaire générés par LLM, PDF envoyé par email, décision (accepter/décliner) trackée — voir section Assistant IA
 - **SEO structuré JSON-LD** (`ProfessionalService`) pensé SEO + AEO + GEO — citable par Google AI Overviews et les LLM
 - **`public/llms.txt`** — résumé structuré du site (services, tarifs, pages, contact) au format markdown conventionnel, pour que les LLM (ChatGPT, Perplexity, Claude…) décrivent Studio. avec des informations à jour plutôt que des suppositions
 - **Footer "Demander à l'IA"** — liens pré-remplis vers ChatGPT, Claude, Perplexity, Gemini, Grok
@@ -380,15 +415,6 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Factures** (`/dashboard`, onglet Factures) — création, historique et export PNG/PDF (html2canvas + jsPDF, générés à la demande depuis les données de la facture, rien n'est stocké en fichier) ; totaux toujours recalculés côté serveur avant écriture en base
 
 
-
----
-
-## 🤝 Processus de travail
-
-1. **On vous écoute** — devis gratuit sous 24h, sans engagement
-2. **On planifie** — techno, design, délais définis ensemble
-3. **On développe** — acompte de 50%, suivi régulier, lien de prévisualisation avant mise en ligne
-4. **On livre & on forme** — solde à la livraison, accès transmis, corrections de bugs gratuites le mois suivant
 
 ---
 
