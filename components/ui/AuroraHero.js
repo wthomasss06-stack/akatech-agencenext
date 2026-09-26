@@ -193,14 +193,6 @@ export default function AuroraHero({ labels = [], overlay = 0.50 }) {
         }}
       />
 
-      {/* ── Ligne de scan — émeraude ── */}
-      <div style={{
-        position: 'absolute', left: 0, right: 0, height: 1,
-        background: 'linear-gradient(90deg,transparent,rgba(136,202,83,.45),rgba(102,255,170,.6),rgba(136,202,83,.45),transparent)',
-        animation: 'dither-scan 9s linear infinite',
-        pointerEvents: 'none', zIndex: 2,
-      }} />
-
       {/* ── Overlay dégradé — isole la navbar en haut ── */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none',
@@ -258,10 +250,6 @@ export default function AuroraHero({ labels = [], overlay = 0.50 }) {
 
       {/* ── Keyframes ── */}
       <style>{`
-        @keyframes dither-scan {
-          0%   { top: -2%; }
-          100% { top: 104%; }
-        }
         @keyframes dot-blink {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0.3; }

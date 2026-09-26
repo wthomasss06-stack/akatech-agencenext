@@ -253,7 +253,7 @@ function Hero() {
     <section id="home-hero" style={{ height: `${HERO_VH}dvh`, maxHeight: `${HERO_VH}dvh`, width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806', paddingBottom: 'clamp(140px, 15vh, 180px)' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <img src={cld('/images/hero-bg.webp')} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        <img src="/images/hero/home-desktop-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
         <motion.div
@@ -267,13 +267,6 @@ function Hero() {
         />
         <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .13, pointerEvents: 'none' }} />
 
-      </div>
-
-      {/* Décor maximalisme pop vitaminé — texture demi-teinte, purement
-          décorative (pointer-events none), au-dessus du fond photo mais
-          sous le bloc de contenu (z-index 10). */}
-      <div aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 3, pointerEvents: 'none', overflow: 'hidden' }}>
-        <div className="halftone-bg" style={{ position: 'absolute', top: 0, right: 0, width: '45%', height: '55%', opacity: .14, WebkitMaskImage: 'radial-gradient(circle at 100% 0%, black, transparent 70%)', maskImage: 'radial-gradient(circle at 100% 0%, black, transparent 70%)' }} />
       </div>
 
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '3rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>

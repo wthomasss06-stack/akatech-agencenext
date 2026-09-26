@@ -145,14 +145,14 @@ export default function CardNav() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const toggle = () => {
+  // Le panel se déploie désormais au survol (hover) du curseur sur la
+  // barre de nav — plus de bouton hamburger à cliquer.
+  const openNav = () => {
     const tl = tlRef.current
-    if (!tl) return
-    const next = !openRef.current
-    openRef.current = next
-    if (next) tl.play()
-    else tl.reverse()
-    setOpen(next)
+    if (!tl || openRef.current) return
+    openRef.current = true
+    tl.play()
+    setOpen(true)
   }
 
   const closeNav = () => {
@@ -164,11 +164,10 @@ export default function CardNav() {
 
   return (
     <div className="aka-nav-container">
-      <nav ref={navRef} className={'aka-card-nav' + (open ? ' is-open' : '')} style={{
+      <nav ref={navRef} className={'aka-card-nav' + (open ? ' is-open' : '')} onMouseEnter={openNav} onMouseLeave={closeNav} style={{
         '--nav-bg': open ? (T.light ? 'rgba(248,248,248,0.88)' : 'rgba(6,14,9,0.85)') : 'transparent',
         '--nav-blur': open ? 'blur(20px) saturate(160%)' : 'none',
         
-        '--nav-hline': '#88ca53',
         '--nav-btn-border': !open ? 'rgba(255,255,255,0.3)' : 'rgba(242,237,232,.15)',
         '--nav-btn-bg': !open ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,.05)',
         '--nav-btn-color': '#88ca53',
@@ -185,10 +184,7 @@ export default function CardNav() {
         '--theme-green': T.green,
       }}>
         <div className="aka-nav-top">
-          <button className={'aka-hamburger' + (open ? ' open' : '')} onClick={toggle} aria-label="Menu" type="button">
-            <div className="aka-hline" />
-            <div className="aka-hline" />
-          </button>
+          <div className="aka-hamburger" aria-hidden="true" />
 
           <TransitionLink href="/" className="aka-nav-logo" onClick={closeNav}>
             <Image src="/images/logo.webp" alt="AKATech" width={47} height={50} style={{ objectFit: 'contain' }} priority />

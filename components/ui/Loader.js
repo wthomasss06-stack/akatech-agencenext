@@ -205,11 +205,11 @@ export default function Loader() {
             overflow: 'hidden',
           }}
         >
-          {/* Calque fond — couleur + grid + glow + scan-line. C'est CE
-              calque qui se fait percer d'un trou transparent pendant le
-              collapse (via mask-image), pas le wrapper racine : du coup
-              le Hero (monté en dessous, derrière tout ça) devient
-              visible à travers le trou dès qu'il s'ouvre. */}
+          {/* Calque fond — couleur + grid + glow. C'est CE calque qui se
+              fait percer d'un trou transparent pendant le collapse (via
+              mask-image), pas le wrapper racine : du coup le Hero (monté
+              en dessous, derrière tout ça) devient visible à travers le
+              trou dès qu'il s'ouvre. */}
           <div ref={bgLayerRef} style={{ position: 'absolute', inset: 0, background: '#030806' }}>
             {/* Grid bg */}
             <div style={{
@@ -226,14 +226,6 @@ export default function Loader() {
               borderRadius: '50%',
               background: 'radial-gradient(circle, rgba(136,202,83,.12) 0%, transparent 65%)',
               animation: 'glow-pulse 2s ease-in-out infinite',
-              pointerEvents: 'none',
-            }} />
-
-            {/* Bottom scan line */}
-            <div style={{
-              position: 'absolute', left: 0, right: 0, height: 1,
-              background: 'linear-gradient(90deg,transparent,rgba(136,202,83,.4),transparent)',
-              animation: 'scan-line 2s ease-in-out infinite',
               pointerEvents: 'none',
             }} />
           </div>

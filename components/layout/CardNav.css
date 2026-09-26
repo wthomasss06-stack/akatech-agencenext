@@ -36,18 +36,8 @@ nav.aka-card-nav {
 
 .aka-hamburger {
   justify-self: start;
-  width: 24px; height: 15px; cursor: pointer;
-  display: flex; flex-direction: column; justify-content: space-between;
-  z-index: 10; background: none; border: none; padding: 0;
+  width: 24px; height: 15px;
 }
-.aka-hline {
-  width: 100%; height: 1.5px;
-  background: var(--nav-hline);
-  transition: transform 0.35s cubic-bezier(0.77,0,0.175,1), opacity 0.3s, background 0.4s;
-  border-radius: 2px; transform-origin: center;
-}
-.aka-hamburger.open .aka-hline:nth-child(1) { transform: translateY(6.75px) rotate(45deg); background: #c6ff3d; }
-.aka-hamburger.open .aka-hline:nth-child(2) { transform: translateY(-8.25px) rotate(-45deg); background: #c6ff3d; }
 
 .aka-nav-logo {
   justify-self: center;
