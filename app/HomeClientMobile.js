@@ -13,6 +13,7 @@ import {
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
@@ -319,9 +320,7 @@ function Hero() {
     <section id="home-hero" style={{ height: '100dvh', maxHeight: '100dvh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <img src={cld('/images/hero-bg.webp')} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
+        <img src="/images/hero/home-mobile-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <motion.div
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
           animate={{ background: [
@@ -388,10 +387,6 @@ function Hero() {
             style={{ display: 'inline-flex', alignItems: 'center', fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: '1.05rem', textTransform: 'uppercase', letterSpacing: '-.01em', color: '#c6ff3d', background: 'transparent', border: '3px solid #c6ff3d', borderRadius: 999, padding: 'calc(1rem - 3px) calc(2.1rem - 3px)' }}>
             <HoverSlideText text={t('heroBookCall')} />
           </motion.a>
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .55 }} style={{ paddingTop: '2.8rem' }}>
-          <CircularProjectsGallery />
         </motion.div>
       </div>
 
@@ -1192,6 +1187,7 @@ function ProjectFormHome() {
       const res = await fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, projectType: form.service }) })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || t('formErrorGeneric'))
+      trackAction('contact_submit')
       setSent(true)
     } catch (err) {
       setError(err.message || t('formErrorGeneric'))

@@ -32,91 +32,10 @@ const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPi
 
 // ── HERO (inchangé) ───────────────────────────────────────────
 // ── CIRCULAR PROJECTS GALLERY (inspiré Aeline/Catalis) ────────
-function CircularProjectsGallery() {
-  const T = useTheme()
-  // 6 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
-  // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
-  const GALLERY_ITEMS = PROJECTS.filter(p => p.id >= 19 && p.id <= 24)
-  const [active, setActive] = useState(0)
-  const reduceMotion = useReducedMotion()
-
-  useEffect(() => {
-    if (reduceMotion) return // pas de rotation auto si l'utilisateur préfère moins de mouvement
-    const id = setInterval(() => setActive(a => (a + 1) % GALLERY_ITEMS.length), 2800)
-    return () => clearInterval(id)
-  }, [GALLERY_ITEMS.length, reduceMotion])
-
-  // Position relative de chaque carte par rapport à `active` (-2..-1..0..1..2)
-  const order = GALLERY_ITEMS.map((_, i) => {
-    let rel = i - active
-    if (rel > GALLERY_ITEMS.length / 2) rel -= GALLERY_ITEMS.length
-    if (rel < -GALLERY_ITEMS.length / 2) rel += GALLERY_ITEMS.length
-    return rel
-  })
-
-  // Ratio natif 1600×815 ≈ 1.96:1
-  const CARD_W = 340
-  const CARD_H = Math.round(340 * (815 / 1600))  // ≈ 173px
-  const STEP   = CARD_W * 0.72                    // espacement entre centres
-
-  return (
-    <div style={{ position: 'relative', height: CARD_H + 60, width: '100%', maxWidth: '100vw', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 1200 }}>
-      {GALLERY_ITEMS.map((p, i) => {
-        const rel    = order[i]
-        const abs    = Math.abs(rel)
-        const x      = rel * STEP
-        const y      = abs * 14
-        const rot    = rel * 8
-        const scale  = 1 - abs * 0.13
-        const opacity = abs > 2 ? 0 : 1 - abs * 0.18
-        const isActive = rel === 0
-
-        return (
-          <motion.div key={p.id}
-            animate={{ x, y, rotate: rot, scale, opacity }}
-            transition={{ duration: .9, ease: [.22,1,.36,1] }}
-            onClick={() => setActive(i)}
-            style={{
-              position: 'absolute',
-              width: CARD_W,
-              height: CARD_H,
-              borderRadius: 10,
-              overflow: 'hidden',
-              zIndex: 10 - abs,
-              cursor: 'pointer',
-              border: isActive
-                ? '1.5px solid rgba(136,202,83,.6)'
-                : '1px solid rgba(255,255,255,.1)',
-              boxShadow: isActive
-                ? '0 0 0 3px rgba(136,202,83,.15), 0 12px 36px rgba(0,0,0,.6)'
-                : '0 6px 20px rgba(0,0,0,.4)',
-              transformStyle: 'preserve-3d',
-            }}>
-            <LazyImg
-              src={p.img}
-              alt={p.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' }}
-            />
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: isActive
-                ? 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.8) 100%)'
-                : 'linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.65) 100%)',
-            }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.7rem 1rem' }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}><HoverSlideText text={p.title} /></div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(136,202,83,.9)', marginTop: '.1rem' }}>{p.type}</div>
-            </div>
-          </motion.div>
-        )
-      })}
-    </div>
-  )
-}
-
-// Hauteur du Hero en dvh — volontairement < 100 pour laisser apparaître
-// un aperçu de la CIRCULAR PROJECTS GALLERY en bas de viewport sur desktop.
-const HERO_VH = 92
+// Hauteur du Hero en dvh — plein écran (la Circular Projects Gallery qui
+// était ancrée au bas du Hero a été retirée : elle fait doublon avec la
+// section "Nos dernières réalisations" plus bas dans la page).
+const HERO_VH = 100
 
 function HeroSlogan() {
   const { t } = useLanguage()
@@ -175,7 +94,6 @@ function Hero() {
   const layerBgRef  = useRef(null)
   const layerMidRef = useRef(null)
   const layerForeRef = useRef(null)
-  const galleryRef  = useRef(null)
 
   useEffect(() => {
     const onMouse = (e) => {
@@ -195,7 +113,6 @@ function Hero() {
       }
       apply(layerBgRef.current,   0.2)
       apply(layerMidRef.current,  0.5, true)
-      apply(galleryRef.current,   0.5, true)
       apply(layerForeRef.current, 0.8)
     }
     window.addEventListener('mousemove', onMouse)
@@ -238,9 +155,6 @@ function Hero() {
         if (layerForeRef.current) {
           layerForeRef.current.style.opacity = String(Math.max(0, 1 - progress * 2.2))
         }
-        if (galleryRef.current) {
-          galleryRef.current.style.opacity = String(Math.max(0, 1 - progress * 1.25))
-        }
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -250,7 +164,7 @@ function Hero() {
 
   return (
     <div ref={wrapRef} style={{ position: 'relative', height: `${HERO_VH + 200}dvh` }}>
-    <section id="home-hero" style={{ height: `${HERO_VH}dvh`, maxHeight: `${HERO_VH}dvh`, width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806', paddingBottom: 'clamp(140px, 15vh, 180px)' }}>
+    <section id="home-hero" style={{ height: `${HERO_VH}dvh`, maxHeight: `${HERO_VH}dvh`, width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <img src="/images/hero/home-desktop-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
@@ -328,19 +242,6 @@ function Hero() {
         </motion.div>
 
         
-      </div>
-
-      {/* Aperçu de la CIRCULAR PROJECTS GALLERY — ancrée au bas du Hero,
-          indépendante du centrage du bloc titre/sous-titre/avatars/CTA
-          ci-dessus : reste toujours visible en partie quelle que soit
-          la hauteur de ce bloc ou du viewport. Div simple (comme
-          layerMidRef) pour porter les mutations impératives parallax/
-          scroll sans entrer en conflit avec l'anim Framer d'entrée,
-          isolée sur le motion.div enfant. */}
-      <div ref={galleryRef} style={{ position: 'absolute', left: 0, right: 0, bottom: '-78px', zIndex: 11, willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .45 }}>
-          <CircularProjectsGallery />
-        </motion.div>
       </div>
 
       <div ref={layerForeRef} style={{ position: 'absolute', inset: 0, zIndex: 20, pointerEvents: 'none', willChange: 'transform, opacity', transition: 'transform .1s ease-out' }}>
@@ -1037,11 +938,11 @@ function ArchiveTunnelSection() {
           </Link>
           <div style={{ display: 'flex', gap: '.6rem' }}>
             <button type="button" onClick={() => nudge(-1)} aria-label="Précédent"
-              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.surface, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.card, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <ChevronLeft size={18} />
             </button>
             <button type="button" onClick={() => nudge(1)} aria-label="Suivant"
-              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.surface, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.card, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
               <ChevronRight size={18} />
             </button>
           </div>
@@ -1068,7 +969,7 @@ function ArchiveTunnelSection() {
                 overflow: 'hidden',
                 border: '1px solid rgba(136,202,83,.25)',
                 boxShadow: '0 28px 70px rgba(0,0,0,.22)',
-                background: T.surface,
+                background: T.card,
                 position: 'relative',
                 flexShrink: 0,
               }}
@@ -1089,7 +990,7 @@ function ArchiveTunnelSection() {
                   )}
                 </div>
               </div>
-              <div style={{ padding: '1rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', gap: '.25rem', background: T.surface }}>
+              <div style={{ padding: '1rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', gap: '.25rem', background: T.card }}>
                 <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain, letterSpacing: '-.01em' }}>
                   {p.title}
                 </div>

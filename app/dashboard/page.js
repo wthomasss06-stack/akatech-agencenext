@@ -434,6 +434,11 @@ export default function DashboardPage() {
   const [leadPage, setLeadPage] = useState(1)
   const [leadPagination, setLeadPagination] = useState(null)
   const [leadSearch, setLeadSearch] = useState('')
+  // Pagination "Visiteurs récurrents" — côté client : getTopVisitors renvoie
+  // déjà tout le tableau trié (voir note dans app/api/stats/route.js), donc
+  // changer de page ne coûte aucun aller-retour réseau.
+  const [visitorsPage, setVisitorsPage] = useState(1)
+  const VISITORS_PER_PAGE = 20
   const [leadStatusFilter, setLeadStatusFilter] = useState('')
 
   const [prospects, setProspects] = useState([])
@@ -859,8 +864,9 @@ export default function DashboardPage() {
                   {v.topVisitors.length === 0 ? (
                     <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de visiteurs récurrents</div>
                   ) : (
+                    <>
                     <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      {v.topVisitors.map((tv) => (
+                      {v.topVisitors.slice((visitorsPage - 1) * VISITORS_PER_PAGE, visitorsPage * VISITORS_PER_PAGE).map((tv) => (
                         <button
                           key={tv.id}
                           onClick={() => openJourney(tv)}
@@ -881,6 +887,12 @@ export default function DashboardPage() {
                         </button>
                       ))}
                     </div>
+                    <Pagination
+                      pagination={{ page: visitorsPage, pages: Math.ceil(v.topVisitors.length / VISITORS_PER_PAGE) }}
+                      onPage={setVisitorsPage}
+                      T={T}
+                    />
+                    </>
                   )}
                 </div>
               </div>

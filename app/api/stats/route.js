@@ -37,7 +37,12 @@ export async function GET() {
       getVisitorStats(30),
       getTodayAiUsage(),
       getActionStats(30),
-      getTopVisitors(30),
+      getTopVisitors(30, 200), // limite haute (au lieu de 15) : la pagination
+                               // se fait côté client sur ce tableau déjà en
+                               // mémoire — la requête complète est de toute
+                               // façon exécutée avant le slice(0, limit) dans
+                               // getTopVisitors, donc pas de coût réseau
+                               // supplémentaire à changer de page.
     ])
 
     return NextResponse.json({

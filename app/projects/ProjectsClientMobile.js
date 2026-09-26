@@ -102,9 +102,12 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
     }
   }
 
+  // Profondeur de la pile rendue uniquement par échelle/décalage/z-index —
+  // jamais par l'opacité : une carte en retrait garde opacity:1 (fond
+  // .sku-card opaque) pour ne pas laisser transparaître la carte suivante
+  // en surimpression derrière l'active.
   const stackScale = 1 - abs * 0.055
   const stackY = abs * 14
-  const stackOpacity = 1 - abs * 0.4
 
   return (
     <motion.div
@@ -112,7 +115,7 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
       dragElastic={0.65}
       dragConstraints={{ left: 0, right: 0 }}
       onDragEnd={isActive ? handleDragEnd : undefined}
-      animate={isActive ? controls : { x: 0, y: stackY, scale: stackScale, opacity: stackOpacity, rotate: 0 }}
+      animate={isActive ? controls : { x: 0, y: stackY, scale: stackScale, opacity: 1, rotate: 0 }}
       initial={false}
       transition={{ duration: .4, ease: [.22, 1, .36, 1] }}
       style={{
