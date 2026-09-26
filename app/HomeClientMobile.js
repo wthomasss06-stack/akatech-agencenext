@@ -13,7 +13,6 @@ import {
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
-import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
@@ -83,7 +82,7 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
 }
 
 // ── CIRCULAR PROJECTS GALLERY — adapté mobile (ratio 16:9, largeur réduite) ──
-function CircularProjectsGallery({ items, draggable = false, cardW = 220, intervalMs = 2800 }) {
+function CircularProjectsGallery({ items, draggable = false, cardW = 250, intervalMs = 2800 }) {
   const T = useTheme()
   // 6 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
   // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
@@ -320,7 +319,7 @@ function Hero() {
     <section id="home-hero" style={{ height: '100dvh', maxHeight: '100dvh', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#030806' }}>
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
-        <img src="/images/hero/home-mobile-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        <img src={cld('/images/hero-bg.webp')} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.95) 0%, rgba(3,8,6,.78) 45%, rgba(3,8,6,.28) 100%)' }} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 15%, rgba(3,8,6,.92) 100%)' }} />
         <motion.div
@@ -825,7 +824,7 @@ function ProjectsSection() {
       </motion.div>
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }} style={{ position: 'relative', zIndex: 1 }}>
-        <CircularProjectsGallery items={ITEMS} draggable cardW={260} intervalMs={3400} />
+        <CircularProjectsGallery items={ITEMS} draggable cardW={290} intervalMs={3400} />
       </motion.div>
 
       {/* CTA */}
@@ -1193,7 +1192,6 @@ function ProjectFormHome() {
       const res = await fetch('/api/contact/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, projectType: form.service }) })
       const data = await res.json()
       if (!res.ok) throw new Error(data?.error || t('formErrorGeneric'))
-      trackAction('contact_submit')
       setSent(true)
     } catch (err) {
       setError(err.message || t('formErrorGeneric'))
