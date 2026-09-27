@@ -321,6 +321,10 @@ function Hero() {
 
       <div ref={layerBgRef} style={{ position: 'absolute', zIndex: 1, width: '115%', height: '115%', willChange: 'transform, filter', transition: 'transform .1s ease-out', pointerEvents: 'none' }}>
         <img src="/images/hero/home-mobile-bg.webp" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} />
+        {/* Voile léger — juste ce qu'il faut pour lire le texte du Hero
+            par-dessus l'image (≈ moitié de l'opacité de la version desktop) */}
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(105deg, rgba(3,8,6,.55) 0%, rgba(3,8,6,.4) 45%, rgba(3,8,6,.12) 100%)' }} />
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 25%, rgba(3,8,6,.6) 100%)' }} />
         <motion.div
           style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
           animate={{ background: [
