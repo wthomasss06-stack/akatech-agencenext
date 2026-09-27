@@ -958,3 +958,21 @@ body.light-mode .process-sticky-card-6 { background: linear-gradient(160deg,#102
   .view-desktop { display: none !important;  }
   .view-mobile  { display: block !important; }
 }
+
+/* ══════════════════════════════════════════════
+   ADMIN — grille BlogTab (formulaire + liste)
+   2 colonnes sur desktop, empilé sur mobile —
+   corrige le chevauchement des panneaux constaté
+   sous ~900px (le 2e track gardait un minimum de
+   280px alors que le 1er était compressible à 0,
+   donc le formulaire débordait dessous la liste).
+══════════════════════════════════════════════ */
+.bt-blog-grid {
+  display: grid;
+  gap: 16px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+}
+@media (max-width: 900px) {
+  .bt-blog-grid { grid-template-columns: 1fr; }
+}
