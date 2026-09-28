@@ -976,3 +976,15 @@ body.light-mode .process-sticky-card-6 { background: linear-gradient(160deg,#102
 @media (max-width: 900px) {
   .bt-blog-grid { grid-template-columns: 1fr; }
 }
+
+/* Paires de champs courtes du formulaire Factures (N°/réf, dates,
+   téléphone/email, qté/prix, acompte/devise) — 2 colonnes tant qu'il y
+   a la place, empilées sur mobile plutôt que compressées à ~150px. */
+.bt-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+@media (max-width: 480px) {
+  .bt-field-row { grid-template-columns: 1fr; }
+}

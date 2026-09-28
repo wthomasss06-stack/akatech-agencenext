@@ -231,7 +231,7 @@ function ProspectDetailModal({ prospect, onClose, onStatus, onDelete, saving, T 
             <div style={{ fontWeight: 800, color: T.textMain }}>{prospect.contactName || 'Prospect sans nom'}</div>
             <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 3 }}>{prospect.contactHandle || 'Contact non renseigné'} · {prospect.type}</div>
           </div>
-          <button onClick={onClose} aria-label="Fermer le prospect" style={{ background: 'none', border: 'none', color: T.textSub, cursor: 'pointer', padding: 8 }}><X size={20} /></button>
+          <button onClick={onClose} aria-label="Fermer le prospect" className="btn-ghost btn-sm" style={{ padding: '.4rem', borderRadius: '50%' }}><X size={18} /></button>
         </div>
         <div style={{ padding: '1.2rem 1.3rem', overflowY: 'auto' }}>
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 10, marginBottom: 16 }}>
@@ -239,7 +239,7 @@ function ProspectDetailModal({ prospect, onClose, onStatus, onDelete, saving, T 
             <select value={prospect.status} disabled={saving} onChange={(e) => onStatus(prospect.id, e.target.value)} style={{ background: T.card, border: `1px solid ${T.border}`, borderRadius: 8, padding: '.4rem .6rem', color: T.textMain, fontSize: '.78rem' }}>
               {['STARTED', 'SUBMITTED', 'QUOTED', 'ACCEPTED', 'DECLINED'].map((status) => <option key={status} value={status}>{STATUS_LABELS[status] || status}</option>)}
             </select>
-            <button type="button" onClick={() => onDelete(prospect)} title="Supprimer ce prospect" style={{ marginLeft: 'auto', background: 'none', border: 'none', color: '#d93025', cursor: 'pointer', padding: 8 }}><Trash2 size={16} /></button>
+            <button type="button" onClick={() => onDelete(prospect)} title="Supprimer ce prospect" className="btn-ghost btn-sm" style={{ marginLeft: 'auto', padding: '.4rem .6rem', color: '#e05e5e', borderColor: '#e05e5e' }}><Trash2 size={14} /></button>
           </div>
           {prospect.quote && (
             <div style={{ background: T.light ? 'rgba(95,145,55,.08)' : 'rgba(136,202,83,.08)', border: `1px solid ${T.border2}`, borderRadius: 10, padding: '.8rem 1rem', marginBottom: 16 }}>

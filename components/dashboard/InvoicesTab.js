@@ -56,18 +56,6 @@ function inputStyle(T) {
   }
 }
 
-function iconBtnStyle(T) {
-  return { background: 'none', border: 'none', cursor: 'pointer', flexShrink: 0, color: T.textMuted, padding: 6, display: 'flex', borderRadius: 8 }
-}
-
-function downloadBtnStyle(T, primary) {
-  return {
-    flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
-    padding: '.6rem 1rem', borderRadius: 10, fontSize: '.78rem', fontWeight: 700, cursor: 'pointer', border: 'none',
-    background: primary ? T.green : T.tabRail, color: primary ? '#08120a' : T.textMain,
-  }
-}
-
 export default function InvoicesTab({ T, CARD }) {
   const [view, setView] = useState('list') // 'list' | 'form'
   const [invoices, setInvoices] = useState([])
@@ -309,18 +297,18 @@ export default function InvoicesTab({ T, CARD }) {
   if (view === 'form') {
     return (
       <div>
-        <button onClick={backToList} style={{ background: 'none', border: 'none', color: T.textSub, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, fontSize: '.8rem', fontWeight: 700, padding: '.4rem 0', marginBottom: 12 }}>
+        <button onClick={backToList} className="btn-ghost btn-sm" style={{ marginBottom: 12 }}>
           <ArrowLeft size={15} /> Retour aux factures
         </button>
 
         <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', alignItems: 'flex-start' }}>
           {/* Formulaire */}
           <div style={{ ...CARD, padding: '1.2rem', flex: '1 1 340px', minWidth: 300, display: 'flex', flexDirection: 'column', gap: 10 }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div className="bt-field-row">
               <Field T={T} label="N° Facture"><input value={form.number} onChange={e => updateField('number', e.target.value)} style={inputStyle(T)} /></Field>
               <Field T={T} label="Réf. contrat"><input value={form.contractRef} onChange={e => updateField('contractRef', e.target.value)} style={inputStyle(T)} /></Field>
             </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div className="bt-field-row">
               <Field T={T} label="Date d'émission"><input type="date" value={form.issueDate} onChange={e => updateField('issueDate', e.target.value)} style={inputStyle(T)} /></Field>
               <Field T={T} label="Date d'échéance"><input type="date" value={form.dueDate} onChange={e => updateField('dueDate', e.target.value)} style={inputStyle(T)} /></Field>
             </div>
@@ -328,7 +316,7 @@ export default function InvoicesTab({ T, CARD }) {
             <div style={{ fontSize: '.7rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.05em', color: T.green, marginTop: 8 }}>Client</div>
             <Field T={T} label="Nom / Raison sociale"><input value={form.clientName} onChange={e => updateField('clientName', e.target.value)} style={inputStyle(T)} placeholder="Nom complet du client" /></Field>
             <Field T={T} label="Adresse"><textarea value={form.clientAddress} onChange={e => updateField('clientAddress', e.target.value)} style={{ ...inputStyle(T), minHeight: 50, resize: 'vertical' }} /></Field>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div className="bt-field-row">
               <Field T={T} label="Téléphone"><input value={form.clientPhone} onChange={e => updateField('clientPhone', e.target.value)} style={inputStyle(T)} placeholder="+225 XX XX XX XX" /></Field>
               <Field T={T} label="Email"><input value={form.clientEmail} onChange={e => updateField('clientEmail', e.target.value)} style={inputStyle(T)} /></Field>
             </div>
@@ -340,12 +328,12 @@ export default function InvoicesTab({ T, CARD }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6 }}>
                   <span style={{ fontSize: '.72rem', fontWeight: 700, color: T.green }}>Ligne {i + 1}</span>
                   {form.lines.length > 1 && (
-                    <button onClick={() => removeLine(i)} style={{ background: 'none', border: 'none', color: '#e05e5e', cursor: 'pointer', fontSize: '.7rem', fontWeight: 700 }}>Supprimer</button>
+                    <button onClick={() => removeLine(i)} className="btn-ghost btn-sm" style={{ padding: '.25rem .7rem', fontSize: '.7rem', color: '#e05e5e', borderColor: '#e05e5e' }}>Supprimer</button>
                   )}
                 </div>
                 <input value={line.desc} onChange={e => updateLine(i, 'desc', e.target.value)} placeholder="Description de la prestation" style={{ ...inputStyle(T), marginBottom: 6 }} />
                 <input value={line.detail || ''} onChange={e => updateLine(i, 'detail', e.target.value)} placeholder="Détail (optionnel) — ex. 10 pages · SEO avancé · hébergement inclus" style={{ ...inputStyle(T), marginBottom: 6, fontSize: '.75rem', color: T.textSub }} />
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+                <div className="bt-field-row">
                   <Field T={T} label="Qté" small><input type="number" min="0" value={line.qty} onChange={e => updateLine(i, 'qty', e.target.value)} style={inputStyle(T)} /></Field>
                   <Field T={T} label="Prix unitaire" small><input type="number" min="0" value={line.price} onChange={e => updateLine(i, 'price', e.target.value)} style={inputStyle(T)} /></Field>
                 </div>
@@ -364,7 +352,7 @@ export default function InvoicesTab({ T, CARD }) {
               </label>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
+            <div className="bt-field-row">
               <Field T={T} label="Acompte déjà versé"><input type="number" min="0" value={form.deposit} onChange={e => updateField('deposit', e.target.value)} style={inputStyle(T)} /></Field>
               <Field T={T} label="Devise">
                 <select value={form.currency} onChange={e => updateField('currency', e.target.value)} style={inputStyle(T)}>
@@ -387,10 +375,8 @@ export default function InvoicesTab({ T, CARD }) {
 
             {saveError && <div style={{ color: '#e05e5e', fontSize: '.78rem' }}>{saveError}</div>}
 
-            <button onClick={saveInvoice} disabled={saving} style={{
-              marginTop: 4, padding: '.7rem 1rem', background: T.green, color: '#08120a', border: 'none', borderRadius: 10,
-              fontWeight: 800, fontSize: '.85rem', cursor: saving ? 'default' : 'pointer', opacity: saving ? .7 : 1,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            <button onClick={saveInvoice} disabled={saving} className="btn-raised" style={{
+              marginTop: 4, justifyContent: 'center', opacity: saving ? .7 : 1, cursor: saving ? 'default' : 'pointer',
             }}>
               <Save size={15} /> {saving ? 'Enregistrement…' : editingId ? 'Mettre à jour la facture' : 'Enregistrer la facture'}
             </button>
@@ -399,10 +385,10 @@ export default function InvoicesTab({ T, CARD }) {
           {/* Aperçu + téléchargement */}
           <div style={{ flex: '1 1 420px', minWidth: 300 }}>
             <div style={{ display: 'flex', gap: 8, marginBottom: 10 }}>
-              <button onClick={downloadPNG} disabled={exporting !== null} style={downloadBtnStyle(T, false)}>
+              <button onClick={downloadPNG} disabled={exporting !== null} className="btn-ghost btn-sm" style={{ flex: 1, justifyContent: 'center', opacity: exporting !== null ? .7 : 1 }}>
                 <ImageIcon size={14} /> {exporting === 'png' ? 'Génération…' : 'PNG'}
               </button>
-              <button onClick={downloadPDF} disabled={exporting !== null} style={downloadBtnStyle(T, true)}>
+              <button onClick={downloadPDF} disabled={exporting !== null} className="btn-raised btn-sm" style={{ flex: 1, justifyContent: 'center', opacity: exporting !== null ? .7 : 1 }}>
                 <FileText size={14} /> {exporting === 'pdf' ? 'Génération…' : 'PDF'}
               </button>
             </div>
@@ -450,10 +436,7 @@ export default function InvoicesTab({ T, CARD }) {
           <option value="">Tous les statuts</option>
           {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
         </select>
-        <button onClick={openNewInvoice} style={{
-          display: 'flex', alignItems: 'center', gap: 6, background: T.green, color: '#08120a', border: 'none',
-          borderRadius: 10, padding: '.6rem 1rem', fontWeight: 800, fontSize: '.8rem', cursor: 'pointer', flexShrink: 0,
-        }}>
+        <button onClick={openNewInvoice} className="btn-raised btn-sm" style={{ flexShrink: 0 }}>
           <Plus size={15} /> Nouvelle facture
         </button>
       </div>
@@ -485,10 +468,10 @@ export default function InvoicesTab({ T, CARD }) {
               >
                 {Object.keys(STATUS_LABELS).map(s => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
               </select>
-              <button onClick={() => openEditInvoice(inv)} title="Modifier" style={iconBtnStyle(T)}>
+              <button onClick={() => openEditInvoice(inv)} title="Modifier" className="btn-ghost btn-sm" style={{ padding: '.4rem .6rem', flexShrink: 0 }}>
                 <Pencil size={14} />
               </button>
-              <button onClick={() => setDeleteTarget({ id: inv.id, label: `${inv.number} · ${inv.clientName}` })} title="Supprimer" style={iconBtnStyle(T)}>
+              <button onClick={() => setDeleteTarget({ id: inv.id, label: `${inv.number} · ${inv.clientName}` })} title="Supprimer" className="btn-ghost btn-sm" style={{ padding: '.4rem .6rem', flexShrink: 0, color: '#e05e5e', borderColor: '#e05e5e' }}>
                 <Trash2 size={14} />
               </button>
             </div>
@@ -498,13 +481,13 @@ export default function InvoicesTab({ T, CARD }) {
 
       {pagination && pagination.pages > 1 && (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, marginTop: '1.2rem' }}>
-          <button onClick={() => setPage(p => p - 1)} disabled={pagination.page <= 1}
-            style={{ background: 'none', border: `1px solid ${T.border}`, borderRadius: 8, padding: 10, minWidth: 40, minHeight: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.textMain, cursor: pagination.page <= 1 ? 'default' : 'pointer', opacity: pagination.page <= 1 ? .4 : 1 }}>
+          <button onClick={() => setPage(p => p - 1)} disabled={pagination.page <= 1} className="btn-ghost btn-sm"
+            style={{ padding: '.5rem .7rem', cursor: pagination.page <= 1 ? 'default' : 'pointer', opacity: pagination.page <= 1 ? .4 : 1 }}>
             <ChevronLeft size={16} />
           </button>
           <span style={{ fontSize: '.8rem', color: T.textSub }}>Page {pagination.page} / {pagination.pages}</span>
-          <button onClick={() => setPage(p => p + 1)} disabled={pagination.page >= pagination.pages}
-            style={{ background: 'none', border: `1px solid ${T.border}`, borderRadius: 8, padding: 10, minWidth: 40, minHeight: 40, display: 'flex', alignItems: 'center', justifyContent: 'center', color: T.textMain, cursor: pagination.page >= pagination.pages ? 'default' : 'pointer', opacity: pagination.page >= pagination.pages ? .4 : 1 }}>
+          <button onClick={() => setPage(p => p + 1)} disabled={pagination.page >= pagination.pages} className="btn-ghost btn-sm"
+            style={{ padding: '.5rem .7rem', cursor: pagination.page >= pagination.pages ? 'default' : 'pointer', opacity: pagination.page >= pagination.pages ? .4 : 1 }}>
             <ChevronRight size={16} />
           </button>
         </div>
@@ -532,7 +515,7 @@ export default function InvoicesTab({ T, CARD }) {
               La facture sera supprimée définitivement. Cette action est irréversible.
             </div>
             <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-              <button onClick={() => setDeleteTarget(null)} disabled={deleting} style={{ background: 'none', border: `1px solid ${T.border}`, borderRadius: 100, padding: '.55rem 1.1rem', color: T.textSub, cursor: 'pointer', fontSize: '.82rem', fontWeight: 700 }}>
+              <button onClick={() => setDeleteTarget(null)} disabled={deleting} className="btn-ghost btn-sm">
                 Annuler
               </button>
               <button onClick={confirmDelete} disabled={deleting} style={{ background: '#d93025', border: '1px solid #d93025', borderRadius: 100, padding: '.55rem 1.1rem', color: '#fff', cursor: deleting ? 'default' : 'pointer', fontSize: '.82rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 6, opacity: deleting ? .7 : 1 }}>
