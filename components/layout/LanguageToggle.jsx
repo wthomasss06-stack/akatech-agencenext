@@ -1,14 +1,22 @@
 'use client'
 import { useEffect, useState } from 'react'
 
-/* Bouton de langue simple : FR ⇄ EN via la traduction Google du navigateur.
+/* Sélecteur de langue simple via la traduction Google du navigateur.
    Le site reste écrit en français ; le cookie `googtrans` + le script Google
    Translate traduisent la page à la volée. */
 
-const TARGET = 'en'
+const LANGS = [
+  { code: 'fr', label: 'FR', name: 'Français' },
+  { code: 'en', label: 'EN', name: 'English' },
+  { code: 'zh-CN', label: 'ZH', name: '中文' },
+  { code: 'es', label: 'ES', name: 'Español' },
+  { code: 'ar', label: 'AR', name: 'العربية' },
+  { code: 'pt', label: 'PT', name: 'Português' },
+]
 
-function readTranslated() {
-  return new RegExp(`(?:^|;\\s*)googtrans=/fr/${TARGET}(?:;|$)`).test(document.cookie)
+function readLang() {
+  const m = document.cookie.match(/(?:^|;\s*)googtrans=\/fr\/([\w-]+)/)
+  return m && LANGS.some(l => l.code === m[1]) ? m[1] : 'fr'
 }
 
 function setCookie(value) {
@@ -60,7 +68,7 @@ function loadGoogleTranslate() {
 
   window.akaGoogleTranslateInit = () => {
     new window.google.translate.TranslateElement(
-      { pageLanguage: 'fr', includedLanguages: `fr,${TARGET}`, autoDisplay: false },
+      { pageLanguage: 'fr', includedLanguages: LANGS.map(l => l.code).join(','), autoDisplay: false },
       'aka-gt-holder'
     )
   }
@@ -71,27 +79,28 @@ function loadGoogleTranslate() {
 }
 
 export default function LanguageToggle() {
-  const [translated, setTranslated] = useState(false)
+  const [lang, setLang] = useState('fr')
 
   useEffect(() => {
-    const active = readTranslated()
-    setTranslated(active)
-    if (active) loadGoogleTranslate()
+    const current = readLang()
+    setLang(current)
+    if (current !== 'fr') loadGoogleTranslate()
   }, [])
 
-  const toggle = () => {
-    setCookie(translated ? '' : `/fr/${TARGET}`)
+  const change = event => {
+    const next = event.target.value
+    setLang(next)
+    setCookie(next === 'fr' ? '' : `/fr/${next}`)
     window.location.reload()
   }
 
-  const label = translated ? 'FR' : TARGET.toUpperCase()
-  const title = translated ? 'Afficher le site en français' : 'Translate this page to English'
-
   return (
-    <div className="aka-language-toggle notranslate" translate="no">
-      <button type="button" onClick={toggle} title={title} aria-label={title}>
-        {label}
-      </button>
+    <div className="aka-language-toggle notranslate" translate="no" title="Langue / Language">
+      <select value={lang} onChange={change} aria-label="Langue / Language">
+        {LANGS.map(l => (
+          <option key={l.code} value={l.code}>{l.label}</option>
+        ))}
+      </select>
     </div>
   )
 }
