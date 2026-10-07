@@ -1,6 +1,7 @@
 // app/api/track/route.js
 import { cookies, headers } from 'next/headers'
 import { upsertVisitor, getOrCreateVisitSession, recordPageView, updateSessionConsent, recordAction, ACTION_TYPES } from '@/lib/db'
+import { createDailyVisitorAlertKey, enqueueEmailNotification } from '@/lib/email-notifications'
 
 export const runtime = 'nodejs'
 
@@ -22,6 +23,28 @@ function pathFromReferer(referer) {
   }
 }
 
+function safeNotificationPath(path) {
+  try {
+    return new URL(path, 'https://akatech.local').pathname.slice(0, 200) || '/'
+  } catch {
+    return '/'
+  }
+}
+
+function referrerHost(referrer) {
+  if (!referrer) return null
+  try {
+    return new URL(referrer).hostname.slice(0, 120)
+  } catch {
+    return null
+  }
+}
+
+function clientIpFromHeaders(headerList) {
+  const forwardedFor = headerList.get('x-forwarded-for')
+  return forwardedFor?.split(',')[0]?.trim() || headerList.get('x-real-ip') || 'unknown'
+}
+
 export async function POST(request) {
   try {
     const { path, referrer, consent, action } = await request.json()
@@ -39,7 +62,6 @@ export async function POST(request) {
     const cookieStore = await cookies()
     const visitorId = cookieStore.get('akatech_visitor')?.value
     const sessionId = cookieStore.get('akatech_session')?.value
-    const isNewSession = !!cookieStore.get('akatech_session_new')?.value
 
     // Sans cookies (bloqués par le navigateur, ou requête hors navigation
     // normale), on ignore silencieusement plutôt que de renvoyer une erreur :
@@ -51,16 +73,34 @@ export async function POST(request) {
     const headerList = await headers()
     const userAgent = headerList.get('user-agent') || ''
 
-    const visitor = await upsertVisitor(visitorId, isNewSession)
+    const { visitor, isNewVisitor } = await upsertVisitor(visitorId)
     const session = await getOrCreateVisitSession(sessionId, visitor.id, {
-      device: isNewSession ? getDevice(userAgent) : undefined,
-      referrer: isNewSession ? (referrer || null) : undefined,
-      userAgent: isNewSession ? userAgent : undefined,
+      device: getDevice(userAgent),
+      referrer: referrer || null,
+      userAgent,
     })
 
     if (hasPath) await recordPageView(session.id, path)
     if (hasConsent) await updateSessionConsent(session.id, consent)
     if (hasAction) await recordAction(session.id, action, pathFromReferer(headerList.get('referer')))
+
+    const alertPath = hasPath ? path : pathFromReferer(headerList.get('referer')) || '/'
+    if (isNewVisitor && !/bot|crawler|spider|headless|preview|monitor/i.test(userAgent)) {
+      try {
+        await enqueueEmailNotification({
+          eventKey: createDailyVisitorAlertKey(visitor.id, clientIpFromHeaders(headerList)),
+          eventType: 'NEW_VISITOR',
+          summary: 'Un nouveau navigateur consulte le site AKATech.',
+          details: {
+            path: safeNotificationPath(alertPath),
+            device: getDevice(userAgent),
+            referrer: referrerHost(referrer),
+          },
+        })
+      } catch (error) {
+        console.error('[Track] Alerte de visite non mise en file:', error?.message ?? error)
+      }
+    }
 
     return Response.json({ ok: true, tracked: true })
   } catch (error) {

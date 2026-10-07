@@ -196,6 +196,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 | `Message` | Chaque tour de la conversation, avec le fournisseur IA utilisé |
 | `Lead` | Prospect capturé par l'assistant — score, statut, notes |
 | `Visitor` / `VisitSession` / `PageView` / `VisitorAction` | Analytics visiteurs (pages vues + clics d'action) pour le dashboard — voir section dédiée plus haut |
+| `NotificationOutbox` | Alertes Resend idempotentes pour les nouvelles visites et les intentions de devis, avec reprises planifiées |
 | `Questionnaire` | Réponses au formulaire de devis (`/devis/[type]`) — lien public par token, statut STARTED → SUBMITTED → QUOTED → accepted/declined |
 | `Quote` | Devis généré pour un `Questionnaire` : formule tarifaire, fourchette de prix, justification et argumentaire générés par LLM |
 | `BlogPost` | Articles du blog (titre, contenu, catégorie, image, publication) |
@@ -209,7 +210,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 
 > **Prisma 6.x, pas 7.x** — la version 7 a changé la façon de déclarer `datasource.url` dans le schéma (système d'adaptateurs). `package.json` est volontairement figé sur `^6.19.3`.
 
-> **Après avoir tiré cette mise à jour** : le modèle `VisitorAction` est nouveau — pense à lancer `npx prisma db push` (ou `prisma migrate`) sur ta branche dev avant de relancer le site, sinon le tracking des clics échoue silencieusement (le dashboard reste fonctionnel, juste sans ces données) et l'onglet Analytics affiche des sections vides pour "Clics & actions" et "Visiteurs récurrents".
+> **Après avoir tiré cette mise à jour** : les modèles `VisitorAction` et `NotificationOutbox` sont nouveaux — lance `npx prisma db push` sur ta branche dev avant de relancer le site. Le déploiement ne doit pas pointer vers la base prod pendant cette opération.
 
 ---
 
@@ -352,6 +353,9 @@ GROQ_API_KEY=xxxxxxxx
 DATABASE_URL=postgresql://...   # branche Neon "development"
 ADMIN_USER=xxxxxxxx
 ADMIN_PASSWORD=xxxxxxxx
+CRON_SECRET=une-valeur-aleatoire-longue # requis pour protéger la reprise Vercel Cron
+# Optionnel mais conseillé : secret stable distinct pour le HMAC IP quotidien
+VISITOR_ALERT_HASH_SECRET=une-autre-valeur-aleatoire-longue
 
 # .env — lu par la CLI Prisma uniquement
 DATABASE_URL=postgresql://...   # même branche "development" que ci-dessus,
@@ -394,7 +398,7 @@ npm i -g vercel
 vercel --prod
 ```
 
-Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD` — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface.
+Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD`, `CRON_SECRET` et, de préférence, `VISITOR_ALERT_HASH_SECRET` — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface. Le Cron relance les courriels en attente toutes les cinq minutes; `CRON_SECRET` doit être une valeur aléatoire longue. En l’absence de `VISITOR_ALERT_HASH_SECRET`, l’empreinte quotidienne de l’IP est dérivée de `RESEND_API_KEY`; l’adresse IP brute n’est jamais stockée ni envoyée.
 
 `DATABASE_URL` doit être scopée différemment par environnement (menu déroulant à côté de chaque variable) : branche Neon **prod** pour "Production", branche **dev** pour "Preview" et "Development" — sinon les preview deployments (ou `vercel dev`) touchent la même base que le site en ligne.
 
