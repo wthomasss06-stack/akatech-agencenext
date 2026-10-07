@@ -360,7 +360,7 @@ Crée **deux fichiers** d'environnement (oui, deux — voir note Prisma plus hau
 
 ```bash
 # .env.local — lu par Next.js (le site)
-RESEND_API_KEY=re_xxxxxxxx
+RESEND_API_KEY=re_xxxxxxx
 FROM_EMAIL=onboarding@resend.dev
 ADMIN_EMAIL=ton-email@example.com
 GEMINI_API_KEY=xxxxxxxx
