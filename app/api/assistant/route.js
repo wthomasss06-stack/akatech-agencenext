@@ -15,6 +15,7 @@ import {
 import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK, detectAssistantLanguage } from '@/lib/assistant'
 import { PROJECT_TYPE_LABELS } from '@/lib/data'
 import { getOrCreateConversation, saveMessage, saveLead, createQuestionnaire } from '@/lib/db'
+import { enqueueEmailNotification } from '@/lib/email-notifications'
 
 export const runtime = 'nodejs'
 
@@ -191,6 +192,7 @@ async function runAssistant(messages, controller, encoder, conversationId, langu
         const typeKey = ['portfolio', 'vitrine_ecommerce', 'saas'].includes(questionnaireType) ? questionnaireType : 'portfolio'
 
         let token = null
+        let questionnaireId = null
         try {
           const q = await createQuestionnaire({
             type: typeKey,
@@ -199,8 +201,22 @@ async function runAssistant(messages, controller, encoder, conversationId, langu
             contactHandle: functionCall.args?.contact || null,
           })
           token = q.token
+          questionnaireId = q.id
         } catch (err) {
           console.error('[Assistant] Échec création questionnaire:', err?.message ?? err)
+        }
+
+        if (questionnaireId) {
+          try {
+            await enqueueEmailNotification({
+              eventKey: `chat-intent:${conversationId || questionnaireId}`,
+              eventType: 'CHAT_INTENT',
+              summary: 'Le chatbot a préparé un questionnaire de devis après un échange avec un prospect.',
+              details: { projectType: PROJECT_TYPE_LABELS[typeKey] || typeKey },
+            }, { awaitDelivery: false })
+          } catch (err) {
+            console.error('[Assistant] Alerte d’intention non mise en file:', err?.message ?? err)
+          }
         }
 
         const questionnaireUrl = token ? `${baseUrl}/devis/${typeKey}?t=${token}` : null

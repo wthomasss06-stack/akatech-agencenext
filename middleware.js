@@ -79,12 +79,6 @@ export function middleware(request) {
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     })
-    response.cookies.set('akatech_session_new', '1', {
-      maxAge: 60 * 30,
-      httpOnly: false, // lisible côté client pour transmettre device/referrer à /api/track
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    })
   } else {
     // Session existante : on la prolonge de 30 min à chaque page vue.
     response.cookies.set('akatech_session', hasSession.value, {

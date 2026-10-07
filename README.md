@@ -174,11 +174,26 @@ Tracking interne (dashboard, onglet **Analytics**), en complément de Vercel Ana
 **Comment ça fonctionne :**
 
 1. **À l'arrivée sur une page publique**, le navigateur envoie un événement `page_view` à `/api/track`. Les pages `/dashboard` et les routes `/api/*` sont exclues (pas de cookie posé, pas d'événement).
-2. **`middleware.js` pose deux cookies techniques** dès la première requête : `akatech_visitor` (1 an, identifie le navigateur — pas une personne) et `akatech_session` (30 min glissantes, se prolonge à chaque page vue). Un retour après 30 min d'inactivité crée une nouvelle session, comptée comme une nouvelle "visite".
+2. **`middleware.js` pose deux cookies techniques** dès la première requête : `akatech_visitor` (1 an, identifie le navigateur — pas une personne) et `akatech_session` (30 min glissantes, se prolonge à chaque page vue). Un retour après 30 min d'inactivité crée une nouvelle session, comptée comme une nouvelle "visite" : le compteur (`Visitor.visitCount`) s'incrémente uniquement quand une `VisitSession` est réellement créée en base (`createMany` + `skipDuplicates`, donc sans double comptage si deux requêtes arrivent en même temps) — jamais à chaque page vue ou clic.
 3. **Les clics d'action** sont suivis via `lib/track-action.js` sur les points d'entrée principaux du site (badge WhatsApp flottant, liens WhatsApp/téléphone du footer, ouverture du chat IA, envoi réussi du formulaire de contact). Chaque clic est classé dans une whitelist serveur (`ACTION_TYPES` dans `lib/db.js`) — jamais une valeur arbitraire envoyée par le navigateur — et la page/section concernée est déduite de l'en-tête `Referer` (chemin seul, jamais les paramètres d'URL ni le contenu d'un champ saisi).
 4. **Dans le dashboard**, les visiteurs par jour sont comptés comme des `visitorId` distincts ce jour-là (courbe Recharts). Le nombre de fois qu'un visiteur est revenu correspond à son nombre de sessions distinctes, pas à son nombre de pages vues. La liste "Visiteurs récurrents" est cliquable et ouvre le **parcours** détaillé (pages vues + clics fusionnés et triés chronologiquement, session par session) via `/api/stats/visitor/[visitorId]`, chargé à la demande.
 
 **Limites à garder en tête :** cela compte des navigateurs, pas des personnes. Effacer les cookies ou changer d'appareil crée une autre identité de suivi ; plusieurs personnes partageant un appareil peuvent être regroupées.
+
+### 🔔 Alertes e-mail (Resend)
+
+`lib/email-notifications.js` envoie un e-mail à `ADMIN_EMAIL` pour deux événements :
+
+| Événement | Déclencheur | Anti-doublon |
+|---|---|---|
+| `NEW_VISITOR` | Création d'une nouvelle identité visiteur dans `/api/track` (bots évités par le User-Agent) | 1 alerte par IP et par jour UTC, via une empreinte HMAC (`VISITOR_ALERT_HASH_SECRET`) — l'IP brute n'est ni stockée ni envoyée |
+| `CHAT_INTENT` | Le chatbot démarre un questionnaire de devis (`start_questionnaire`) | 1 alerte par conversation |
+
+Les e-mails déjà existants (lead capturé, étapes du devis) ne changent pas et ne sont pas doublés.
+
+**Fiabilité (outbox)** : chaque alerte est d'abord écrite dans la table `NotificationOutbox` (clé unique + `Idempotency-Key` Resend), puis envoyée. Si Resend échoue, la ligne repasse en `PENDING` avec un délai croissant (1 min, 5 min, 15 min, 1 h), jusqu'à 5 tentatives. Un Vercel Cron appelle `/api/notifications/dispatch` toutes les 5 minutes (protégé par `CRON_SECRET`) pour reprendre les alertes en attente et libérer les envois interrompus. Les lignes envoyées/échouées sont purgées après 30 jours.
+
+**Garde-fou quota** : `DAILY_LIMITS` plafonne le nombre d'alertes créées par jour UTC (40 visites, 25 intentions de devis) pour qu'un pic de trafic n'épuise jamais le quota Resend au détriment des e-mails de leads. Au-delà, l'événement reste visible dans le dashboard ; seul l'e-mail est ignoré.
 
 **Point important sur le consentement :** la bannière cookies (`components/ui/CookieConsent.js`) enregistre un choix ("Tout accepter" / "Refuser l'optionnel") côté session, pour que le dashboard affiche la vraie répartition accepté/refusé — mais que le choix soit accepter ou refuser, la mesure d'audience anonyme posée par `middleware.js` continue de tourner : elle n'attend pas la décision de la bannière pour démarrer. Autrement dit, le consentement ne sert pas aujourd'hui à activer ou couper ce tracking, seulement à l'enregistrer.
 
@@ -196,6 +211,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 | `Message` | Chaque tour de la conversation, avec le fournisseur IA utilisé |
 | `Lead` | Prospect capturé par l'assistant — score, statut, notes |
 | `Visitor` / `VisitSession` / `PageView` / `VisitorAction` | Analytics visiteurs (pages vues + clics d'action) pour le dashboard — voir section dédiée plus haut |
+| `NotificationOutbox` | File d'alertes e-mail (visites, intentions de devis) : clé unique, statut PENDING → PROCESSING → SENT/FAILED, tentatives et reprises par Cron |
 | `Questionnaire` | Réponses au formulaire de devis (`/devis/[type]`) — lien public par token, statut STARTED → SUBMITTED → QUOTED → accepted/declined |
 | `Quote` | Devis généré pour un `Questionnaire` : formule tarifaire, fourchette de prix, justification et argumentaire générés par LLM |
 | `BlogPost` | Articles du blog (titre, contenu, catégorie, image, publication) |
@@ -209,7 +225,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 
 > **Prisma 6.x, pas 7.x** — la version 7 a changé la façon de déclarer `datasource.url` dans le schéma (système d'adaptateurs). `package.json` est volontairement figé sur `^6.19.3`.
 
-> **Après avoir tiré cette mise à jour** : le modèle `VisitorAction` est nouveau — pense à lancer `npx prisma db push` (ou `prisma migrate`) sur ta branche dev avant de relancer le site, sinon le tracking des clics échoue silencieusement (le dashboard reste fonctionnel, juste sans ces données) et l'onglet Analytics affiche des sections vides pour "Clics & actions" et "Visiteurs récurrents".
+> **Après avoir tiré cette mise à jour** : les modèles `VisitorAction` et `NotificationOutbox` sont nouveaux, et `Visitor.visitCount` passe de `@default(1)` à `@default(0)` (la première session créée l'incrémente) — lance `npx prisma db push` sur ta branche dev avant de relancer le site, puis **sur la base de production avant (ou pendant) le déploiement**, sinon le tracking et les alertes échouent silencieusement côté serveur (le site reste fonctionnel). Les visiteurs existants ne sont pas modifiés.
 
 ---
 
@@ -352,6 +368,10 @@ GROQ_API_KEY=xxxxxxxx
 DATABASE_URL=postgresql://...   # branche Neon "development"
 ADMIN_USER=xxxxxxxx
 ADMIN_PASSWORD=xxxxxxxx
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+CRON_SECRET=un-secret-aleatoire-long   # protège /api/notifications/dispatch
+VISITOR_ALERT_HASH_SECRET=un-autre-secret-stable
+# (le détail complet et les commentaires figurent dans .env.example)
 
 # .env — lu par la CLI Prisma uniquement
 DATABASE_URL=postgresql://...   # même branche "development" que ci-dessus,
@@ -394,7 +414,9 @@ npm i -g vercel
 vercel --prod
 ```
 
-Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD` — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface.
+Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SITE_URL`, `CRON_SECRET` et `VISITOR_ALERT_HASH_SECRET` (plus `GEMINI_API_KEY_2` à `_4` et les variables Cloudinary si utilisées — voir `.env.example`; `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` est lue au runtime par le navigateur, pas seulement pour l'upload) — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface.
+
+`vercel.json` déclare un Cron (`/api/notifications/dispatch`, `*/5 * * * *`). Vercel refuse le déploiement si ton plan n'autorise pas une fréquence aussi élevée (le plan Hobby est limité à une exécution par jour — à vérifier dans la documentation Vercel) : dans ce cas, remplace le planning par `0 8 * * *`. L'envoi immédiat des alertes fonctionne dans tous les cas ; le Cron ne sert qu'aux reprises après échec.
 
 `DATABASE_URL` doit être scopée différemment par environnement (menu déroulant à côté de chaque variable) : branche Neon **prod** pour "Production", branche **dev** pour "Preview" et "Development" — sinon les preview deployments (ou `vercel dev`) touchent la même base que le site en ligne.
 
