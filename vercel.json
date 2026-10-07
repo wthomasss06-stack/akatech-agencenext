@@ -8,5 +8,11 @@
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
       ]
     }
+  ],
+  "crons": [
+    {
+      "path": "/api/notifications/dispatch",
+      "schedule": "*/5 * * * *"
+    }
   ]
 }
