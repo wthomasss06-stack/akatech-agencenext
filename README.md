@@ -341,26 +341,16 @@ npm install
 # → lance automatiquement `prisma generate` (postinstall)
 ```
 
-Crée **deux fichiers** d'environnement (oui, deux — voir note Prisma plus haut) :
+Copie le modèle complet vers `.env.local`, puis remplace les valeurs fictives :
 
 ```bash
-# .env.local — lu par Next.js (le site)
-RESEND_API_KEY=re_xxxxxxxx
-FROM_EMAIL=onboarding@resend.dev
-ADMIN_EMAIL=ton-email@example.com
-GEMINI_API_KEY=xxxxxxxx
-GROQ_API_KEY=xxxxxxxx
-DATABASE_URL=postgresql://...   # branche Neon "development"
-ADMIN_USER=xxxxxxxx
-ADMIN_PASSWORD=xxxxxxxx
-CRON_SECRET=une-valeur-aleatoire-longue # requis pour protéger la reprise Vercel Cron
-# Optionnel mais conseillé : secret stable distinct pour le HMAC IP quotidien
-VISITOR_ALERT_HASH_SECRET=une-autre-valeur-aleatoire-longue
-
-# .env — lu par la CLI Prisma uniquement
-DATABASE_URL=postgresql://...   # même branche "development" que ci-dessus,
-                                 # jamais la branche prod (voir note plus haut)
+cp .env.example .env.local
+# Remplace d'abord les valeurs fictives, surtout DATABASE_URL (base de développement).
+# Prisma CLI ne lit pas .env.local : duplique dans .env uniquement la ligne DATABASE_URL.
+grep '^DATABASE_URL=' .env.local > .env
 ```
+
+`CRON_SECRET` doit être un secret aléatoire long. `VISITOR_ALERT_HASH_SECRET` doit rester stable; s'il est vide, l'empreinte IP quotidienne utilise `RESEND_API_KEY`. Les variables Cloudinary sont nécessaires uniquement pour les opérations d'upload. Le contenu complet et les commentaires figurent dans `.env.example`.
 
 Puis, si tu utilises la base de données :
 ```bash
@@ -398,7 +388,7 @@ npm i -g vercel
 vercel --prod
 ```
 
-Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD`, `CRON_SECRET` et, de préférence, `VISITOR_ALERT_HASH_SECRET` — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface. Le Cron relance les courriels en attente toutes les cinq minutes; `CRON_SECRET` doit être une valeur aléatoire longue. En l’absence de `VISITOR_ALERT_HASH_SECRET`, l’empreinte quotidienne de l’IP est dérivée de `RESEND_API_KEY`; l’adresse IP brute n’est jamais stockée ni envoyée.
+Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GEMINI_API_KEY_2`, `GEMINI_API_KEY_3`, `GEMINI_API_KEY_4`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD`, `CRON_SECRET`, `VISITOR_ALERT_HASH_SECRET`, `NEXT_PUBLIC_SITE_URL`, `CLOUDINARY_CLOUD_NAME`, `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` et `CLOUDINARY_API_SECRET` — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface. Le Cron relance les courriels en attente toutes les cinq minutes; `CRON_SECRET` est requis pour le protéger. L'empreinte quotidienne de l'IP est dérivée de `VISITOR_ALERT_HASH_SECRET` (ou de `RESEND_API_KEY` si le secret dédié n'est pas configuré); l'adresse IP brute n'est jamais stockée ni envoyée.
 
 `DATABASE_URL` doit être scopée différemment par environnement (menu déroulant à côté de chaque variable) : branche Neon **prod** pour "Production", branche **dev** pour "Preview" et "Development" — sinon les preview deployments (ou `vercel dev`) touchent la même base que le site en ligne.
 
