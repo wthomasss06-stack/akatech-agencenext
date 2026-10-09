@@ -4,7 +4,7 @@ import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
   Trash2, AlertTriangle, Cookie, Receipt, ClipboardList, Newspaper,
-  MousePointerClick, Repeat,
+  MousePointerClick, Repeat, CalendarClock, ArrowRight, CheckCircle2,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
@@ -109,6 +109,105 @@ function StatusPill({ status, T }) {
     }}>
       {STATUS_LABELS[status] || status}
     </span>
+  )
+}
+
+const ACTION_SEVERITY_COLORS = { high: '#e05e5e', medium: '#e0a83e', low: '#5b8def' }
+
+/* « Actions à faire » : calculées côté serveur (lib/dashboard-actions.js),
+   rafraîchies avec le reste des stats toutes les 30 s. Un clic ouvre l'onglet concerné. */
+function ActionsPanel({ actions, onGo, T, CARD }) {
+  const items = actions?.items ?? []
+  const hasMore = Object.values(actions?.more ?? {}).some(Boolean)
+  return (
+    <div style={{ ...CARD, padding: '1.2rem', marginBottom: 24 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
+        <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub }}>Actions à faire</div>
+        {items.length > 0 && (
+          <span style={{
+            fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.95rem',
+            color: ACTION_SEVERITY_COLORS.high, background: `${ACTION_SEVERITY_COLORS.high}1a`,
+            border: `1px solid ${ACTION_SEVERITY_COLORS.high}44`, borderRadius: 100, padding: '1px 10px',
+          }}>
+            {actions.total}{hasMore ? '+' : ''}
+          </span>
+        )}
+      </div>
+
+      {actions?.unavailable ? (
+        <div style={{ color: T.textMuted, fontSize: '.78rem' }}>
+          Actions indisponibles pour l'instant — le schéma de la base n'est probablement pas à jour (<code>npx prisma db push</code>).
+        </div>
+      ) : items.length === 0 ? (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: T.textSub, fontSize: '.82rem' }}>
+          <CheckCircle2 size={16} color={T.green} /> Rien d'urgent : tout est à jour.
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+          {items.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onGo(item.tab)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left',
+                background: 'none', border: `1px solid ${T.border}`, borderRadius: 12,
+                padding: '.65rem .85rem', cursor: 'pointer', color: T.textMain,
+              }}
+            >
+              <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: ACTION_SEVERITY_COLORS[item.severity] || T.textMuted }} />
+              <span style={{ flex: 1, minWidth: 0 }}>
+                <span style={{ display: 'block', fontSize: '.82rem', fontWeight: 700 }}>{item.title}</span>
+                {item.detail && <span style={{ display: 'block', fontSize: '.74rem', color: T.textSub, marginTop: 2 }}>{item.detail}</span>}
+              </span>
+              <ArrowRight size={14} color={T.textMuted} style={{ flexShrink: 0 }} />
+            </button>
+          ))}
+          {hasMore && <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 4 }}>D'autres actions sont listées dans les onglets concernés.</div>}
+        </div>
+      )}
+    </div>
+  )
+}
+
+/* Date de relance d'un lead : date au format AAAA-MM-JJ + raccourcis. */
+function FollowUpControl({ value, closed, onChange, T }) {
+  if (closed) return null
+  const day = value ? String(value).slice(0, 10) : ''
+  const shift = (days) => {
+    const d = new Date()
+    d.setUTCDate(d.getUTCDate() + days)
+    return d.toISOString().slice(0, 10)
+  }
+  const overdue = Boolean(day) && day <= shift(0)
+  const warn = ACTION_SEVERITY_COLORS.high
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', flexShrink: 0 }}>
+      <CalendarClock size={14} color={overdue ? warn : T.textMuted} />
+      <input
+        type="date"
+        value={day}
+        onChange={(e) => onChange(e.target.value || null)}
+        title="Date de relance"
+        style={{
+          background: 'none', border: `1px solid ${overdue ? warn : T.border}`, borderRadius: 8,
+          padding: '.25rem .4rem', color: overdue ? warn : T.textMain, fontSize: '.72rem',
+        }}
+      />
+      {[['Demain', 1], ['3 j', 3], ['7 j', 7]].map(([label, days]) => (
+        <button
+          key={label}
+          onClick={() => onChange(shift(days))}
+          style={{ background: 'none', border: `1px solid ${T.border}`, borderRadius: 8, padding: '.22rem .45rem', fontSize: '.68rem', color: T.textSub, cursor: 'pointer' }}
+        >
+          {label}
+        </button>
+      ))}
+      {day && (
+        <button onClick={() => onChange(null)} title="Effacer la relance" style={{ background: 'none', border: 'none', cursor: 'pointer', color: T.textMuted, padding: 4, display: 'flex' }}>
+          <X size={12} />
+        </button>
+      )}
+    </div>
   )
 }
 
@@ -401,6 +500,7 @@ function normalizeStats(d) {
     leads: { total: 0, qualified: 0, avgScore: 0, ...d?.leads },
     conversion: { rate: 0, ...d?.conversion },
     activity: d?.activity ?? [],
+    actions: d?.actions ?? { items: [], counts: {}, total: 0, more: {} },
   }
 }
 
@@ -538,6 +638,18 @@ export default function DashboardPage() {
       body: JSON.stringify({ id, status }),
     })
     loadLeads()
+    loadStats() // les « Actions à faire » dépendent du statut
+  }
+
+  // followUpAt : 'AAAA-MM-JJ' ou null (effacer la relance)
+  async function updateLeadFollowUp(id, followUpAt) {
+    await fetch('/api/leads', {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, followUpAt }),
+    })
+    loadLeads()
+    loadStats()
   }
 
   async function updateProspectStatus(id, status) {
@@ -637,6 +749,8 @@ export default function DashboardPage() {
           <>
             {tab === 'overview' && stats && (
               <div>
+                <ActionsPanel actions={stats.actions} onGo={setTab} T={T} CARD={CARD} />
+
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12, marginBottom: 24 }}>
                   <KpiCard T={T} label="Visiteurs (30j)" value={v.totalVisitors} sub={`${v.newVisitors} nouveaux`} />
                   <KpiCard T={T} label="Sessions" value={v.totalSessions} sub={`${v.totalPageViews} pages vues`} />
@@ -996,6 +1110,12 @@ export default function DashboardPage() {
                           <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                         ))}
                       </select>
+                      <FollowUpControl
+                        T={T}
+                        value={lead.followUpAt}
+                        closed={lead.status === 'CONVERTED' || lead.status === 'LOST'}
+                        onChange={(day) => updateLeadFollowUp(lead.id, day)}
+                      />
                       <button
                         onClick={() => setConfirmTarget({ type: 'lead', id: lead.id, label: `${lead.name} · ${lead.contact}` })}
                         title="Supprimer ce lead"

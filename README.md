@@ -180,6 +180,31 @@ Tracking interne (dashboard, onglet **Analytics**), en complément de Vercel Ana
 
 **Limites à garder en tête :** cela compte des navigateurs, pas des personnes. Effacer les cookies ou changer d'appareil crée une autre identité de suivi ; plusieurs personnes partageant un appareil peuvent être regroupées.
 
+### ✅ Actions à faire (Vue d'ensemble)
+
+La Vue d'ensemble du dashboard commence par la liste de ce qui demande une décision aujourd'hui (`lib/dashboard-actions.js`, rafraîchie toutes les 30 s avec les stats). Un clic ouvre l'onglet concerné.
+
+| Action | Condition |
+|---|---|
+| Facture en retard | statut `ENVOYEE` et échéance (`dueDate`) strictement antérieure à aujourd'hui (UTC) |
+| Devis accepté | questionnaire `ACCEPTED` décidé dans les 7 derniers jours |
+| Relancer un lead | `Lead.followUpAt` arrivée à échéance (aujourd'hui ou avant) sur un lead `NEW`, `QUALIFIED` ou `CONTACTED` |
+| Lead qualifié à contacter | statut `QUALIFIED` (score ≥ 60, seuil déjà utilisé par `lib/db.js`) sans relance planifiée |
+| Devis sans réponse | questionnaire `QUOTED` dont le devis a plus de 5 jours |
+
+Chaque famille est limitée à 10 lignes. Les délais (5 jours, 7 jours) sont des repères de suivi internes, jamais montrés aux clients : ils se règlent dans `lib/dashboard-actions.js` (`QUOTE_PENDING_DAYS`, `ACCEPTED_QUOTE_WINDOW_DAYS`).
+
+**Date de relance** : dans l'onglet Leads, chaque lead a un sélecteur de date et les raccourcis « Demain », « 3 j », « 7 j ». La relance s'efface toute seule quand le lead passe en `CONVERTED` ou `LOST`. Si la base n'est pas encore à jour, la Vue d'ensemble affiche « Actions indisponibles » au lieu de planter.
+
+### 🎨 E-mails HTML (Resend)
+
+Tous les e-mails envoyés à `ADMIN_EMAIL` (alertes visiteur/prospect, formulaire de contact, lead de l'assistant, devis) partagent la même mise en page :
+
+- `lib/email-layout.js` : gabarit et briques (logo, champs, bouton, encart de tarif). Toutes les valeurs y sont échappées : on lui passe des valeurs brutes, jamais du HTML.
+- `lib/email-templates.js` : contenu des e-mails de contact, de lead et de devis ; les alertes visiteur/prospect sont rendues dans `lib/email-notifications.js` avec les mêmes briques.
+- **Polices du site** : JetBrains Mono (texte) et Barlow Condensed italique (titres), chargées depuis Google Fonts. Apple Mail, iOS Mail, Samsung Mail et Thunderbird les affichent ; Gmail et Outlook ne chargent aucune police externe et utilisent une police système (monospace / condensée) avec la même mise en page.
+- **Logo** : `public/email/akatech-logo.png`, servi à `NEXT_PUBLIC_SITE_URL/email/akatech-logo.png` (PNG, car les clients mail n'affichent pas le WebP ni le SVG de façon fiable). Si les images sont bloquées, le texte « AKATech » s'affiche à la place. Le chemin `/email/` est exclu du middleware (pas de cookie sur cette image).
+
 ### 🔔 Alertes e-mail (Resend)
 
 `lib/email-notifications.js` envoie un e-mail à `ADMIN_EMAIL` pour deux événements :
@@ -191,7 +216,7 @@ Tracking interne (dashboard, onglet **Analytics**), en complément de Vercel Ana
 
 Les e-mails déjà existants (lead capturé, étapes du devis) ne changent pas et ne sont pas doublés.
 
-**Fiabilité (outbox)** : chaque alerte est d'abord écrite dans la table `NotificationOutbox` (clé unique + `Idempotency-Key` Resend), puis envoyée. Si Resend échoue, la ligne repasse en `PENDING` avec un délai croissant (1 min, 5 min, 15 min, 1 h), jusqu'à 5 tentatives. Un Vercel Cron appelle `/api/notifications/dispatch` toutes les 5 minutes (protégé par `CRON_SECRET`) pour reprendre les alertes en attente et libérer les envois interrompus. Les lignes envoyées/échouées sont purgées après 30 jours.
+**Fiabilité (outbox)** : chaque alerte est d'abord écrite dans la table `NotificationOutbox` (clé unique + `Idempotency-Key` Resend), puis envoyée. Si Resend échoue, la ligne repasse en `PENDING` avec un délai croissant (1 min, 5 min, 15 min, 1 h), jusqu'à 5 tentatives. Un Vercel Cron appelle `/api/notifications/dispatch` une fois par jour à 8 h UTC (protégé par `CRON_SECRET`) pour reprendre les alertes en attente et libérer les envois interrompus : sur le plan Hobby, une reprise a donc lieu au mieux au prochain passage quotidien (entre 8h00 et 8h59). Les lignes envoyées/échouées sont purgées après 30 jours.
 
 **Garde-fou quota** : `DAILY_LIMITS` plafonne le nombre d'alertes créées par jour UTC (40 visites, 25 intentions de devis) pour qu'un pic de trafic n'épuise jamais le quota Resend au détriment des e-mails de leads. Au-delà, l'événement reste visible dans le dashboard ; seul l'e-mail est ignoré.
 
@@ -209,7 +234,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 |---|---|
 | `Conversation` | Une session de chat — statut ACTIVE / ENDED / CONVERTED |
 | `Message` | Chaque tour de la conversation, avec le fournisseur IA utilisé |
-| `Lead` | Prospect capturé par l'assistant — score, statut, notes |
+| `Lead` | Prospect capturé par l'assistant — score, statut, notes, date de relance (`followUpAt`) |
 | `Visitor` / `VisitSession` / `PageView` / `VisitorAction` | Analytics visiteurs (pages vues + clics d'action) pour le dashboard — voir section dédiée plus haut |
 | `NotificationOutbox` | File d'alertes e-mail (visites, intentions de devis) : clé unique, statut PENDING → PROCESSING → SENT/FAILED, tentatives et reprises par Cron |
 | `Questionnaire` | Réponses au formulaire de devis (`/devis/[type]`) — lien public par token, statut STARTED → SUBMITTED → QUOTED → accepted/declined |
@@ -225,7 +250,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 
 > **Prisma 6.x, pas 7.x** — la version 7 a changé la façon de déclarer `datasource.url` dans le schéma (système d'adaptateurs). `package.json` est volontairement figé sur `^6.19.3`.
 
-> **Après avoir tiré cette mise à jour** : les modèles `VisitorAction` et `NotificationOutbox` sont nouveaux, et `Visitor.visitCount` passe de `@default(1)` à `@default(0)` (la première session créée l'incrémente) — lance `npx prisma db push` sur ta branche dev avant de relancer le site, puis **sur la base de production avant (ou pendant) le déploiement**, sinon le tracking et les alertes échouent silencieusement côté serveur (le site reste fonctionnel). Les visiteurs existants ne sont pas modifiés.
+> **Après avoir tiré cette mise à jour** : les modèles `VisitorAction` et `NotificationOutbox` sont nouveaux, `Lead` gagne la colonne `followUpAt` (date de relance, facultative), et `Visitor.visitCount` passe de `@default(1)` à `@default(0)` (la première session créée l'incrémente) — lance `npx prisma db push` sur ta branche dev avant de relancer le site, puis **sur la base de production avant (ou pendant) le déploiement**, sinon le tracking et les alertes échouent silencieusement côté serveur (le site reste fonctionnel). Les visiteurs existants ne sont pas modifiés.
 
 ---
 
@@ -360,7 +385,7 @@ Crée **deux fichiers** d'environnement (oui, deux — voir note Prisma plus hau
 
 ```bash
 # .env.local — lu par Next.js (le site)
-RESEND_API_KEY=re_xxxxxxx
+RESEND_API_KEY=re_xxxxxxxx
 FROM_EMAIL=onboarding@resend.dev
 ADMIN_EMAIL=ton-email@example.com
 GEMINI_API_KEY=xxxxxxxx
@@ -416,7 +441,7 @@ vercel --prod
 
 Variables d'environnement à configurer sur Vercel (Project Settings → Environment Variables) : `RESEND_API_KEY`, `FROM_EMAIL`, `ADMIN_EMAIL`, `GEMINI_API_KEY`, `GROQ_API_KEY`, `DATABASE_URL`, `ADMIN_USER`, `ADMIN_PASSWORD`, `NEXT_PUBLIC_SITE_URL`, `CRON_SECRET` et `VISITOR_ALERT_HASH_SECRET` (plus `GEMINI_API_KEY_2` à `_4` et les variables Cloudinary si utilisées — voir `.env.example`; `NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME` est lue au runtime par le navigateur, pas seulement pour l'upload) — pas de fichier `.env` à gérer côté Vercel, tout passe par son interface.
 
-`vercel.json` déclare un Cron (`/api/notifications/dispatch`, `*/5 * * * *`). Vercel refuse le déploiement si ton plan n'autorise pas une fréquence aussi élevée (le plan Hobby est limité à une exécution par jour — à vérifier dans la documentation Vercel) : dans ce cas, remplace le planning par `0 8 * * *`. L'envoi immédiat des alertes fonctionne dans tous les cas ; le Cron ne sert qu'aux reprises après échec.
+`vercel.json` déclare un Cron quotidien (`/api/notifications/dispatch`, `0 8 * * *`), compatible avec le plan Hobby (une exécution par jour maximum, déclenchée entre 8h00 et 8h59). Sur un plan Pro, tu peux le passer à `*/5 * * * *` pour des reprises plus rapides ; sur Hobby, un planning plus fréquent fait échouer le déploiement. L'envoi immédiat des alertes fonctionne dans tous les cas ; le Cron ne sert qu'aux reprises après échec.
 
 `DATABASE_URL` doit être scopée différemment par environnement (menu déroulant à côté de chaque variable) : branche Neon **prod** pour "Production", branche **dev** pour "Preview" et "Development" — sinon les preview deployments (ou `vercel dev`) touchent la même base que le site en ligne.
 

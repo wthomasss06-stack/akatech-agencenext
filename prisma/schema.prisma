@@ -82,10 +82,12 @@ model Lead {
   score          Int          @default(0)
   status         LeadStatus   @default(NEW)
   notes          String?
+  followUpAt     DateTime?    // relance prévue (dashboard « Actions à faire ») ; remis à null quand le lead est CONVERTED/LOST
   createdAt      DateTime     @default(now())
 
   @@index([status])
   @@index([score])
+  @@index([followUpAt])
 }
 
 // ═══════════════════════════════════════════

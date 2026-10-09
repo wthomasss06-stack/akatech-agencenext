@@ -2,6 +2,7 @@
 // Protégée par middleware.js (Basic Auth) — pas de vérification d'auth
 // ici, elle est déjà passée avant d'arriver à ce handler.
 import { prisma } from '@/lib/db'
+import { parseFollowUpInput } from '@/lib/dashboard-actions'
 import { NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -54,25 +55,47 @@ export async function GET(request) {
   }
 }
 
-// PATCH /api/leads — Mettre à jour le statut d'un lead
+// PATCH /api/leads — Mettre à jour un lead : statut, notes et/ou date de relance.
+// { id, status?, notes?, followUpAt? } — followUpAt = 'AAAA-MM-JJ' ou null pour l'effacer.
+// Un lead passé en CONVERTED ou LOST n'a plus de relance à faire : on l'efface.
 export async function PATCH(request) {
   try {
-    const { id, status, notes } = await request.json()
+    const body = await request.json().catch(() => null)
+    const { id, status, notes } = body || {}
+    const hasStatus = status !== undefined
+    const hasFollowUp = Boolean(body) && Object.prototype.hasOwnProperty.call(body, 'followUpAt')
 
-    if (!id || !status) {
-      return NextResponse.json({ error: 'ID et status requis' }, { status: 400 })
+    if (!id || (!hasStatus && !hasFollowUp)) {
+      return NextResponse.json({ error: 'ID et status (ou followUpAt) requis' }, { status: 400 })
     }
-    if (!VALID_STATUSES.includes(status)) {
+    if (hasStatus && !VALID_STATUSES.includes(status)) {
       return NextResponse.json({ error: `Statut invalide. Valeurs acceptées : ${VALID_STATUSES.join(', ')}` }, { status: 400 })
     }
 
+    let followUpAt
+    if (hasFollowUp) {
+      const parsed = parseFollowUpInput(body.followUpAt)
+      if (!parsed.ok) {
+        return NextResponse.json({ error: 'Date de relance invalide (format AAAA-MM-JJ attendu)' }, { status: 400 })
+      }
+      followUpAt = parsed.date
+    }
+
+    const closing = hasStatus && (status === 'CONVERTED' || status === 'LOST')
     const lead = await prisma.lead.update({
       where: { id },
-      data: { status, ...(notes !== undefined ? { notes } : {}) },
+      data: {
+        ...(hasStatus ? { status } : {}),
+        ...(notes !== undefined ? { notes } : {}),
+        ...(closing ? { followUpAt: null } : hasFollowUp ? { followUpAt } : {}),
+      },
     })
 
     return NextResponse.json({ lead })
   } catch (error) {
+    if (error.code === 'P2025') {
+      return NextResponse.json({ error: 'Lead introuvable' }, { status: 404 })
+    }
     console.error('[API Leads PATCH] Erreur:', error)
     return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 })
   }

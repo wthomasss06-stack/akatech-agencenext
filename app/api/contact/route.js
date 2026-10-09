@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
-import { PROJECT_TYPE_LABELS } from '@/lib/data'
+import { getFromAddress } from '@/lib/email-layout'
+import { buildContactEmail } from '@/lib/email-templates'
 
 let _resend = null
 function getResend() {
@@ -41,15 +42,6 @@ function pruneOldEntries() {
 
 /* ── Helpers ── */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
-function escapeHtml(str = '') {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
-}
 
 function getClientIp(request) {
   const fwd = request.headers.get('x-forwarded-for')
@@ -134,93 +126,24 @@ export async function POST(request) {
     )
   }
 
-  /* ── Échappement HTML avant injection dans le template email ──
-     Empêche un visiteur malveillant d'injecter du HTML/JS dans
-     l'email reçu via les champs name/email/message/projectType. */
-  const safeName = escapeHtml(name)
-  const safeEmail = escapeHtml(email)
-  const safePhone = escapeHtml(phone)
-  const safeBudget = escapeHtml(budget)
-  const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>')
-  const projectLabel = escapeHtml(PROJECT_TYPE_LABELS[projectType] || projectType || '—')
+  /* ── Mise en page : lib/email-templates.js reçoit les champs bruts et
+     échappe tout (un visiteur malveillant ne peut pas injecter de HTML
+     via name/email/message/projectType). ── */
+  const mail = buildContactEmail({ name, email, phone, projectType, budget, message })
 
   try {
     const result = await getResend().emails.send({
       /* Resend impose un domaine vérifié en from.
          Si ton domaine n'est pas vérifié, garde onboarding@resend.dev
          pour les tests, puis passe à noreply@tondomaine.com en prod. */
-      from: process.env.FROM_EMAIL ?? 'onboarding@resend.dev',
+      from: getFromAddress(),
       to: process.env.ADMIN_EMAIL ?? 'wthomasss06@gmail.com',
-      reply_to: email,
-      subject: `🚀 Nouveau projet — ${safeName} (${projectLabel})`,
-      html: `
-        <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;max-width:600px;margin:0 auto;background:#0a120c;">
-
-          <!-- Header marque -->
-          <div style="padding:28px 32px;background:linear-gradient(135deg,#0d1a11 0%,#0a120c 100%);border-bottom:1px solid rgba(136,202,83,.25);">
-            <div style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;letter-spacing:.1em;color:#88ca53;text-transform:uppercase;">
-              AKATech
-            </div>
-            <div style="margin-top:4px;font-size:11px;color:rgba(255,255,255,.4);">
-              Nouvelle demande reçue via le formulaire de contact
-            </div>
-          </div>
-
-          <div style="padding:32px;">
-
-            <!-- Titre + badge type de projet -->
-            <h2 style="margin:0 0 6px;color:#f2ede8;font-size:20px;font-weight:800;">
-              ${safeName}
-            </h2>
-            <div style="display:inline-block;padding:5px 12px;border-radius:100px;background:rgba(136,202,83,.12);border:1px solid rgba(136,202,83,.3);font-size:12px;font-weight:700;color:#b3ee85;margin-bottom:24px;">
-              ${projectLabel}
-            </div>
-
-            <!-- Infos contact en cards -->
-            <table style="width:100%;border-collapse:collapse;margin-bottom:20px;">
-              <tr>
-                <td style="padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px 0 0 10px;border-right:none;">
-                  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px;">Email</div>
-                  <a href="mailto:${safeEmail}" style="font-size:13px;color:#88ca53;text-decoration:none;font-weight:600;">${safeEmail}</a>
-                </td>
-                <td style="padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:0 10px 10px 0;">
-                  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px;">WhatsApp / Tél</div>
-                  <span style="font-size:13px;color:#f2ede8;font-weight:600;">${safePhone || '—'}</span>
-                </td>
-              </tr>
-            </table>
-
-            <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-              <tr>
-                <td style="padding:14px 16px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;">
-                  <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:5px;">Budget estimé</div>
-                  <span style="font-size:13px;color:#f2ede8;font-weight:600;">${safeBudget || 'Non précisé'}</span>
-                </td>
-              </tr>
-            </table>
-
-            <!-- Message -->
-            <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px;">
-              Description du projet
-            </div>
-            <p style="color:#e8e4df;line-height:1.7;font-size:14px;background:rgba(136,202,83,.05);padding:18px;border-radius:10px;border-left:3px solid #88ca53;margin:0 0 28px;">
-              ${safeMessage}
-            </p>
-
-            <!-- CTA -->
-            <a href="mailto:${safeEmail}" style="display:inline-block;padding:13px 26px;border-radius:100px;background:#88ca53;color:#0a120c;font-size:13px;font-weight:700;text-decoration:none;">
-              Répondre à ${safeName.split(' ')[0]} →
-            </a>
-
-          </div>
-
-          <div style="padding:18px 32px;border-top:1px solid rgba(255,255,255,.06);">
-            <p style="margin:0;font-size:11px;color:rgba(255,255,255,.3);">
-              Envoyé depuis akatech-nextjs · ${new Date().toLocaleString('fr-FR', { timeZone: 'Africa/Abidjan' })}
-            </p>
-          </div>
-        </div>
-      `,
+      /* Le SDK Resend lit `replyTo` (camelCase) : l'ancien `reply_to` était
+         ignoré, donc « Répondre » écrivait à l'expéditeur Resend. */
+      replyTo: email,
+      subject: mail.subject,
+      html: mail.html,
+      text: mail.text,
     })
 
     console.log('[Contact] Email envoyé :', result?.data?.id ?? result)

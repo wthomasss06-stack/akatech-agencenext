@@ -1,6 +1,7 @@
 // app/api/stats/route.js
 // Protégée par middleware.js (Basic Auth).
 import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage, getActionStats, getTopVisitors } from '@/lib/db'
+import { getDashboardActions } from '@/lib/dashboard-actions'
 import { NextResponse } from 'next/server'
 
 export const runtime = 'nodejs'
@@ -17,7 +18,7 @@ export async function GET() {
       todayConversations, weekConversations, monthConversations,
       totalLeads, qualifiedLeads, contactedLeads, convertedLeads,
       avgLeadScore, totalMessages, avgMessagesPerConversation,
-      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, topVisitors,
+      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, topVisitors, actions,
     ] = await Promise.all([
       prisma.conversation.count(),
       prisma.conversation.count({ where: { status: 'ACTIVE' } }),
@@ -43,6 +44,12 @@ export async function GET() {
                                // façon exécutée avant le slice(0, limit) dans
                                // getTopVisitors, donc pas de coût réseau
                                // supplémentaire à changer de page.
+      // « Actions à faire » ne doit jamais empêcher le reste du dashboard de charger
+      // (ex. colonne Lead.followUpAt pas encore créée avant `prisma db push`).
+      getDashboardActions().catch((error) => {
+        console.error('[API Stats] Actions à faire indisponibles:', error?.message || error)
+        return { items: [], counts: {}, total: 0, more: {}, unavailable: true }
+      }),
     ])
 
     return NextResponse.json({
@@ -69,6 +76,7 @@ export async function GET() {
       activity,
       visitors: { ...visitorStats, actionsByType: actionStats, topVisitors },
       aiUsage,
+      actions,
     })
   } catch (error) {
     console.error('[API Stats] Erreur:', error)
