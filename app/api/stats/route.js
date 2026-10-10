@@ -1,6 +1,6 @@
 // app/api/stats/route.js
 // Protégée par middleware.js (Basic Auth).
-import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage, getActionStats, getTopVisitors } from '@/lib/db'
+import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage, getActionStats, getVisitorList } from '@/lib/db'
 import { getDashboardActions } from '@/lib/dashboard-actions'
 import { NextResponse } from 'next/server'
 
@@ -18,7 +18,7 @@ export async function GET() {
       todayConversations, weekConversations, monthConversations,
       totalLeads, qualifiedLeads, contactedLeads, convertedLeads,
       avgLeadScore, totalMessages, avgMessagesPerConversation,
-      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, topVisitors, actions,
+      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, visitorList, actions,
     ] = await Promise.all([
       prisma.conversation.count(),
       prisma.conversation.count({ where: { status: 'ACTIVE' } }),
@@ -38,12 +38,8 @@ export async function GET() {
       getVisitorStats(30),
       getTodayAiUsage(),
       getActionStats(30),
-      getTopVisitors(30, 200), // limite haute (au lieu de 15) : la pagination
-                               // se fait côté client sur ce tableau déjà en
-                               // mémoire — la requête complète est de toute
-                               // façon exécutée avant le slice(0, limit) dans
-                               // getTopVisitors, donc pas de coût réseau
-                               // supplémentaire à changer de page.
+      getVisitorList(30, 500), // le dashboard trie/filtre cette liste côté navigateur ;
+                               // `total` indique s'il y a plus de visiteurs que la liste.
       // « Actions à faire » ne doit jamais empêcher le reste du dashboard de charger
       // (ex. colonne Lead.followUpAt pas encore créée avant `prisma db push`).
       getDashboardActions().catch((error) => {
@@ -74,7 +70,7 @@ export async function GET() {
       },
       byProjectType: leadsByProjectType.map(p => ({ type: p.projectType || 'Non précisé', count: p._count.id })),
       activity,
-      visitors: { ...visitorStats, actionsByType: actionStats, topVisitors },
+      visitors: { ...visitorStats, actionsByType: actionStats, topVisitors: visitorList.items, topVisitorsTotal: visitorList.total },
       aiUsage,
       actions,
     })

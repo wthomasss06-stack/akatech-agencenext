@@ -1,15 +1,19 @@
 ﻿'use client'
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import {
   LayoutDashboard, BarChart3, MessagesSquare, Users, Search,
   X, ChevronLeft, ChevronRight, RefreshCw, Smartphone, Monitor, Tablet, Sun, Moon,
   Trash2, AlertTriangle, Cookie, Receipt, ClipboardList, Newspaper,
-  MousePointerClick, Repeat, CalendarClock, ArrowRight, CheckCircle2,
+  MousePointerClick, Repeat, CalendarClock, ArrowRight, CheckCircle2, ChevronDown, RotateCcw,
 } from 'lucide-react'
 import {
   ResponsiveContainer, AreaChart, Area, BarChart, Bar as RBar,
   PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip as RTooltip,
 } from 'recharts'
+import {
+  VISITOR_SORTS, VISITOR_PERIODS, VISITOR_MIN_VISITS, VISITOR_ENGAGEMENT, DEFAULT_VISITOR_VIEW, NO_DEVICE,
+  filterAndSortVisitors, listVisitorDevices, countActiveVisitorFilters, summarizeActionCounts,
+} from '@/lib/dashboard-view'
 import { HoverSlideText } from '@/components/ui/index'
 import Logo from '@/components/ui/Logo'
 import InvoicesTab from '@/components/dashboard/InvoicesTab'
@@ -114,15 +118,39 @@ function StatusPill({ status, T }) {
 
 const ACTION_SEVERITY_COLORS = { high: '#e05e5e', medium: '#e0a83e', low: '#5b8def' }
 
+const ACTIONS_OPEN_KEY = 'akatech-dashboard-actions-open'
+
 /* « Actions à faire » : calculées côté serveur (lib/dashboard-actions.js),
-   rafraîchies avec le reste des stats toutes les 30 s. Un clic ouvre l'onglet concerné. */
+   rafraîchies avec le reste des stats toutes les 30 s. Un clic ouvre l'onglet concerné.
+   Le panneau se replie ; son état est mémorisé dans le navigateur. Replié, il garde
+   le compteur et un résumé, pour qu'une urgence ne soit jamais complètement masquée. */
 function ActionsPanel({ actions, onGo, T, CARD }) {
+  const [open, setOpen] = useState(true)
+  useEffect(() => {
+    try { if (localStorage.getItem(ACTIONS_OPEN_KEY) === '0') setOpen(false) } catch { /* stockage indisponible : reste déplié */ }
+  }, [])
+  function toggle() {
+    const next = !open
+    setOpen(next)
+    try { localStorage.setItem(ACTIONS_OPEN_KEY, next ? '1' : '0') } catch { /* ignoré */ }
+  }
+
   const items = actions?.items ?? []
   const hasMore = Object.values(actions?.more ?? {}).some(Boolean)
+  const summary = actions?.unavailable ? 'indisponibles' : items.length ? summarizeActionCounts(actions.counts) : 'rien d’urgent'
   return (
     <div style={{ ...CARD, padding: '1.2rem', marginBottom: 24 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 12, marginBottom: 12 }}>
-        <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub }}>Actions à faire</div>
+      <button
+        type="button"
+        onClick={toggle}
+        aria-expanded={open}
+        aria-controls="dashboard-actions-list"
+        style={{
+          display: 'flex', alignItems: 'center', gap: 10, width: '100%', background: 'none', border: 'none',
+          padding: 0, cursor: 'pointer', color: 'inherit', textAlign: 'left', marginBottom: open ? 12 : 0,
+        }}
+      >
+        <span style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub }}>Actions à faire</span>
         {items.length > 0 && (
           <span style={{
             fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontWeight: 900, fontSize: '.95rem',
@@ -132,37 +160,48 @@ function ActionsPanel({ actions, onGo, T, CARD }) {
             {actions.total}{hasMore ? '+' : ''}
           </span>
         )}
-      </div>
+        <span style={{
+          flex: 1, minWidth: 0, fontSize: '.72rem', color: T.textMuted,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}>
+          {open ? '' : summary}
+        </span>
+        <ChevronDown size={16} color={T.textMuted} style={{ flexShrink: 0, transition: 'transform .2s', transform: open ? 'rotate(180deg)' : 'none' }} />
+      </button>
 
-      {actions?.unavailable ? (
-        <div style={{ color: T.textMuted, fontSize: '.78rem' }}>
-          Actions indisponibles pour l'instant — le schéma de la base n'est probablement pas à jour (<code>npx prisma db push</code>).
-        </div>
-      ) : items.length === 0 ? (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: T.textSub, fontSize: '.82rem' }}>
-          <CheckCircle2 size={16} color={T.green} /> Rien d'urgent : tout est à jour.
-        </div>
-      ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {items.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onGo(item.tab)}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left',
-                background: 'none', border: `1px solid ${T.border}`, borderRadius: 12,
-                padding: '.65rem .85rem', cursor: 'pointer', color: T.textMain,
-              }}
-            >
-              <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: ACTION_SEVERITY_COLORS[item.severity] || T.textMuted }} />
-              <span style={{ flex: 1, minWidth: 0 }}>
-                <span style={{ display: 'block', fontSize: '.82rem', fontWeight: 700 }}>{item.title}</span>
-                {item.detail && <span style={{ display: 'block', fontSize: '.74rem', color: T.textSub, marginTop: 2 }}>{item.detail}</span>}
-              </span>
-              <ArrowRight size={14} color={T.textMuted} style={{ flexShrink: 0 }} />
-            </button>
-          ))}
-          {hasMore && <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 4 }}>D'autres actions sont listées dans les onglets concernés.</div>}
+      {open && (
+        <div id="dashboard-actions-list">
+          {actions?.unavailable ? (
+            <div style={{ color: T.textMuted, fontSize: '.78rem' }}>
+              Actions indisponibles pour l'instant — le schéma de la base n'est probablement pas à jour (<code>npx prisma db push</code>).
+            </div>
+          ) : items.length === 0 ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: T.textSub, fontSize: '.82rem' }}>
+              <CheckCircle2 size={16} color={T.green} /> Rien d'urgent : tout est à jour.
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+              {items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => onGo(item.tab)}
+                  style={{
+                    display: 'flex', alignItems: 'center', gap: 12, width: '100%', textAlign: 'left',
+                    background: 'none', border: `1px solid ${T.border}`, borderRadius: 12,
+                    padding: '.65rem .85rem', cursor: 'pointer', color: T.textMain,
+                  }}
+                >
+                  <span style={{ width: 8, height: 8, borderRadius: '50%', flexShrink: 0, background: ACTION_SEVERITY_COLORS[item.severity] || T.textMuted }} />
+                  <span style={{ flex: 1, minWidth: 0 }}>
+                    <span style={{ display: 'block', fontSize: '.82rem', fontWeight: 700 }}>{item.title}</span>
+                    {item.detail && <span style={{ display: 'block', fontSize: '.74rem', color: T.textSub, marginTop: 2 }}>{item.detail}</span>}
+                  </span>
+                  <ArrowRight size={14} color={T.textMuted} style={{ flexShrink: 0 }} />
+                </button>
+              ))}
+              {hasMore && <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 4 }}>D'autres actions sont listées dans les onglets concernés.</div>}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -255,6 +294,148 @@ function UsageBar({ label, usage, T }) {
       <div style={{ height: 8, borderRadius: 4, background: T.border, overflow: 'hidden' }}>
         <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', background: color, borderRadius: 4 }} />
       </div>
+    </div>
+  )
+}
+
+const VISITORS_PER_PAGE = 20
+const DEVICE_LABELS = { desktop: 'Ordinateur', mobile: 'Mobile', tablet: 'Tablette' }
+const formatVisitorDate = (value) => {
+  const date = new Date(value)
+  return Number.isNaN(date.getTime()) ? '—' : date.toLocaleDateString('fr-FR')
+}
+const formatVisitorDateTime = (value) => {
+  const date = new Date(value)
+  return Number.isNaN(date.getTime())
+    ? '—'
+    : date.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })
+}
+
+/* « Visiteurs récurrents » : liste déjà en mémoire (jusqu'à 500 visiteurs, 30 jours),
+   triée et filtrée côté navigateur — changer un critère ne coûte aucun aller-retour réseau. */
+function RecurringVisitorsCard({ visitors, total, onOpen, T, CARD }) {
+  const [view, setView] = useState(DEFAULT_VISITOR_VIEW)
+  const [page, setPage] = useState(1)
+  const update = (patch) => { setView((current) => ({ ...current, ...patch })); setPage(1) }
+  const reset = () => { setView(DEFAULT_VISITOR_VIEW); setPage(1) }
+
+  const rows = useMemo(() => filterAndSortVisitors(visitors, view), [visitors, view])
+  const { devices, hasUnknown } = useMemo(() => listVisitorDevices(visitors), [visitors])
+  const filters = countActiveVisitorFilters(view)
+  const pristine = filters === 0 && view.sort === DEFAULT_VISITOR_VIEW.sort
+  const pages = Math.max(1, Math.ceil(rows.length / VISITORS_PER_PAGE))
+  const current = Math.min(page, pages)
+  const pageRows = rows.slice((current - 1) * VISITORS_PER_PAGE, current * VISITORS_PER_PAGE)
+  const truncated = total > visitors.length
+
+  const control = {
+    background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: '.4rem .6rem',
+    color: T.textMain, fontSize: '.74rem', minWidth: 0,
+  }
+  const field = (label, node) => (
+    <label style={{ display: 'flex', flexDirection: 'column', gap: 3, fontSize: '.62rem', color: T.textMuted, minWidth: 0 }}>
+      {label}
+      {node}
+    </label>
+  )
+
+  return (
+    <div style={{ ...CARD, padding: '1.2rem', gridColumn: '1 / -1' }}>
+      <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 4 }}>Visiteurs récurrents</div>
+      <div style={{ fontSize: '.7rem', color: T.textMuted, marginBottom: 14 }}>
+        30 derniers jours. Trie et filtre pour analyser : choisis « 2 visites et + » pour ne garder que ceux qui reviennent.
+        Clique une ligne pour voir son parcours (pages vues + clics).
+      </div>
+
+      {visitors.length === 0 ? (
+        <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de visiteurs</div>
+      ) : (
+        <>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'flex-end', marginBottom: 12 }}>
+            {field('Trier par',
+              <select value={view.sort} onChange={(e) => update({ sort: e.target.value })} style={control}>
+                {VISITOR_SORTS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>)}
+            {field('Dernière visite',
+              <select value={view.period} onChange={(e) => update({ period: e.target.value })} style={control}>
+                {VISITOR_PERIODS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>)}
+            {field('Nombre de visites',
+              <select value={view.minVisits} onChange={(e) => update({ minVisits: Number(e.target.value) })} style={control}>
+                {VISITOR_MIN_VISITS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>)}
+            {field('Appareil',
+              <select value={view.device} onChange={(e) => update({ device: e.target.value })} style={control}>
+                <option value="">Tous</option>
+                {devices.map((device) => <option key={device} value={device}>{DEVICE_LABELS[device] || device}</option>)}
+                {hasUnknown && <option value={NO_DEVICE}>Inconnu</option>}
+              </select>)}
+            {field('Clics',
+              <select value={view.engagement} onChange={(e) => update({ engagement: e.target.value })} style={control}>
+                {VISITOR_ENGAGEMENT.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+              </select>)}
+            {field('Identifiant',
+              <input
+                type="search"
+                value={view.query}
+                onChange={(e) => update({ query: e.target.value })}
+                placeholder="ex. a3f9…"
+                style={{ ...control, width: 110 }}
+              />)}
+            {!pristine && (
+              <button
+                type="button"
+                onClick={reset}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 5, background: 'none', border: `1px solid ${T.border}`,
+                  borderRadius: 10, padding: '.4rem .7rem', color: T.textSub, fontSize: '.72rem', cursor: 'pointer',
+                }}
+              >
+                <RotateCcw size={12} /> Réinitialiser
+              </button>
+            )}
+          </div>
+
+          <div style={{ fontSize: '.7rem', color: T.textMuted, marginBottom: 10 }}>
+            {rows.length} visiteur{rows.length > 1 ? 's' : ''} sur {visitors.length}
+            {truncated && ` · liste limitée aux ${visitors.length} plus actifs (${total} visiteurs en 30 jours)`}
+          </div>
+
+          {rows.length === 0 ? (
+            <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Aucun visiteur ne correspond à ces filtres.</div>
+          ) : (
+            <>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {pageRows.map((tv) => (
+                  <button
+                    key={tv.id}
+                    onClick={() => onOpen(tv)}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: 10, width: '100%', flexWrap: 'wrap',
+                      background: 'none', border: 'none', borderRadius: 10, cursor: 'pointer',
+                      padding: '.55rem .6rem', textAlign: 'left', color: T.textMain,
+                    }}
+                    onMouseEnter={(e) => { e.currentTarget.style.background = T.light ? '#f6f8f9' : 'rgba(255,255,255,.04)' }}
+                    onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
+                  >
+                    <Repeat size={14} color={T.textMuted} style={{ flexShrink: 0 }} />
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textSub, flexShrink: 0 }}>{tv.shortId}…</span>
+                    <span style={{ fontSize: '.72rem', color: T.textMuted, flex: 1, minWidth: 150 }}>
+                      {formatVisitorDateTime(tv.lastSeenAt)}
+                      <span style={{ opacity: .75 }}> · 1re visite {formatVisitorDate(tv.firstSeenAt)}</span>
+                    </span>
+                    <span style={{ fontSize: '.72rem', color: T.textMuted, flexShrink: 0 }}>{DEVICE_LABELS[tv.lastDevice] || tv.lastDevice || '—'}</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}><Repeat size={11} />{tv.visits}</span>
+                    <span style={{ fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}>{tv.pageViews} pages</span>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}><MousePointerClick size={11} />{tv.actions}</span>
+                  </button>
+                ))}
+              </div>
+              <Pagination pagination={{ page: current, pages }} onPage={setPage} T={T} />
+            </>
+          )}
+        </>
+      )}
     </div>
   )
 }
@@ -489,7 +670,7 @@ const EMPTY_VISITORS = {
   bounceRate: 0, avgSessionDurationSeconds: 0,
   devices: [], sources: [], topPages: [], activeHours: [],
   consent: { accepted: 0, rejected: 0, pending: 0 },
-  visitorsByDay: [], actionsByType: [], topVisitors: [],
+  visitorsByDay: [], actionsByType: [], topVisitors: [], topVisitorsTotal: 0,
 }
 
 function normalizeStats(d) {
@@ -534,11 +715,6 @@ export default function DashboardPage() {
   const [leadPage, setLeadPage] = useState(1)
   const [leadPagination, setLeadPagination] = useState(null)
   const [leadSearch, setLeadSearch] = useState('')
-  // Pagination "Visiteurs récurrents" — côté client : getTopVisitors renvoie
-  // déjà tout le tableau trié (voir note dans app/api/stats/route.js), donc
-  // changer de page ne coûte aucun aller-retour réseau.
-  const [visitorsPage, setVisitorsPage] = useState(1)
-  const VISITORS_PER_PAGE = 20
   const [leadStatusFilter, setLeadStatusFilter] = useState('')
 
   const [prospects, setProspects] = useState([])
@@ -970,45 +1146,7 @@ export default function DashboardPage() {
                     </ResponsiveContainer>
                   )}
                 </div>
-                <div style={{ ...CARD, padding: '1.2rem', gridColumn: '1 / -1' }}>
-                  <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 4 }}>Visiteurs récurrents</div>
-                  <div style={{ fontSize: '.7rem', color: T.textMuted, marginBottom: 14 }}>
-                    Classés par nombre de visites distinctes sur 30 jours. Clique une ligne pour voir son parcours (pages vues + clics).
-                  </div>
-                  {v.topVisitors.length === 0 ? (
-                    <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de visiteurs récurrents</div>
-                  ) : (
-                    <>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                      {v.topVisitors.slice((visitorsPage - 1) * VISITORS_PER_PAGE, visitorsPage * VISITORS_PER_PAGE).map((tv) => (
-                        <button
-                          key={tv.id}
-                          onClick={() => openJourney(tv)}
-                          style={{
-                            display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-                            background: 'none', border: 'none', borderRadius: 10, cursor: 'pointer',
-                            padding: '.55rem .6rem', textAlign: 'left', color: T.textMain,
-                          }}
-                          onMouseEnter={(e) => { e.currentTarget.style.background = T.light ? '#f6f8f9' : 'rgba(255,255,255,.04)' }}
-                          onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}
-                        >
-                          <Repeat size={14} color={T.textMuted} style={{ flexShrink: 0 }} />
-                          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textSub, flexShrink: 0 }}>{tv.shortId}…</span>
-                          <span style={{ fontSize: '.72rem', color: T.textMuted, flex: 1 }}>{new Date(tv.lastSeenAt).toLocaleDateString('fr-FR')}</span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}><Repeat size={11} />{tv.visits}</span>
-                          <span style={{ fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}>{tv.pageViews} pages</span>
-                          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: '.72rem', color: T.textSub, flexShrink: 0 }}><MousePointerClick size={11} />{tv.actions}</span>
-                        </button>
-                      ))}
-                    </div>
-                    <Pagination
-                      pagination={{ page: visitorsPage, pages: Math.ceil(v.topVisitors.length / VISITORS_PER_PAGE) }}
-                      onPage={setVisitorsPage}
-                      T={T}
-                    />
-                    </>
-                  )}
-                </div>
+                <RecurringVisitorsCard visitors={v.topVisitors} total={v.topVisitorsTotal} onOpen={openJourney} T={T} CARD={CARD} />
               </div>
             )}
 

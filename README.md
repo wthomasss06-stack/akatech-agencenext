@@ -180,9 +180,24 @@ Tracking interne (dashboard, onglet **Analytics**), en complément de Vercel Ana
 
 **Limites à garder en tête :** cela compte des navigateurs, pas des personnes. Effacer les cookies ou changer d'appareil crée une autre identité de suivi ; plusieurs personnes partageant un appareil peuvent être regroupées.
 
+### 🔎 Visiteurs récurrents : tri et filtres
+
+Dans Analytics, la liste « Visiteurs récurrents » (30 derniers jours) se trie et se filtre dans le navigateur, sans nouvelle requête (`lib/dashboard-view.js`) :
+
+| Contrôle | Options |
+|---|---|
+| Trier par | dernière visite (récente ou ancienne d'abord, **par défaut : récente d'abord**), première visite, nombre de visites, pages vues, clics |
+| Dernière visite | tout, 24 h, 7 jours, 14 jours |
+| Nombre de visites | toutes, 2 et +, 3 et +, 5 et + (« 2 et + » = visiteurs qui reviennent) |
+| Appareil | ordinateur, mobile, tablette, inconnu |
+| Clics | tous, avec clics, sans clic |
+| Identifiant | recherche sur le début de l'identifiant anonymisé |
+
+Un bouton « Réinitialiser » apparaît dès qu'un tri ou un filtre est actif ; le compteur affiche « N visiteurs sur M ». L'API (`/api/stats`) renvoie jusqu'à 500 visiteurs, les plus actifs d'abord ; au-delà, la liste indique qu'elle est limitée (`getVisitorList` dans `lib/db.js`).
+
 ### ✅ Actions à faire (Vue d'ensemble)
 
-La Vue d'ensemble du dashboard commence par la liste de ce qui demande une décision aujourd'hui (`lib/dashboard-actions.js`, rafraîchie toutes les 30 s avec les stats). Un clic ouvre l'onglet concerné.
+La Vue d'ensemble du dashboard commence par la liste de ce qui demande une décision aujourd'hui (`lib/dashboard-actions.js`, rafraîchie toutes les 30 s avec les stats). Un clic ouvre l'onglet concerné. Le panneau se plie et se déplie d'un clic sur son titre (choix mémorisé dans le navigateur) ; replié, il garde le compteur et un résumé (« 2 factures en retard · 1 relance »).
 
 | Action | Condition |
 |---|---|
