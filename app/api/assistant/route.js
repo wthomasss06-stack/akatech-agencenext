@@ -10,6 +10,7 @@ import {
   toGeminiContents,
   toGroqMessages,
   GROQ_MODEL,
+  GROQ_REQUEST_DEFAULTS,
   MAX_TOKENS 
 } from '@/lib/ai-providers'
 import { buildSystemPrompt, ASSISTANT_TOOLS, WHATSAPP_LINK, detectAssistantLanguage } from '@/lib/assistant'
@@ -192,7 +193,7 @@ async function runAssistant(messages, controller, encoder, conversationId, langu
     console.warn('[Assistant] Toutes les clés Gemini épuisées. Bascule de secours vers Groq...', geminiGlobalError?.message ?? geminiGlobalError)
   }
 
-  // 2. FALLBACK DE SECOURS : GROQ (Llama 3.1 8B)
+  // 2. FALLBACK DE SECOURS : GROQ (GPT-OSS 20B)
   // On repart d'un texte vide : si Gemini avait déjà streamé un fragment
   // avant d'échouer, on ne veut pas le mélanger avec la réponse Groq dans
   // le message sauvegardé (le flux déjà envoyé au visiteur n'est pas
@@ -209,10 +210,8 @@ async function runAssistant(messages, controller, encoder, conversationId, langu
     ]
 
     const responseStream = await groqClient.chat.completions.create({
-      model: GROQ_MODEL,
+      ...GROQ_REQUEST_DEFAULTS,
       messages: groqMessages,
-      temperature: 0.7,
-      max_tokens: MAX_TOKENS,
       stream: true,
     })
 

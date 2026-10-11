@@ -14,8 +14,8 @@ Développé par **M'Bollo Aka Elvis** — Développeur Full-Stack basé à Abidj
 [![GSAP](https://img.shields.io/badge/GSAP-3.12-88ce02?style=flat-square)](https://gsap.com)
 [![Three.js](https://img.shields.io/badge/Three.js-r185-000000?style=flat-square&logo=three.js)](https://threejs.org)
 [![Framer Motion](https://img.shields.io/badge/Framer%20Motion-11-0055FF?style=flat-square)](https://www.framer.com/motion)
-[![Gemini](https://img.shields.io/badge/Gemini-2.5%2F3.x-4285F4?style=flat-square&logo=googlegemini)](https://aistudio.google.com)
-[![Groq](https://img.shields.io/badge/Groq-Llama%203.1-F55036?style=flat-square)](https://groq.com)
+[![Gemini](https://img.shields.io/badge/Gemini-3.8%20Flash-4285F4?style=flat-square&logo=googlegemini)](https://aistudio.google.com)
+[![Groq](https://img.shields.io/badge/Groq-GPT--OSS%2020B-F55036?style=flat-square)](https://groq.com)
 [![Prisma](https://img.shields.io/badge/Prisma-6.x-2D3748?style=flat-square&logo=prisma)](https://prisma.io)
 [![License](https://img.shields.io/badge/Licence-Propriétaire-red?style=flat-square)](#)
 
@@ -45,7 +45,7 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 | **Lucide React** | 0.469 | Icônes vectorielles |
 | **Resend** | 4.0 | Envoi d'e-mails (formulaire de contact) |
 | **@google/genai** | 2.11 | Assistant IA — fournisseur principal (Gemini, gratuit) |
-| **groq-sdk** | 1.3 | Assistant IA — fournisseur de secours (Llama 3.1 8B, gratuit) |
+| **groq-sdk** | 1.3 | Assistant IA — fournisseur de secours (GPT-OSS 20B, gratuit) |
 | **Prisma** + PostgreSQL (Neon) | 6.19 | Conversations, leads, questionnaires, devis, articles, analytics visiteurs — alimente le dashboard admin |
 | **@vercel/analytics** | 2.0 | Pageviews + Web Vitals (en complément du tracking interne visiteurs) |
 | **Recharts** | 3.9 | Graphiques du dashboard admin |
@@ -151,12 +151,14 @@ Widget de chat flottant (bouton bas-gauche — le bas-droit est déjà pris par 
 
 **Double fournisseur, cascade automatique** :
 ```
-Gemini (gemini-3.5-flash → gemini-3.1-flash-lite → gemini-1.5-flash)
-   ↓ (si les 3 échouent : quota épuisé, modèle indisponible…)
-Groq (Llama 3.1 8B, gratuit)
+Gemini (gemini-3.8-flash → gemini-3.6-flash → gemini-3.5-flash-lite → gemini-3.1-flash-lite)
+   ↓ (si les 4 échouent : quota épuisé, modèle indisponible…)
+Groq (openai/gpt-oss-20b, gratuit)
    ↓ (si les deux fournisseurs sont hors service)
 Message de repli invitant à écrire sur WhatsApp
 ```
+**Changer de modèle ne change pas les clés** : une clé Gemini identifie ton projet Google, le modèle n'est qu'un paramètre de chaque requête (`GEMINI_MODELS` dans `lib/ai-providers.js`). **Maintenance** : les modèles sont retirés tous les quelques mois (Google redirige parfois l'ancien nom, Groq coupe sans redirection). Vérifie ces deux pages à chaque e-mail « Deprecation » reçu : [Gemini](https://ai.google.dev/gemini-api/docs/deprecations) et [Groq](https://console.groq.com/docs/deprecations). Groq a arrêté `llama-3.1-8b-instant` le 16 août 2026 (remplaçant : `openai/gpt-oss-20b`). Limites gratuites de ce modèle : 1 000 requêtes/jour et 8 000 jetons/minute — le prompt système (~6 000 jetons) fait que le secours convient aux conversations courtes.
+
 Les deux fournisseurs sont sur des paliers **gratuits** (voir `.env.example`) — aucun coût direct tant que le volume reste raisonnable pour une agence qui démarre.
 
 **System prompt généré, pas codé en dur** — `lib/assistant.js` construit le prompt à partir de `lib/data.js` (`SERVICES`, `PRICING`, `FAQ_ITEMS`, `PROJECT_TYPE_LABELS`) à chaque requête : un changement de tarif sur le site se reflète automatiquement dans les réponses de l'assistant, sans synchronisation manuelle.

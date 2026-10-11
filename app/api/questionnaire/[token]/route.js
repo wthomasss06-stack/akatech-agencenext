@@ -80,8 +80,9 @@ async function classifyAnswers(type, answers) {
       return sanitizeClassification(type, { category: fallbackCategory, tier: fallbackTier, rationale: 'Classification fallback sans clé Gemini active.' })
     }
 
+    // Le modèle est choisi par la cascade de lib/ai-providers.js (GEMINI_MODELS) :
+    // un `model` passé ici serait de toute façon écrasé.
     const answer = await generateGeminiContent({
-      model: 'gemini-2.5-flash',
       contents: [{ role: 'user', parts: [{ text: prompt.userContent }] }],
       config: { systemInstruction: prompt.systemInstruction },
     })

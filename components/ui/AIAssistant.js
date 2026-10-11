@@ -596,7 +596,7 @@ export default function AIAssistant() {
           </div>
 
           {/* Messages */}
-          <div ref={listRef} style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.1rem', display: 'flex', flexDirection: 'column', gap: '.85rem', background: T.bg }}>
+          <div ref={listRef} data-lenis-prevent style={{ flex: 1, overflowY: 'auto', padding: '1rem 1.1rem', display: 'flex', flexDirection: 'column', gap: '.85rem', background: T.bg }}>
             {messages.map((m, i) => (
               <div key={i} style={{
                 alignSelf: m.role === 'user' ? 'flex-end' : 'flex-start',

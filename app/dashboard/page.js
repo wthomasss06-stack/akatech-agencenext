@@ -975,7 +975,7 @@ export default function DashboardPage() {
                       Repères indicatifs (limites publiques des fournisseurs, approximatives) — pas un compteur exact de ton quota restant.
                     </div>
                     <UsageBar T={T} label="Gemini" usage={stats.aiUsage.gemini} />
-                    <UsageBar T={T} label="Groq (Llama 3.1 8B)" usage={stats.aiUsage.groq} />
+                    <UsageBar T={T} label="Groq (GPT-OSS 20B)" usage={stats.aiUsage.groq} />
                   </div>
                 )}
               </div>

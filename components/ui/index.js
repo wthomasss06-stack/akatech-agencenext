@@ -6,6 +6,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useTheme } from '@/lib/theme'
 import { trackAction } from '@/lib/track-action'
+import { scrollToTop } from '@/lib/lenis-instance'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -280,7 +281,7 @@ export function BackToTop() {
       whileHover={{ scale: 1.08, rotate: -4, boxShadow: '6px 8px 0px #050505, 0 0 24px rgba(198,255,61,.45)' }}
       whileTap={{ scale: .94, rotate: 0, boxShadow: '2px 2px 0px #050505' }}
       transition={{ type: 'spring', stiffness: 400, damping: 18 }}
-      onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+      onClick={scrollToTop}
       aria-label="Remonter en haut de la page"
       style={{
         position: 'fixed', bottom: '6.5rem', right: '2rem', zIndex: 8999,

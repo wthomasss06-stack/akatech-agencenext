@@ -307,7 +307,7 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
         ))}
       </div>
 
-      <aside id="sm-panel" ref={panelRef} className="sm-panel" aria-hidden={!open} aria-label={t('menu')}>
+      <aside id="sm-panel" ref={panelRef} className="sm-panel" data-lenis-prevent aria-hidden={!open} aria-label={t('menu')}>
         <div className="sm-panel-inner">
           <div className="sm-panel-head">
             <TransitionLink href="/" className="sm-panel-logo-link" onClick={closeMenu} aria-label={t('homeAria')}>

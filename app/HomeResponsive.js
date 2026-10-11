@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react'
 import HomeClientDesktop from './HomeClientDesktop'
 import HomeClientMobile  from './HomeClientMobile'
+import SmoothScroll from '@/components/ui/SmoothScroll'
 
 export default function HomeResponsive() {
   const [ready, setReady]   = useState(false)
@@ -20,5 +21,11 @@ export default function HomeResponsive() {
   // Avant hydratation → rien (évite flash + conflit useScroll)
   if (!ready) return null
 
-  return mobile ? <HomeClientMobile /> : <HomeClientDesktop />
+  // Lenis (défilement fluide) uniquement sur l'accueil, desktop et mobile.
+  return (
+    <>
+      <SmoothScroll />
+      {mobile ? <HomeClientMobile /> : <HomeClientDesktop />}
+    </>
+  )
 }
