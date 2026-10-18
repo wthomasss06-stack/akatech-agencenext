@@ -1,5 +1,6 @@
 ﻿'use client'
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import {
   motion,
   useAnimation,
@@ -13,6 +14,9 @@ import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
+import { hasRealUrl } from '@/lib/project-stories'
+import { trackAction } from '@/lib/track-action'
+import CaseStudyModal from './CaseStudyModal'
 
 
 
@@ -83,9 +87,11 @@ function HeroRealisations() {
    CARTE INDIVIDUELLE (composant pour pouvoir
    utiliser les hooks useTransform)
 ──────────────────────────────────────────────── */
-function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
+function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, onOpen, T }) {
   const { t } = useLanguage()
   const controls = useAnimation()
+  const online = hasRealUrl(project)
+  const inProgress = project.progress != null && project.progress < 100
 
   if (abs > 2) return null
 
@@ -173,7 +179,7 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
               <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
                 {project.type}
               </div>
-              {project.live && (
+              {online && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
                   <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
                   {t('online')}
@@ -182,8 +188,8 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
             </div>
 
             {/* Résultat */}
-            <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '1rem', color: '#88ca53' }}>
-              {project.result}
+            <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#88ca53' }}>
+              {project.story?.badge || String(project.result || '').replace(/^↑\s*/, '')}
             </div>
           </div>
 
@@ -193,46 +199,34 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
               {project.title}
             </h3>
 
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.2rem' }}>{project.desc}</p>
+            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.4rem' }}>{project.story?.pitch || project.desc}</p>
 
-            {project.live && project.url ? (
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="btn-ghost btn-sm"
-                style={{ marginBottom: '1.2rem' }}
-                onClick={e => { if (!isActive) e.preventDefault() }}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem' }}>
+              <button
+                type="button"
+                className="btn-raised btn-sm"
+                aria-haspopup="dialog"
+                aria-label={`${t('caseOpenAria')} ${project.title}`}
+                onClick={() => { if (isActive) onOpen(project) }}
               >
-                <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={12} />
-              </a>
-            ) : (
-              <span
-                className="btn-ghost btn-sm"
-                style={{ marginBottom: '1.2rem', opacity: .5, pointerEvents: 'none' }}
-              >
-                <FileText size={12} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `${t('project_progress')} · ${project.progress}%` : t('project_demo')} />
-              </span>
-            )}
+                <HoverSlideText text={t('learnMore')} /> <ArrowUpRight size={12} />
+              </button>
 
-            {/* Stack technique */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.5rem' }}>
-              {(project.tech || []).map(tc => (
-                <span key={tc} style={{
-                  padding: '.3rem .85rem',
-                  borderRadius: 100,
-                  background: 'rgba(136,202,83,.1)',
-                  border: '1px solid rgba(136,202,83,.35)',
-                  fontFamily: "'JetBrains Mono',monospace",
-                  fontSize: '.72rem',
-                  fontWeight: 700,
-                  color: '#88ca53',
-                  letterSpacing: '.04em',
-                  whiteSpace: 'nowrap',
-                }}>
-                  {tc}
+              {online ? (
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn-ghost btn-sm"
+                  onClick={e => { if (!isActive) e.preventDefault() }}
+                >
+                  <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={12} />
+                </a>
+              ) : inProgress ? (
+                <span className="btn-ghost btn-sm" style={{ opacity: .5, pointerEvents: 'none' }}>
+                  <FileText size={12} /> <HoverSlideText text={`${t('project_progress')} · ${project.progress}%`} />
                 </span>
-              ))}
+              ) : null}
             </div>
           </div>
         </div>
@@ -253,6 +247,9 @@ function StackedRealisations() {
   const localizedProjects = getLocalizedData(language).PROJECTS
   const total = localizedProjects.length
   const [active, setActive] = useState(0)
+  const [selected, setSelected] = useState(null)
+  const openProject = useCallback((project) => { trackAction('cta_click'); setSelected(project) }, [])
+  const closeProject = useCallback(() => setSelected(null), [])
 
   const go = (dir) => setActive(a => (a + dir + total) % total)
 
@@ -273,6 +270,7 @@ function StackedRealisations() {
               total={total}
               index={i}
               onSwipe={go}
+              onOpen={openProject}
               T={T}
             />
           )
@@ -296,6 +294,8 @@ function StackedRealisations() {
       <p style={{ textAlign: 'center', marginTop: '.6rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(136,202,83,.5)', letterSpacing: '.04em' }}>
         {t('projectsSwipeHint')}
       </p>
+
+      {selected && createPortal(<CaseStudyModal project={selected} onClose={closeProject} />, document.body)}
     </section>
   )
 }
@@ -313,7 +313,7 @@ function ProjectsIntro() {
   const inView = useInView(ref, { once: true, margin: '-60px' })
 
   const TEXT = t('projectsIntro')
-  const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'objectifs', 'technologies', 'conversions,', 'productivité).', 'utilisateur', 'mesure.'])
+  const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'problème', 'solution', 'quotidien.'])
 
   return (
     <section ref={ref} style={{ padding: '6rem 5% 4rem', background: T.bg, position: 'relative' }}>

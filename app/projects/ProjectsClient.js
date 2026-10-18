@@ -1,5 +1,6 @@
 ﻿'use client'
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, useState, useCallback } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, useInView } from 'framer-motion'
 import { Code, Check, FileText, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -8,6 +9,9 @@ import { GhostTitle, LazyImg, GreenUnderline, HoverSlideText } from '@/component
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
+import { hasRealUrl } from '@/lib/project-stories'
+import { trackAction } from '@/lib/track-action'
+import CaseStudyModal from './CaseStudyModal'
 
 
 /* ────────────────────────────────────────────────
@@ -113,10 +117,12 @@ function getDisplayUrl(url) {
    panneau d'infos à droite. Port exact de
    ProjectScrollSlide (App.jsx / elvis-portfolio).
 ──────────────────────────────────────────────── */
-function ProjectScrollSlide({ project, index, total, T }) {
+function ProjectScrollSlide({ project, index, total, T, onOpen }) {
   const { t } = useLanguage()
   const desktopImg = project.img
   const displayUrl = getDisplayUrl(project.url)
+  const online = hasRealUrl(project)
+  const inProgress = project.progress != null && project.progress < 100
 
   // "preview" dans le nom → capture recadrée du contenu → on superpose notre browser chrome.
   // "responsive" ou nom brut → capture qui contient déjà son propre cadre/mockup → pas de
@@ -174,7 +180,7 @@ function ProjectScrollSlide({ project, index, total, T }) {
               <div className="fc-mobile-home" style={{ '--gb': T.border }} />
             </div>
             <div className="fc-resp-badge">
-              <Check size={12} /> 100% Responsive
+              <Check size={12} /> {t('responsiveBadge')}
             </div>
           </div>
           )}
@@ -185,40 +191,39 @@ function ProjectScrollSlide({ project, index, total, T }) {
         <div className="fc-info">
           <div>
             <h3 className="fc-name" style={{ color: T.textMain }}>{project.title}</h3>
-            <h3 className="fc-sub">{project.subtitle}</h3>
+            <p className="fc-sub">{project.subtitle}</p>
           </div>
 
           <div className="fc-meta" style={{ borderColor: 'rgba(136,202,83,.25)' }}>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.type} — {project.live ? t('online') : t('project_progress')}</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.type} — {online ? t('online') : (inProgress ? t('project_progress') : t('delivered'))}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_market')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_country')}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_role')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_design')}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_year')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.year}</span></div>
           </div>
 
-          <div className="fc-tags">
-            {(project.tech || []).map(t => <span key={t} className="fc-tag">{t}</span>)}
+          <p className="fc-desc" style={{ color: T.textSub }}>{project.story?.pitch || project.desc}</p>
+
+          <div className="fc-actions">
+            <button
+              type="button"
+              className="btn-raised btn-sm"
+              aria-haspopup="dialog"
+              aria-label={`${t('caseOpenAria')} ${project.title}`}
+              onClick={() => onOpen(project)}
+            >
+              <HoverSlideText text={t('learnMore')} /> <ArrowUpRight size={15} />
+            </button>
+
+            {online ? (
+              <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm">
+                <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={15} />
+              </a>
+            ) : inProgress ? (
+              <span className="btn-ghost btn-sm" style={{ opacity: .5, pointerEvents: 'none' }}>
+                <FileText size={15} /> <HoverSlideText text={`${t('project_progress')} · ${project.progress}%`} />
+              </span>
+            ) : null}
           </div>
-
-          <h3 className="fc-desc" style={{ color: T.textSub }}>{project.desc}</h3>
-
-          {project.live && project.url ? (
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noreferrer"
-              className="btn-ghost btn-sm"
-              style={{ alignSelf: 'flex-start' }}
-            >
-              <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={15} />
-            </a>
-          ) : (
-            <span
-              className="btn-ghost btn-sm"
-              style={{ alignSelf: 'flex-start', opacity: .5, pointerEvents: 'none' }}
-            >
-              <FileText size={15} /> <HoverSlideText text={project.progress != null && project.progress < 100 ? `${t('project_progress')} · ${project.progress}%` : t('project_demo')} />
-            </span>
-          )}
         </div>
       </div>
 
@@ -245,6 +250,9 @@ function StackedRealisations() {
   const trackRef    = useRef(null)
   const fillRef     = useRef(null)
   const total = localizedProjects.length
+  const [selected, setSelected] = useState(null)
+  const openProject = useCallback((project) => { trackAction('cta_click'); setSelected(project) }, [])
+  const closeProject = useCallback(() => setSelected(null), [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -289,7 +297,7 @@ function StackedRealisations() {
 
         <ul ref={trackRef} className="fcx-track">
           {localizedProjects.map((project, i) => (
-            <ProjectScrollSlide key={project.id} project={project} index={i} total={total} T={T} />
+            <ProjectScrollSlide key={project.id} project={project} index={i} total={total} T={T} onOpen={openProject} />
           ))}
         </ul>
 
@@ -297,6 +305,9 @@ function StackedRealisations() {
           <div ref={fillRef} className="fcx-progress-fill" style={{ width: 0, background: 'linear-gradient(135deg, #c6ff3d, #88ca53)' }} />
         </div>
       </div>
+
+      {/* Fiche « En savoir plus » — montée dans <body> pour échapper aux transformations de la piste */}
+      {selected && createPortal(<CaseStudyModal project={selected} onClose={closeProject} />, document.body)}
 
       {/* CSS — port direct des classes fcx et fc d'App.jsx, palette AKATech */}
       <style>{`
@@ -362,19 +373,13 @@ function StackedRealisations() {
         }
         .fc-info { display: flex; flex-direction: column; gap: 2.2rem; min-height: 420px; }
         .fc-name { font-family: 'JetBrains Mono',monospace; font-size: clamp(2rem,3.5vw,3.2rem); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
-        .fc-sub { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: #88ca53; margin-top: .4rem; }
+        .fc-sub { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: #88ca53; margin: .4rem 0 0; }
         .fc-meta { display: flex; flex-direction: column; gap: .55rem; border-left: 2px solid; padding-left: 1.2rem; }
         .fc-meta-row { display: flex; gap: 1rem; font-size: .78rem; }
         .fc-ml { font-family: 'JetBrains Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; min-width: 80px; }
         .fc-mv { font-weight: 500; }
-        .fc-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
-        .fc-tag {
-          font-family: 'JetBrains Mono', monospace; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase;
-          padding: 4px 12px; border-radius: 20px; border: 1.5px solid rgba(136,202,83,.3);
-          color: #88ca53; background: rgba(136,202,83,.07); transition: background .2s, border-color .2s;
-        }
-        .fc-tag:hover { background: rgba(136,202,83,.16); border-color: rgba(136,202,83,.6); }
-        .fc-desc { font-size: .9rem; line-height: 1.7; max-width: 44ch; font-weight: 400; }
+        .fc-actions { display: flex; flex-wrap: wrap; gap: .8rem; align-self: flex-start; }
+        .fc-desc { font-size: .95rem; line-height: 1.7; max-width: 44ch; font-weight: 400; margin: 0; }
 
         @media (max-width: 1100px) {
           .fc-grid { grid-template-columns: 1fr; gap: 5rem; }
@@ -496,7 +501,7 @@ function ProjectsIntro() {
           }}
         >
           {(() => {
-            const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'objectifs', 'technologies', 'conversions,', 'productivité).', 'utilisateur', 'mesure.'])
+            const greenWords = new Set(['PME,', 'startups', 'créateurs.', 'problème', 'solution', 'quotidien.'])
             return TEXT.split(' ').map((word, i) => (
               <span
                 key={i}

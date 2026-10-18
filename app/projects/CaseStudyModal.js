@@ -1,117 +1,158 @@
 // app/projects/CaseStudyModal.js
-// Fiche détail d'un projet, ouverte depuis /projects (bouton unique
-// "Détail du projet"). Réutilise volontairement le même gabarit et la
-// même feuille de style que components/explorer/ProjectModal.jsx
-// (import de ProjectModal.css, classes .pgm-*) pour que la modale
-// Réalisations soit visuellement identique à celle d'Explorer — seule
-// différence : les sections Problème / Solution / Résultat, propres à
-// l'étude de cas, ajoutées via les classes .pgm-case-* (mêmes fichier
-// CSS, règles ajoutées à la suite).
+// Fiche « En savoir plus » d'une réalisation, ouverte depuis /projects
+// (desktop ET mobile). Écrite pour un futur client, pas pour un développeur :
+// aucune technologie affichée — le problème de départ, la solution, les
+// fonctions phares, où en est le projet, puis un appel à l'action toujours
+// visible (WhatsApp pré-rempli + devis gratuit).
+//
+// Les textes viennent de project.story (lib/project-stories.js). Style
+// autonome dans CaseStudyModal.css (préfixe .cs-), sans toucher au CSS partagé
+// avec l'Explorer.
 'use client'
-import { useEffect } from 'react'
-import { X, ArrowUpRight } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { X, Check, ArrowUpRight, MessageCircle } from 'lucide-react'
 import { HoverSlideText } from '@/components/ui/index'
+import TransitionLink from '@/components/layout/TransitionLink'
 import { useLanguage } from '@/lib/language'
-import '@/components/explorer/ProjectModal.css'
+import { trackAction } from '@/lib/track-action'
+import { hasRealUrl, projectWhatsAppUrl } from '@/lib/project-stories'
+import './CaseStudyModal.css'
 
-function statusInfo(p, t) {
-  if (p.live && p.url) return { label: t('online'), offline: false }
-  if (p.progress != null && p.progress < 100) return { label: `${t('project_progress')} · ${p.progress}%`, offline: true }
-  return { label: t('offline'), offline: true }
-}
+const FOCUSABLE = 'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
 
 export default function CaseStudyModal({ project, onClose }) {
   const { t } = useLanguage()
+  const modalRef = useRef(null)
+  const closeRef = useRef(null)
+
   useEffect(() => {
-    const onKey = (e) => { if (e.key === 'Escape') onClose() }
+    if (!project) return undefined
+    const previouslyFocused = document.activeElement
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    closeRef.current?.focus()
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') { onClose(); return }
+      // Piège à focus : Tab reste dans la fenêtre tant qu'elle est ouverte.
+      if (e.key === 'Tab' && modalRef.current) {
+        const items = [...modalRef.current.querySelectorAll(FOCUSABLE)]
+        if (!items.length) return
+        const first = items[0]
+        const last = items[items.length - 1]
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+      }
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = previousOverflow
+      previouslyFocused?.focus?.()
+    }
+  }, [project, onClose])
 
   if (!project) return null
-  const status = statusInfo(project, t)
+
+  const story = project.story
+  const online = hasRealUrl(project)
+  const inProgress = project.progress != null && project.progress < 100
+  // Même logique que la carte : « En ligne » dès que le site est réellement en ligne.
+  const statusLabel = online
+    ? t('online')
+    : (inProgress ? `${t('project_progress')} · ${project.progress}%` : t('delivered'))
 
   return (
-    <div className="pgm-backdrop" onClick={onClose}>
-      <div className="pgm-modal" onClick={(e) => e.stopPropagation()}>
-        <button type="button" className="pgm-close" onClick={onClose} aria-label={t('close')}>
+    <div className="cs-backdrop" onClick={onClose}>
+      <div
+        ref={modalRef}
+        className="cs-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="cs-title"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button ref={closeRef} type="button" className="cs-close" onClick={onClose} aria-label={t('close')}>
           <X size={16} />
         </button>
 
-        <div className="pgm-image">
-          <img src={project.img} alt={project.title} />
-          <div className="pgm-image-fade" />
+        <div className="cs-image">
+          <img src={project.img} alt={`Aperçu du site ${project.title}`} />
+          <div className="cs-image-fade" />
         </div>
 
-        <div className="pgm-info">
-          <span className="pgm-eyebrow">{project.type}</span>
-          <h2 className="pgm-name">{project.title}</h2>
-          {project.subtitle && <p className="pgm-sub">{project.subtitle}</p>}
-
-          <div className="pgm-meta">
-            <div className="pgm-meta-item">
-              <span>{t('project_year')}</span>
-              <span>{project.year}</span>
-            </div>
-            <div className="pgm-meta-item">
-              <span>{t('project_market')}</span>
-              <span>{t('project_country')}</span>
-            </div>
-            <div className="pgm-meta-item">
-              <span>{t('status')}</span>
-              <span>
-                <em style={{
-                  width: 6, height: 6, borderRadius: '50%', fontStyle: 'normal',
-                  background: status.offline ? 'rgba(255,255,255,.35)' : '#88ca53',
-                  boxShadow: status.offline ? 'none' : '0 0 6px 1px rgba(136,202,83,.7)',
-                  display: 'inline-block',
-                }} />
-                {status.label}
+        <div className="cs-info">
+          <div className="cs-scroll">
+            <div className="cs-head">
+              <span className="cs-eyebrow">{project.type}</span>
+              <span className="cs-status">
+                <i className={`cs-dot${online ? ' is-live' : ''}`} />
+                {statusLabel} · {project.year}
               </span>
             </div>
+            <h2 id="cs-title" className="cs-name">{project.title}</h2>
+            <p className="cs-pitch">{story?.pitch || project.desc}</p>
+
+            {story && (
+              <>
+                <section className="cs-block cs-block--problem">
+                  <h3 className="cs-label">{t('caseProblem')}</h3>
+                  <p className="cs-text">{story.problem}</p>
+                </section>
+
+                <section className="cs-block cs-block--solution">
+                  <h3 className="cs-label">{t('caseSolution')}</h3>
+                  <p className="cs-text">{story.solution}</p>
+                </section>
+
+                {story.features?.length > 0 && (
+                  <section className="cs-block">
+                    <h3 className="cs-label">{t('caseFeatures')}</h3>
+                    <ul className="cs-features">
+                      {story.features.map((f) => (
+                        <li key={f}><Check size={15} aria-hidden="true" /><span>{f}</span></li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                {story.outcome && (
+                  <section className="cs-block">
+                    <h3 className="cs-label">{t('caseResult')}</h3>
+                    <p className="cs-text">{story.outcome}</p>
+                  </section>
+                )}
+              </>
+            )}
           </div>
 
-          {project.result && (
-            <span className="pgm-result">↑ {project.result}</span>
-          )}
-
-          {project.desc && <p className="pgm-desc">{project.desc}</p>}
-
-          {project.problem && (
-            <div className="pgm-case-block">
-              <span className="pgm-case-label">{t('caseProblem')}</span>
-              <p className="pgm-case-text">{project.problem}</p>
-            </div>
-          )}
-          {project.solution && (
-            <div className="pgm-case-block">
-              <span className="pgm-case-label">{t('caseSolution')}</span>
-              <p className="pgm-case-text">{project.solution}</p>
-            </div>
-          )}
-          {project.impact && (
-            <div className="pgm-case-block">
-              <span className="pgm-case-label">{t('caseResult')}</span>
-              <p className="pgm-case-text">{project.impact}</p>
-            </div>
-          )}
-
-          {Array.isArray(project.tech) && project.tech.length > 0 && (
-            <div className="pgm-tags">
-              {project.tech.map((t, i) => <span className="pgm-tag" key={i}>{t}</span>)}
-            </div>
-          )}
-
-          <div className="pgm-actions">
-            {project.live && project.url ? (
-              <a href={project.url} target="_blank" rel="noreferrer" className="btn-raised">
-                <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={15} />
+          {/* Appel à l'action — hors de la zone qui défile : toujours visible */}
+          <div className="cs-footer">
+            <p className="cs-footer-title">
+              {story?.audience ? `${t('caseCtaTitle')} Idéal pour ${story.audience}.` : t('caseCtaTitle')}
+            </p>
+            <div className="cs-actions">
+              <a
+                href={projectWhatsAppUrl(project)}
+                target="_blank"
+                rel="noreferrer"
+                className="btn-raised btn-sm"
+                onClick={() => trackAction('whatsapp_click')}
+              >
+                <MessageCircle size={15} /> <HoverSlideText text={t('caseCtaWhatsApp')} />
               </a>
-            ) : (
-              <span className="pgm-cta-muted">
-                {project.progress != null && project.progress < 100 ? `${t('project_progress')} — ${project.progress}%` : t('project_demo')}
-              </span>
-            )}
+              <TransitionLink href="/devis" className="btn-ghost btn-sm" onClick={() => trackAction('cta_click')}>
+                <HoverSlideText text={t('caseCtaQuote')} />
+              </TransitionLink>
+            </div>
+            <div className="cs-footer-row">
+              <span className="cs-note">{t('uiFreeQuote24')}</span>
+              {online && (
+                <a href={project.url} target="_blank" rel="noreferrer" className="cs-site-link">
+                  {t('caseSeeSite')} <ArrowUpRight size={13} />
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
