@@ -207,7 +207,7 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, onOpen, 
                 className="btn-raised btn-sm"
                 aria-haspopup="dialog"
                 aria-label={`${t('caseOpenAria')} ${project.title}`}
-                onClick={() => { if (isActive) onOpen(project) }}
+                onClick={(e) => { if (isActive) onOpen(project, e.currentTarget) }}
               >
                 <HoverSlideText text={t('learnMore')} /> <ArrowUpRight size={12} />
               </button>
@@ -248,7 +248,7 @@ function StackedRealisations() {
   const total = localizedProjects.length
   const [active, setActive] = useState(0)
   const [selected, setSelected] = useState(null)
-  const openProject = useCallback((project) => { trackAction('cta_click'); setSelected(project) }, [])
+  const openProject = useCallback((project, el) => { trackAction('cta_click'); setSelected({ project, el }) }, [])
   const closeProject = useCallback(() => setSelected(null), [])
 
   const go = (dir) => setActive(a => (a + dir + total) % total)
@@ -295,7 +295,7 @@ function StackedRealisations() {
         {t('projectsSwipeHint')}
       </p>
 
-      {selected && createPortal(<CaseStudyModal project={selected} onClose={closeProject} />, document.body)}
+      {selected && createPortal(<CaseStudyModal project={selected.project} originEl={selected.el} onClosed={closeProject} />, document.body)}
     </section>
   )
 }

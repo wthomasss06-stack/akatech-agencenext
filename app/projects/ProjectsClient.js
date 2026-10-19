@@ -209,7 +209,7 @@ function ProjectScrollSlide({ project, index, total, T, onOpen }) {
               className="btn-raised btn-sm"
               aria-haspopup="dialog"
               aria-label={`${t('caseOpenAria')} ${project.title}`}
-              onClick={() => onOpen(project)}
+              onClick={(e) => onOpen(project, e.currentTarget)}
             >
               <HoverSlideText text={t('learnMore')} /> <ArrowUpRight size={15} />
             </button>
@@ -251,7 +251,7 @@ function StackedRealisations() {
   const fillRef     = useRef(null)
   const total = localizedProjects.length
   const [selected, setSelected] = useState(null)
-  const openProject = useCallback((project) => { trackAction('cta_click'); setSelected(project) }, [])
+  const openProject = useCallback((project, el) => { trackAction('cta_click'); setSelected({ project, el }) }, [])
   const closeProject = useCallback(() => setSelected(null), [])
 
   useEffect(() => {
@@ -306,8 +306,8 @@ function StackedRealisations() {
         </div>
       </div>
 
-      {/* Fiche « En savoir plus » — montée dans <body> pour échapper aux transformations de la piste */}
-      {selected && createPortal(<CaseStudyModal project={selected} onClose={closeProject} />, document.body)}
+      {/* Fiche « En savoir plus » — panneau morph né du bouton cliqué, monté dans <body> pour échapper aux transformations de la piste */}
+      {selected && createPortal(<CaseStudyModal project={selected.project} originEl={selected.el} onClosed={closeProject} />, document.body)}
 
       {/* CSS — port direct des classes fcx et fc d'App.jsx, palette AKATech */}
       <style>{`

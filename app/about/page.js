@@ -4,7 +4,7 @@ import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: 'À propos — AKATech | Agence Web Abidjan',
-  description: `Découvrez AKATech, agence web basée à Abidjan. 3+ ans d'expérience, +${PROJECTS.length} projets livrés, 100% de clients satisfaits.`,
+  description: `Découvrez AKATech, agence web basée à Abidjan. 3+ ans d'expérience, +${PROJECTS.length} projets livrés, 99% de clients satisfaits.`,
   alternates: { canonical: '/about' },
   openGraph: { title: 'À propos — AKATech', description: `3+ ans d'expérience, +${PROJECTS.length} projets livrés en Côte d'Ivoire.`, locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/about' },
 }
