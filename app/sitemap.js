@@ -1,4 +1,4 @@
-import { BLOG_POSTS } from '@/lib/data'
+import { BLOG_POSTS, PROJECTS } from '@/lib/data'
 
 export const dynamic = 'force-static'
 
@@ -25,5 +25,12 @@ export default function sitemap() {
     priority: 0.5,
   }))
 
-  return [...staticRoutes, ...blogRoutes]
+  const projectRoutes = PROJECTS.map(project => ({
+    url: `${SITE_URL}/projects/${project.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
+
+  return [...staticRoutes, ...projectRoutes, ...blogRoutes]
 }

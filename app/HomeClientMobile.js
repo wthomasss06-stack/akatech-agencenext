@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import TransitionLink from '@/components/layout/TransitionLink'
 import { cld } from '@/lib/cloudinary'
 import {
-  ArrowRight, Star, ExternalLink, ChevronDown,
+  ArrowRight, ArrowUpRight, Star, ChevronDown,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
   Calendar, Layers, Receipt, Calculator, MessageCircle, CreditCard,
@@ -85,6 +86,7 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
 // ── CIRCULAR PROJECTS GALLERY — adapté mobile (ratio 16:9, largeur réduite) ──
 function CircularProjectsGallery({ items, draggable = false, cardW = 250, intervalMs = 2800 }) {
   const T = useTheme()
+  const { t } = useLanguage()
   // 6 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
   // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
   const DEFAULT_ITEMS = PROJECTS.filter(p => p.id >= 19 && p.id <= 24)
@@ -180,18 +182,18 @@ function CircularProjectsGallery({ items, draggable = false, cardW = 250, interv
             }} />
             <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.45rem .7rem' }}>
               <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}>{p.title}</div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: 'rgba(136,202,83,.9)', marginTop: '.05rem' }}>{p.type}</div>
+              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: 'rgba(136,202,83,.9)', marginTop: '.05rem' }}>{p.category?.label || p.type}</div>
             </div>
-            {draggable && isActive && p.url && (
-              <a href={p.url} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
-                style={{
-                  position: 'absolute', top: '.5rem', right: '.5rem', zIndex: 21,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  width: 26, height: 26, borderRadius: '50%',
-                  background: 'rgba(136,202,83,.92)', color: '#04140a',
-                }}>
-                <ExternalLink size={12} />
-              </a>
+            {draggable && isActive && (
+              <TransitionLink
+                href={`/projects/${p.slug}`}
+                className="btn-raised btn-sm"
+                aria-label={`${t('detailAria')} ${p.title}`}
+                onClick={(e) => { e.stopPropagation(); trackAction('cta_click') }}
+                style={{ position: 'absolute', top: '.5rem', right: '.5rem', zIndex: 21 }}
+              >
+                <HoverSlideText text={t('detail')} /> <ArrowUpRight size={12} />
+              </TransitionLink>
             )}
           </motion.div>
         )

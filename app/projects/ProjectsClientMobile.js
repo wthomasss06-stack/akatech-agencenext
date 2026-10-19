@@ -1,13 +1,12 @@
 ﻿'use client'
-import { useRef, useEffect, useState, useCallback } from 'react'
-import { createPortal } from 'react-dom'
+import { useRef, useEffect, useState } from 'react'
 import {
   motion,
   useAnimation,
   AnimatePresence,
   useInView,
 } from 'framer-motion'
-import { Code, FileText, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Code, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
@@ -16,7 +15,7 @@ import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
 import { hasRealUrl } from '@/lib/project-stories'
 import { trackAction } from '@/lib/track-action'
-import CaseStudyModal from './CaseStudyModal'
+import TransitionLink from '@/components/layout/TransitionLink'
 
 
 
@@ -87,11 +86,10 @@ function HeroRealisations() {
    CARTE INDIVIDUELLE (composant pour pouvoir
    utiliser les hooks useTransform)
 ──────────────────────────────────────────────── */
-function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, onOpen, T }) {
+function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
   const { t } = useLanguage()
   const controls = useAnimation()
   const online = hasRealUrl(project)
-  const inProgress = project.progress != null && project.progress < 100
 
   if (abs > 2) return null
 
@@ -177,7 +175,7 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, onOpen, 
             {/* Badges */}
             <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
               <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
-                {project.type}
+                {project.category?.label || project.type}
               </div>
               {online && (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
@@ -202,31 +200,17 @@ function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, onOpen, 
             <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.4rem' }}>{project.story?.pitch || project.desc}</p>
 
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem' }}>
-              <button
-                type="button"
+              <TransitionLink
+                href={`/projects/${project.slug}`}
                 className="btn-raised btn-sm"
-                aria-haspopup="dialog"
-                aria-label={`${t('caseOpenAria')} ${project.title}`}
-                onClick={(e) => { if (isActive) onOpen(project, e.currentTarget) }}
+                aria-label={`${t('detailAria')} ${project.title}`}
+                tabIndex={isActive ? 0 : -1}
+                aria-hidden={isActive ? undefined : true}
+                style={isActive ? undefined : { pointerEvents: 'none' }}
+                onClick={() => trackAction('cta_click')}
               >
-                <HoverSlideText text={t('learnMore')} /> <ArrowUpRight size={12} />
-              </button>
-
-              {online ? (
-                <a
-                  href={project.url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-ghost btn-sm"
-                  onClick={e => { if (!isActive) e.preventDefault() }}
-                >
-                  <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={12} />
-                </a>
-              ) : inProgress ? (
-                <span className="btn-ghost btn-sm" style={{ opacity: .5, pointerEvents: 'none' }}>
-                  <FileText size={12} /> <HoverSlideText text={`${t('project_progress')} · ${project.progress}%`} />
-                </span>
-              ) : null}
+                <HoverSlideText text={t('detail')} /> <ArrowUpRight size={12} />
+              </TransitionLink>
             </div>
           </div>
         </div>
@@ -247,9 +231,6 @@ function StackedRealisations() {
   const localizedProjects = getLocalizedData(language).PROJECTS
   const total = localizedProjects.length
   const [active, setActive] = useState(0)
-  const [selected, setSelected] = useState(null)
-  const openProject = useCallback((project, el) => { trackAction('cta_click'); setSelected({ project, el }) }, [])
-  const closeProject = useCallback(() => setSelected(null), [])
 
   const go = (dir) => setActive(a => (a + dir + total) % total)
 
@@ -270,7 +251,6 @@ function StackedRealisations() {
               total={total}
               index={i}
               onSwipe={go}
-              onOpen={openProject}
               T={T}
             />
           )
@@ -295,7 +275,6 @@ function StackedRealisations() {
         {t('projectsSwipeHint')}
       </p>
 
-      {selected && createPortal(<CaseStudyModal project={selected.project} originEl={selected.el} onClosed={closeProject} />, document.body)}
     </section>
   )
 }

@@ -2,12 +2,13 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
+import TransitionLink from '@/components/layout/TransitionLink'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { cld } from '@/lib/cloudinary'
 
 import {
-  ArrowRight, Star, ExternalLink,
+  ArrowRight, ArrowUpRight, Star, ExternalLink,
   Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
   TrendingUp, Users, Clock, Award,
   MessageCircle, Target, Code, Timer, ChevronLeft, ChevronRight,
@@ -952,6 +953,10 @@ function ArchiveTunnelSection() {
       <div
         ref={trackWrapRef}
         className="archive-track-wrap"
+        onMouseEnter={pause}
+        onMouseLeave={resume}
+        onFocus={pause}
+        onBlur={resume}
         style={{ marginTop: '3rem', overflowX: 'auto', overflowY: 'hidden', padding: '1rem 5%', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
         <style jsx>{`
@@ -962,6 +967,8 @@ function ArchiveTunnelSection() {
             <div key={`${p.id}-${i}`}
               onMouseEnter={() => setHoveredId(p.id)}
               onMouseLeave={() => setHoveredId(null)}
+              onFocus={() => setHoveredId(p.id)}
+              onBlur={() => setHoveredId(null)}
               style={{
                 minWidth: 420,
                 minHeight: 560,
@@ -978,16 +985,16 @@ function ArchiveTunnelSection() {
                 <LazyImg src={p.img} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.28)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease' }} />
                 <div style={{ position: 'absolute', top: '50%', left: '50%', transform: hoveredId === p.id ? 'translate(-50%, -50%)' : 'translate(-50%, -30%)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease, transform .25s ease', width: 'calc(100% - 40px)', display: 'flex', justifyContent: 'center' }}>
-                  {p.url ? (
-                    <a href={p.url} target="_blank" rel="noreferrer" className="btn-raised" style={{ width: '100%', maxWidth: 260, justifyContent: 'center' }}>
-                      <HoverSlideText text={t('project_view')} />
-                      <ArrowRight size={16} />
-                    </a>
-                  ) : (
-                    <div style={{ width: '100%', maxWidth: 260, textAlign: 'center', padding: '.95rem 1rem', borderRadius: 999, border: '2px solid #050505', boxShadow: '4px 4px 0px #050505', background: 'rgba(255,255,255,.12)', color: '#fff', fontFamily: "'JetBrains Mono',monospace", fontSize: '.79rem' }}>
-                      {t('comingSoon')}
-                    </div>
-                  )}
+                  <TransitionLink
+                    href={`/projects/${p.slug}`}
+                    className="btn-raised"
+                    aria-label={`${t('detailAria')} ${p.title}`}
+                    onClick={() => trackAction('cta_click')}
+                    style={{ width: '100%', maxWidth: 260, justifyContent: 'center' }}
+                  >
+                    <HoverSlideText text={t('detail')} />
+                    <ArrowUpRight size={16} />
+                  </TransitionLink>
                 </div>
               </div>
               <div style={{ padding: '1rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', gap: '.25rem', background: T.card }}>
@@ -995,7 +1002,7 @@ function ArchiveTunnelSection() {
                   {p.title}
                 </div>
                 <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: '#88ca53', textTransform: 'uppercase', letterSpacing: '.08em' }}>
-                  {p.type}
+                  {p.category?.label || p.type}
                 </div>
               </div>
             </div>

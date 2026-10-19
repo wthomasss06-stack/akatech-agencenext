@@ -1,8 +1,7 @@
 ﻿'use client'
-import { useRef, useEffect, useState, useCallback } from 'react'
-import { createPortal } from 'react-dom'
+import { useRef, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { Code, Check, FileText, ArrowUpRight } from 'lucide-react'
+import { Code, Check, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GhostTitle, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
@@ -11,7 +10,7 @@ import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
 import { hasRealUrl } from '@/lib/project-stories'
 import { trackAction } from '@/lib/track-action'
-import CaseStudyModal from './CaseStudyModal'
+import TransitionLink from '@/components/layout/TransitionLink'
 
 
 /* ────────────────────────────────────────────────
@@ -117,7 +116,7 @@ function getDisplayUrl(url) {
    panneau d'infos à droite. Port exact de
    ProjectScrollSlide (App.jsx / elvis-portfolio).
 ──────────────────────────────────────────────── */
-function ProjectScrollSlide({ project, index, total, T, onOpen }) {
+function ProjectScrollSlide({ project, index, total, T }) {
   const { t } = useLanguage()
   const desktopImg = project.img
   const displayUrl = getDisplayUrl(project.url)
@@ -195,7 +194,7 @@ function ProjectScrollSlide({ project, index, total, T, onOpen }) {
           </div>
 
           <div className="fc-meta" style={{ borderColor: 'rgba(136,202,83,.25)' }}>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.type} — {online ? t('online') : (inProgress ? t('project_progress') : t('delivered'))}</span></div>
+            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.category?.label || project.type} — {online ? t('online') : (inProgress ? t('project_progress') : t('delivered'))}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_market')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_country')}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_role')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_design')}</span></div>
             <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_year')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.year}</span></div>
@@ -204,25 +203,14 @@ function ProjectScrollSlide({ project, index, total, T, onOpen }) {
           <p className="fc-desc" style={{ color: T.textSub }}>{project.story?.pitch || project.desc}</p>
 
           <div className="fc-actions">
-            <button
-              type="button"
+            <TransitionLink
+              href={`/projects/${project.slug}`}
               className="btn-raised btn-sm"
-              aria-haspopup="dialog"
-              aria-label={`${t('caseOpenAria')} ${project.title}`}
-              onClick={(e) => onOpen(project, e.currentTarget)}
+              aria-label={`${t('detailAria')} ${project.title}`}
+              onClick={() => trackAction('cta_click')}
             >
-              <HoverSlideText text={t('learnMore')} /> <ArrowUpRight size={15} />
-            </button>
-
-            {online ? (
-              <a href={project.url} target="_blank" rel="noreferrer" className="btn-ghost btn-sm">
-                <HoverSlideText text={t('project_view')} /> <ArrowUpRight size={15} />
-              </a>
-            ) : inProgress ? (
-              <span className="btn-ghost btn-sm" style={{ opacity: .5, pointerEvents: 'none' }}>
-                <FileText size={15} /> <HoverSlideText text={`${t('project_progress')} · ${project.progress}%`} />
-              </span>
-            ) : null}
+              <HoverSlideText text={t('detail')} /> <ArrowUpRight size={15} />
+            </TransitionLink>
           </div>
         </div>
       </div>
@@ -250,9 +238,6 @@ function StackedRealisations() {
   const trackRef    = useRef(null)
   const fillRef     = useRef(null)
   const total = localizedProjects.length
-  const [selected, setSelected] = useState(null)
-  const openProject = useCallback((project, el) => { trackAction('cta_click'); setSelected({ project, el }) }, [])
-  const closeProject = useCallback(() => setSelected(null), [])
 
   useEffect(() => {
     const section = sectionRef.current
@@ -297,7 +282,7 @@ function StackedRealisations() {
 
         <ul ref={trackRef} className="fcx-track">
           {localizedProjects.map((project, i) => (
-            <ProjectScrollSlide key={project.id} project={project} index={i} total={total} T={T} onOpen={openProject} />
+            <ProjectScrollSlide key={project.id} project={project} index={i} total={total} T={T} />
           ))}
         </ul>
 
@@ -305,9 +290,6 @@ function StackedRealisations() {
           <div ref={fillRef} className="fcx-progress-fill" style={{ width: 0, background: 'linear-gradient(135deg, #c6ff3d, #88ca53)' }} />
         </div>
       </div>
-
-      {/* Fiche « En savoir plus » — panneau morph né du bouton cliqué, monté dans <body> pour échapper aux transformations de la piste */}
-      {selected && createPortal(<CaseStudyModal project={selected.project} originEl={selected.el} onClosed={closeProject} />, document.body)}
 
       {/* CSS — port direct des classes fcx et fc d'App.jsx, palette AKATech */}
       <style>{`
