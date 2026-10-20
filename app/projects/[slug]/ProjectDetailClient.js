@@ -158,6 +158,12 @@ export default function ProjectDetailClient({ project, related, prev, next }) {
 
   return (
     <article className="pd">
+      {/* Fond identique à la landing PC : voir .pd-bg dans ProjectDetail.css */}
+      <div className="pd-bg" aria-hidden="true">
+        <div className="grid-bg pd-bg-grid" />
+        <div className="pd-bg-glow" />
+      </div>
+
       {/* ── HERO ─────────────────────────────────────────── */}
       <header className="pd-hero">
         <div className="pd-wrap pd-hero-grid">

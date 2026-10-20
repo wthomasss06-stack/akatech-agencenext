@@ -331,11 +331,11 @@ function ProjectForm() {
                       onFocus={e => { e.target.style.borderColor = '#88ca53'; e.target.style.boxShadow = '0 0 0 3px rgba(136,202,83,.12)' }}
                       onBlur={e => { e.target.style.borderColor = T.border; e.target.style.boxShadow = 'none' }}>
                       <option value="">Sélectionner...</option>
-                      <option>Moins de 100 000 FCFA</option>
-                      <option>100 000 – 300 000 FCFA</option>
-                      <option>300 000 – 600 000 FCFA</option>
-                      <option>600 000 – 1 200 000 FCFA</option>
-                      <option>Plus de 1 200 000 FCFA</option>
+                      <option>Moins de 200 000 FCFA</option>
+                      <option>200 000 – 400 000 FCFA</option>
+                      <option>400 000 – 800 000 FCFA</option>
+                      <option>800 000 – 1 500 000 FCFA</option>
+                      <option>Plus de 1 500 000 FCFA</option>
                       <option>À discuter</option>
                     </select>
                   </div>

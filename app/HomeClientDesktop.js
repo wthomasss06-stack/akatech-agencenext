@@ -439,10 +439,10 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections }) {
 // ── SERVICES — Two-Column Skewed Images (HTML skew-section) ──
 // ═══════════════════════════════════════════════════════════════
 const getServicesSkew = (t) => [
-  { n: '01', Icon: Globe,        title: t('service_site_vitrine'),            desc: t('service_site_vitrine_desc'), price: t('pricing_from_150k'), del: '5-7 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
+  { n: '01', Icon: Globe,        title: t('service_site_vitrine'),            desc: t('service_site_vitrine_desc'), price: t('pricing_from_vitrine'), del: '10-15 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
   { n: '02', Icon: Map,          title: t('service_cartes_dashboards'),        desc: t('service_cartes_dashboards_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
   { n: '03', Icon: Wrench,       title: t('service_maintenance'),              desc: t('service_maintenance_desc'), price: t('pricing_from_20000_month'), del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
-  { n: '04', Icon: MapPin,       title: t('service_google_my_business'),       desc: t('service_google_my_business_desc'), price: t('pricing_from_10000_month'), del: '1-2 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
+  { n: '04', Icon: MapPin,       title: t('service_google_my_business'),       desc: t('service_google_my_business_desc'), price: t('pricing_from_gbp'), del: '2-7 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
   { n: '05', Icon: MessageCircle, title: t('service_chatbot_ia'),               desc: t('service_chatbot_ia_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/ia.webp', slug: 'chatbot-ia' },
   { n: '06', Icon: CreditCard,    title: t('service_paiement_en_ligne'),        desc: t('service_paiement_en_ligne_desc'), price: t('pricing_quote'), del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
 ]

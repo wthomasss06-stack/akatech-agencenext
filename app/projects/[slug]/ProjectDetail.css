@@ -20,12 +20,25 @@
   --pd-shadow: #fff;                      /* ombre dure des étiquettes */
   --pd-soft: rgba(136, 202, 83, 0.35);    /* ombre dure des cartes */
   --pd-accent: var(--pop-lime);           /* accent en texte */
-  --pd-grid: rgba(136, 202, 83, 0.07);
 
-  position: relative;
+  position: relative; isolation: isolate;
   color: var(--pd-text);
   background: var(--pd-bg);
   overflow-x: clip;
+}
+
+/* ── Fond : celui de la landing PC ──────────────────────────────
+   Fond uni (--bg-dark / --bg-light), texture .grid-bg (globals.css,
+   opacité 0.2 comme les sections de l'accueil) et deux halos verts
+   très discrets (0.04–0.05). Une seule couche derrière toute la page,
+   pour que le fond reste continu d'une section à l'autre. */
+.pd-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.pd-bg-grid { position: absolute; inset: 0; opacity: 0.2; }
+.pd-bg-glow {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(800px 520px at 76% 13%, rgba(136, 202, 83, 0.05), transparent 65%),
+    radial-gradient(800px 520px at 18% 60%, rgba(136, 202, 83, 0.04), transparent 65%);
 }
 body.light-mode .pd {
   --pd-bg: var(--bg-light);
@@ -39,7 +52,6 @@ body.light-mode .pd {
   --pd-shadow: #050505;
   --pd-soft: #050505;
   --pd-accent: #3d6b1c;
-  --pd-grid: rgba(0, 0, 0, 0.05);
 }
 
 .pd *, .pd *::before, .pd *::after { box-sizing: border-box; }
@@ -56,23 +68,8 @@ body.light-mode .pd {
 
 /* ─────────────── HERO ─────────────── */
 .pd-hero {
-  position: relative; isolation: isolate;
+  position: relative;
   padding: clamp(6.5rem, 15vh, 9rem) 0 clamp(3rem, 8vh, 5rem);
-}
-.pd-hero::before {
-  content: ''; position: absolute; inset: 0; z-index: -2; pointer-events: none;
-  background:
-    radial-gradient(880px circle at 82% 34%, rgba(198, 255, 61, 0.15), transparent 62%),
-    radial-gradient(640px circle at 4% 92%, rgba(136, 202, 83, 0.1), transparent 60%);
-}
-.pd-hero::after {
-  content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
-  background-image:
-    linear-gradient(var(--pd-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--pd-grid) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 82%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 82%);
 }
 .pd-hero-grid {
   display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);

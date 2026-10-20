@@ -2,10 +2,11 @@
 import Link from 'next/link'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
+import PageBackground from '@/components/ui/PageBackground'
 
 function buildStyles(T) {
   return {
-    shell: { minHeight: '100vh', padding: 'clamp(7rem, 13vw, 11rem) 5% 7rem', background: T.bg },
+    shell: { minHeight: '100vh', padding: 'clamp(7rem, 13vw, 11rem) 5% 7rem', background: T.bg, position: 'relative', isolation: 'isolate' },
     inner: { maxWidth: 920, margin: '0 auto' },
     eyebrow: { color: T.green, fontSize: '.72rem', letterSpacing: '.16em', textTransform: 'uppercase', marginBottom: '1rem' },
     title: { color: T.textMain, fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(2.4rem, 7vw, 5.5rem)', lineHeight: 1, letterSpacing: '-.06em', marginBottom: '1.5rem' },
@@ -31,6 +32,7 @@ export default function LegalPage({ contentByLanguage }) {
   const styles = buildStyles(T)
   return (
     <main style={styles.shell}>
+      <PageBackground />
       <div style={styles.inner}>
         <div style={styles.eyebrow}>{content.eyebrow}</div>
         <h1 style={styles.title}>{content.title}</h1>

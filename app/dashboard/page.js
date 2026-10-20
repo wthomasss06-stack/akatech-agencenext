@@ -16,6 +16,7 @@ import {
 } from '@/lib/dashboard-view'
 import { HoverSlideText } from '@/components/ui/index'
 import Logo from '@/components/ui/Logo'
+import PageBackground from '@/components/ui/PageBackground'
 import InvoicesTab from '@/components/dashboard/InvoicesTab'
 import BlogTab from '@/components/dashboard/BlogTab'
 
@@ -43,10 +44,15 @@ import BlogTab from '@/components/dashboard/BlogTab'
    groups (plus risqué pour un gain cosmétique).
    ──────────────────────────────────────────────────────────── */
 
+/* Fonds alignés sur la landing (app/globals.css : --bg-dark #060e09,
+   --bg-dark-card #0d1a11, --bg-light #f8f8f8, --bg-light-card #fff) +
+   texture .grid-bg et halos via <PageBackground fixed /> plus bas. Valeurs
+   littérales (pas de var(--…)) : ces couleurs passent aussi dans des
+   attributs SVG (graphiques Recharts) et des concaténations de chaînes. */
 const DASH_THEME_LIGHT = {
   light: true,
-  bg: '#f6f8f9',
-  bgAlt: '#f6f8f9',
+  bg: '#f8f8f8',
+  bgAlt: '#f8f8f8',
   card: '#ffffff',
   textMain: '#1a1d1f',
   textSub: '#5f6368',
@@ -63,20 +69,20 @@ const DASH_THEME_LIGHT = {
 
 const DASH_THEME_DARK = {
   light: false,
-  bg: '#202124',
-  bgAlt: '#202124',
-  card: '#292a2d',
+  bg: '#060e09',
+  bgAlt: '#060e09',
+  card: '#0d1a11',
   textMain: '#e8eaed',
   textSub: '#9aa0a6',
   textMuted: '#80868b',
   green: '#88ca53',
   greenSub: '#6fb03f',
-  border: '#3c4043',
-  border2: '#5f6368',
+  border: 'rgba(136,202,83,.14)',
+  border2: 'rgba(136,202,83,.28)',
   shadow: '0 1px 2px rgba(0,0,0,.35), 0 1px 6px rgba(0,0,0,.3)',
   shadowHover: '0 2px 8px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35)',
-  tabRail: '#303134',
-  tabActive: '#3c4043',
+  tabRail: 'rgba(136,202,83,.08)',
+  tabActive: 'rgba(136,202,83,.2)',
 }
 
 const DASH_THEME_KEY = 'akatech-dashboard-theme'
@@ -878,6 +884,7 @@ export default function DashboardPage() {
       position: 'fixed', inset: 0, zIndex: 9500, overflowY: 'auto',
       background: T.bg, color: T.textMain, fontFamily: 'inherit',
     }}>
+      <PageBackground fixed />
       <div style={{ maxWidth: 1100, margin: '0 auto', padding: '2rem 1.2rem 4rem' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.8rem', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.6rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '.7rem' }}>

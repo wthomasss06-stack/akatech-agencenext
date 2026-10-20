@@ -437,7 +437,7 @@ const getServicesItems = (t) => [
       { h: t('service_site_vitrine_b5'), d: t('service_site_vitrine_b5_d') },
       { h: t('service_site_vitrine_b6'), d: t('service_site_vitrine_b6_d') },
     ],
-    price: t('pricing_from_150k'),
+    price: t('pricing_from_vitrine'),
   },
   {
     n: '02', Icon: Map, title: t('service_cartes_dashboards'),
@@ -473,7 +473,7 @@ const getServicesItems = (t) => [
       { h: t('service_gmb_b4'), d: t('service_gmb_b4_d') },
       { h: t('service_gmb_b5'), d: t('service_gmb_b5_d') },
     ],
-    price: t('pricing_from_10000_month'),
+    price: t('pricing_from_gbp'),
   },
   {
     n: '05', Icon: MessageCircle, title: t('service_chatbot_ia'),

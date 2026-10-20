@@ -238,7 +238,7 @@ function PricingTabs() {
 const GARANTIES = [
   { icon: FileText,      title: 'Devis 100% gratuit',      desc: 'Sans engagement, sous 24h'            },
   { icon: Lock,          title: 'Paiement sécurisé',        desc: 'MTN, Orange Money, Wave, virement'    },
-  { icon: Zap,           title: 'Délais respectés',          desc: 'Date convenue, ou remboursement'      },
+  { icon: Zap,           title: 'Délais respectés',          desc: 'Retard de notre fait : pénalité et remboursement partiel possible' },
   { icon: GraduationCap, title: 'Formation incluse',         desc: 'Vous restez autonome après livraison' },
   { icon: Wrench,        title: 'Support 48h',               desc: 'Corrections & évolutions post-livraison' },
   { icon: Globe,         title: 'Adapté marché africain',    desc: 'Mobile Money, faible débit, FCFA'     },

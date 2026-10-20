@@ -75,7 +75,8 @@ akatech-nextjs/
 │   │
 │   ├── about/                 # Équipe, stats animées, valeurs
 │   ├── services/               # 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes
-│   ├── projects/               # Galerie filtrée (19 réalisations)
+│   ├── projects/               # Galerie (19 réalisations) — un seul bouton « Détail » par carte
+│   │   └── [slug]/              # Page de détail d'une réalisation : /projects/<slug> (SSR, un seul composant PC + mobile)
 │   ├── pricing/                 # 4 grilles tarifaires (Vitrine, E-commerce, SaaS, GBP) + FAQ
 │   ├── devis/ · devis/[type]/   # Questionnaire de devis dynamique (portfolio, vitrine/e-commerce, SaaS)
 │   ├── blog/[slug]/            # Articles (modèle BlogPost) + recherche + newsletter
@@ -112,6 +113,8 @@ akatech-nextjs/
 │   ├── ai-providers.js  # Cascade de modèles Gemini, fallback Groq, rate-limiting, validation — partagé entre les routes assistant
 │   ├── questionnaires-schema.js  # Source unique des 3 questionnaires (champs, types, conditions d'affichage)
 │   ├── quote-calc.js · market-positioning.js  # Classification tarifaire + argumentaire du devis, générés par LLM
+│   ├── project-categories.js  # Rubrique de chaque réalisation (id → slug de rubrique) + slugify() pour les URLs
+│   ├── project-stories.js     # Textes « côté client » des 19 réalisations (problème, solution, fonctions, résultat) + helpers (lien, WhatsApp, captures)
 │   ├── questionnaire-pdf.js  # Génération du PDF de devis + envoi email
 │   ├── track-action.js  # Helper client — envoie un clic d'action (WhatsApp, tel, chat, formulaire) à /api/track
 │   │
@@ -121,6 +124,8 @@ akatech-nextjs/
 ```
 
 > Chaque route suit le même schéma **Desktop / Mobile / Responsive-loader** — même logique de séparation que sur AKAFOLIO.
+>
+> Exception : `/projects/[slug]` est un **seul composant responsive** (mise en page en CSS). Il est rendu côté serveur : le contenu est dans le HTML livré aux moteurs de recherche, ce que les paires Desktop/Mobile (qui attendent `useEffect` avant d'afficher) ne garantissent pas.
 
 ---
 
@@ -131,7 +136,8 @@ akatech-nextjs/
 | `/` | Accueil | Hero animé, services, marquees de confiance, projets récents, témoignages |
 | `/about` | À propos | Équipe, stats animées, valeurs |
 | `/services` | Services | 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes |
-| `/projects` | Projets | Galerie filtrée par catégorie — 19 réalisations |
+| `/projects` | Projets | Galerie des 19 réalisations — chaque carte affiche sa **rubrique** et un seul bouton **Détail** |
+| `/projects/[slug]` | Détail d'un projet | Le problème, la solution, ce que ça apporte, où en est le projet, appel à l'action, autres réalisations. Le bouton **Voir le projet** est ici. 19 pages générées (`generateStaticParams`), `404` sur un slug inconnu |
 | `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 19 projets — desktop uniquement, repli vers `/projects` sur mobile |
 | `/pricing` | Tarifs | 4 grilles (Vitrine — incluant le portfolio —, E-commerce, SaaS, GBP), FAQ, témoignages |
 | `/devis` + `/devis/[type]` | Devis | Formulaire de questionnaire dynamique (portfolio, vitrine/e-commerce, SaaS), généré depuis `lib/questionnaires-schema.js` — accessible depuis l'assistant IA ou directement par lien |
@@ -277,7 +283,7 @@ PostgreSQL (testé avec [Neon](https://neon.tech), palier gratuit), schéma dans
 
 ### 01 · Conception de Site Web
 Création de sites web modernes, responsive et optimisés pour convertir vos visiteurs en clients. Du portfolio à la plateforme e-commerce, chaque page est conçue avec soin.
-**À partir de 150 000 FCFA · 5 à 7 jours**
+**À partir de 200 000 FCFA · 10 à 15 jours**
 
 ### 02 · Cartes Interactives & Dashboards
 Intégration de cartes interactives Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces lisibles et actionnables.
@@ -289,7 +295,7 @@ Suivi technique, corrections de bugs, mises à jour de sécurité et améliorati
 
 ### 04 · Fiche Google My Business
 Création ou optimisation de votre fiche Google (NAP, catégories, photos, description SEO local) et suivi mensuel : réponse aux avis, publications et statistiques.
-**À partir de 20 000 FCFA · 1 à 2 jours**
+**À partir de 59 000 FCFA · 2 à 7 jours**
 
 ### 05 · Intégration IA Chatbot
 Un chatbot conversationnel intégré à votre site pour interagir avec vos visiteurs et les guider — le même type d'assistant que celui d'akatech.vercel.app, pensé pour augmenter la productivité de votre business.
@@ -316,6 +322,23 @@ Familles de projets présentées sur `/services` et l'accueil — une même fami
 | 07 | 🧮 POS & caisse | Système d'encaissement et de caisse physique | *à venir* |
 
 > Source unique : `WHAT_WE_BUILD` dans `lib/data.js`.
+
+### 🗂️ Classement des réalisations
+
+Chaque projet de `PROJECTS` reçoit une **rubrique** parmi les 7 ci-dessus (`project.category`) et un **slug** d'URL (`project.slug`, tiré du titre : « Jean Edy · Portfolio » → `jean-edy-portfolio`). Les cartes et la page de détail affichent la rubrique (« E-commerce », « Site vitrine »…) à la place de l'ancien champ `type`, qui reste inchangé pour le dashboard, l'Explorer et l'assistant.
+
+| Rubrique | Réalisations |
+|---|---|
+| Site vitrine | TechFlow, Tati, MK Studio, AKATech, Université les Anges, Jean Edy · Portfolio, MD Laverie Pressing |
+| E-commerce | ShopCI, ManoBeat 777, Chez Florence |
+| Plateforme | TerraSafe, Nexura, KokoEat, Anyama Proxy |
+| Application web | ChapChap Bara, Karnet, REKOLLECTE |
+| Réservation | New Horizon Service |
+| POS & caisse | ProTech POS |
+| Gestion & facturation | — |
+
+- **Reclasser un projet** : modifier son entrée dans `PROJECT_CATEGORY_BY_ID` (`lib/project-categories.js`).
+- **Ajouter un projet** : l'ajouter dans `PROJECTS` (`lib/data.js`), puis son id dans `PROJECT_CATEGORY_BY_ID` et ses textes dans `PROJECT_STORIES` (`lib/project-stories.js`). Sa page `/projects/<slug>` et son entrée du sitemap sont créées automatiquement.
 
 ---
 
@@ -347,37 +370,45 @@ Après paiement du solde, le projet est mis en ligne et les accès sont transmis
 
 > Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine + hébergement offerts la 1ère année sur toutes les formules
 >
+> **Grille révisée en octobre 2026** (prix relevés, délais en plages plus larges). Source unique : `PRICING` dans `lib/data.js` — les pages `/pricing`, l'assistant IA et le moteur de devis (`lib/quote-calc.js`) la lisent directement.
+>
 > Le **portfolio** n'a plus sa propre grille : c'est une déclinaison du Site Vitrine (questionnaire dédié sur `/devis/portfolio`, mais devis piochant dans la même grille de prix).
 
 ### 🖥️ Site Vitrine (portfolio inclus)
 | Formule | Prix | Délai |
 |---|---|---|
-| LANDING | 150 000 FCFA | 5 à 7 jours |
-| **STARTER** ⭐ | 250 000 FCFA | 7 à 10 jours |
-| PREMIUM | 550 000 FCFA | 10 à 14 jours |
+| LANDING | 200 000 FCFA | 10 à 15 jours |
+| **STARTER** ⭐ | 350 000 FCFA | 2 à 3 semaines |
+| PREMIUM | 750 000 FCFA | 3 à 5 semaines |
 
 ### 🛒 E-commerce
 | Formule | Prix | Délai |
 |---|---|---|
-| STARTER | 450 000 FCFA | 1 mois à 1 mois 2 semaines |
-| **PRO** ⭐ | 750 000 FCFA | 1 mois à 1 mois 2 semaines |
-| ELITE | 1 500 000 FCFA | 1 mois à 1 mois 2 semaines |
+| STARTER | 650 000 FCFA | 3 à 5 semaines |
+| **PRO** ⭐ | 1 100 000 FCFA | 4 à 7 semaines |
+| ELITE | 2 000 000 FCFA | 6 à 10 semaines |
 
 ### ⚙️ App Web / SaaS
 | Formule | Prix | Délai |
 |---|---|---|
-| MVP / Outil métier | 600 000 – 1 000 000 FCFA | 3 à 5 semaines |
-| **Plateforme + abonnement** ⭐ | 1 200 000 – 2 200 000 FCFA | 6 à 10 semaines |
-| Marketplace multi-acteurs | 2 500 000 – 4 500 000 FCFA | 10 à 16 semaines |
+| MVP / Outil métier | 1 000 000 – 1 800 000 FCFA | 4 à 7 semaines |
+| **Plateforme + abonnement** ⭐ | 2 000 000 – 3 800 000 FCFA | 8 à 12 semaines |
+| Marketplace multi-acteurs | 4 000 000 – 7 000 000 FCFA | 12 à 20 semaines |
+
+> Le moteur de devis stocke un minimum **et** un maximum (base, PDF, dashboard) : le marketplace garde donc une fourchette bornée. Pour l'afficher « dès 4 000 000 FCFA, sur devis », il faudrait d'abord adapter ce moteur.
 
 ### 📍 Fiche Google My Business
 | Formule | Prix | Délai |
 |---|---|---|
-| **CRÉATION** ⭐ | 20 000 FCFA | 1 à 2 jours |
-| OPTIMISATION | 12 000 FCFA | 1 jour |
-| SUIVI MENSUEL | 10 000 FCFA/mois | Continu |
+| **CRÉATION** ⭐ | 59 000 FCFA | 2 à 7 jours |
+| OPTIMISATION | 29 000 FCFA | 1 à 3 jours |
+| SUIVI MENSUEL | 9 000 FCFA/mois | Continu |
 
 > ⭐ = Formule recommandée. Détail complet des fonctionnalités par formule → page [`/pricing`](https://akatech.vercel.app/pricing).
+>
+> **Délais** : le compte à rebours démarre à la réception de l'acompte (50 %) **et** des contenus (textes, logo, photos). Les plages sont volontairement larges : on annonce la fourchette haute et on livre plus tôt si possible. Pour la fiche Google, la validation par Google ne dépend pas d'AKATech.
+>
+> **Garantie de délai** : en cas de retard du fait d'AKATech, une pénalité s'applique et le client peut demander l'annulation avec remboursement partiel (même formulation sur `/pricing` et dans la FAQ de `lib/data.js`).
 
 ---
 
@@ -468,6 +499,8 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 
 ## ⚙️ Fonctionnalités techniques notables
 
+- **Pages de détail des réalisations** (`/projects/[slug]`) — un seul bouton « Détail » par carte (PC, mobile, accueil), page rendue côté serveur, métadonnées + JSON-LD `CreativeWork`/`BreadcrumbList` par projet, 19 URLs dans le sitemap, même fond que l'accueil (`.grid-bg`)
+- **Fond commun** — les pages légales (`components/legal/LegalPage.js`) et le dashboard admin (`app/dashboard/page.js`) reprennent le fond de la landing via `components/ui/PageBackground.js` (fond uni + `.grid-bg` + halos verts). La palette du dashboard (`DASH_THEME_*`) utilise les mêmes fonds et cartes que l'accueil
 - **Tunnel 3D WebGL** (`/explorer`) — Three.js + GSAP ScrollTrigger, parcourt les 19 projets, textures = vraies captures d'écran
 - **Thème clair/sombre** en transition circulaire via **View Transitions API** (repli instantané si non supporté)
 - **Bilingue FR/EN** — sélecteur navbar, persisté en `localStorage`, ~200 clés de traduction (`lib/language.js`)
