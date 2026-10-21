@@ -1,142 +1,109 @@
-﻿/* ═══════════════════════════════════════════════
-   ProjectGlobeModal.css
-   Modal projet du globe Explorer — adapté du
-   .tunnel-modal (elvis-portfolio / App.jsx) : image
-   fixe à gauche, infos scrollables à droite.
+/* ═══════════════════════════════════════════════
+   ProjectModal.css — modal projet du tunnel Explorer.
+   Modal PLEIN : la capture remplit tout le modal, le contenu
+   (rubrique, nom, technologies, bouton Détail) est posé dessus.
+   Préfixe `pjm-` : ne touche pas aux `pgm-` du modal du globe.
    ═══════════════════════════════════════════════ */
 
-.pgm-backdrop {
+.pjm-backdrop {
   position: fixed; inset: 0; z-index: 200;
   background: rgba(3, 8, 6, 0.82);
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   display: flex; align-items: center; justify-content: center;
   padding: 4vh 4vw;
-  animation: pgmFadeIn .35s ease both;
+  animation: pjmFadeIn .35s ease both;
 }
-@keyframes pgmFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pjmFadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-.pgm-modal {
-  position: relative;
-  width: 100%; max-width: 980px; max-height: 88vh;
-  display: grid; grid-template-columns: 1.25fr 1fr;
+.pjm-modal {
+  position: relative; overflow: hidden;
+  width: 100%; max-width: 1040px; height: min(680px, 86vh);
   background: #060e09;
-  border: 1px solid rgba(136, 202, 83, 0.22);
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.55);
-  animation: pgmPopIn .45s cubic-bezier(.16,1,.3,1) both;
+  border: 3px solid rgba(255, 255, 255, 0.92); border-radius: 20px;
+  box-shadow: 10px 10px 0 #c6ff3d, 0 30px 90px rgba(0, 0, 0, 0.55);
+  animation: pjmPopIn .45s cubic-bezier(.16,1,.3,1) both;
 }
-@keyframes pgmPopIn {
+@keyframes pjmPopIn {
   from { opacity: 0; transform: scale(.94) translateY(14px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-.pgm-close {
-  position: absolute; top: 1rem; right: 1rem; z-index: 5;
-  width: 34px; height: 34px; border-radius: 50%;
+/* Capture plein cadre + dégradé : le texte reste lisible quelle que soit l'image */
+.pjm-bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; display: block; }
+.pjm-shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(3,8,6,.97) 0%, rgba(3,8,6,.86) 34%, rgba(3,8,6,.35) 64%, rgba(3,8,6,.05) 100%);
+}
+
+.pjm-close {
+  position: absolute; top: 1rem; right: 1rem; z-index: 3;
+  width: 44px; height: 44px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.55);
+  border: 2px solid rgba(255, 255, 255, 0.5);
   color: #fff; cursor: pointer;
-  transition: background .25s ease, transform .35s cubic-bezier(.22,1,.36,1), border-color .25s ease;
+  transition: background .25s ease, transform .35s cubic-bezier(.22,1,.36,1), border-color .25s ease, color .25s ease;
 }
-.pgm-close:hover { background: linear-gradient(135deg, #c6ff3d, #88ca53); border-color: #050505; color: #04140a; transform: rotate(90deg); }
+.pjm-close:hover { background: linear-gradient(135deg, #c6ff3d, #88ca53); border-color: #050505; color: #04140a; transform: rotate(90deg); }
+.pjm-close:focus-visible, .pjm-modal a:focus-visible { outline: 3px solid #c6ff3d; outline-offset: 3px; }
 
-.pgm-image {
-  position: relative; background: #0a1710;
-  min-height: 260px;
-}
-.pgm-image img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.pgm-image-fade {
-  position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(6,14,9,.5), transparent 30%);
-  pointer-events: none;
-}
-
-.pgm-info {
-  padding: 2.2rem 2.1rem;
-  overflow-y: auto;
-  display: flex; flex-direction: column; gap: 1.1rem;
+.pjm-content {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: clamp(1.4rem, 3.4vw, 2.6rem);
+  display: flex; flex-direction: column; align-items: flex-start; gap: 1rem;
   color: #f2ede8;
 }
-.pgm-info::-webkit-scrollbar { width: 6px; }
-.pgm-info::-webkit-scrollbar-thumb { background: rgba(136,202,83,.3); border-radius: 3px; }
 
-.pgm-eyebrow {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .62rem; font-weight: 700; letter-spacing: .28em; text-transform: uppercase;
-  color: #88ca53;
+.pjm-top { display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1.1rem; }
+.pjm-sticker {
+  display: inline-block;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; text-transform: uppercase;
+  font-size: 1.15rem; letter-spacing: .02em; color: #050505; padding: .25em .7em;
+  background: linear-gradient(135deg, #c6ff3d, #88ca53);
+  border: 3px solid #050505; border-radius: .2em; box-shadow: 4px 4px 0 #fff;
+  transform: rotate(-3deg);
 }
-.pgm-name {
-  font-family: 'Anton', sans-serif; text-transform: uppercase;
-  font-size: 1.9rem; line-height: 1; letter-spacing: -.01em;
-  color: #fff; margin: 0;
-}
-.pgm-sub {
-  font-family: 'JetBrains Mono', monospace; font-size: .82rem;
-  color: rgba(255,255,255,.5); margin: 0;
-}
-
-.pgm-meta {
-  display: flex; flex-wrap: wrap; gap: 1.1rem;
-  padding-left: .9rem;
-  border-left: 2px solid rgba(136, 202, 83, 0.35);
-}
-.pgm-meta-item { display: flex; flex-direction: column; gap: 2px; }
-.pgm-meta-item span:first-child {
-  font-family: 'JetBrains Mono', monospace; font-size: .58rem; text-transform: uppercase;
-  letter-spacing: .1em; color: rgba(255,255,255,.4);
-}
-.pgm-meta-item span:last-child {
-  font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 700; color: #f2ede8;
-  display: inline-flex; align-items: center; gap: .4rem;
-}
-
-.pgm-result {
-  display: inline-flex; align-items: center; gap: .5rem;
-  align-self: flex-start;
-  font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 700;
-  color: #88ca53; background: rgba(136,202,83,.1);
-  border: 1px solid rgba(136,202,83,.3); border-radius: 999px;
-  padding: .4rem .85rem;
-}
-
-.pgm-desc {
-  font-size: .92rem; line-height: 1.65; color: rgba(242,237,232,.78);
-  max-width: 46ch;
-}
-
-.pgm-tags { display: flex; flex-wrap: wrap; gap: .5rem; }
-.pgm-tag {
-  font-family: 'JetBrains Mono', monospace; font-size: .68rem; font-weight: 600;
-  color: rgba(255,255,255,.75);
-  border: 1px solid rgba(136,202,83,.28);
-  border-radius: 999px; padding: .35rem .8rem;
-  background: rgba(136,202,83,.04);
-}
-
-.pgm-actions {
-  display: flex; flex-wrap: wrap; gap: .8rem;
-  margin-top: auto; padding-top: .6rem;
-}
-.pgm-cta-muted {
+.pjm-status {
   display: inline-flex; align-items: center; gap: .55rem;
-  padding: .85rem 1.5rem; border-radius: 999px;
-  border: 1px solid rgba(255,255,255,.15);
-  color: rgba(255,255,255,.45);
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700; font-size: .78rem; letter-spacing: .02em; text-transform: uppercase;
-  cursor: default;
+  font-family: 'JetBrains Mono', monospace; font-size: .78rem; font-weight: 600; color: rgba(255,255,255,.85);
+}
+.pjm-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.4); flex: none; }
+.pjm-dot.is-live { background: #8fe814; box-shadow: 0 0 0 3px rgba(143,232,20,.22), 0 0 10px 1px rgba(143,232,20,.7); }
+
+.pjm-title {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic; text-transform: uppercase;
+  font-size: clamp(2.8rem, 7vw, 5.2rem); line-height: .9; letter-spacing: -.02em;
+  color: #fff; margin: 0; text-shadow: 4px 4px 0 rgba(0,0,0,.5);
+}
+.pjm-sub {
+  font-family: 'JetBrains Mono', monospace; font-size: .86rem; line-height: 1.6;
+  color: rgba(255,255,255,.72); margin: 0; max-width: 56ch;
 }
 
-/* ── Responsive ──────────────────────────────────── */
-@media (max-width: 900px) {
-  .pgm-backdrop { padding: 0; }
-  .pgm-modal {
-    grid-template-columns: 1fr; grid-template-rows: 34vh 1fr;
-    max-height: 100vh; height: 100vh; border-radius: 0; max-width: 100%;
-  }
-  .pgm-image { min-height: 0; }
-  .pgm-info { padding: 1.6rem 1.4rem 2.2rem; }
-  .pgm-name { font-size: 1.6rem; }
+.pjm-tech { display: flex; flex-direction: column; gap: .55rem; max-width: 100%; }
+.pjm-tech-label { font-family: 'JetBrains Mono', monospace; font-size: .72rem; font-weight: 600; color: rgba(255,255,255,.6); }
+.pjm-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+.pjm-chip {
+  font-family: 'JetBrains Mono', monospace; font-size: .74rem; font-weight: 600; color: #fff;
+  background: rgba(6, 14, 9, .62); border: 1px solid rgba(136, 202, 83, .5);
+  border-radius: 999px; padding: .38rem .85rem;
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+}
+
+.pjm-actions { margin-top: .4rem; }
+
+/* ── Mobile : plein écran ── */
+@media (max-width: 700px) {
+  .pjm-backdrop { padding: 0; }
+  .pjm-modal { max-width: 100%; height: 100dvh; height: 100vh; border: 0; border-radius: 0; box-shadow: none; }
+  @supports (height: 100dvh) { .pjm-modal { height: 100dvh; } }
+  .pjm-bg { object-position: top center; }
+  .pjm-content { padding: 1.3rem 1.2rem 1.6rem; gap: .85rem; }
+  .pjm-actions { width: 100%; }
+  .pjm-actions .btn-raised { width: 100%; justify-content: center; min-height: 52px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pjm-backdrop, .pjm-modal { animation: none; }
+  .pjm-close { transition: none; }
 }

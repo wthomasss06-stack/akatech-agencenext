@@ -1,5 +1,5 @@
 'use client'
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
@@ -71,89 +71,6 @@ export function LaserBeam({ position = 'right', intensity = 'medium', style = {}
         animation: 'laserSpark 3.2s ease-in-out infinite',
       }} />
     </div>
-  )
-}
-
-// ── GHOST TITLE ──────────────────────────────────────────────
-// Texte fantôme en contour (stroke) superposé à chaque titre de
-// section. Même mécanique que le cycle-text du StaggeredMenu :
-// pile de lignes scramblées dans un viewport overflow:hidden,
-// on glisse en yPercent jusqu'à atterrir sur le texte réel.
-// Déclenché par IntersectionObserver à l'entrée/sortie du
-// viewport (pas au hover) — cycle inverse à la sortie.
-// Usage : <h2><GhostTitle text="MON TITRE DE SECTION" /></h2>
-const GHOST_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#+*/=<>'
-
-function ghostScrambleLine(text) {
-  return text.split('').map(ch => (
-    /[a-zA-Z0-9]/.test(ch) ? GHOST_CHARS[Math.floor(Math.random() * GHOST_CHARS.length)] : ch
-  )).join('')
-}
-
-function ghostBuildSequence(opening, finalText, cycles = 3) {
-  const landing = opening ? finalText : ghostScrambleLine(finalText)
-  const start = opening ? ghostScrambleLine(finalText) : finalText
-  const seq = [start]
-  for (let i = 0; i < cycles; i++) seq.push(ghostScrambleLine(finalText))
-  seq.push(landing)
-  seq.push(landing)
-  return seq
-}
-
-function useGhostScroll(text, cycles = 3) {
-  const innerRef = useRef(null)
-  const tweenRef = useRef(null)
-  const [lines, setLines] = useState([text])
-
-  const play = useCallback((opening = true) => {
-    if (!text) return
-    tweenRef.current?.kill()
-    const seq = ghostBuildSequence(opening, text, cycles)
-    setLines(seq)
-    requestAnimationFrame(() => {
-      const inner = innerRef.current
-      if (!inner) return
-      gsap.set(inner, { yPercent: 0 })
-      const finalShift = ((seq.length - 1) / seq.length) * 100
-      tweenRef.current = gsap.to(inner, {
-        yPercent: -finalShift,
-        duration: 0.42 + seq.length * 0.055,
-        ease: 'power4.out',
-        overwrite: 'auto',
-      })
-    })
-  }, [text, cycles])
-
-  return { innerRef, lines, play }
-}
-
-export function GhostTitle({ text, className = '' }) {
-  const wrapRef = useRef(null)
-  const ghost = useGhostScroll(text)
-
-  useEffect(() => {
-    const el = wrapRef.current
-    if (!el) return
-    let hasEntered = false
-    const io = new IntersectionObserver(
-      entries => entries.forEach(entry => {
-        if (entry.isIntersecting) { hasEntered = true; ghost.play(true) }
-        else if (hasEntered) { ghost.play(false) }
-      }),
-      { threshold: 0.1, rootMargin: '0px 0px -5% 0px' }
-    )
-    io.observe(el)
-    return () => io.disconnect()
-  }, [ghost.play])
-
-  return (
-    <span ref={wrapRef} className={`ghost-title-wrap ${className}`} aria-hidden="true">
-      <span className="ghost-title-cycle">
-        <span className="ghost-title-inner" ref={ghost.innerRef}>
-          {ghost.lines.map((l, i) => <span className="ghost-title-line" key={i}>{l}</span>)}
-        </span>
-      </span>
-    </span>
   )
 }
 
@@ -444,13 +361,7 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 760, height: 480, borderRadius: '50%', background: 'radial-gradient(ellipse,rgba(136,202,83,.13),transparent 65%)', pointerEvents: 'none' }} />
       <motion.div initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }} animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}
         style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto' }}>
-        <h2 style={{
-          position: 'relative',
-          fontSize: 'clamp(2.15rem, 6vw, 4.8rem)', fontWeight: 900, fontStyle: 'italic',
-          fontFamily: "'Barlow Condensed',sans-serif", textTransform: 'uppercase',
-          color: T.textMain, letterSpacing: '-.01em', lineHeight: .98, marginBottom: '2.8rem',
-        }}>
-          <GhostTitle text={message} />
+        <h2 className="section-title-big" style={{ color: T.textMain, marginBottom: '2.8rem' }}>
           {message}
         </h2>
         <a href={href} target="_blank" rel="noreferrer" className="btn-raised btn-xl" onClick={() => trackAction(href.includes('wa.me') ? 'whatsapp_click' : 'cta_click')}>

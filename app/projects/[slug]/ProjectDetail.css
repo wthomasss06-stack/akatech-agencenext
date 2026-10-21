@@ -61,8 +61,9 @@ body.light-mode .pd {
 /* Titres de section — même signature que le reste du site */
 .pd-h2 {
   font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-style: italic;
-  text-transform: uppercase; letter-spacing: -0.015em; line-height: 0.95;
-  font-size: clamp(2.1rem, 4.8vw, 3.8rem);
+  text-transform: uppercase; letter-spacing: var(--title-tracking); line-height: var(--title-leading);
+  /* même courbe que les titres de section du site, plafonnée : la page a déjà un très grand H1 */
+  font-size: min(var(--title-size), 3.8rem); text-wrap: balance;
   margin: 0 0 1.3rem; color: inherit;
 }
 

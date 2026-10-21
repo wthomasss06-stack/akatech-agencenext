@@ -335,40 +335,6 @@ body.light-mode .btn-ghost:active {
   box-shadow: 3px 3px 0px var(--pop-lime-glow);
 }
 
-/* Ghost Title — texte fantôme en contour superposé au h2/h1.
-   Positionné en absolu derrière le texte réel, contour seul
-   (-webkit-text-stroke), couleur discrète qui se confond avec
-   le fond. Se déclenche en scramble→texte au scroll. */
-.ghost-title-wrap {
-  position: absolute;
-  inset: 0;
-  display: block;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-  user-select: none;
-  color: transparent;
-  font: inherit;
-  line-height: inherit;
-  letter-spacing: inherit;
-  -webkit-text-stroke: 1.5px rgba(198,255,61,.4);
-  transform: translate(.22em, .12em) scale(1.025);
-}
-body.light-mode .ghost-title-wrap {
-  -webkit-text-stroke: 1.5px rgba(95,145,55,.32);
-}
-.ghost-title-cycle {
-  display: block;
-  overflow: hidden;
-}
-.ghost-title-inner {
-  display: block;
-}
-.ghost-title-line {
-  display: block;
-  white-space: nowrap;
-}
-
 /* Ghost Scroll Showcase — panneaux plein écran Prestations / Processus.
    Le fond bouge déjà via GSAP (transform), donc le hover ne touche
    volontairement que le filter (aucun conflit de transform). */
@@ -449,14 +415,29 @@ body.light-mode .ghost-title-wrap {
   max-width: 720px;          /* évite que la ligne file trop loin à droite */
 }
 
-/* Titres de section — Barlow Condensed */
+/* ── TITRES DE SECTION — une seule échelle, PC et mobile ──────────
+   Barlow Condensed 900 italique, majuscules. La taille suit l'écran en
+   continu (un seul clamp, plus de saut entre la version PC et la version
+   mobile). À ajuster ICI : tous les h2.section-title-big, le titre de
+   PageCTA et les h1 des pages mobiles lisent ces trois variables.
+   Hauteur et espacement des lettres identiques partout.
+   Les styles en ligne ne portent plus que la couleur (thème), l'alignement
+   et les marges. */
+:root {
+  --title-size: clamp(2.3rem, 1.2rem + 4.6vw, 5.6rem);
+  --title-leading: 1;
+  --title-tracking: -.02em;
+}
 .section-title-big {
+  position: relative;
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
   font-style: italic;
   text-transform: uppercase;
-  letter-spacing: -.01em;
-  line-height: 0.95;
+  font-size: var(--title-size);
+  line-height: var(--title-leading);
+  letter-spacing: var(--title-tracking);
+  text-wrap: balance;
 }
 /* Text gradient — désormais un vrai dégradé électrique (pop vitaminé),
    même police que le reste du titre. Se propage à tous les usages déjà

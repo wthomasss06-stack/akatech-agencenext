@@ -4,7 +4,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, ChevronUp, Star } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { PageCTA, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 
@@ -49,8 +49,7 @@ function HeroPricing() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1rem' }}>
-            <GhostTitle text={t('pricingTitle')} />
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1rem' }}>
             {t('pricingTitle')}
           </h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 540, margin: '0 auto 1.5rem' }}>
@@ -272,8 +271,7 @@ function TrustedBy() {
 
       <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3.5rem', paddingLeft: '5%', paddingRight: '5%' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text="CE QU'ILS DISENT DE L'INVESTISSEMENT" />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             Ce qu'ils disent de <GreenUnderline><span className="text-gradient">l'investissement</span></GreenUnderline>
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, margin: '.8rem auto 0', maxWidth: 480 }}>
@@ -346,8 +344,7 @@ function FAQSection() {
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bg }}>
       <div style={{ maxWidth: 800, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('faqUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('faqTitle')}
           </h2>
           <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}

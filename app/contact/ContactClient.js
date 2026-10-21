@@ -9,7 +9,7 @@ import {
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, GreenUnderline, LazyImg } from '@/components/ui/index'
+import { GreenUnderline, LazyImg } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
@@ -255,7 +255,6 @@ function HeroContact() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text={t('contactTitle').toUpperCase()} />
           {t('contactTitle').toUpperCase()}
         </motion.h1>
 
@@ -347,8 +346,7 @@ function ContactChannels() {
         {/* ── Header ── */}
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-              <GhostTitle text={t('contactChannelsTitle').toUpperCase()} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.5rem' }}>
               {t('contactChannelsTitle')}
             </h2>
           </BlurReveal>

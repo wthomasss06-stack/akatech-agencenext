@@ -54,7 +54,8 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 
 **Design system :**
 - Vert de marque `#88ca53` (dark mode) / `#5f9137` (light mode)
-- Polices : **JetBrains Mono** (corps, UI) · **Space Grotesk** (titres) · **Anton** (labels du mode Explorer/Tunnel) · **Dancing Script** (accents décoratifs)
+- Polices : **JetBrains Mono** (corps, UI) · **Barlow Condensed** italique 900 (tous les titres de section et de page) · **Anton** (labels du mode Explorer/Tunnel) · **Dancing Script** (accents décoratifs)
+- **Titres de section** : une seule échelle pour PC et mobile, définie dans `app/globals.css` (`--title-size`, `--title-leading`, `--title-tracking`) et portée par la classe `.section-title-big`. Les `<h2>` n'ont plus de taille ni de police en ligne : seulement la couleur du thème, l'alignement et les marges. Pour changer la taille de tous les titres, modifier `--title-size`. L'ancien effet « ghost title » (texte fantôme en contour derrière les titres) a été retiré, composant et CSS compris
 - Thème clair/sombre persistant, bascule en transition circulaire (**View Transitions API**, repli instantané sur Firefox)
 
 ---
@@ -101,7 +102,7 @@ akatech-nextjs/
 │   ├── layout/    # Navbar, Footer, CardNav, StaggeredMenu, PageTransition, BlobTransition
 │   ├── ui/        # AuroraHero, OrbHero, Loader, ConversionMarquee, TrustStacksMarquee, AIAssistant, VisitorTracker, CookieConsent…
 │   ├── dashboard/ # Onglets admin — ProspectsTab, InvoicesTab, etc.
-│   ├── explorer/  # ProjectsTunnel (Three.js live), ProjectModal, ProjectGlobe (dormant)
+│   ├── explorer/  # ProjectsTunnel (Three.js live), ProjectModal (modal plein : capture, rubrique, technologies, bouton Détail → /projects/<slug>), ProjectGlobe (dormant)
 │   └── responsive/# ResponsiveLoader — bascule desktop/mobile par composant
 │
 ├── lib/

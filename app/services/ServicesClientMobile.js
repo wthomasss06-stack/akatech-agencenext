@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
@@ -30,8 +30,7 @@ function HeroServices() {
       <AuroraHero labels={[]} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '72px 5% 0' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <h1 style={{ position: 'relative', fontSize: 'clamp(2.4rem,5vw,3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: '-.04em', lineHeight: 1.1, marginBottom: '1.2rem' }}>
-            <GhostTitle text={t('services').toUpperCase()} />
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}>
             {t('services').toUpperCase()}
             <GreenUnderline><span className="text-gradient">{t('services').toUpperCase()}</span></GreenUnderline>
           </h1>
@@ -65,8 +64,7 @@ function ServicesList() {
     <section id="services-list" ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('chooseSolution').toUpperCase()} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('chooseSolution')}
           </h2>
         </motion.div>

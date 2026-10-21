@@ -4,7 +4,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, Star, FileText, Lock, Clock, GraduationCap, Wrench, Globe } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
+import { GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData } from '@/lib/data'
 
@@ -75,7 +75,6 @@ function HeroPricing() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-            <GhostTitle text={t('pricingTitle')} />
           TARIF
           
         </motion.h1>
@@ -143,8 +142,7 @@ function PricingTabs() {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '0.5rem' }}>
-              <GhostTitle text={t('pricing_tab_title')} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '0.5rem' }}>
               {t('chooseSolution')}
             </h2>
           </BlurReveal>
@@ -252,8 +250,7 @@ function GuaranteeStrip() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="ZÉRO SURPRISE, ZÉRO JARGON." />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
               Zéro surprise, <GreenUnderline><span className="text-gradient">zéro jargon.</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -358,8 +355,7 @@ function TrustedBy() {
       <div style={{ maxWidth: 1200, margin: '0 auto', paddingBottom: '3.5rem', paddingLeft: '5%', paddingRight: '5%' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text="CE QU'ILS DISENT DE L'INVESTISSEMENT" />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
               Ce qu'ils disent de{' '}
               <GreenUnderline><span className="text-gradient">l'investissement</span></GreenUnderline>
             </h2>
@@ -464,8 +460,7 @@ function FAQSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('faqUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('faqTitle')}
           </h2>
         </BlurReveal>

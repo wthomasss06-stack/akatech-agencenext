@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
@@ -676,8 +676,7 @@ function ServicesPreview() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .25 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.15 }}>
-            <GhostTitle text={t('homeServicesTitle')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('homeServicesTitle').split(' ')[0]}<br />
             <GreenUnderline><span className="text-gradient">{t('homeServicesTitle').split(' ').slice(1).join(' ')}</span></GreenUnderline>
           </h2>
@@ -759,8 +758,7 @@ function Process() {
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bg }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('processTitle').toUpperCase()} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('processTitle')}
           </h2>
         </motion.div>
@@ -815,8 +813,7 @@ function ProjectsSection() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.6rem' }}>
-          <GhostTitle text={t('homeProjectsUpper')} />
+        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.6rem' }}>
           {t('projects_latest_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('projects_latest_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
         </h2>
         <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
@@ -859,8 +856,7 @@ function Testimonials() {
       <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%,-50%)', width: 600, height: 600, borderRadius: '50%', background: 'radial-gradient(circle,rgba(136,202,83,.05),transparent 65%)', pointerEvents: 'none' }} />
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('homeTestimonialsUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('testimonials_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
           </h2>
         </motion.div>
@@ -977,8 +973,7 @@ function DomainesSection() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('domainesTitle').toUpperCase()} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('domainesTitle')}
           </h2>
           <RevealParagraph text={t('domainesIntro')} extraStyle={{ color: T.textSub }} inView={inView} />
@@ -1018,8 +1013,7 @@ function PricingCallout() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('chooseSolution').toUpperCase()} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('chooseSolution')}
           </h2>
           <RevealParagraph text={t('pricingLead')} greenWords={[]} extraStyle={{ color: T.textSub }} inView={inView} />
@@ -1140,8 +1134,7 @@ function GeoSectionHome() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('geoUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('geoTitle')}
           </h2>
           <RevealParagraph
@@ -1204,8 +1197,7 @@ function ProjectFormHome() {
     <section ref={ref} style={{ padding: 'clamp(2.5rem,7vw,3.5rem) 5% 5rem', background: T.bgAlt, overflowX: 'hidden' }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '1.6rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('formUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('formTitle')}
           </h2>
           <RevealParagraph
@@ -1303,8 +1295,7 @@ function FAQSectionHome() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .2 }} />
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(2.3rem,8.5vw,3.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('faqUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('faqTitle')}
           </h2>
         </motion.div>

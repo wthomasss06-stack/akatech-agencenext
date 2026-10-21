@@ -10,7 +10,7 @@ import {
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
+import { GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { BLOG_POSTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
@@ -246,7 +246,6 @@ function HeroBlog() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text="LE BLOG" />
           LE BLOG
           
         </motion.h1>
@@ -586,8 +585,7 @@ function BlogGrid({ posts }) {
         {/* ── Section header ── */}
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', lineHeight: 1.2 }}>
-              <GhostTitle text="EXPLOREZ NOS RESSOURCES DIGITALES" />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
               Explorez nos <GreenUnderline>
                 <span className="text-gradient">ressources digitales</span>
               </GreenUnderline>
@@ -740,8 +738,7 @@ function Newsletter() {
           <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(136,202,83,.12)', border: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '1.5rem' }}>
             <Zap size={24} style={{ color: T.green }} />
           </div>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.7rem', textAlign: 'left' }}>
-            <GhostTitle text={blogText(language, 'newsletterTitle')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.7rem', textAlign: 'left' }}>
             {blogText(language, 'newsletterTitle')}
           </h2>
         </BlurReveal>
@@ -816,8 +813,7 @@ function ProcessBlog() {
       {/* Sticky header */}
       <div style={{ position: 'sticky', top: 0, zIndex: 50, textAlign: 'left', padding: '2.5rem 5% 1.5rem', background: steps[0].bg, borderBottom: `1px solid ${T.border}` }}>
         <BlurReveal delay={0.1}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', margin: 0 }}>
-            <GhostTitle text={blogText(language, 'processTitle')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: 0 }}>
             {blogText(language, 'processLead')}{' '}
             <GreenUnderline>
               <span className="text-gradient">

@@ -4,7 +4,7 @@ import { motion, useInView } from 'framer-motion'
 import { Code, Check, ArrowUpRight } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
@@ -56,7 +56,6 @@ function HeroRealisations() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text={t('projectsTitleUpper')} />
           {t('projectsTitleUpper')}
           
         </motion.h1>
@@ -458,11 +457,8 @@ function ProjectsIntro() {
         {/* Titre de section */}
         <h2 className="section-title-big" style={{
           position: 'relative',
-          fontSize: 'clamp(3.4rem,6.5vw,5.6rem)',
           color: T.textMain,
-          marginBottom: '2.5rem',
-        }}>
-          <GhostTitle text={t('projectsCtaTitle')} />
+          marginBottom: '2.5rem', }}>
           {t('projectsCtaLead')} <GreenUnderline><span className="text-gradient">{t('projectsCtaHighlight')}</span></GreenUnderline>
         </h2>
 

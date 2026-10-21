@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { LazyImg, LaserBeam, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
@@ -66,7 +66,6 @@ function HeroServices() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text={t('services').toUpperCase()} />
           {t('services').toUpperCase()}
         </motion.h1>
 
@@ -129,8 +128,7 @@ function ServicesList() {
     <section id="services-list" ref={ref} style={{ padding: '7rem 5%', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.04em', lineHeight: 1.08 }}>
-            <GhostTitle text={t('chooseSolution').toUpperCase()} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('chooseSolution')}
           </h2>
         </motion.div>

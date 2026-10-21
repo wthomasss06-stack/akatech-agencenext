@@ -117,7 +117,7 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { STATS, PROJECTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
@@ -182,7 +182,6 @@ function HeroAbout() {
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          <GhostTitle text="AKATECH" />
           AKATECH
           
         </motion.h1>
@@ -332,8 +331,7 @@ function StatsFounderSection() {
         {/* h2 — au-dessus des 2 colonnes, aligné à gauche, même style que les autres sections */}
         <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text="MISSION & VISION" />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               Mission & <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -404,8 +402,7 @@ function TimelineSection() {
         {/* h2 — trait rouge, aligné à gauche */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text="L'ÉVOLUTION D'AKATECH" />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -443,8 +440,7 @@ function ValuesSection() {
         {/* h2 — trait rouge, aligné à gauche */}
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text="CE QUI NOUS DISTINGUE" />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -480,8 +476,7 @@ function SkillsSection() {
       {/* h2 — au-dessus des 2 colonnes, aligné à gauche, même style que les autres sections */}
       <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.12}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-            <GhostTitle text="LES TECHNOLOGIES QUI FONT LA DIFFÉRENCE" />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
             Les technologies qui font{' '}
             <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
           </h2>
@@ -558,8 +553,7 @@ function RayonSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
           <BlurReveal direction="left">
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, marginBottom: '1.2rem' }}>
-              <GhostTitle text={tFr('geoUpper')} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '1.2rem' }}>
               {tFr('geoTitle')}
             </h2>
             <WordRevealP

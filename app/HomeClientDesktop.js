@@ -18,7 +18,7 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GhostTitle, AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
@@ -633,8 +633,7 @@ function ServicesPreview() {
         {/* Header — titre sur trait rouge, contenu sur trait jaune */}
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1} direction="left">
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text={t('homeServicesTitle')} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               {t('homeServicesTitle').split(' ')[0]}{' '}
               <GreenUnderline>
                 <span className="text-gradient">
@@ -683,8 +682,7 @@ function WhyUs() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text={t('processTitle').toUpperCase()} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               {t('processTitle')}
             </h2>
           </BlurReveal>
@@ -725,8 +723,7 @@ function Testimonials() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text={t('homeTestimonialsUpper')} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('testimonials_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
             </h2>
           </BlurReveal>
@@ -853,8 +850,7 @@ function DomainesSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain }}>
-              <GhostTitle text={t('domainesTitle').toUpperCase()} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               {t('domainesTitle')}
             </h2>
           </BlurReveal>
@@ -929,8 +925,7 @@ function ArchiveTunnelSection() {
   return (
     <section style={{ padding: '5rem 0 6rem', background: T.bg }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.4rem', textAlign: 'center' }}>
-        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, margin: 0 }}>
-          <GhostTitle text={t('projectsTitle').toUpperCase()} />
+        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: 0 }}>
           {t('projectsTitle')}
         </h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -1174,8 +1169,7 @@ function PricingCallout() {
         {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <BlurReveal>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", marginBottom: '.6rem', color: T.textMain }}>
-              <GhostTitle text={t('chooseSolution').toUpperCase()} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', marginBottom: '.6rem', color: T.textMain }}>
               {t('chooseSolution')}
             </h2>
           </BlurReveal>
@@ -1281,8 +1275,7 @@ function FAQSectionHome() {
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .15 }} />
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-            <GhostTitle text={t('faqUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('faqTitle')}
           </h2>
         </BlurReveal>
@@ -1329,8 +1322,7 @@ function GeoSectionHome() {
       <div style={{ maxWidth: 1200, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal>
-            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em' }}>
-              <GhostTitle text={t('geoUpper')} />
+            <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
               {t('geoTitle')}
             </h2>
           </BlurReveal>
@@ -1394,8 +1386,7 @@ function ProjectFormHome() {
     <section ref={el => { ref.current = el; sectionRef.current = el }} style={{ padding: 'clamp(2rem,4vw,3rem) 5% clamp(3rem,7vw,6rem)', background: T.bgAlt }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <BlurReveal style={{ marginBottom: '2rem' }}>
-          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', fontSize: 'clamp(3.4rem,6.5vw,5.6rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: '-.03em', marginBottom: '.5rem' }}>
-            <GhostTitle text={t('formUpper')} />
+          <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.5rem' }}>
             {t('formTitle')}
           </h2>
         </BlurReveal>
