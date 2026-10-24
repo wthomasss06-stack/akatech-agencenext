@@ -7,6 +7,7 @@ import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import LanguageToggle from './LanguageToggle'
 import { HoverSlideText } from '@/components/ui/index'
+import { useAskAI } from '@/components/ui/AskAI'
 import TransitionLink from './TransitionLink'
 import './StaggeredMenu.css'
 
@@ -48,6 +49,7 @@ function NavItemWithGhost({ it, idx, isActive, closeMenu }) {
 export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
   const T = useTheme()
   const { t } = useLanguage()
+  const ai = useAskAI()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const openRef = useRef(false)
@@ -103,9 +105,11 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
 
     const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'))
     const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'))
+    const askEls = Array.from(panel.querySelectorAll('.sm-ask-head, .sm-ask-btn'))
 
     if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 })
     if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 })
+    if (askEls.length) gsap.set(askEls, { y: 26, opacity: 0 })
 
     const tl = gsap.timeline({ paused: true })
 
@@ -123,8 +127,9 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
       panelInsertTime
     )
 
+    const itemsStart = panelInsertTime + panelDuration * 0.15
+
     if (itemEls.length) {
-      const itemsStart = panelInsertTime + panelDuration * 0.15
       tl.to(itemEls, {
         yPercent: 0, rotate: 0, duration: 1,
         ease: 'power4.out',
@@ -138,6 +143,15 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
           stagger: { each: 0.08, from: 'start' },
         }, itemsStart + 0.1)
       }
+    }
+
+    // « Demandez à l'IA » — titre puis boutons, en cascade après les liens
+    if (askEls.length) {
+      tl.to(askEls, {
+        y: 0, opacity: 1, duration: 0.6,
+        ease: 'power3.out',
+        stagger: { each: 0.07, from: 'start' },
+      }, itemsStart + 0.25 + itemEls.length * 0.1)
     }
 
     openTlRef.current = tl
@@ -170,8 +184,10 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
       onComplete: () => {
         const itemEls = Array.from(panel.querySelectorAll('.sm-panel-itemLabel'))
         const numberEls = Array.from(panel.querySelectorAll('.sm-panel-list[data-numbering] .sm-panel-item'))
+        const askEls = Array.from(panel.querySelectorAll('.sm-ask-head, .sm-ask-btn'))
         if (itemEls.length) gsap.set(itemEls, { yPercent: 140, rotate: 10 })
         if (numberEls.length) gsap.set(numberEls, { '--sm-num-opacity': 0 })
+        if (askEls.length) gsap.set(askEls, { y: 26, opacity: 0 })
         busyRef.current = false
       },
     })
@@ -340,6 +356,26 @@ export default function StaggeredMenu({ items = [], isActive, onOpenChange }) {
               />
             ))}
           </ul>
+
+          <div className="sm-ask">
+            <p className="sm-ask-head" id="sm-ask-heading">{ai.heading}</p>
+            <div className="sm-ask-grid">
+              {ai.platforms.map(p => (
+                <button
+                  key={p.id}
+                  type="button"
+                  className="sm-ask-btn"
+                  onClick={() => ai.ask(p)}
+                  title={`${ai.askLabel} ${p.label}`}
+                  aria-label={`${ai.askLabel} ${p.label}`}
+                  aria-describedby="sm-ask-heading"
+                >
+                  <img src={p.icon} alt="" width={26} height={26} />
+                  <span aria-live="polite">{ai.label(p)}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
           <div className="sm-panel-footer">
             <a

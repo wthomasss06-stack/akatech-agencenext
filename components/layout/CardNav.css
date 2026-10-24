@@ -194,3 +194,36 @@ body.light-mode .aka-language-toggle select option,
   font-size: 0.68rem; opacity: 0.5; display: block;
   margin-top: -2px; font-weight: 400;
 }
+
+/* ── Carte 4 : « Demandez à l'IA ce qu'elle pense d'AKATech » ── */
+.aka-card-4 {
+  grid-column: 1 / -1;
+  min-height: 0;
+  flex-direction: row; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 14px 24px;
+  padding: 16px 22px;
+  background: var(--card4-bg);
+  color: var(--card-text);
+  border: var(--card4-border);
+}
+.aka-card-4 .aka-card-label { color: var(--theme-green); opacity: 0.85; }
+.aka-ai-head { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.aka-ai-title {
+  margin: 0;
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+  font-size: 1.05rem; line-height: 1.25; letter-spacing: -0.01em;
+  color: var(--card-text);
+}
+.aka-ai-row { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+.aka-ai-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  min-width: 64px; padding: 8px 10px; border: none; border-radius: 12px;
+  background: transparent; color: var(--card-text); cursor: pointer;
+  font: 600 .56rem 'JetBrains Mono', monospace; letter-spacing: .04em;
+  transition: transform .25s cubic-bezier(.22,1,.36,1), background-color .2s;
+}
+.aka-ai-btn img { display: block; width: 26px; height: 26px; object-fit: contain; }
+.aka-ai-btn:hover { transform: translateY(-3px); background: rgba(136,202,83,.14); }
+.aka-ai-btn:active { transform: translateY(0) scale(.96); }
+.aka-ai-btn:focus-visible { outline: 2px solid #88ca53; outline-offset: 2px; }
+.aka-ai-btn span { opacity: .75; }

@@ -1,50 +1,22 @@
-AKATech — ZIP différentiel v2 (à dézipper à la racine de akatech-nextjs, en écrasant)
+AKATech — ZIP différentiel v3 (à dézipper à la racine de akatech-nextjs, en écrasant)
+Base de comparaison : akatech-nextjs_v2.zip
 
-À SUPPRIMER (bandeau d'images retiré — présents seulement si tu as appliqué le zip précédent)
-  - components/ui/SpotlightMarquee.jsx
-  - components/ui/SpotlightMarquee.css
-  - components/ui/ProjectMarquee.jsx
+NOUVEAU (1)
+  + components/ui/AskAI.jsx            (hook useAskAI + bandeau footer partagé)
 
-NOUVEAUX (10)
-  + components/ui/DeviceShowcase.css
-  + components/ui/DeviceShowcase.jsx
-  + components/ui/HoverRevealList.css
-  + components/ui/HoverRevealList.jsx
-  + components/ui/ProjectShowcase.css
-  + components/ui/ProjectShowcase.jsx
-  + lib/device-mockups.js
-  + lib/project-media.js
-  + public/images/devices/laptop-frame.webp
-  + public/images/devices/phone-frame.webp
+MODIFIÉS (8)
+  ~ app/projects/ProjectsClient.js         (PC : section renommée « Nos réalisations », parallaxe horizontal « une par une » retiré)
+  ~ app/projects/ProjectsClientMobile.js   (mobile : même renommage, deck swipeable retiré)
+  ~ components/layout/CardNav.jsx          (+ carte « Demandez à l'IA… » dans le stagger GSAP)
+  ~ components/layout/CardNav.css
+  ~ components/layout/StaggeredMenu.jsx    (+ bloc « Demandez à l'IA… » animé dans le stagger)
+  ~ components/layout/StaggeredMenu.css
+  ~ components/layout/Footer.js            (utilise le composant partagé AskAI, rendu inchangé)
+  ~ lib/language.js                        (nouvelle clé projectsPageTitle = « Nos réalisations »)
 
-MODIFIÉS (16)
-  ~ app/HomeClientDesktop.js
-  ~ app/HomeClientMobile.js
-  ~ app/about/AboutClient.js
-  ~ app/about/AboutClientMobile.js
-  ~ app/blog/BlogClient.js
-  ~ app/blog/BlogClientMobile.js
-  ~ app/contact/ContactClient.js
-  ~ app/contact/ContactClientMobile.js
-  ~ app/pricing/PricingClient.js
-  ~ app/pricing/PricingClientMobile.js
-  ~ app/projects/ProjectsClient.js
-  ~ app/projects/ProjectsClientMobile.js
-  ~ app/projects/[slug]/ProjectDetailClient.js
-  ~ app/services/ServicesClientMobile.js
-  ~ app/services/ServicesClients.js
-  ~ components/ui/index.js
+À SUPPRIMER : rien.
+EXCLUS PAR SÉCURITÉ : .env, .env.local, app/.env (non inclus).
 
-CE QUI A CHANGÉ DEPUIS LA V1
-- Portable : l'écran est retaillé au format des webm/webp (2,17:1). Le média remplit tout l'écran,
-  plus de bande ni de flou. Image du cadre : public/images/devices/laptop-frame.webp.
-- Liste hover reveal : l'image qui suit le curseur est en couleur.
-- Bandeau d'images : retiré partout (hero PC + mobile).
-
-VIDÉOS (.webm) — lues depuis Cloudinary
-- URL : cld('/images/projects/<nom>-preview.webm') → akatech/images/projects/<nom>-preview.webm.
-- Upload : « npm run upload-images » (gère déjà les vidéos). Noms reconnus : lib/project-media.js >
-  WEBM_AVAILABLE. Sans webm (ou en cas d'échec de chargement), l'aperçu .webp s'affiche.
-- moncashjour-preview.webm traîne à la racine de ton zip d'origine : le mettre dans public/images/projects/.
-
-SI « Can't resolve 'lenis' » : faire « npm install » (dépendance déjà déclarée dans package.json).
+NOTES
+- La home garde « Nos dernières réalisations » (clé projectsTitle inchangée) ; seule la page /projects utilise « Nos réalisations ».
+- La vitrine portable + téléphone (ProjectShowcase, image 1) est conservée telle quelle.

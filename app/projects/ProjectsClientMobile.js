@@ -1,22 +1,13 @@
 ﻿'use client'
-import { useRef, useEffect, useState, useMemo } from 'react'
-import {
-  motion,
-  useAnimation,
-  AnimatePresence,
-  useInView,
-} from 'framer-motion'
-import { Code, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
+import { useRef, useEffect, useMemo } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
-import { LazyImg, LaserBeam, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
+import { LazyImg, GreenUnderline, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
-import { hasRealUrl } from '@/lib/project-stories'
-import { trackAction } from '@/lib/track-action'
-import TransitionLink from '@/components/layout/TransitionLink'
 
 
 
@@ -76,203 +67,6 @@ function HeroRealisations() {
             animate={{ y:[0,-18,0] }} transition={{ duration:p.dur, repeat:Infinity, ease:'easeInOut', delay:p.dy }} />
         ))}
       </div>
-    </section>
-  )
-}
-
-/* ────────────────────────────────────────────────
-   CARTE INDIVIDUELLE (composant pour pouvoir
-   utiliser les hooks useTransform)
-──────────────────────────────────────────────── */
-function DeckCard({ project, rel, abs, isActive, total, index, onSwipe, T }) {
-  const { t } = useLanguage()
-  const controls = useAnimation()
-  const online = hasRealUrl(project)
-
-  if (abs > 2) return null
-
-  const handleDragEnd = (e, info) => {
-    const { offset, velocity } = info
-    if (offset.x < -70 || velocity.x < -450) {
-      controls.start({ x: -520, rotate: -14, opacity: 0, transition: { duration: .32, ease: 'easeIn' } })
-        .then(() => onSwipe(1))
-    } else if (offset.x > 70 || velocity.x > 450) {
-      controls.start({ x: 520, rotate: 14, opacity: 0, transition: { duration: .32, ease: 'easeIn' } })
-        .then(() => onSwipe(-1))
-    } else {
-      controls.start({ x: 0, rotate: 0, transition: { type: 'spring', stiffness: 320, damping: 26 } })
-    }
-  }
-
-  // Profondeur de la pile rendue uniquement par échelle/décalage/z-index —
-  // jamais par l'opacité : une carte en retrait garde opacity:1 (fond
-  // .sku-card opaque) pour ne pas laisser transparaître la carte suivante
-  // en surimpression derrière l'active.
-  const stackScale = 1 - abs * 0.055
-  const stackY = abs * 14
-
-  return (
-    <motion.div
-      drag={isActive ? 'x' : false}
-      dragElastic={0.65}
-      dragConstraints={{ left: 0, right: 0 }}
-      onDragEnd={isActive ? handleDragEnd : undefined}
-      animate={isActive ? controls : { x: 0, y: stackY, scale: stackScale, opacity: 1, rotate: 0 }}
-      initial={false}
-      transition={{ duration: .4, ease: [.22, 1, .36, 1] }}
-      style={{
-        position: 'absolute',
-        width: '100%',
-        maxWidth: 480,
-        zIndex: 10 - abs,
-        touchAction: isActive ? 'pan-y' : 'none',
-        cursor: isActive ? 'grab' : 'default',
-      }}
-    >
-      <div
-        className="sku-card"
-        style={{
-          overflow: 'hidden',
-          border: '1px solid rgba(136,202,83,.25)',
-          boxShadow: `
-            0 0 0 1px rgba(136,202,83,.08),
-            0 20px 60px rgba(0,0,0,.45),
-            0 4px 12px rgba(0,0,0,.3)
-          `,
-        }}
-      >
-        {/* Numéro de réalisation */}
-        <div className="no-pill-mobile" style={{
-          position: 'absolute', top: '1.2rem', left: '1.2rem',
-          fontFamily: "'JetBrains Mono',monospace", fontWeight: 900,
-          fontSize: '.65rem', color: 'rgba(136,202,83,.55)',
-          letterSpacing: '.12em', zIndex: 2,
-          background: 'rgba(3,8,6,.55)', backdropFilter: 'blur(6px)',
-          padding: '.2rem .7rem', borderRadius: 100,
-          border: '1px solid rgba(136,202,83,.2)',
-        }}>
-          {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-
-          {/* Image — agrandie (320px, était 280px) */}
-          <div style={{ height: 320, position: 'relative', overflow: 'hidden' }}>
-            <LazyImg
-              src={project.img}
-              alt={project.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-              placeholder={
-                <div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Code size={40} style={{ color: 'rgba(136,202,83,.2)' }} />
-                </div>
-              }
-            />
-            <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top,rgba(3,8,6,.95) 0%,rgba(3,8,6,.2) 50%,transparent)' }} />
-
-            {/* Badges */}
-            <div className="no-pill-mobile" style={{ position: 'absolute', top: '1rem', right: '1rem', display: 'flex', gap: '.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-              <div style={{ padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.15)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: '#88ca53' }}>
-                {project.category?.label || project.type}
-              </div>
-              {online && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '.35rem', padding: '.28rem .8rem', borderRadius: 100, background: 'rgba(136,202,83,.88)', fontFamily: "'JetBrains Mono',monospace", fontSize: '.58rem', color: '#fff', fontWeight: 700, letterSpacing: '.06em' }}>
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#fff', animation: 'dot-blink 1.4s ease-in-out infinite' }} />
-                  {t('online')}
-                </div>
-              )}
-            </div>
-
-            {/* Résultat */}
-            <div className="no-pill-mobile" style={{ position: 'absolute', bottom: '1rem', right: '1rem', padding: '.3rem .9rem', borderRadius: 100, background: 'rgba(0,0,0,.65)', backdropFilter: 'blur(8px)', border: '1px solid rgba(136,202,83,.3)', fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.85rem', color: '#88ca53' }}>
-              {project.story?.badge || String(project.result || '').replace(/^↑\s*/, '')}
-            </div>
-          </div>
-
-          {/* Contenu */}
-          <div style={{ padding: '1.8rem 2rem' }}>
-            <h3 style={{ fontSize: '1.3rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", letterSpacing: '-.02em', lineHeight: 1.2, marginBottom: '.6rem' }}>
-              {project.title}
-            </h3>
-
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(.85rem,2.8vw,1rem)', fontWeight: 600, lineHeight: 1.65, color: T.textSub, marginBottom: '1.4rem' }}>{project.story?.pitch || project.desc}</p>
-
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '.7rem' }}>
-              <TransitionLink
-                href={`/projects/${project.slug}`}
-                className="btn-raised btn-sm"
-                aria-label={`${t('detailAria')} ${project.title}`}
-                tabIndex={isActive ? 0 : -1}
-                aria-hidden={isActive ? undefined : true}
-                style={isActive ? undefined : { pointerEvents: 'none' }}
-                onClick={() => trackAction('cta_click')}
-              >
-                <HoverSlideText text={t('detail')} /> <ArrowUpRight size={12} />
-              </TransitionLink>
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  )
-}
-
-/* ────────────────────────────────────────────────
-   SECTION DECK SWIPEABLE — remplace l'ancien scroll-stack
-   (hauteur de page fixe, indépendante du nombre de projets ;
-   même logique d'interaction — glisser/relâcher — que le
-   CircularProjectsGallery de la home mobile)
-──────────────────────────────────────────────── */
-function StackedRealisations() {
-  const T = useTheme()
-  const { t, language } = useLanguage()
-  const localizedProjects = getLocalizedData(language).PROJECTS
-  const total = localizedProjects.length
-  const [active, setActive] = useState(0)
-
-  const go = (dir) => setActive(a => (a + dir + total) % total)
-
-  return (
-    <section style={{ background: T.bg, padding: '4rem 0 6rem' }}>
-      <div style={{ position: 'relative', height: 640, padding: '0 5%', display: 'flex', alignItems: 'flex-start', justifyContent: 'center' }}>
-        {localizedProjects.map((project, i) => {
-          let rel = i - active
-          if (rel > total / 2) rel -= total
-          if (rel < -total / 2) rel += total
-          return (
-            <DeckCard
-              key={project.title}
-              project={project}
-              rel={rel}
-              abs={Math.abs(rel)}
-              isActive={rel === 0}
-              total={total}
-              index={i}
-              onSwipe={go}
-              T={T}
-            />
-          )
-        })}
-      </div>
-
-      {/* Navigation manuelle — accessibilité et découvrabilité du geste */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.2rem', marginTop: '1.6rem' }}>
-        <button type="button" onClick={() => go(-1)} aria-label={t('projectPrevAria')}
-          style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', color: '#88ca53', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <ChevronLeft size={18} />
-        </button>
-        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textSub, letterSpacing: '.06em', minWidth: 56, textAlign: 'center' }}>
-          {String(active + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-        </span>
-        <button type="button" onClick={() => go(1)} aria-label={t('projectNextAria')}
-          style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid rgba(136,202,83,.3)', background: 'rgba(136,202,83,.08)', color: '#88ca53', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <ChevronRight size={18} />
-        </button>
-      </div>
-      <p style={{ textAlign: 'center', marginTop: '.6rem', fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', color: 'rgba(136,202,83,.5)', letterSpacing: '.04em' }}>
-        {t('projectsSwipeHint')}
-      </p>
-
     </section>
   )
 }
@@ -342,7 +136,7 @@ function ProjectsShowcaseSection() {
   return (
     <section style={{ padding: '5rem 0 4rem', background: T.bg, overflow: 'hidden' }}>
       <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: '0 0 3rem', padding: '0 5%' }}>
-        <UnderlinedTitle text={t('projectsTitle')} />
+        <UnderlinedTitle text={t('projectsPageTitle')} />
       </h2>
       <ProjectShowcase items={items} />
     </section>
@@ -359,7 +153,6 @@ export default function RealisationsPage() {
       <HeroRealisations />
       <ProjectsIntro />
       <ProjectsShowcaseSection />
-      <StackedRealisations />
 
       <section style={{ position: 'relative', width: '100%', aspectRatio: '1 / 1', overflow: 'hidden' }}>
         <LazyImg

@@ -8,6 +8,7 @@ import { Moon, Sun, Orbit } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { HoverSlideText } from '@/components/ui/index'
+import { useAskAI } from '@/components/ui/AskAI'
 import TransitionLink from './TransitionLink'
 import LanguageToggle from './LanguageToggle'
 import { useBlobTransition } from './BlobTransition'
@@ -94,6 +95,7 @@ function CardLinkWithGhost({ href, label, sub, onClick }) {
 export default function CardNav() {
   const T = useTheme()
   const { t } = useLanguage()
+  const ai = useAskAI()
   const pathname = usePathname()
   const blobNavigate = useBlobTransition()
   const inExplorer = pathname?.startsWith('/explorer')
@@ -174,6 +176,8 @@ export default function CardNav() {
         '--card1-bg': T.light ? '#f0eeeb' : '#0d1a11',
         '--card2-bg': T.light ? '#eaf5e2' : '#0a1f10',
         '--card3-bg': T.light ? '#ffffff' : '#060e09',
+        '--card4-bg': T.light ? '#e4f6cf' : '#0c2412',
+        '--card4-border': '2px solid #050505',
         '--card-text': T.light ? '#0a0c16' : '#f2ede8',
         '--card1-border': T.light ? '2px solid #050505' : '2px solid #050505',
         '--card2-border': T.light ? '2px solid #050505' : '2px solid #050505',
@@ -237,6 +241,30 @@ export default function CardNav() {
             <div className="aka-card-links">
               <CardLinkWithGhost href="/services" label={t('service')} sub={t('whatWeOffer')} onClick={closeNav} />
               <CardLinkWithGhost href="/about" label={t('about')} sub={t('aboutTeam')} onClick={closeNav} />
+            </div>
+          </div>
+
+          {/* Carte 4 — « Demandez à l'IA ce qu'elle pense d'AKATech » (pleine largeur, entre dans le stagger GSAP) */}
+          <div className="aka-nav-card aka-card-4" ref={el => cardsRef.current[3] = el}>
+            <div className="aka-ai-head">
+              <div className="aka-card-label" id="aka-nav-ai-heading">AKATech × IA</div>
+              <p className="aka-ai-title">{ai.heading}</p>
+            </div>
+            <div className="aka-ai-row">
+              {ai.platforms.map(p => (
+                <button
+                  key={p.id}
+                  type="button"
+                  className="aka-ai-btn"
+                  onClick={() => ai.ask(p)}
+                  title={`${ai.askLabel} ${p.label}`}
+                  aria-label={`${ai.askLabel} ${p.label}`}
+                  aria-describedby="aka-nav-ai-heading"
+                >
+                  <img src={p.icon} alt="" width={26} height={26} />
+                  <span aria-live="polite"><HoverSlideText text={ai.label(p)} /></span>
+                </button>
+              ))}
             </div>
           </div>
         </div>

@@ -1,17 +1,13 @@
 ﻿'use client'
 import { useRef, useEffect, useMemo } from 'react'
-import { motion, useInView } from 'framer-motion'
-import { Code, Check, ArrowUpRight } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
-import { LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
+import { LazyImg, GreenUnderline, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
-import { hasRealUrl } from '@/lib/project-stories'
-import { trackAction } from '@/lib/track-action'
-import TransitionLink from '@/components/layout/TransitionLink'
 
 
 /* ────────────────────────────────────────────────
@@ -94,283 +90,6 @@ function HeroRealisations() {
           color: #88ca53; letter-spacing: .3em; text-transform: uppercase; margin: 0 0 .9rem;
         }
         .hr-desc { font-size: .95rem; color: rgba(255,255,255,.6); line-height: 1.7; margin: 0; }
-      `}</style>
-    </section>
-  )
-}
-
-/* ────────────────────────────────────────────────
-   HELPERS — mêmes utilitaires que App.jsx
-──────────────────────────────────────────────── */
-function getDisplayUrl(url) {
-  const m = /^https?:\/\/([^/]+)/.exec(url || '')
-  return m ? m[1] : (url || 'Démo locale')
-}
-
-/* ────────────────────────────────────────────────
-   SLIDE PROJET — plein écran, mockup desktop (browser
-   chrome) + mockup mobile (phone shell) côte à côte,
-   panneau d'infos à droite. Port exact de
-   ProjectScrollSlide (App.jsx / elvis-portfolio).
-──────────────────────────────────────────────── */
-function ProjectScrollSlide({ project, index, total, T }) {
-  const { t } = useLanguage()
-  const desktopImg = project.img
-  const displayUrl = getDisplayUrl(project.url)
-  const online = hasRealUrl(project)
-  const inProgress = project.progress != null && project.progress < 100
-
-  // "preview" dans le nom → capture recadrée du contenu → on superpose notre browser chrome.
-  // "responsive" ou nom brut → capture qui contient déjà son propre cadre/mockup → pas de
-  // fausse barre navigateur (sinon double cadre, ex. TechFlow, ShopCI).
-  const isPreviewAsset = /preview/i.test(project.img)
-
-  // Image mobile :
-  // 1. imgMobile explicite dans data.js (variante responsive dédiée)
-  // 2. isPreviewAsset → même image preview (portrait ~9:16, ça couvre le phone shell)
-  // 3. responsive dans img → même image (déjà au bon format)
-  // 4. sinon → null = pas de phone shell affiché
-  const isResponsiveAsset = /responsive/i.test(project.img)
-  const mobileImg = project.imgMobile
-    ? project.imgMobile
-    : (isPreviewAsset || isResponsiveAsset ? project.img : null)
-
-  return (
-    <li className="fcx-slide">
-      <div className="fc-grid">
-
-        {/* ── Mockups ── */}
-        <div className="fc-mockups">
-          <div className="fc-desktop-wrap">
-            <div className="fc-desktop-shell" style={{ background: T.light ? '#fff' : '#0c1710', borderColor: T.border }}>
-              {isPreviewAsset && (
-                <div className="fc-desktop-bar" style={{ background: T.light ? '#f3f6f2' : '#081209', borderColor: T.border }}>
-                  <span className="fc-dot fc-dot--r" />
-                  <span className="fc-dot fc-dot--y" />
-                  <span className="fc-dot fc-dot--g" />
-                  <span className="fc-bar-url" style={{ background: T.border, color: T.textMuted }}>{displayUrl}</span>
-                </div>
-              )}
-              <div className="fc-desktop-screen" style={{ background: T.light ? '#f3f6f2' : '#081209' }}>
-                <LazyImg
-                  src={desktopImg}
-                  alt={`${project.title} — aperçu desktop`}
-                  className="fc-screen-img"
-                  placeholder={
-                    <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                      <Code size={40} style={{ color: 'rgba(136,202,83,.2)' }} />
-                    </div>
-                  }
-                />
-              </div>
-            </div>
-          </div>
-
-          {mobileImg && (
-          <div className="fc-mobile-wrap">
-            <div className="fc-mobile-shell" style={{ background: T.light ? '#fff' : '#0c1710', borderColor: T.border }}>
-              <div className="fc-mobile-notch" style={{ background: T.light ? '#f3f6f2' : '#081209' }} />
-              <div className="fc-mobile-screen" style={{ background: T.light ? '#f3f6f2' : '#081209' }}>
-                <LazyImg src={mobileImg} alt={`${project.title} — aperçu mobile`} className="fc-screen-img" />
-              </div>
-              <div className="fc-mobile-home" style={{ '--gb': T.border }} />
-            </div>
-            <div className="fc-resp-badge">
-              <Check size={12} /> {t('responsiveBadge')}
-            </div>
-          </div>
-          )}
-          <div className="fc-glow" />
-        </div>
-
-        {/* ── Info panel ── */}
-        <div className="fc-info">
-          <div>
-            <h3 className="fc-name" style={{ color: T.textMain }}>{project.title}</h3>
-            <p className="fc-sub">{project.subtitle}</p>
-          </div>
-
-          <div className="fc-meta" style={{ borderColor: 'rgba(136,202,83,.25)' }}>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_type')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.category?.label || project.type} — {online ? t('online') : (inProgress ? t('project_progress') : t('delivered'))}</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_market')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_country')}</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_role')}</span><span className="fc-mv" style={{ color: T.textMain }}>{t('project_design')}</span></div>
-            <div className="fc-meta-row"><span className="fc-ml" style={{ color: T.textMuted }}>{t('project_year')}</span><span className="fc-mv" style={{ color: T.textMain }}>{project.year}</span></div>
-          </div>
-
-          <p className="fc-desc" style={{ color: T.textSub }}>{project.story?.pitch || project.desc}</p>
-
-          <div className="fc-actions">
-            <TransitionLink
-              href={`/projects/${project.slug}`}
-              className="btn-raised btn-sm"
-              aria-label={`${t('detailAria')} ${project.title}`}
-              onClick={() => trackAction('cta_click')}
-            >
-              <HoverSlideText text={t('detail')} /> <ArrowUpRight size={15} />
-            </TransitionLink>
-          </div>
-        </div>
-      </div>
-
-      <div className="fcx-counter">
-        <strong>{String(index + 1).padStart(2, '0')}</strong> / {String(total).padStart(2, '0')}
-      </div>
-    </li>
-  )
-}
-
-/* ────────────────────────────────────────────────
-   SECTION PRINCIPALE — Scroll horizontal plein écran
-   Port exact de ProjectsHorizontalScroll (App.jsx) :
-   • section height = total × 100vh
-   • sticky 100vh contenant le track
-   • track translaté en vw selon la progression de scroll
-   Desktop uniquement (mobile garde son propre composant).
-──────────────────────────────────────────────── */
-function StackedRealisations() {
-  const T = useTheme()
-  const { language, t } = useLanguage()
-  const localizedProjects = getLocalizedData(language).PROJECTS
-  const sectionRef = useRef(null)
-  const trackRef    = useRef(null)
-  const fillRef     = useRef(null)
-  const total = localizedProjects.length
-
-  useEffect(() => {
-    const section = sectionRef.current
-    const track   = trackRef.current
-    const fill    = fillRef.current
-    if (!section || !track) return
-
-    const update = () => {
-      const rect     = section.getBoundingClientRect()
-      const sectionH = section.offsetHeight
-      const viewH    = window.innerHeight
-      let progress = -rect.top / (sectionH - viewH)
-      progress = Math.max(0, Math.min(1, progress))
-
-      const maxVW = (total - 1) * 100
-      track.style.transform = `translateX(-${progress * maxVW}vw)`
-      if (fill) fill.style.width = `${progress * 100}%`
-    }
-
-    window.addEventListener('scroll', update, { passive: true })
-    window.addEventListener('resize', update)
-    update()
-    return () => {
-      window.removeEventListener('scroll', update)
-      window.removeEventListener('resize', update)
-    }
-  }, [total])
-
-  return (
-    <section ref={sectionRef} id="hscroll-section" className="fcx-section" style={{ height: `${total * 100}vh`, background: T.bg }}>
-      <div className="fcx-sticky">
-
-        {/* Heading flottant dans le sticky */}
-        <div className="fcx-section-label">
-          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.6rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.45em', textTransform: 'uppercase', marginBottom: '.6rem' }}>
-            // {t('projectsScrollHint')}
-          </p>
-          <h2 style={{ fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic', fontSize: 'clamp(1.1rem,1.8vw,1.6rem)', color: T.textMain, letterSpacing: '-.02em', margin: 0 }}>
-            {t('projectsCountHeading').replace('{count}', total)}
-          </h2>
-        </div>
-
-        <ul ref={trackRef} className="fcx-track">
-          {localizedProjects.map((project, i) => (
-            <ProjectScrollSlide key={project.id} project={project} index={i} total={total} T={T} />
-          ))}
-        </ul>
-
-        <div className="fcx-progress-track" style={{ background: 'rgba(136,202,83,.12)' }}>
-          <div ref={fillRef} className="fcx-progress-fill" style={{ width: 0, background: 'linear-gradient(135deg, #c6ff3d, #88ca53)' }} />
-        </div>
-      </div>
-
-      {/* CSS — port direct des classes fcx et fc d'App.jsx, palette AKATech */}
-      <style>{`
-        .fcx-section { position: relative; }
-        .fcx-sticky {
-          position: sticky; top: 0; height: 100vh; width: 100%;
-          overflow: hidden; display: flex; align-items: stretch;
-        }
-        .fcx-section-label {
-          position: absolute; top: 28px; left: 8vw; z-index: 10;
-          pointer-events: none; text-align: left;
-        }
-        .fcx-track {
-          display: flex; height: 100vh; flex-shrink: 0;
-          will-change: transform; list-style: none; margin: 0; padding: 0;
-          transition: transform 60ms linear;
-        }
-        .fcx-slide {
-          position: relative; width: 100vw; height: 100vh; flex-shrink: 0;
-          display: flex; align-items: center; padding: 0 8vw; overflow: hidden;
-        }
-        .fcx-slide .fc-grid { width: 100%; }
-        .fcx-counter {
-          position: absolute; top: 28px; right: 8vw; z-index: 5;
-          font-family: 'JetBrains Mono', monospace; font-size: .68rem;
-          letter-spacing: .1em; color: ${T.textMuted}; pointer-events: none;
-        }
-        .fcx-counter strong { color: #88ca53; }
-        .fcx-progress-track {
-          position: absolute; bottom: 28px; left: 8vw; right: 8vw; height: 2px;
-          z-index: 5; border-radius: 2px; overflow: hidden;
-        }
-        .fcx-progress-fill { height: 100%; will-change: width; }
-
-        .fc-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 6vw; align-items: center; }
-        .fc-mockups { position: relative; }
-        .fc-desktop-wrap { position: relative; z-index: 2; }
-        .fc-desktop-shell { border-radius: 10px 10px 6px 6px; border: 2px solid; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,.35); }
-        .fc-desktop-bar { display: flex; align-items: center; gap: 6px; padding: 8px 14px; border-bottom: 1px solid; }
-        .fc-dot { width: 10px; height: 10px; border-radius: 50%; }
-        .fc-dot--r { background: #FF5F57; }
-        .fc-dot--y { background: #FFBD2E; }
-        .fc-dot--g { background: #28C840; }
-        .fc-bar-url { margin-left: 10px; font-family: 'JetBrains Mono', monospace; font-size: .6rem; border-radius: 4px; padding: 2px 10px; }
-        .fc-desktop-screen { width: 100%; aspect-ratio: 16/9; overflow: hidden; position: relative; }
-        .fc-screen-img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
-        .fc-mobile-wrap { position: absolute; bottom: -20px; right: -28px; z-index: 4; width: 28%; }
-        .fc-mobile-shell { border-radius: 28px; border: 2px solid; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
-        .fc-mobile-notch { width: 40%; height: 6px; border-radius: 0 0 6px 6px; margin: 0 auto; }
-        .fc-mobile-screen { aspect-ratio: 9/18; overflow: hidden; position: relative; }
-        .fc-mobile-home { height: 20px; display: flex; align-items: center; justify-content: center; }
-        .fc-mobile-home::after { content: ''; width: 32px; height: 4px; background: rgba(136,202,83,.4); border-radius: 3px; }
-        .fc-resp-badge {
-          display: inline-flex; align-items: center; gap: 6px; margin-top: 12px;
-          font-family: 'JetBrains Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase;
-          color: #88ca53; border: 1px solid rgba(136,202,83,.35); border-radius: 20px;
-          padding: 5px 12px; background: rgba(136,202,83,.08);
-        }
-        .fc-glow {
-          position: absolute; bottom: -40px; left: 10%; width: 60%; height: 120px;
-          background: radial-gradient(ellipse, rgba(136,202,83,.22) 0%, transparent 70%);
-          pointer-events: none; z-index: 1;
-        }
-        .fc-info { display: flex; flex-direction: column; gap: 2.2rem; min-height: 420px; }
-        .fc-name { font-family: 'JetBrains Mono',monospace; font-size: clamp(2rem,3.5vw,3.2rem); font-weight: 800; letter-spacing: -.02em; line-height: 1; }
-        .fc-sub { font-family: 'JetBrains Mono', monospace; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; color: #88ca53; margin: .4rem 0 0; }
-        .fc-meta { display: flex; flex-direction: column; gap: .55rem; border-left: 2px solid; padding-left: 1.2rem; }
-        .fc-meta-row { display: flex; gap: 1rem; font-size: .78rem; }
-        .fc-ml { font-family: 'JetBrains Mono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; min-width: 80px; }
-        .fc-mv { font-weight: 500; }
-        .fc-actions { display: flex; flex-wrap: wrap; gap: .8rem; align-self: flex-start; }
-        .fc-desc { font-size: .95rem; line-height: 1.7; max-width: 44ch; font-weight: 400; margin: 0; }
-
-        @media (max-width: 1100px) {
-          .fc-grid { grid-template-columns: 1fr; gap: 5rem; }
-          .fc-mobile-wrap { right: -14px; }
-          .fcx-slide { padding: 0 6vw; }
-        }
-        @media (max-width: 768px) {
-          /* Cette section n'est rendue que côté desktop (voir export par défaut) */
-          .fcx-slide { padding: 0 5vw; }
-          .fcx-counter { top: 18px; right: 5vw; font-size: .6rem; }
-          .fcx-progress-track { left: 5vw; right: 5vw; bottom: 18px; }
-        }
       `}</style>
     </section>
   )
@@ -513,7 +232,7 @@ function ProjectsShowcaseSection() {
   return (
     <section style={{ padding: '5rem 0 4rem', background: T.bg, overflow: 'hidden' }}>
       <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: '0 0 3rem', padding: '0 5%' }}>
-        <UnderlinedTitle text={t('projectsTitle')} />
+        <UnderlinedTitle text={t('projectsPageTitle')} />
       </h2>
       <ProjectShowcase items={items} />
     </section>
@@ -530,7 +249,6 @@ export default function RealisationsPage() {
       <HeroRealisations />
       <ProjectsIntro />
       <ProjectsShowcaseSection />
-      <StackedRealisations />
 
       <section style={{ position: 'relative', width: '100%', aspectRatio: '2048 / 768', overflow: 'hidden' }}>
         <LazyImg
