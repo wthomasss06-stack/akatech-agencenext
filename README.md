@@ -290,8 +290,8 @@ Création de sites web modernes, responsive et optimisés pour convertir vos vis
 Intégration de cartes interactives Mapbox / Leaflet et de dashboards de visualisation de données. Vos données brutes deviennent des interfaces lisibles et actionnables.
 **Sur devis · 7 à 14 jours**
 
-### 03 · Maintenance & Support
-Suivi technique, corrections de bugs, mises à jour de sécurité et améliorations continues. Vous vous concentrez sur votre métier, AKATech s'occupe du reste.
+### 03 · Optimisation SEO
+Audit technique, recherche de mots-clés, optimisation des pages et de la vitesse pour améliorer votre positionnement sur Google. Vous gagnez en visibilité, AKATech s'occupe du reste.
 **À partir de 20 000 FCFA/mois**
 
 ### 04 · Fiche Google My Business

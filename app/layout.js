@@ -114,7 +114,7 @@ const ORG_JSON_LD = {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Conception de Site Web' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Cartes Interactives & Dashboards' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'API & Backend Robustes' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Maintenance & Support' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Optimisation SEO' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Fiche Google My Business' } },
     ],
   },

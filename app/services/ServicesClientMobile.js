@@ -2,7 +2,7 @@
 import { useRef, useState } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
+import { ArrowRight, Check, Globe, ShoppingCart, Cpu, Server, Palette, Search, Video, CreditCard, Zap, Timer, MessageCircle, Map, MapPin } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { LazyImg, LaserBeam, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
@@ -13,7 +13,7 @@ import { SERVICES } from '@/lib/data'
 
 
 
-const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
+const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Search, Map, MapPin, Video, MessageCircle, CreditCard }
 
 const PROCESS_STEPS = [
   { n: '01', title: 'Consultation gratuite', desc: 'Échange de 30 min pour comprendre votre projet, vos objectifs et votre budget. Aucun engagement.' },
@@ -73,7 +73,7 @@ function ServicesList() {
             return (
               <button key={s.title} onClick={() => setActive(i)}
                 style={{ display: 'flex', alignItems: 'center', gap: '.4rem', padding: '.5rem 1.1rem', borderRadius: 100, border: '1px solid', borderColor: active === i ? T.green : T.border, background: active === i ? 'linear-gradient(145deg,#8dd456,#5f9137)' : 'transparent', color: active === i ? '#fff' : T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.82rem', fontWeight: 600, cursor: 'pointer', transition: 'all .22s' }}>
-                <Ic size={14} />{t(`service_${s.slug}`)}
+                <Ic size={14} />{s.title}
               </button>
             )
           })}
@@ -94,7 +94,7 @@ function ServicesList() {
             initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: .35 }}
             className="svc-detail-grid">
             {/* Image */}
-            <div className="svc-detail-img" style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 40px rgba(0,0,0,.3)', aspectRatio: '1 / 1', width: '100%', maxWidth: 380, margin: '0 auto' }}>
+            <div className="svc-detail-img" style={{ borderRadius: 20, overflow: 'hidden', border: `1px solid ${T.border}`, boxShadow: '8px 8px 40px rgba(0,0,0,.3)', aspectRatio: '16 / 9', width: '100%', maxWidth: 640, margin: '0 auto' }}>
               <LazyImg src={svc.img} alt={svc.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 placeholder={<div style={{ height: '100%', background: 'linear-gradient(135deg,#0a1a0e,#060e09)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><Icon size={48} style={{ color: 'rgba(136,202,83,.3)' }} /></div>} />
             </div>
@@ -107,7 +107,7 @@ function ServicesList() {
                 </div>
                 <div>
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 600, color: T.greenSub, letterSpacing: '.1em' }}>{svc.n}</div>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{t(`service_${svc.slug}`)}</h3>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: T.textMain, fontFamily: "'JetBrains Mono',monospace" }}>{svc.title}</h3>
                 </div>
               </div>
 

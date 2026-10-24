@@ -556,7 +556,8 @@ body:not(.light-mode) textarea,
 body:not(.light-mode) select {
   color-scheme: light;
 }
-body:not(.light-mode) select,
+/* .aka-lang-select exclu : le sélecteur de langue garde son style néon (CardNav.css / StaggeredMenu.css) */
+body:not(.light-mode) select:not(.aka-lang-select),
 body:not(.light-mode) input,
 body:not(.light-mode) textarea {
   background: rgba(10,16,12,0.92);

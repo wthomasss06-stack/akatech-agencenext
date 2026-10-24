@@ -96,7 +96,7 @@ export default function LanguageToggle() {
 
   return (
     <div className="aka-language-toggle notranslate" translate="no" title="Langue / Language">
-      <select value={lang} onChange={change} aria-label="Langue / Language">
+      <select className="aka-lang-select" value={lang} onChange={change} aria-label="Langue / Language">
         {LANGS.map(l => (
           <option key={l.code} value={l.code}>{l.label}</option>
         ))}

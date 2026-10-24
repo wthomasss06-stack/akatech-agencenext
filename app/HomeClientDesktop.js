@@ -9,7 +9,7 @@ import { cld } from '@/lib/cloudinary'
 
 import {
   ArrowRight, ArrowUpRight, Star, ExternalLink,
-  Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
+  Globe, ShoppingCart, Cpu, Server, Palette, Search, Map, MapPin,
   TrendingUp, Users, Clock, Award,
   MessageCircle, Target, Code, Timer, ChevronLeft, ChevronRight,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
@@ -31,7 +31,7 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
 }
 
-const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin }
+const ICON_MAP = { Globe, ShoppingCart, Cpu, Server, Palette, Search, Map, MapPin }
 
 // ── HERO (inchangé) ───────────────────────────────────────────
 // ── CIRCULAR PROJECTS GALLERY (inspiré Aeline/Catalis) ────────
@@ -445,7 +445,7 @@ function AnimatedBeamGrid({ containerRef, nodeIds, connections }) {
 const getServicesSkew = (t) => [
   { n: '01', Icon: Globe,        title: t('service_site_vitrine'),            desc: t('service_site_vitrine_desc'), price: t('pricing_from_vitrine'), del: '10-15 jours', img: '/images/service/creation%20de%20site%20web.webp', slug: 'site-vitrine' },
   { n: '02', Icon: Map,          title: t('service_cartes_dashboards'),        desc: t('service_cartes_dashboards_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/dasbord.webp', slug: 'cartes-dashboards' },
-  { n: '03', Icon: Wrench,       title: t('service_maintenance'),              desc: t('service_maintenance_desc'), price: t('pricing_from_20000_month'), del: 'Contrat mensuel', img: '/images/service/maintenence.webp', slug: 'maintenance' },
+  { n: '03', Icon: Search,       title: t('service_seo'),              desc: t('service_seo_desc'), price: t('pricing_from_20000_month'), del: 'Contrat mensuel', img: '/images/service/seo.webp', slug: 'seo' },
   { n: '04', Icon: MapPin,       title: t('service_google_my_business'),       desc: t('service_google_my_business_desc'), price: t('pricing_from_gbp'), del: '2-7 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
   { n: '05', Icon: MessageCircle, title: t('service_chatbot_ia'),               desc: t('service_chatbot_ia_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/ia.webp', slug: 'chatbot-ia' },
   { n: '06', Icon: CreditCard,    title: t('service_paiement_en_ligne'),        desc: t('service_paiement_en_ligne_desc'), price: t('pricing_quote'), del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
@@ -1161,7 +1161,7 @@ function ProjectFormHome() {
                         <option value="chatbot-ia">{t('service_chatbot_ia')}</option>
                         <option value="paiement-en-ligne">{t('service_paiement_en_ligne')}</option>
                         <option value="google-my-business">{t('service_google_my_business')}</option>
-                        <option value="maintenance">{t('service_maintenance')}</option>
+                        <option value="seo">{t('service_seo')}</option>
                         <option value="autre">{t('service_other')}</option>
                       </select>
                     </div>

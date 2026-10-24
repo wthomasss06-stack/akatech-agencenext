@@ -6,7 +6,7 @@ import TransitionLink from '@/components/layout/TransitionLink'
 import { cld } from '@/lib/cloudinary'
 import {
   ArrowRight, ArrowUpRight, Star, ChevronDown,
-  Globe, ShoppingCart, Cpu, Server, Palette, Wrench, Map, MapPin,
+  Globe, ShoppingCart, Cpu, Server, Palette, Search, Map, MapPin,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
   Calendar, Layers, Receipt, Calculator, MessageCircle, CreditCard,
   Zap, Timer, Check, HelpCircle, Send, Lock,
@@ -336,14 +336,14 @@ const getServicesItems = (t) => [
     price: t('pricing_quote'),
   },
   {
-    n: '03', Icon: Wrench, title: t('service_maintenance'),
-    tagline: t('service_maintenance_tagline'),
+    n: '03', Icon: Search, title: t('service_seo'),
+    tagline: t('service_seo_tagline'),
     bullets: [
-      { h: t('service_maintenance_b1'), d: t('service_maintenance_b1_d') },
-      { h: t('service_maintenance_b2'), d: t('service_maintenance_b2_d') },
-      { h: t('service_maintenance_b3'), d: t('service_maintenance_b3_d') },
-      { h: t('service_maintenance_b4'), d: t('service_maintenance_b4_d') },
-      { h: t('service_maintenance_b5'), d: t('service_maintenance_b5_d') },
+      { h: t('service_seo_b1'), d: t('service_seo_b1_d') },
+      { h: t('service_seo_b2'), d: t('service_seo_b2_d') },
+      { h: t('service_seo_b3'), d: t('service_seo_b3_d') },
+      { h: t('service_seo_b4'), d: t('service_seo_b4_d') },
+      { h: t('service_seo_b5'), d: t('service_seo_b5_d') },
     ],
     price: t('pricing_from_20000_month'),
   },
@@ -1130,7 +1130,7 @@ function ProjectFormHome() {
                       <option value="chatbot-ia">Intégration IA Chatbot</option>
                       <option value="paiement-en-ligne">Intégration de Paiement en Ligne</option>
                       <option value="google-my-business">Fiche Google My Business</option>
-                      <option value="maintenance">Maintenance & Support</option>
+                      <option value="seo">Optimisation SEO</option>
                       <option value="autre">Autre</option>
                     </select>
                   </div>

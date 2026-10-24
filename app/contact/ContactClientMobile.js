@@ -314,7 +314,7 @@ function ProjectForm() {
                         <option value="chatbot-ia">Intégration IA Chatbot</option>
                         <option value="paiement-en-ligne">Intégration de Paiement en Ligne</option>
                         <option value="google-my-business">Fiche Google My Business</option>
-                        <option value="maintenance">Maintenance & Support</option>
+                        <option value="seo">Optimisation SEO</option>
                         <option value="autre">Autre</option>
                       </select>
                     </div>

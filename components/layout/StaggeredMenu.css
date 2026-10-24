@@ -404,20 +404,24 @@ body.light-mode .sm-header-right .aka-language-toggle select option,
 .sm-ask-btn {
   display: flex; flex-direction: column; align-items: center; gap: .4rem;
   padding: .75rem .4rem;
-  border: 1px solid rgba(136,202,83,.2); border-radius: 14px;
-  background: rgba(136,202,83,.05);
+  border: none; border-radius: 14px;
+  background: transparent;
   color: rgba(242,237,232,.75);
   font: 600 .6rem 'JetBrains Mono', monospace;
   cursor: pointer;
-  /* pas de transform CSS : GSAP pilote y/opacity à l'ouverture */
-  transition: background-color .2s, border-color .2s, color .2s;
+  /* pas de transform CSS sur le bouton : GSAP pilote y/opacity à l'ouverture */
+  transition: color .2s;
 }
-.sm-ask-btn img { display: block; width: 26px; height: 26px; object-fit: contain; }
+.sm-ask-btn img { display: block; width: 26px; height: 26px; object-fit: contain; transition: transform .25s cubic-bezier(.22,1,.36,1); }
 .sm-ask-btn:hover,
-.sm-ask-btn:focus-visible { background: rgba(136,202,83,.16); border-color: #88ca53; outline: none; }
-.light-mode .sm-ask-btn { color: rgba(26,58,10,.75); background: rgba(95,145,55,.08); border-color: rgba(95,145,55,.3); }
+.sm-ask-btn:focus-visible { color: #88ca53; }
+.sm-ask-btn:hover img,
+.sm-ask-btn:focus-visible img { transform: translateY(-2px) scale(1.08); }
+.sm-ask-btn:focus-visible { outline: 2px solid #88ca53; outline-offset: 2px; }
+.light-mode .sm-ask-btn { color: rgba(26,58,10,.75); }
 .light-mode .sm-ask-btn:hover,
-.light-mode .sm-ask-btn:focus-visible { background: rgba(95,145,55,.18); border-color: #5f9137; }
+.light-mode .sm-ask-btn:focus-visible { color: #5f9137; }
+.light-mode .sm-ask-btn:focus-visible { outline-color: #5f9137; }
 
 /* ════════════════════════════════════
    HEADER MOBILE FIXE

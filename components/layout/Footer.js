@@ -144,7 +144,7 @@ export default function Footer() {
     [t('footerServiceVitrine'), '/services'],
     [t('footerServiceEcommerce'), '/services'],
     [t('footerServiceSaas'), '/services'],
-    [t('footerServiceMaintenance'), '/services'],
+    [t('footerServiceSeo'), '/services'],
   ]
 
   const LEGAL = [
