@@ -17,12 +17,6 @@
   line-height: .92; letter-spacing: -.02em;
 }
 .ps-pitch { margin: 1.1rem 0 1.7rem; max-width: 440px; font-family: 'JetBrains Mono', monospace; font-size: .88rem; line-height: 1.7; }
-.ps-pills { list-style: none; margin: 1.8rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: .45rem .5rem; }
-.ps-pill {
-  padding: .35rem .75rem; border-radius: 999px; cursor: pointer;
-  font-family: 'JetBrains Mono', monospace; font-size: .68rem; letter-spacing: .04em;
-  transition: all .25s;
-}
 .ps-controls { display: flex; gap: .6rem; margin-top: 2rem; }
 .ps-arrow {
   width: 44px; height: 44px; border-radius: 50%; cursor: pointer;
@@ -34,5 +28,4 @@
   .ps-title { font-size: clamp(2.2rem, 9vw, 3rem); margin-top: .4rem; }
   .ps-pitch { margin: .9rem auto 1.4rem; }
   .ps-controls { justify-content: center; margin-top: 1.4rem; }
-  .ps-pills { justify-content: center; }
 }

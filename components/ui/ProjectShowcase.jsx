@@ -2,8 +2,8 @@
 // components/ui/ProjectShowcase.jsx
 // Vitrine « portable + téléphone » d'une liste de projets : le média du projet
 // joue dans les écrans (DeviceShowcase), fiche + navigation à côté (PC) ou
-// dessous (mobile, glisser à gauche / droite). Défilement auto en pause au
-// survol / au toucher.
+// dessous (mobile, glisser à gauche / droite) ; flèches pour naviguer, pas de
+// pastilles. Défilement auto en pause au survol / au toucher.
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -90,26 +90,6 @@ export default function ProjectShowcase({ items, autoMs = 9000, startId }) {
           <button type="button" className="ps-arrow" style={arrow} onClick={() => go(-1)} aria-label="Précédent"><ChevronLeft size={18} /></button>
           <button type="button" className="ps-arrow" style={arrow} onClick={() => go(1)} aria-label="Suivant"><ChevronRight size={18} /></button>
         </div>
-
-        <ol className="ps-pills">
-          {items.map((p, i) => (
-            <li key={p.id}>
-              <button
-                type="button"
-                className="ps-pill"
-                aria-current={i === index}
-                onClick={() => setIndex(i)}
-                style={{
-                  border: `1px solid ${i === index ? '#88ca53' : T.border}`,
-                  background: i === index ? 'rgba(136,202,83,.12)' : 'transparent',
-                  color: i === index ? '#88ca53' : T.textMuted,
-                }}
-              >
-                {p.title}
-              </button>
-            </li>
-          ))}
-        </ol>
       </div>
     </div>
   )

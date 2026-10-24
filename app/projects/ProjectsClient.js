@@ -3,7 +3,7 @@ import { useRef, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import ProjectShowcase from '@/components/ui/ProjectShowcase'
+import ProjectScrollShowcase from '@/components/ui/ProjectScrollShowcase'
 import { LazyImg, GreenUnderline, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
@@ -221,7 +221,8 @@ function ProjectsIntro() {
 }
 
 // ── Vitrine : le projet joue dans un portable + un téléphone ──
-// PC : webm dans le portable (webp à défaut) ; mobile : téléphone seul, image `-responsive`.
+// Défilement parallaxe horizontal : le défilement vertical fait glisser les projets
+// (voir ProjectScrollShowcase). PC : webm dans le portable (webp à défaut).
 function ProjectsShowcaseSection() {
   const T = useTheme()
   const { t, language } = useLanguage()
@@ -230,12 +231,14 @@ function ProjectsShowcaseSection() {
     [language]
   )
   return (
-    <section style={{ padding: '5rem 0 4rem', background: T.bg, overflow: 'hidden' }}>
-      <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: '0 0 3rem', padding: '0 5%' }}>
-        <UnderlinedTitle text={t('projectsPageTitle')} />
-      </h2>
-      <ProjectShowcase items={items} />
-    </section>
+    <>
+      <section style={{ padding: '5rem 5% 1rem', background: T.bg }}>
+        <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: 0 }}>
+          <UnderlinedTitle text={t('projectsPageTitle')} />
+        </h2>
+      </section>
+      <ProjectScrollShowcase items={items} />
+    </>
   )
 }
 

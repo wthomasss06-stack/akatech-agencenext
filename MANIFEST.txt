@@ -1,22 +1,19 @@
-AKATech — ZIP différentiel v3 (à dézipper à la racine de akatech-nextjs, en écrasant)
-Base de comparaison : akatech-nextjs_v2.zip
+AKATech — ZIP différentiel v5 (cumulatif, base : akatech-nextjs_v2.zip) — à dézipper à la racine de akatech-nextjs, en écrasant.
+Contient tout le v3 + v4 + le nouveau défilement parallaxe horizontal. Peut être dézippé par-dessus v3 ou v4.
 
-NOUVEAU (1)
-  + components/ui/AskAI.jsx            (hook useAskAI + bandeau footer partagé)
+NOUVEAUX (3)
+  + components/ui/AskAI.jsx
+  + components/ui/ProjectScrollShowcase.jsx   (NOUVEAU v5 : portable + téléphone en défilement parallaxe horizontal)
+  + components/ui/ProjectScrollShowcase.css   (NOUVEAU v5)
 
-MODIFIÉS (8)
-  ~ app/projects/ProjectsClient.js         (PC : section renommée « Nos réalisations », parallaxe horizontal « une par une » retiré)
-  ~ app/projects/ProjectsClientMobile.js   (mobile : même renommage, deck swipeable retiré)
-  ~ components/layout/CardNav.jsx          (+ carte « Demandez à l'IA… » dans le stagger GSAP)
-  ~ components/layout/CardNav.css
-  ~ components/layout/StaggeredMenu.jsx    (+ bloc « Demandez à l'IA… » animé dans le stagger)
-  ~ components/layout/StaggeredMenu.css
-  ~ components/layout/Footer.js            (utilise le composant partagé AskAI, rendu inchangé)
-  ~ lib/language.js                        (nouvelle clé projectsPageTitle = « Nos réalisations »)
+MODIFIÉS (10)
+  ~ app/projects/ProjectsClient.js         (PC : titre « Nos réalisations » + ProjectScrollShowcase à la place du carrousel)
+  ~ app/projects/ProjectsClientMobile.js   (mobile : « Nos réalisations », garde le carrousel ProjectShowcase au doigt)
+  ~ components/layout/CardNav.jsx / CardNav.css
+  ~ components/layout/StaggeredMenu.jsx / StaggeredMenu.css
+  ~ components/layout/Footer.js
+  ~ components/ui/ProjectShowcase.jsx / ProjectShowcase.css   (pastilles retirées ; reste utilisé par la home et le mobile)
+  ~ lib/language.js
 
 À SUPPRIMER : rien.
 EXCLUS PAR SÉCURITÉ : .env, .env.local, app/.env (non inclus).
-
-NOTES
-- La home garde « Nos dernières réalisations » (clé projectsTitle inchangée) ; seule la page /projects utilise « Nos réalisations ».
-- La vitrine portable + téléphone (ProjectShowcase, image 1) est conservée telle quelle.
