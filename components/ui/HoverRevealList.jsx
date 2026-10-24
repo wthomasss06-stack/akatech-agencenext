@@ -1,7 +1,7 @@
 'use client'
 // components/ui/HoverRevealList.jsx
 // Liste « hover reveal image » (réf. TRES_MINIMALISM.html) : au survol d'une
-// ligne, une image en niveaux de gris suit le curseur (GSAP quickTo).
+// ligne, une image en couleur suit le curseur (GSAP quickTo).
 //
 // items : [{ id, title, desc?, tag?, img, href? }]
 // theme : { text, muted, line, accent } (couleurs du thème courant)

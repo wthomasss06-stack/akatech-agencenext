@@ -5,7 +5,7 @@
 //   • PC (≥ 1024 px)  : portable → vidéo .webm si dispo, sinon aperçu .webp ;
 //                       téléphone → image `-responsive`
 //   • Mobile          : téléphone seul, image `-responsive`, JAMAIS de vidéo
-// Réglages de perspective : lib/device-mockups.js. Styles : DeviceShowcase.css.
+// Écran du portable au format 2,17:1 des webm/webp. Réglages de perspective : lib/device-mockups.js. Styles : DeviceShowcase.css.
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { LAPTOP, PHONE, DEVICE_FRAME } from '@/lib/device-mockups'
@@ -111,8 +111,6 @@ function LaptopScreen({ media, title, allowVideo }) {
   const showVideo = allowVideo && media.video && !failed
   return (
     <>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className="dv-ambient" src={media.desktopImg} alt="" aria-hidden="true" decoding="async" />
       {showVideo ? (
         <ScreenVideo src={media.video} poster={media.desktopImg} onFail={() => setFailed(true)} />
       ) : (

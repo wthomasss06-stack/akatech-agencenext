@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════
    HoverRevealList — liste minimaliste : au survol d'une ligne, une image
-   (niveaux de gris) suit le curseur. Adapté de TRES_MINIMALISM.html.
+   (en couleur) suit le curseur. Adapté de TRES_MINIMALISM.html.
    ═══════════════════════════════════════════════════════════════ */
 .hrl { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hrl-line, rgba(255, 255, 255, .16)); }
 .hrl-row {
@@ -60,7 +60,6 @@
   z-index: 100;
   opacity: 0;
   transform: translate(-50%, -50%) scale(.8);
-  filter: grayscale(100%);
   border-radius: 6px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, .35);
 }

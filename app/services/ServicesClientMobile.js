@@ -8,7 +8,6 @@ import { useLanguage } from '@/lib/language'
 import { LazyImg, LaserBeam, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
-import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { cld } from '@/lib/cloudinary'
 import { SERVICES } from '@/lib/data'
 
@@ -29,14 +28,12 @@ function HeroServices() {
   return (
     <section style={{ height: '100vh', minHeight: 600, width: '100%', background: '#060e09', position: 'relative', overflow: 'hidden', display: 'flex', alignItems: 'center' }}>
       <AuroraHero labels={[]} />
-      {/* Bandeau d'images des projets (droite → gauche) : suit le doigt et fait onduler les textes data-wake */}
-      <ProjectMarquee zIndex={0} />
       <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center', position: 'relative', zIndex: 1, padding: '72px 5% 0' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}><span data-wake style={{ display: 'block' }}><UnderlinedTitle text={t('services').toUpperCase()} /></span></h1>
-          <div data-wake><p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 620, margin: '0 auto 2.5rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}><UnderlinedTitle text={t('services').toUpperCase()} /></h1>
+          <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 620, margin: '0 auto 2.5rem' }}>
             {t('servicesHero')}
-          </p></div>
+          </p>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '1rem' }}>
               <HoverSlideText text={t('freeQuote')} /> <MessageCircle size={16} />

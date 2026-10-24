@@ -7,7 +7,6 @@ import { useLanguage } from '@/lib/language'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
 import { LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
-import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { cld } from '@/lib/cloudinary'
 import { PROJECTS, getLocalizedData } from '@/lib/data'
 import { hasRealUrl } from '@/lib/project-stories'
@@ -56,16 +55,13 @@ function HeroRealisations() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
-      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
-      <ProjectMarquee />
-
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>{t('projectsTitleUpper')}</span></motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>{t('projectsTitleUpper')}</motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <div data-wake><p className="hr-kicker">+{PROJECTS.length} {t('deliveredProjects')} · 99% {t('satisfied')}</p>
-            <p className="hr-desc">{t('projectsHero')}</p></div>
+            <p className="hr-kicker">+{PROJECTS.length} {t('deliveredProjects')} · 99% {t('satisfied')}</p>
+            <p className="hr-desc">{t('projectsHero')}</p>
           </motion.div>
         </div>
       </div>

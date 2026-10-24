@@ -12,7 +12,6 @@ import { useLanguage } from '@/lib/language'
 import { GreenUnderline, LazyImg, UnderlinedTitle } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
-import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { cld } from '@/lib/cloudinary'
 
 // ═══════════════════════════════════════════════════════════════
@@ -254,16 +253,13 @@ function HeroContact() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
-      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
-      <ProjectMarquee />
-
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>{t('contactTitle').toUpperCase()}</span></motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>{t('contactTitle').toUpperCase()}</motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <div data-wake><p className="hr-kicker">{t('freeQuote')} · 24h</p>
-            <p className="hr-desc">{t('contactHero')}</p></div>
+            <p className="hr-kicker">{t('freeQuote')} · 24h</p>
+            <p className="hr-desc">{t('contactHero')}</p>
           </motion.div>
         </div>
       </div>

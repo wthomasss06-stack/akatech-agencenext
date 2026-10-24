@@ -8,7 +8,6 @@ import { useLanguage } from '@/lib/language'
 import { LazyImg, LaserBeam, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
-import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { cld } from '@/lib/cloudinary'
 import { getLocalizedData } from '@/lib/data'
 
@@ -65,16 +64,13 @@ function HeroServices() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
-      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
-      <ProjectMarquee />
-
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>{t('services').toUpperCase()}</span></motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>{t('services').toUpperCase()}</motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <div data-wake><p className="hr-kicker">{t('service_hero_kicker')}</p>
-            <p className="hr-desc">{t('service_hero_text')}</p></div>
+            <p className="hr-kicker">{t('service_hero_kicker')}</p>
+            <p className="hr-desc">{t('service_hero_text')}</p>
           </motion.div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
             

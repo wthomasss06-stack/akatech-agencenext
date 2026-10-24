@@ -26,7 +26,6 @@ import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData 
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
 import HoverRevealList from '@/components/ui/HoverRevealList'
-import ProjectMarquee from '@/components/ui/ProjectMarquee'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -187,22 +186,19 @@ function Hero() {
 
       </div>
 
-      {/* Bandeau d'images des projets (droite → gauche), suit le pointeur et fait onduler les textes data-wake */}
-      <ProjectMarquee />
-
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '3rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
         
 
-        <div data-wake><HeroSloganCycle /></div>
+        <HeroSloganCycle />
 
-        <div data-wake>
+        
           <motion.p
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
             style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.02rem', color: 'rgba(255,255,255,.68)', maxWidth: 560, margin: '0 auto 1.7rem', lineHeight: 1.55 }}>
             {t('homeHeroText')}
           </motion.p>
-        </div>
+        
 
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .4 }}

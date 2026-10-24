@@ -1,15 +1,17 @@
-AKATech — ZIP différentiel (à dézipper à la racine de akatech-nextjs, en écrasant)
+AKATech — ZIP différentiel v2 (à dézipper à la racine de akatech-nextjs, en écrasant)
 
-NOUVEAUX (13)
+À SUPPRIMER (bandeau d'images retiré — présents seulement si tu as appliqué le zip précédent)
+  - components/ui/SpotlightMarquee.jsx
+  - components/ui/SpotlightMarquee.css
+  - components/ui/ProjectMarquee.jsx
+
+NOUVEAUX (10)
   + components/ui/DeviceShowcase.css
   + components/ui/DeviceShowcase.jsx
   + components/ui/HoverRevealList.css
   + components/ui/HoverRevealList.jsx
-  + components/ui/ProjectMarquee.jsx
   + components/ui/ProjectShowcase.css
   + components/ui/ProjectShowcase.jsx
-  + components/ui/SpotlightMarquee.css
-  + components/ui/SpotlightMarquee.jsx
   + lib/device-mockups.js
   + lib/project-media.js
   + public/images/devices/laptop-frame.webp
@@ -33,17 +35,16 @@ MODIFIÉS (16)
   ~ app/services/ServicesClients.js
   ~ components/ui/index.js
 
-VIDÉOS (.webm) — lues depuis Cloudinary
-- URL générée par cld('/images/projects/<nom>-preview.webm') : akatech/images/projects/<nom>-preview.webm.
-- Les uploader avec « npm run upload-images » (le script gère déjà les vidéos, même arborescence).
-- Noms reconnus (lib/project-media.js > WEBM_AVAILABLE) : kokoeat, linkedin-banner, terrasafe,
-  techflow, jean-edy, laverie, tati, newhorizon, universitelesanges, mk, nexura, livreurtrack,
-  moncashjour, elvismarket, monmarket (tous en « -preview.webm »).
-  Autre projet avec un webm : ajouter son nom dans WEBM_AVAILABLE.
-- Tant qu'un .webm n'est pas uploadé (ou s'il ne charge pas), l'aperçu .webp s'affiche à la place.
-- moncashjour-preview.webm est à la racine du zip d'origine : le déplacer dans public/images/projects/
-  avant l'upload.
+CE QUI A CHANGÉ DEPUIS LA V1
+- Portable : l'écran est retaillé au format des webm/webp (2,17:1). Le média remplit tout l'écran,
+  plus de bande ni de flou. Image du cadre : public/images/devices/laptop-frame.webp.
+- Liste hover reveal : l'image qui suit le curseur est en couleur.
+- Bandeau d'images : retiré partout (hero PC + mobile).
 
-NON TESTÉ ICI
-- npm run build complet (Prisma impossible à générer dans mon environnement) ; la compilation Next
-  passe et le rendu a été vérifié en navigateur (PC + mobile).
+VIDÉOS (.webm) — lues depuis Cloudinary
+- URL : cld('/images/projects/<nom>-preview.webm') → akatech/images/projects/<nom>-preview.webm.
+- Upload : « npm run upload-images » (gère déjà les vidéos). Noms reconnus : lib/project-media.js >
+  WEBM_AVAILABLE. Sans webm (ou en cas d'échec de chargement), l'aperçu .webp s'affiche.
+- moncashjour-preview.webm traîne à la racine de ton zip d'origine : le mettre dans public/images/projects/.
+
+SI « Can't resolve 'lenis' » : faire « npm install » (dépendance déjà déclarée dans package.json).

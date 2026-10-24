@@ -12,7 +12,6 @@ import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { GreenUnderline, HoverSlideText, LazyImg, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
-import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { BLOG_POSTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
@@ -245,16 +244,13 @@ function HeroBlog() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
-      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
-      <ProjectMarquee />
-
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>LE BLOG</span></motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>LE BLOG</motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <div data-wake><p className="hr-kicker">{t('blogTitle')}</p>
-            <p className="hr-desc">{t('blogHero')}</p></div>
+            <p className="hr-kicker">{t('blogTitle')}</p>
+            <p className="hr-desc">{t('blogHero')}</p>
             <a
               href="https://www.linkedin.com/in/m-bollo-aka"
               target="_blank"
