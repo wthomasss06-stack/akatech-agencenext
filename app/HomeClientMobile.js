@@ -8,7 +8,7 @@ import {
   ArrowRight, ArrowUpRight, Star, ChevronDown,
   Globe, ShoppingCart, Cpu, Server, Palette, Search, Map, MapPin,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
-  Calendar, Layers, Receipt, Calculator, MessageCircle, CreditCard,
+  Calendar, Layers, Receipt, Calculator, MessageCircle, CreditCard, Video,
   Zap, Timer, Check, HelpCircle, Send, Lock,
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -17,7 +17,7 @@ import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTit
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
-import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
+import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
 
@@ -383,6 +383,14 @@ const getServicesItems = (t) => [
     ],
     price: t('pricing_quote'),
   },
+  {
+    n: '07', Icon: Video, title: SERVICES[6].title,
+    tagline: SERVICES[6].desc,
+    bullets: SERVICES[6].features.map(h => ({ h })),
+    price: SERVICES[6].price,
+    del: SERVICES[6].del,
+    href: `https://wa.me/2250142507750?text=${encodeURIComponent('Bonjour AKATech, je suis intéressé par Vidéos IA pour le marketing')}`,
+  },
 ]
 
 // ── DATA processus — texte complet (remplace les visuels image) ──
@@ -601,18 +609,19 @@ function ServicesPreview() {
                 <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.76rem', fontStyle: 'italic', color: T.textMuted, lineHeight: 1.6, marginBottom: '.9rem' }}>
                   {s.tagline}
                 </p>
+                {s.del && <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: T.textMuted, marginBottom: '.7rem' }}>Délai : {s.del}</p>}
                 <div style={{ marginBottom: '1.1rem' }}>
                   {s.bullets.map((b, bi) => (
                     <div key={bi} style={{ display: 'flex', gap: '.6rem', padding: '.55rem 0', borderTop: bi ? `1px solid ${T.border}` : 'none' }}>
                       <span style={{ width: 5, height: 5, borderRadius: '50%', background: '#88ca53', marginTop: '.45rem', flexShrink: 0 }} />
                       <div>
                         <div style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: 700, fontSize: '.78rem', color: T.textMain, lineHeight: 1.4 }}>{b.h}</div>
-                        <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: T.textMuted, lineHeight: 1.5, marginTop: '.1rem' }}>{b.d}</div>
+                        {b.d && <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: T.textMuted, lineHeight: 1.5, marginTop: '.1rem' }}>{b.d}</div>}
                       </div>
                     </div>
                   ))}
                 </div>
-                <a href="https://wa.me/2250142507750" target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.78rem', padding: '.7rem 1.3rem', width: '100%', justifyContent: 'center' }}>
+                <a href={s.href || 'https://wa.me/2250142507750'} target="_blank" rel="noreferrer" className="btn-raised" style={{ fontSize: '.78rem', padding: '.7rem 1.3rem', width: '100%', justifyContent: 'center' }}>
                   <HoverSlideText text={t('service_cta')} /> <ArrowRight size={13} />
                 </a>
               </div>

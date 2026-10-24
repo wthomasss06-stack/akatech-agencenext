@@ -13,7 +13,7 @@ import {
   TrendingUp, Users, Clock, Award,
   MessageCircle, Target, Code, Timer, ChevronLeft, ChevronRight,
   Monitor, ShoppingBag, LayoutDashboard, Cog, Image,
-  Calendar, Layers, Receipt, Calculator, CreditCard,
+  Calendar, Layers, Receipt, Calculator, CreditCard, Video,
   Send, Zap, Lock, Mail, Phone, Check, HelpCircle, ChevronDown
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
@@ -449,6 +449,7 @@ const getServicesSkew = (t) => [
   { n: '04', Icon: MapPin,       title: t('service_google_my_business'),       desc: t('service_google_my_business_desc'), price: t('pricing_from_gbp'), del: '2-7 jours', img: '/images/service/fiche-google.webp', slug: 'google-my-business' },
   { n: '05', Icon: MessageCircle, title: t('service_chatbot_ia'),               desc: t('service_chatbot_ia_desc'), price: t('pricing_quote'), del: '7-14 jours', img: '/images/service/ia.webp', slug: 'chatbot-ia' },
   { n: '06', Icon: CreditCard,    title: t('service_paiement_en_ligne'),        desc: t('service_paiement_en_ligne_desc'), price: t('pricing_quote'), del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
+  { n: '07', Icon: Video, title: SERVICES[6].title, desc: SERVICES[6].desc, price: SERVICES[6].price, del: SERVICES[6].del, img: SERVICES[6].img, slug: SERVICES[6].slug },
 ]
 
 // Thème de la liste « hover reveal image » (HoverRevealList)
