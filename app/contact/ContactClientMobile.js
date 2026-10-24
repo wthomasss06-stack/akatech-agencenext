@@ -8,10 +8,11 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
+import { LaserBeam, GreenUnderline, HoverSlideText, LazyImg, UnderlinedTitle } from '@/components/ui/index'
 import { trackAction } from '@/lib/track-action'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { cld } from '@/lib/cloudinary'
 
 
@@ -71,15 +72,15 @@ function HeroContact() {
         <AuroraHero labels={[]} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(6,14,9,.95) 100%)' }} />
       </div>
+      {/* Bandeau d'images des projets (droite → gauche) : suit le doigt et fait onduler les textes data-wake */}
+      <ProjectMarquee />
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 1000, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}>
-          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}>
-            {t('contactTitle')}
-          </h1>
-          <p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}><span data-wake style={{ display: 'block' }}><UnderlinedTitle text={t('contactTitle')} /></span></h1>
+          <div data-wake><p style={{ fontSize: 'clamp(.9rem,2vw,1.05rem)', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
             {t('contactHero')}
-          </p>
+          </p></div>
         </motion.div>
       </div>
       {/* Layer FORE — particules */}
@@ -112,7 +113,7 @@ function ContactChannels() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '1rem' }}>
-            {t('contactChannelsTitle')}
+            <UnderlinedTitle text={t('contactChannelsTitle')} />
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.5rem' }}>
             {t('contactChannelsIntro')}
@@ -247,7 +248,7 @@ function ProjectForm() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '1rem' }}>
-            {t('formTitle')}
+            <UnderlinedTitle text={t('formTitle')} />
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.5rem' }}>
             {t('formLead')}

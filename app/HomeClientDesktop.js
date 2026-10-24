@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import TransitionLink from '@/components/layout/TransitionLink'
@@ -18,12 +18,15 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
+import ProjectShowcase from '@/components/ui/ProjectShowcase'
+import HoverRevealList from '@/components/ui/HoverRevealList'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger)
@@ -184,17 +187,22 @@ function Hero() {
 
       </div>
 
+      {/* Bandeau d'images des projets (droite → gauche), suit le pointeur et fait onduler les textes data-wake */}
+      <ProjectMarquee />
+
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '3rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
         
 
-        <HeroSloganCycle />
+        <div data-wake><HeroSloganCycle /></div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
-          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.02rem', color: 'rgba(255,255,255,.68)', maxWidth: 560, margin: '0 auto 1.7rem', lineHeight: 1.55 }}>
-          {t('homeHeroText')}
-        </motion.p>
+        <div data-wake>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
+            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '1.02rem', color: 'rgba(255,255,255,.68)', maxWidth: 560, margin: '0 auto 1.7rem', lineHeight: 1.55 }}>
+            {t('homeHeroText')}
+          </motion.p>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .4 }}
@@ -447,172 +455,8 @@ const getServicesSkew = (t) => [
   { n: '06', Icon: CreditCard,    title: t('service_paiement_en_ligne'),        desc: t('service_paiement_en_ligne_desc'), price: t('pricing_quote'), del: '5-10 jours', img: '/images/service/peiement.webp', slug: 'paiement-en-ligne' },
 ]
 
-// ── GHOST SCROLL SHOWCASE — parallax + texte fantôme horizontal ──
-// Port du pattern gemini-code-1785847388601.html (GSAP + ScrollTrigger) :
-// chaque item devient un panneau plein écran avec une image de fond en
-// parallax vertical (scrub) et un très grand titre en contour ("ghost",
-// même traitement que les H2 du site) qui glisse à l'horizontale au
-// scroll, sens alterné pair/impair. Légende en bas à gauche (numéro,
-// titre lisible, tag, description, lien) pour garder l'information
-// exploitable — remplace HoverImageReveal pour Prestations et Processus.
-function GhostScrollShowcase({ items }) {
-  const { t } = useLanguage()
-  const containerRef = useRef(null)
-  const panelRefs = useRef([])
-  const bgRefs = useRef([])
-  const ghostRefs = useRef([])
-  const reduceMotion = useReducedMotion()
-
-  useEffect(() => {
-    panelRefs.current = panelRefs.current.slice(0, items.length)
-    bgRefs.current = bgRefs.current.slice(0, items.length)
-    ghostRefs.current = ghostRefs.current.slice(0, items.length)
-
-    // Chargement paresseux des images de fond : on n'assigne
-    // backgroundImage qu'à l'approche du viewport (perf sur 5-7
-    // panneaux plein écran d'un coup). Fichiers locaux directs (public/images/service,
-    // public/images/process) — plus de tentative Cloudinary sur ces images.
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const el = entry.target
-          const url = el.dataset.bg
-          if (url) el.style.backgroundImage = `url(${url})`
-          io.unobserve(el)
-        }
-      })
-    }, { rootMargin: '600px 0px' })
-    bgRefs.current.forEach((el) => el && io.observe(el))
-
-    if (reduceMotion) return () => io.disconnect()
-
-    const timer = setTimeout(() => ScrollTrigger.refresh(), 100)
-
-    const ctx = gsap.context(() => {
-      const panels = panelRefs.current.filter(Boolean)
-      const lastIndex = panels.length - 1
-
-      panels.forEach((panel, i) => {
-        const bg = bgRefs.current[i]
-        const ghost = ghostRefs.current[i]
-        if (!bg || !ghost) return
-
-        gsap.timeline({
-          defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: panel,
-            start: i === 0 ? 'top top' : 'top bottom',
-            end: i === lastIndex ? 'top top' : 'bottom top',
-            scrub: 0.75,
-          },
-        })
-          .fromTo(ghost,
-            { xPercent: i % 2 === 0 ? 30 : -50 },
-            { xPercent: i % 2 === 0 ? -50 : 30 }, 0)
-          .fromTo(bg,
-            { yPercent: i === 0 ? -25 : 0 },
-            { yPercent: i === lastIndex ? -25 : -50 }, 0)
-      })
-    }, containerRef)
-
-    return () => {
-      clearTimeout(timer)
-      io.disconnect()
-      ctx.revert()
-    }
-  }, [items, reduceMotion])
-
-  return (
-    <div ref={containerRef} style={{ position: 'relative' }}>
-      {items.map((item, i) => {
-        const title = item.title.replace(/\n/g, ' ')
-        const ghostText = (item.tag || item.title).replace(/\n/g, ' ')
-        const Tag = item.href ? Link : 'div'
-        const tagProps = item.href ? { href: item.href } : {}
-        return (
-          <Tag
-            key={item.n}
-            {...tagProps}
-            ref={(el) => { panelRefs.current[i] = el }}
-            className={item.href ? 'ghost-scroll-panel is-link' : 'ghost-scroll-panel'}
-            style={{
-              position: 'relative', display: 'block',
-              height: '100vh', minHeight: 560, maxHeight: 1000,
-              overflow: 'hidden', textDecoration: 'none',
-            }}
-          >
-            <div
-              ref={(el) => { bgRefs.current[i] = el }}
-              data-bg={item.img}
-              aria-hidden="true"
-              className="ghost-scroll-bg"
-              style={{
-                position: 'absolute', top: 0, left: 0, width: '100%', height: '200%',
-                backgroundSize: 'cover', backgroundPosition: 'center 18%', backgroundRepeat: 'no-repeat',
-                filter: 'brightness(.38) saturate(1.1)',
-                willChange: 'transform',
-              }}
-            />
-            <div aria-hidden="true" style={{
-              position: 'absolute', inset: 0, pointerEvents: 'none',
-              background: 'linear-gradient(180deg, rgba(6,14,9,.2) 0%, rgba(6,14,9,.16) 42%, rgba(6,14,9,.93) 100%)',
-            }} />
-            <div
-              ref={(el) => { ghostRefs.current[i] = el }}
-              aria-hidden="true"
-              style={{
-                position: 'absolute', top: '26%', left: 0, zIndex: 1,
-                fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic',
-                textTransform: 'uppercase', whiteSpace: 'nowrap', lineHeight: 1,
-                fontSize: 'clamp(4.5rem, 13vw, 11.5rem)',
-                color: 'transparent', WebkitTextStroke: '1.5px rgba(198,255,61,.4)',
-                willChange: 'transform', userSelect: 'none', pointerEvents: 'none',
-              }}
-            >
-              {ghostText}
-            </div>
-
-            <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, padding: '3.2rem 5%', zIndex: 2, pointerEvents: 'none' }}>
-              <div style={{ maxWidth: 680 }}>
-                <div style={{ marginBottom: '.9rem' }}>
-                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: '#88ca53', letterSpacing: '.25em' }}>
-                    {item.n} / {String(items.length).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 style={{
-                  fontFamily: "'Barlow Condensed',sans-serif", fontWeight: 900, fontStyle: 'italic',
-                  textTransform: 'uppercase', letterSpacing: '-.01em', lineHeight: .96,
-                  fontSize: 'clamp(2rem, 4vw, 3.2rem)', color: '#fff', margin: '0 0 .7rem',
-                }}>
-                  {title}
-                </h3>
-                {item.desc && (
-                  <p style={{
-                    fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', lineHeight: 1.65,
-                    color: 'rgba(255,255,255,.66)', margin: 0, maxWidth: 520,
-                  }}>
-                    {item.desc}
-                  </p>
-                )}
-                {item.href && (
-                  <span style={{
-                    display: 'inline-flex', alignItems: 'center', gap: '.5rem', marginTop: '1.3rem',
-                    fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: '#88ca53',
-                  }}>
-                    {t('viewService')}
-                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                      <path d="M2 12L12 2M12 2H5M12 2V9" stroke="#88ca53" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                )}
-              </div>
-            </div>
-          </Tag>
-        )
-      })}
-    </div>
-  )
-}
+// Thème de la liste « hover reveal image » (HoverRevealList)
+const listTheme = (T) => ({ text: T.textMain, muted: T.textMuted, line: T.border, accent: '#88ca53' })
 
 function ServicesPreview() {
   const T = useTheme()
@@ -621,9 +465,9 @@ function ServicesPreview() {
   const SERVICES_SKEW = getServicesSkew(t)
 
   // Tous les services — showcase scroll plein écran, chaque panneau pointe vers son service sur /services
-  const GHOST_ITEMS = SERVICES_SKEW.map(s => ({
-    n: s.n, title: s.title, img: s.img, tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
-  }))
+  const GHOST_ITEMS = useMemo(() => SERVICES_SKEW.map(s => ({
+    id: s.n, n: s.n, title: s.title, img: s.img, tag: s.del, desc: s.desc, href: `/services#${s.slug}`,
+  })), [t]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <section ref={ref} style={{ padding: '7rem 5%', background: T.bg, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
@@ -636,18 +480,14 @@ function ServicesPreview() {
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
               {t('homeServicesTitle').split(' ')[0]}{' '}
               <GreenUnderline>
-                <span className="text-gradient">
-                  {t('homeServicesTitle').split(' ').slice(1).join(' ')}
-                </span>
+                {t('homeServicesTitle').split(' ').slice(1).join(' ')}
               </GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
 
-        {/* ── Ghost Scroll Showcase — tous les services, plein écran ── */}
-        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
-          <GhostScrollShowcase items={GHOST_ITEMS} />
-        </div>
+        {/* Liste « hover reveal image » — chaque ligne mène à son service sur /services */}
+        <HoverRevealList items={GHOST_ITEMS} theme={listTheme(T)} />
 
       </div>
     </section>
@@ -668,13 +508,14 @@ function WhyUs() {
   const { t } = useLanguage()
   const WHY_PANELS = getWhyPanels(t)
 
-  const PROCESS_GHOST_ITEMS = WHY_PANELS.map(p => ({
+  const PROCESS_GHOST_ITEMS = useMemo(() => WHY_PANELS.map(p => ({
+    id: p.n,
     n: p.n,
     title: p.title.replace('\n', ' '),
     img: p.img,
     tag: p.sub,
     desc: p.desc,
-  }))
+  })), [t]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <section style={{ padding: '7rem 5%', background: T.bg, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
@@ -683,7 +524,7 @@ function WhyUs() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
-              {t('processTitle')}
+              <UnderlinedTitle text={t('processTitle')} />
             </h2>
           </BlurReveal>
           <div style={{ textAlign: 'center', marginTop: '1rem' }}>
@@ -693,9 +534,7 @@ function WhyUs() {
           </div>
         </div>
 
-        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
-          <GhostScrollShowcase items={PROCESS_GHOST_ITEMS} />
-        </div>
+        <HoverRevealList items={PROCESS_GHOST_ITEMS} theme={listTheme(T)} />
       </div>
     </section>
   )
@@ -724,7 +563,7 @@ function Testimonials() {
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
-              {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('testimonials_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
+              {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline>{t('testimonials_title').split(' ').slice(-1)[0]}</GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -812,10 +651,8 @@ const getDomaines = (t) => [
   },
 ]
 
-// Bascule Cloudinary — DOMAINES uniquement ici : SERVICES_SKEW et WHY_PANELS
-// gèrent leur propre conversion dans GhostScrollShowcase (avec repli sur le
-// fichier local si Cloudinary ne répond pas), donc on ne les mute plus en
-// place ici pour ne pas perdre l'accès au chemin local d'origine.
+// Bascule Cloudinary — DOMAINES uniquement ici : les images de SERVICES_SKEW et
+// WHY_PANELS restent des fichiers locaux (public/images/service, public/images/process).
 const DOMAINES_CLOUD = [
   { img: '/images/ce%20que%20nous%20concevons/types_sites_01_creation.webp' },
   { img: '/images/ce%20que%20nous%20concevons/types_sites_02_ecommerce.webp' },
@@ -836,13 +673,14 @@ function DomainesSection() {
   const { t } = useLanguage()
   const DOMAINES = getDomaines(t)
 
-  const DOMAINES_GHOST_ITEMS = DOMAINES.map(d => ({
+  const DOMAINES_GHOST_ITEMS = useMemo(() => DOMAINES.map(d => ({
+    id: d.n,
     n: d.n,
     title: d.title,
     img: d.img,
     tag: d.tag,
     desc: d.desc,
-  }))
+  })), [t]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <section style={{ padding: '7rem 5%', background: T.bgAlt, borderTop: `1px solid ${T.border}`, position: 'relative', overflow: 'hidden' }}>
@@ -851,7 +689,7 @@ function DomainesSection() {
         <div style={{ marginBottom: '3rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
-              {t('domainesTitle')}
+              <UnderlinedTitle text={t('domainesTitle')} />
             </h2>
           </BlurReveal>
           <p style={{ maxWidth: 680, margin: '1.2rem auto 0', color: T.textSub, fontFamily: "'JetBrains Mono',monospace", fontSize: '.95rem', lineHeight: 1.7, textAlign: 'center' }}>
@@ -859,9 +697,7 @@ function DomainesSection() {
           </p>
         </div>
 
-        <div style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}>
-          <GhostScrollShowcase items={DOMAINES_GHOST_ITEMS} />
-        </div>
+        <HoverRevealList items={DOMAINES_GHOST_ITEMS} theme={listTheme(T)} />
 
         <div style={{ marginTop: '4rem', textAlign: 'center' }}>
           <p style={{ marginBottom: '1.2rem', color: T.textMuted, fontFamily: "'JetBrains Mono',monospace", fontSize: '.88rem' }}>
@@ -876,133 +712,29 @@ function DomainesSection() {
   )
 }
 
-// ── NOS DERNIÈRES RÉALISATIONS — galerie horizontale auto-scroll ──
+// ── NOS DERNIÈRES RÉALISATIONS — portable + téléphone, le projet joue dans les écrans ──
+// Sur PC la vidéo (.webm) du projet joue dans l'écran du portable (aperçu .webp à
+// défaut), l'image `-responsive` s'affiche dans le téléphone. Défilement auto
+// toutes les 9 s, en pause au survol. Voir components/ui/DeviceShowcase.jsx.
 function ArchiveTunnelSection() {
   const T = useTheme()
   const { t } = useLanguage()
-  const [hoveredId, setHoveredId] = useState(null)
-  // 7 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
-  // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
-  const TUNNEL_ITEMS = PROJECTS.filter(p => p.id >= 18 && p.id <= 24)
-  const LOOP_ITEMS = [...TUNNEL_ITEMS, ...TUNNEL_ITEMS]
-
-  // Défilement — même mécanique que RecentProjects dans Appdesktop.jsx
-  // (portfolio perso) : scroll réel (scrollLeft + rAF sur piste dupliquée
-  // x2), pas une animation CSS — ça permet les boutons prev/next ci-dessous
-  // et une vraie pause au survol/clic, au lieu d'un défilement figé.
-  const trackWrapRef = useRef(null)
-  const pausedRef = useRef(false)
-  const nudgeTimerRef = useRef(null)
-
-  useEffect(() => {
-    const wrap = trackWrapRef.current
-    if (!wrap) return
-    const SPEED = 1.2 // px / frame (~72px/s à 60fps)
-    let raf
-    const step = () => {
-      if (!pausedRef.current) {
-        wrap.scrollLeft += SPEED
-        const half = wrap.scrollWidth / 2
-        if (wrap.scrollLeft >= half) wrap.scrollLeft -= half
-      }
-      raf = requestAnimationFrame(step)
-    }
-    raf = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(raf)
-  }, [])
-
-  const pause = () => { pausedRef.current = true }
-  const resume = () => { pausedRef.current = false }
-  const nudge = (dir) => {
-    const wrap = trackWrapRef.current
-    if (!wrap) return
-    pause()
-    wrap.scrollBy({ left: dir * wrap.clientWidth * 0.7, behavior: 'smooth' })
-    window.clearTimeout(nudgeTimerRef.current)
-    nudgeTimerRef.current = window.setTimeout(resume, 2200)
-  }
+  // 7 projets les plus récents (remplace l'ancienne sélection figée).
+  const items = useMemo(() => PROJECTS.filter(p => p.id >= 18 && p.id <= 24), [])
 
   return (
-    <section style={{ padding: '5rem 0 6rem', background: T.bg }}>
+    <section style={{ padding: '5rem 0 6rem', background: T.bg, overflow: 'hidden' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 5%', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.4rem', textAlign: 'center' }}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: 0 }}>
-          {t('projectsTitle')}
+          <UnderlinedTitle text={t('projectsTitle')} />
         </h2>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
-            <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={15} />
-          </Link>
-          <div style={{ display: 'flex', gap: '.6rem' }}>
-            <button type="button" onClick={() => nudge(-1)} aria-label="Précédent"
-              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.card, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              <ChevronLeft size={18} />
-            </button>
-            <button type="button" onClick={() => nudge(1)} aria-label="Suivant"
-              style={{ width: 42, height: 42, borderRadius: '50%', border: `1px solid ${T.border}`, background: T.card, color: T.textMain, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
-              <ChevronRight size={18} />
-            </button>
-          </div>
-        </div>
+        <Link href="/projects" className="btn-ghost" style={{ flexShrink: 0, display: 'inline-flex', alignItems: 'center', gap: '.4rem' }}>
+          <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={15} />
+        </Link>
       </div>
 
-      <div
-        ref={trackWrapRef}
-        className="archive-track-wrap"
-        onMouseEnter={pause}
-        onMouseLeave={resume}
-        onFocus={pause}
-        onBlur={resume}
-        style={{ marginTop: '3rem', overflowX: 'auto', overflowY: 'hidden', padding: '1rem 5%', WebkitOverflowScrolling: 'touch', scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        <style jsx>{`
-          .archive-track-wrap::-webkit-scrollbar { display: none; }
-        `}</style>
-        <div style={{ display: 'flex', gap: '1.5rem', width: 'max-content', paddingBottom: '1rem' }}>
-          {LOOP_ITEMS.map((p, i) => (
-            <div key={`${p.id}-${i}`}
-              onMouseEnter={() => setHoveredId(p.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              onFocus={() => setHoveredId(p.id)}
-              onBlur={() => setHoveredId(null)}
-              style={{
-                minWidth: 420,
-                minHeight: 560,
-                borderRadius: 24,
-                overflow: 'hidden',
-                border: '1px solid rgba(136,202,83,.25)',
-                boxShadow: '0 28px 70px rgba(0,0,0,.22)',
-                background: T.card,
-                position: 'relative',
-                flexShrink: 0,
-              }}
-            >
-              <div style={{ position: 'relative', width: '100%', height: 420, overflow: 'hidden' }}>
-                <LazyImg src={p.img} alt={p.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,.28)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease' }} />
-                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: hoveredId === p.id ? 'translate(-50%, -50%)' : 'translate(-50%, -30%)', opacity: hoveredId === p.id ? 1 : 0, transition: 'opacity .25s ease, transform .25s ease', width: 'calc(100% - 40px)', display: 'flex', justifyContent: 'center' }}>
-                  <TransitionLink
-                    href={`/projects/${p.slug}`}
-                    className="btn-raised"
-                    aria-label={`${t('detailAria')} ${p.title}`}
-                    onClick={() => trackAction('cta_click')}
-                    style={{ width: '100%', maxWidth: 260, justifyContent: 'center' }}
-                  >
-                    <HoverSlideText text={t('detail')} />
-                    <ArrowUpRight size={16} />
-                  </TransitionLink>
-                </div>
-              </div>
-              <div style={{ padding: '1rem 1.1rem 1.2rem', display: 'flex', flexDirection: 'column', gap: '.25rem', background: T.card }}>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.78rem', fontWeight: 700, color: T.textMain, letterSpacing: '-.01em' }}>
-                  {p.title}
-                </div>
-                <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.62rem', color: '#88ca53', textTransform: 'uppercase', letterSpacing: '.08em' }}>
-                  {p.category?.label || p.type}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div style={{ marginTop: '3rem' }}>
+        <ProjectShowcase items={items} />
       </div>
     </section>
   )
@@ -1170,7 +902,7 @@ function PricingCallout() {
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <BlurReveal>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', marginBottom: '.6rem', color: T.textMain }}>
-              {t('chooseSolution')}
+              <UnderlinedTitle text={t('chooseSolution')} />
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.12}>
@@ -1276,7 +1008,7 @@ function FAQSectionHome() {
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('faqTitle')}
+            <UnderlinedTitle text={t('faqTitle')} />
           </h2>
         </BlurReveal>
       </div>
@@ -1323,7 +1055,7 @@ function GeoSectionHome() {
         <div style={{ marginBottom: '2.5rem' }}>
           <BlurReveal>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-              {t('geoTitle')}
+              <UnderlinedTitle text={t('geoTitle')} />
             </h2>
           </BlurReveal>
           <WordRevealP
@@ -1387,7 +1119,7 @@ function ProjectFormHome() {
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
         <BlurReveal style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.5rem' }}>
-            {t('formTitle')}
+            <UnderlinedTitle text={t('formTitle')} />
           </h2>
         </BlurReveal>
         <WordRevealP sectionRef={sectionRef} text={t('formLead')} greenWords={['form', 'email', '24h', 'free quote', 'formulario', '24 horas', 'presupuesto'] } extraStyle={{ color: T.textSub, marginBottom: '2.5rem' }} />

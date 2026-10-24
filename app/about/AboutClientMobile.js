@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { ArrowRight, Users, Monitor, Code, Heart, Zap, Star, Target, MessageCircle, ExternalLink } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { STATS, PROJECTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
@@ -63,14 +64,14 @@ function HeroAbout() {
         <AuroraHero labels={[]} />
         <div style={{ position: 'absolute', inset: 0, background: `linear-gradient(to bottom, transparent 20%, ${T.bg} 100%)`, opacity: T.light ? 1 : .95 }} />
       </div>
+      {/* Bandeau d'images des projets (droite → gauche) : suit le doigt et fait onduler les textes data-wake */}
+      <ProjectMarquee />
       <div style={{ position: 'relative', zIndex: 10, width: '100%', padding: '7rem 5% 4rem' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}>
-            {tFr('aboutTitle')}
-          </h1>
-          <p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.75, marginBottom: '2rem', maxWidth: 480 }}>
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: T.textMain, letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}><span data-wake style={{ display: 'block' }}><UnderlinedTitle text={tFr('aboutTitle')} /></span></h1>
+          <div data-wake><p style={{ fontSize: '.95rem', color: T.textSub, lineHeight: 1.75, marginBottom: '2rem', maxWidth: 480 }}>
             {tFr('aboutHero')}
-          </p>
+          </p></div>
         </motion.div>
         {/* Photo grid */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, delay: .2 }}
@@ -190,7 +191,7 @@ function FounderSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg, position: 'relative' }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '1.2rem' }}>
-          Mission &  <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
+          Mission &  <GreenUnderline>vision</GreenUnderline>
         </h2>
         <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.2rem' }}>
           <strong>AKATech</strong> construit des solutions digitales pour les entrepreneurs et PME en Côte d'Ivoire qui veulent professionnaliser leur image, générer plus d'opportunités et automatiser leurs processus.
@@ -251,7 +252,7 @@ function TimelineSection() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
+            L'évolution d'<GreenUnderline>AKATech</GreenUnderline>
           </h2>
         </motion.div>
         <div style={{ position: 'relative', paddingLeft: '1.5rem' }}>
@@ -284,7 +285,7 @@ function ValuesSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bg }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-          Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
+          Ce qui nous <GreenUnderline>distingue</GreenUnderline>
         </h2>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '1rem' }}>
@@ -313,7 +314,7 @@ function SkillsSection() {
     <section ref={ref} style={{ padding: '5rem 5%', background: T.bgAlt }}>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.8rem' }}>
-          Les technologies qui font <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
+          Les technologies qui font <GreenUnderline>la différence</GreenUnderline>
         </h2>
         <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.5rem' }}>
           J'utilise les meilleures technologies modernes — sélectionnées pour leur performance, leur fiabilité et leur adéquation avec vos besoins réels.
@@ -348,7 +349,7 @@ function RayonSection() {
       <div style={{ position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.8rem' }}>
-            Où intervenons-<GreenUnderline><span className="text-gradient">nous ?</span></GreenUnderline>
+            Où intervenons-<GreenUnderline>nous ?</GreenUnderline>
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '1.2rem' }}>
             Basés à <strong style={{ color: T.textMain }}>Abidjan</strong>, nous travaillons à distance avec des entrepreneurs à travers l'Afrique de l'Ouest et la diaspora.

@@ -4,8 +4,9 @@ import { motion, useInView, AnimatePresence } from 'framer-motion'
 import { Check, Zap, Timer, AlertTriangle, MessageCircle, HelpCircle, ChevronDown, Star, FileText, Lock, Clock, GraduationCap, Wrench, Globe } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GreenUnderline, PageCTA, HoverSlideText } from '@/components/ui/index'
+import { GreenUnderline, PageCTA, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData } from '@/lib/data'
 
 /* ─── BlurReveal ─────────────────────────────────────────── */
@@ -73,16 +74,16 @@ function HeroPricing() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
+      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
+      <ProjectMarquee />
+
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          TARIF
-          
-        </motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>TARIF</span></motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">{t('pricing_kicker')}</p>
-            <p className="hr-desc">{t('pricingHero')}</p>
+            <div data-wake><p className="hr-kicker">{t('pricing_kicker')}</p>
+            <p className="hr-desc">{t('pricingHero')}</p></div>
           </motion.div>
         </div>
       </div>
@@ -143,7 +144,7 @@ function PricingTabs() {
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '0.5rem' }}>
-              {t('chooseSolution')}
+              <UnderlinedTitle text={t('chooseSolution')} />
             </h2>
           </BlurReveal>
         </div>
@@ -251,7 +252,7 @@ function GuaranteeStrip() {
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-              Zéro surprise, <GreenUnderline><span className="text-gradient">zéro jargon.</span></GreenUnderline>
+              Zéro surprise, <GreenUnderline>zéro jargon.</GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -357,7 +358,7 @@ function TrustedBy() {
           <BlurReveal delay={0.1}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
               Ce qu'ils disent de{' '}
-              <GreenUnderline><span className="text-gradient">l'investissement</span></GreenUnderline>
+              <GreenUnderline>l'investissement</GreenUnderline>
             </h2>
           </BlurReveal>
           <BlurReveal delay={0.2}>
@@ -461,7 +462,7 @@ function FAQSection() {
       <div style={{ maxWidth: 1200, margin: '0 auto 3.5rem', position: 'relative', zIndex: 1 }}>
         <BlurReveal delay={0.1}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('faqTitle')}
+            <UnderlinedTitle text={t('faqTitle')} />
           </h2>
         </BlurReveal>
       </div>

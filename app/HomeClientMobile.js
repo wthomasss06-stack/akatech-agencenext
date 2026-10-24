@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { motion, useInView, AnimatePresence, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import TransitionLink from '@/components/layout/TransitionLink'
@@ -13,12 +13,14 @@ import {
 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
 import { PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
+import ProjectShowcase from '@/components/ui/ProjectShowcase'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 
 // ── TILT 3D CARD — parallaxe souris native ──────────────────
 function TiltCard({ children, style = {}, className = '', intensity = 14, perspective = 900 }) {
@@ -79,125 +81,6 @@ function TiltCard({ children, style = {}, className = '', intensity = 14, perspe
     >
       <div ref={glowRef} style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 0, opacity: 0, transition: 'opacity .12s', borderRadius: 18 }} />
       <div style={{ position: 'relative', zIndex: 1, height: '100%' }}>{children}</div>
-    </div>
-  )
-}
-
-// ── CIRCULAR PROJECTS GALLERY — adapté mobile (ratio 16:9, largeur réduite) ──
-function CircularProjectsGallery({ items, draggable = false, cardW = 250, intervalMs = 2800 }) {
-  const T = useTheme()
-  const { t } = useLanguage()
-  // 6 projets les plus récents (Karnet, ProTech POS, Anyama Proxy,
-  // R3NS3IGN3M3NT ajoutés — remplace l'ancienne sélection figée).
-  const DEFAULT_ITEMS = PROJECTS.filter(p => p.id >= 19 && p.id <= 24)
-  const GALLERY_ITEMS = items || DEFAULT_ITEMS
-  const [active, setActive] = useState(0)
-  const pausedRef = useRef(false)
-  const reduceMotion = useReducedMotion()
-
-  useEffect(() => {
-    if (reduceMotion) return // pas de rotation auto si l'utilisateur préfère moins de mouvement
-    const id = setInterval(() => {
-      setActive(a => (a + 1) % GALLERY_ITEMS.length)
-    }, intervalMs)
-    return () => clearInterval(id)
-  }, [GALLERY_ITEMS.length, intervalMs, reduceMotion])
-
-  const order = GALLERY_ITEMS.map((_, i) => {
-    let rel = i - active
-    if (rel > GALLERY_ITEMS.length / 2) rel -= GALLERY_ITEMS.length
-    if (rel < -GALLERY_ITEMS.length / 2) rel += GALLERY_ITEMS.length
-    return rel
-  })
-
-  // Dimensions mobiles : cartes plus petites, ratio natif 1600×815
-  const CARD_W = cardW
-  const CARD_H = Math.round(CARD_W * (815 / 1600))
-  const STEP   = CARD_W * 0.68
-
-  // Glissement manuel (mobile) — une seule poignée invisible plutôt que
-  // de rendre chaque carte draggable (elles ont déjà leur propre anim
-  // x/rotate scriptée par `active`, les deux entreraient en conflit).
-  // Relâchement : offset ou vitesse suffisants → avance/recule d'une carte,
-  // sinon ça "rebondit" élastiquement (dragElastic) et reprend l'auto-scroll.
-  const onDragEnd = (e, info) => {
-    pausedRef.current = false
-    const { offset, velocity } = info
-    if (offset.x < -40 || velocity.x < -400) {
-      setActive(a => (a + 1) % GALLERY_ITEMS.length)
-    } else if (offset.x > 40 || velocity.x > 400) {
-      setActive(a => (a - 1 + GALLERY_ITEMS.length) % GALLERY_ITEMS.length)
-    }
-  }
-
-  return (
-    <div style={{ position: 'relative', height: CARD_H + 48, width: '100%', maxWidth: '100vw', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', perspective: 900, marginTop: '1.2rem' }}>
-      {draggable && (
-        <motion.div
-          drag="x"
-          dragElastic={0.5}
-          dragConstraints={{ left: 0, right: 0 }}
-          onDragStart={() => { pausedRef.current = true }}
-          onDragEnd={onDragEnd}
-          style={{ position: 'absolute', inset: 0, zIndex: 20, touchAction: 'pan-y' }}
-        />
-      )}
-      {GALLERY_ITEMS.map((p, i) => {
-        const rel    = order[i]
-        const abs    = Math.abs(rel)
-        const x      = rel * STEP
-        const y      = abs * 10
-        const rot    = rel * 7
-        const scale  = 1 - abs * 0.13
-        const opacity = abs > 2 ? 0 : 1 - abs * 0.20
-        const isActive = rel === 0
-
-        return (
-          <motion.div key={p.id}
-            animate={{ x, y, rotate: rot, scale, opacity }}
-            transition={{ duration: .9, ease: [.22,1,.36,1] }}
-            onClick={() => setActive(i)}
-            style={{
-              position: 'absolute',
-              width: CARD_W,
-              height: CARD_H,
-              borderRadius: 8,
-              overflow: 'hidden',
-              zIndex: 10 - abs,
-              cursor: 'pointer',
-              border: isActive ? '1.5px solid rgba(136,202,83,.6)' : '1px solid rgba(255,255,255,.1)',
-              boxShadow: isActive ? '0 0 0 3px rgba(136,202,83,.15), 0 8px 24px rgba(0,0,0,.6)' : '0 4px 14px rgba(0,0,0,.4)',
-              transformStyle: 'preserve-3d',
-            }}>
-            <LazyImg
-              src={p.img}
-              alt={p.title}
-              style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' }}
-            />
-            <div style={{
-              position: 'absolute', inset: 0,
-              background: isActive
-                ? 'linear-gradient(to bottom, transparent 45%, rgba(0,0,0,.8) 100%)'
-                : 'linear-gradient(to bottom, rgba(0,0,0,.1) 0%, rgba(0,0,0,.65) 100%)',
-            }} />
-            <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '.45rem .7rem' }}>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.65rem', fontWeight: 700, color: '#fff', letterSpacing: '-.01em', lineHeight: 1.2 }}>{p.title}</div>
-              <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.55rem', color: 'rgba(136,202,83,.9)', marginTop: '.05rem' }}>{p.category?.label || p.type}</div>
-            </div>
-            {draggable && isActive && (
-              <TransitionLink
-                href={`/projects/${p.slug}`}
-                className="btn-raised btn-sm"
-                aria-label={`${t('detailAria')} ${p.title}`}
-                onClick={(e) => { e.stopPropagation(); trackAction('cta_click') }}
-                style={{ position: 'absolute', top: '.5rem', right: '.5rem', zIndex: 21 }}
-              >
-                <HoverSlideText text={t('detail')} /> <ArrowUpRight size={12} />
-              </TransitionLink>
-            )}
-          </motion.div>
-        )
-      })}
     </div>
   )
 }
@@ -339,15 +222,20 @@ function Hero() {
         <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .13, pointerEvents: 'none' }} />
       </div>
 
+      {/* Bandeau d'images des projets (droite → gauche) — suit le doigt, fait onduler les textes data-wake */}
+      <ProjectMarquee />
+
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: 1100, padding: '4rem 5% 0', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out', textAlign: 'center' }}>
 
-        <HeroSloganCycle />
+        <div data-wake><HeroSloganCycle /></div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
-          style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.92rem', color: 'rgba(255,255,255,.68)', maxWidth: 420, margin: '0 auto 1.4rem', lineHeight: 1.55 }}>
-          {t('homeHeroText')}
-        </motion.p>
+        <div data-wake>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .35 }}
+            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.92rem', color: 'rgba(255,255,255,.68)', maxWidth: 420, margin: '0 auto 1.4rem', lineHeight: 1.55 }}>
+            {t('homeHeroText')}
+          </motion.p>
+        </div>
 
         <motion.div
           initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .5, delay: .4 }}
@@ -678,7 +566,7 @@ function ServicesPreview() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
             {t('homeServicesTitle').split(' ')[0]}<br />
-            <GreenUnderline><span className="text-gradient">{t('homeServicesTitle').split(' ').slice(1).join(' ')}</span></GreenUnderline>
+            <GreenUnderline>{t('homeServicesTitle').split(' ').slice(1).join(' ')}</GreenUnderline>
           </h2>
         </motion.div>
 
@@ -759,7 +647,7 @@ function Process() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('processTitle')}
+            <UnderlinedTitle text={t('processTitle')} />
           </h2>
         </motion.div>
 
@@ -797,36 +685,35 @@ function Process() {
     </section>
   )
 }
-// ── DERNIÈRES RÉALISATIONS — grille éditoriale (miroir ArchiveTunnel desktop) ──
-// Grille 2-col sur mobile, colorisation scroll grayscale→couleur,
-// swipe tactile, cartes avec badges type / live / result
+// ── DERNIÈRES RÉALISATIONS — téléphone (image `-responsive`, jamais de vidéo sur mobile) ──
+// Glisser à gauche / droite (ou flèches) pour changer de projet. Voir DeviceShowcase.
 function ProjectsSection() {
   const T = useTheme()
   const { t } = useLanguage()
   const ref     = useRef(null)
   const inView  = useInView(ref, { once: true, margin: '-60px' })
-
-  const ITEMS = PROJECTS.filter(p => p.id >= 18 && p.id <= 24)
+  const items = useMemo(() => PROJECTS.filter(p => p.id >= 18 && p.id <= 24), [])
 
   return (
-    <section ref={ref} style={{ background: T.bg, position: 'relative', padding: '7rem 5% 5rem' }}>
+    <section ref={ref} style={{ background: T.bg, position: 'relative', padding: '7rem 0 5rem', overflow: 'hidden' }}>
       <div className="grid-bg" style={{ position: 'absolute', inset: 0, opacity: .18 }} />
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ position: 'relative', zIndex: 1, textAlign: 'center', padding: '0 5%' }}>
         <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.6rem' }}>
-          {t('projects_latest_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('projects_latest_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
+          {t('projects_latest_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline>{t('projects_latest_title').split(' ').slice(-1)[0]}</GreenUnderline>
         </h2>
         <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.75rem', color: T.textMuted, letterSpacing: '.04em' }}>
           {t('projects_hint')}
         </p>
       </motion.div>
 
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }} style={{ position: 'relative', zIndex: 1 }}>
-        <CircularProjectsGallery items={ITEMS} draggable cardW={290} intervalMs={3400} />
+      {/* Téléphone seul sur mobile : image `-responsive`, jamais de vidéo (voir DeviceShowcase) */}
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .15 }} style={{ position: 'relative', zIndex: 1, marginTop: '2.2rem' }}>
+        <ProjectShowcase items={items} />
       </motion.div>
 
       {/* CTA */}
-      <div style={{ padding: '2.5rem 0 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
+      <div style={{ padding: '2.5rem 5% 0', textAlign: 'center', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .3 }}>
           <Link href="/projects" className="btn-ghost" style={{ fontSize: '.88rem', padding: '.8rem 1.8rem' }}>
             <HoverSlideText text={t('viewAllProjects')} /> <ArrowRight size={13} />
@@ -857,7 +744,7 @@ function Testimonials() {
       <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline><span className="text-gradient">{t('testimonials_title').split(' ').slice(-1)[0]}</span></GreenUnderline>
+            {t('testimonials_title').split(' ').slice(0, -1).join(' ')} <GreenUnderline>{t('testimonials_title').split(' ').slice(-1)[0]}</GreenUnderline>
           </h2>
         </motion.div>
 
@@ -974,7 +861,7 @@ function DomainesSection() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('domainesTitle')}
+            <UnderlinedTitle text={t('domainesTitle')} />
           </h2>
           <RevealParagraph text={t('domainesIntro')} extraStyle={{ color: T.textSub }} inView={inView} />
         </motion.div>
@@ -1014,7 +901,7 @@ function PricingCallout() {
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('chooseSolution')}
+            <UnderlinedTitle text={t('chooseSolution')} />
           </h2>
           <RevealParagraph text={t('pricingLead')} greenWords={[]} extraStyle={{ color: T.textSub }} inView={inView} />
         </motion.div>
@@ -1135,7 +1022,7 @@ function GeoSectionHome() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('geoTitle')}
+            <UnderlinedTitle text={t('geoTitle')} />
           </h2>
           <RevealParagraph
             text={t('geoLead')}
@@ -1198,7 +1085,7 @@ function ProjectFormHome() {
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '1.6rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('formTitle')}
+            <UnderlinedTitle text={t('formTitle')} />
           </h2>
           <RevealParagraph
             text={t('formLead')}
@@ -1296,7 +1183,7 @@ function FAQSectionHome() {
       <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
         <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
-            {t('faqTitle')}
+            <UnderlinedTitle text={t('faqTitle')} />
           </h2>
         </motion.div>
 

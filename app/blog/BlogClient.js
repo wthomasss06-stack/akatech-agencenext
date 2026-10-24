@@ -10,8 +10,9 @@ import {
 import Image from 'next/image'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
+import { GreenUnderline, HoverSlideText, LazyImg, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { BLOG_POSTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
@@ -244,16 +245,16 @@ function HeroBlog() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
+      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
+      <ProjectMarquee />
+
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          LE BLOG
-          
-        </motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>LE BLOG</span></motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">{t('blogTitle')}</p>
-            <p className="hr-desc">{t('blogHero')}</p>
+            <div data-wake><p className="hr-kicker">{t('blogTitle')}</p>
+            <p className="hr-desc">{t('blogHero')}</p></div>
             <a
               href="https://www.linkedin.com/in/m-bollo-aka"
               target="_blank"
@@ -587,7 +588,7 @@ function BlogGrid({ posts }) {
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, }}>
               Explorez nos <GreenUnderline>
-                <span className="text-gradient">ressources digitales</span>
+                ressources digitales
               </GreenUnderline>
             </h2>
           </BlurReveal>
@@ -739,7 +740,7 @@ function Newsletter() {
             <Zap size={24} style={{ color: T.green }} />
           </div>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.7rem', textAlign: 'left' }}>
-            {blogText(language, 'newsletterTitle')}
+            <UnderlinedTitle text={blogText(language, 'newsletterTitle')} />
           </h2>
         </BlurReveal>
         <WordRevealP
@@ -816,9 +817,7 @@ function ProcessBlog() {
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, margin: 0 }}>
             {blogText(language, 'processLead')}{' '}
             <GreenUnderline>
-              <span className="text-gradient">
-                {blogText(language, 'processHighlight')}
-              </span>
+              {blogText(language, 'processHighlight')}
             </GreenUnderline>
           </h2>
         </BlurReveal>

@@ -1,0 +1,47 @@
+/* ═══════════════════════════════════════════════════════════════
+   SpotlightMarquee — bandeau d'images (webp des projets) qui défile de la
+   droite vers la gauche, suit le pointeur et « pousse » les textes marqués
+   data-wake. Adapté de de_malade.html.
+   Le conteneur parent (le hero) doit être position:relative.
+   ═══════════════════════════════════════════════════════════════ */
+.sm-strip {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: var(--sm-h, 150px);
+  z-index: 2;                 /* au-dessus du fond du hero (z 1), sous son contenu (z 10) */
+  pointer-events: none;
+  overflow: hidden;
+  opacity: .62;
+  will-change: transform;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+          mask-image: linear-gradient(90deg, transparent 0, #000 7%, #000 93%, transparent 100%);
+}
+.sm-track {
+  position: absolute; left: 0; top: 0;
+  height: 100%;
+  display: flex; align-items: center;
+  gap: var(--sm-gap, 14px);
+  will-change: transform;
+}
+.sm-tile {
+  flex: 0 0 auto;
+  width: var(--sm-w, 210px);
+  height: var(--sm-th, 128px);
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(127, 127, 127, .14);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, .25);
+}
+.sm-tile img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+
+/* Cible poussée par le bandeau (voir SpotlightMarquee.jsx) */
+[data-wake] { will-change: transform; }
+
+@media (max-width: 1023px) {
+  .sm-strip { --sm-h: 140px; --sm-w: 84px; --sm-th: 124px; --sm-gap: 10px; opacity: .55; }
+  .sm-tile { border-radius: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sm-strip { opacity: .4; }
+}

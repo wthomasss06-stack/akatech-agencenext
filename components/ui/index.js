@@ -362,7 +362,7 @@ export function PageCTA({ message, cta, href = 'https://wa.me/2250142507750' }) 
       <motion.div initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }} animate={inView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}} transition={{ duration: .7, ease: [.22, 1, .36, 1] }}
         style={{ position: 'relative', zIndex: 1, maxWidth: 920, margin: '0 auto' }}>
         <h2 className="section-title-big" style={{ color: T.textMain, marginBottom: '2.8rem' }}>
-          {message}
+          {typeof message === 'string' ? <UnderlinedTitle text={message} /> : message}
         </h2>
         <a href={href} target="_blank" rel="noreferrer" className="btn-raised btn-xl" onClick={() => trackAction(href.includes('wa.me') ? 'whatsapp_click' : 'cta_click')}>
           <HoverSlideText text={cta} />
@@ -487,6 +487,20 @@ export function GreenUnderline({ children, style = {}, color = '#88ca53' }) {
       </svg>
     </span>
   )
+}
+
+/**
+ * Titre de section avec le « train » de soulignage SVG sous son dernier mot
+ * (ou ses `words` derniers mots). Le texte garde la couleur du titre : plus de
+ * vert sur les mots, seul le trait SVG est vert.
+ */
+export function UnderlinedTitle({ text, words = 1 }) {
+  const str = String(text ?? '')
+  const parts = str.split(' ')
+  if (parts.length < 2) return <GreenUnderline>{str}</GreenUnderline>
+  const head = parts.slice(0, -words).join(' ')
+  const tail = parts.slice(-words).join(' ')
+  return <>{head} <GreenUnderline>{tail}</GreenUnderline></>
 }
 
 // Alias rétrocompatible

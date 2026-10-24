@@ -117,8 +117,9 @@ function TiltCard({ children, style = {}, intensity = 12, perspective = 900 }) {
 
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText } from '@/components/ui/index'
+import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { STATS, PROJECTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
@@ -180,16 +181,16 @@ function HeroAbout() {
       </div>
 
       {/* Titre géant bas-gauche + bloc texte centré verticalement à droite — gabarit hero "page title" (réf. Helious) */}
+      {/* Bandeau d'images des projets (droite → gauche) : suit le pointeur et fait onduler les textes data-wake */}
+      <ProjectMarquee />
+
       <div ref={layerMidRef} className="hr-row" style={{ willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
-        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}>
-          AKATECH
-          
-        </motion.h1>
+        <motion.h1 className="hr-title" initial={{ opacity: 0, y: 28 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: 'easeOut' }}><span data-wake style={{ display: 'block' }}>AKATECH</span></motion.h1>
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">{tFr('aboutTitle')}</p>
-            <p className="hr-desc">{tFr('aboutHero')}</p>
+            <div data-wake><p className="hr-kicker">{tFr('aboutTitle')}</p>
+            <p className="hr-desc">{tFr('aboutHero')}</p></div>
           </motion.div>
         </div>
       </div>
@@ -332,7 +333,7 @@ function StatsFounderSection() {
         <div style={{ maxWidth: 1200, margin: '0 auto 3rem', textAlign: 'left' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
-              Mission & <GreenUnderline><span className="text-gradient">vision</span></GreenUnderline>
+              Mission & <GreenUnderline>vision</GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -403,7 +404,7 @@ function TimelineSection() {
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
-              L'évolution d'<GreenUnderline><span className="text-gradient">AKATech</span></GreenUnderline>
+              L'évolution d'<GreenUnderline>AKATech</GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -441,7 +442,7 @@ function ValuesSection() {
         <div style={{ textAlign: 'center', marginBottom: '4rem' }}>
           <BlurReveal delay={0.12}>
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
-              Ce qui nous <GreenUnderline><span className="text-gradient">distingue</span></GreenUnderline>
+              Ce qui nous <GreenUnderline>distingue</GreenUnderline>
             </h2>
           </BlurReveal>
         </div>
@@ -478,7 +479,7 @@ function SkillsSection() {
         <BlurReveal delay={0.12}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain }}>
             Les technologies qui font{' '}
-            <GreenUnderline><span className="text-gradient">la différence</span></GreenUnderline>
+            <GreenUnderline>la différence</GreenUnderline>
           </h2>
         </BlurReveal>
       </div>
@@ -554,7 +555,7 @@ function RayonSection() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5rem', alignItems: 'center' }}>
           <BlurReveal direction="left">
             <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '1.2rem' }}>
-              {tFr('geoTitle')}
+              <UnderlinedTitle text={tFr('geoTitle')} />
             </h2>
             <WordRevealP
               sectionRef={sectionRef}

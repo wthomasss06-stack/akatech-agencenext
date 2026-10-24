@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════════════════════════
+   HoverRevealList — liste minimaliste : au survol d'une ligne, une image
+   (niveaux de gris) suit le curseur. Adapté de TRES_MINIMALISM.html.
+   ═══════════════════════════════════════════════════════════════ */
+.hrl { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--hrl-line, rgba(255, 255, 255, .16)); }
+.hrl-row {
+  border-bottom: 1px solid var(--hrl-line, rgba(255, 255, 255, .16));
+  position: relative;
+}
+.hrl-link, .hrl-static {
+  display: grid;
+  grid-template-columns: 3.2rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.4rem;
+  padding: clamp(1.4rem, 2.6vw, 2.4rem) 0;
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color .3s, padding-left .35s cubic-bezier(.2, .8, .2, 1);
+}
+.hrl-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .8rem;
+  letter-spacing: .08em;
+  color: var(--hrl-muted, rgba(255, 255, 255, .45));
+}
+.hrl-title {
+  display: block;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-style: italic; text-transform: uppercase;
+  font-size: clamp(2rem, 4vw, 4rem);
+  line-height: .95; letter-spacing: -.02em;
+}
+.hrl-desc {
+  display: block;
+  margin-top: .55rem;
+  max-width: 62ch;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .78rem; line-height: 1.6;
+  color: var(--hrl-muted, rgba(255, 255, 255, .45));
+}
+.hrl-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--hrl-muted, rgba(255, 255, 255, .45));
+  white-space: nowrap;
+  transition: color .3s;
+}
+.hrl-row:hover .hrl-link,
+.hrl-row:hover .hrl-static,
+.hrl-link:focus-visible { color: var(--hrl-accent, #88ca53); padding-left: .6rem; }
+.hrl-row:hover .hrl-tag { color: var(--hrl-accent, #88ca53); }
+
+/* Image flottante qui suit le curseur */
+.hrl-float {
+  position: fixed; top: 0; left: 0;
+  width: 350px; height: 450px;
+  background-size: cover; background-position: center;
+  pointer-events: none;
+  z-index: 100;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.8);
+  filter: grayscale(100%);
+  border-radius: 6px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, .35);
+}
+
+@media (max-width: 1023px) {
+  .hrl-float { display: none; }
+  .hrl-link, .hrl-static { grid-template-columns: 2.4rem minmax(0, 1fr); }
+  .hrl-tag { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hrl-link, .hrl-static { transition: none; }
+}

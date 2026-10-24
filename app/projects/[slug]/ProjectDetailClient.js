@@ -16,60 +16,14 @@ import { useRef } from 'react'
 import { motion, useInView, useReducedMotion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ArrowUpRight, Check, MessageCircle } from 'lucide-react'
 import TransitionLink from '@/components/layout/TransitionLink'
-import { HoverSlideText, LazyImg } from '@/components/ui/index'
+import { HoverSlideText, LazyImg, UnderlinedTitle } from '@/components/ui/index'
+import DeviceShowcase from '@/components/ui/DeviceShowcase'
 import { useLanguage } from '@/lib/language'
 import { trackAction } from '@/lib/track-action'
-import { getProjectScreens, hasRealUrl, projectWhatsAppUrl } from '@/lib/project-stories'
+import { hasRealUrl, projectWhatsAppUrl } from '@/lib/project-stories'
 import './ProjectDetail.css'
 
 const cap = (text) => (text ? text.charAt(0).toUpperCase() + text.slice(1) : text)
-
-/** Navigateur + téléphone : mêmes règles de captures que la page /projects. */
-function Mockups({ project }) {
-  const { t } = useLanguage()
-  const { desktop, mobile, withBrowserBar } = getProjectScreens(project)
-  const host = /^https?:\/\/([^/]+)/.exec(project.url || '')?.[1] || project.slug
-
-  return (
-    <div className="pd-visual">
-      <div className="pd-desktop">
-        {withBrowserBar && (
-          <div className="pd-bar" aria-hidden="true">
-            <i className="pd-bar-dot pd-bar-dot--r" />
-            <i className="pd-bar-dot pd-bar-dot--y" />
-            <i className="pd-bar-dot pd-bar-dot--g" />
-            <span className="pd-bar-url">{host}</span>
-          </div>
-        )}
-        <div className="pd-screen">
-          {/* Image du premier écran : chargée tout de suite (pas de lazy) */}
-          <img
-            className="pd-shot"
-            src={desktop}
-            alt={`${t('pdScreenshotAlt')} ${project.title}`}
-            loading="eager"
-            decoding="async"
-            fetchPriority="high"
-          />
-        </div>
-      </div>
-
-      {mobile && (
-        <div className="pd-phone">
-          <div className="pd-phone-screen">
-            <img
-              className="pd-shot"
-              src={mobile}
-              alt={`${t('pdScreenshotAlt')} ${project.title} — mobile`}
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
 
 /** Barre d'avancement : se remplit une fois, quand elle entre à l'écran. */
 function Meter({ value, label }) {
@@ -200,7 +154,9 @@ export default function ProjectDetailClient({ project, related, prev, next }) {
             </div>
           </div>
 
-          <Mockups project={project} />
+          <div className="pd-visual">
+            <DeviceShowcase project={project} />
+          </div>
         </div>
       </header>
 
@@ -221,14 +177,14 @@ export default function ProjectDetailClient({ project, related, prev, next }) {
         <div className="pd-story" role="region" aria-label={`${t('caseProblem')} / ${t('caseSolution')}`}>
           {problem && (
             <div className="pd-wrap">
-              <h2 className="pd-h2">{t('caseProblem')}</h2>
+              <h2 className="pd-h2"><UnderlinedTitle text={t('caseProblem')} /></h2>
               <p className="pd-big pd-big--muted">{problem}</p>
             </div>
           )}
           {solution && (
             <div className="pd-solution">
               <div className="pd-wrap">
-                <h2 className="pd-h2">{t('caseSolution')}</h2>
+                <h2 className="pd-h2"><UnderlinedTitle text={t('caseSolution')} /></h2>
                 <p className="pd-big">{solution}</p>
               </div>
             </div>
@@ -241,7 +197,7 @@ export default function ProjectDetailClient({ project, related, prev, next }) {
         <div className="pd-features">
           <div className="pd-wrap pd-features-grid">
             <div className="pd-features-head">
-              <h2 className="pd-h2">{t('caseFeatures')}</h2>
+              <h2 className="pd-h2"><UnderlinedTitle text={t('caseFeatures')} /></h2>
             </div>
             <ul className="pd-list">
               {features.map((f) => (
@@ -260,7 +216,7 @@ export default function ProjectDetailClient({ project, related, prev, next }) {
         <div className="pd-where">
           <div className="pd-wrap">
             <div className="pd-where-card">
-              <h2 className="pd-h2">{t('pdWhereAt')}</h2>
+              <h2 className="pd-h2"><UnderlinedTitle text={t('pdWhereAt')} /></h2>
               <div className="pd-where-body">
                 {outcome && <p className="pd-where-text">{outcome}</p>}
                 {inProgress && <Meter value={project.progress} label={t('pdProgress')} />}
@@ -274,7 +230,7 @@ export default function ProjectDetailClient({ project, related, prev, next }) {
       <div className="pd-cta" role="region" aria-labelledby="pd-cta-title">
         <div className="pd-wrap">
           <div className="pd-cta-box">
-            <h2 id="pd-cta-title" className="pd-cta-title">{t('caseCtaTitle')}</h2>
+            <h2 id="pd-cta-title" className="pd-cta-title"><UnderlinedTitle text={t('caseCtaTitle')} /></h2>
             {story?.audience && (
               <p className="pd-cta-lead">{t('pdIdealFor')} {story.audience}.</p>
             )}

@@ -1,0 +1,76 @@
+/* ═══════════════════════════════════════════════════════════════
+   DeviceShowcase — portable + téléphone (fond retiré), le média du projet
+   joue DANS les écrans. Repère interne : 736 × 920 px (voir
+   lib/device-mockups.js), mis à l'échelle par ResizeObserver.
+   Préfixe .dv- ; aucune dépendance au thème sauf les ombres.
+   ═══════════════════════════════════════════════════════════════ */
+.dv {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  aspect-ratio: 1 / 1;
+  isolation: isolate;
+}
+
+.dv-slot { position: absolute; }
+.dv-slot--laptop { left: -7%; top: -5%; width: 84%; animation: dvFloat 9s ease-in-out infinite; }
+.dv-slot--phone  { right: -5%; top: 10%; width: 52%; animation: dvFloat 7s ease-in-out -3s infinite; z-index: 2; }
+
+@keyframes dvFloat {
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -10px; }
+}
+
+.dv-dev { position: relative; width: 100%; aspect-ratio: 736 / 920; }
+.dv-stage {
+  position: absolute; left: 0; top: 0;
+  width: 736px; height: 920px;
+  transform-origin: 0 0;
+  opacity: 0;
+  transition: opacity .45s ease;
+}
+.dv-stage.is-ready { opacity: 1; }
+
+.dv-clip { position: absolute; inset: 0; overflow: hidden; }
+.dv-content {
+  position: absolute; left: 0; top: 0;
+  transform-origin: 0 0;
+  overflow: hidden;
+  background: #050806;
+}
+.dv-frame {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; user-select: none;
+  filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .42));
+}
+body.light-mode .dv-frame { filter: drop-shadow(0 22px 26px rgba(0, 0, 0, .28)); }
+
+/* Fondu entre deux projets */
+.dv-fade { position: absolute; inset: 0; }
+
+/* Écran du portable : média pleine largeur, ancré en haut ; le reste de
+   l'écran (le média est ~2,17:1 pour un écran 16:10) est prolongé par une
+   copie floutée de l'aperçu — rien n'est rogné sur les côtés. */
+.dv-ambient {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: top;
+  filter: blur(26px) saturate(1.15) brightness(.82);
+  transform: scale(1.12);
+}
+.dv-main { position: absolute; left: 0; top: 0; width: 100%; height: auto; display: block; }
+
+/* Écran du téléphone : l'image `-responsive` (720 × 1600) */
+.dv-phone-img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+
+/* Mobile : le téléphone seul, centré, sans vidéo */
+@media (max-width: 1023px) {
+  .dv { aspect-ratio: auto; max-width: 340px; }
+  .dv-slot--laptop { display: none; }
+  .dv-slot--phone { position: relative; right: auto; top: auto; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dv-slot { animation: none; }
+  .dv-stage { transition: none; }
+}

@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { Clock, ArrowRight, Tag, Search, BookOpen, TrendingUp, Globe, ShoppingCart, Code, Zap } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
-import { MarqueeStrip, LaserBeam, GreenUnderline, HoverSlideText, LazyImg } from '@/components/ui/index'
+import { MarqueeStrip, LaserBeam, GreenUnderline, HoverSlideText, LazyImg, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
+import ProjectMarquee from '@/components/ui/ProjectMarquee'
 import { BLOG_POSTS } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
@@ -53,15 +54,15 @@ function HeroBlog() {
         <AuroraHero labels={[]} />
         <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, transparent 20%, rgba(6,14,9,.95) 100%)' }} />
       </div>
+      {/* Bandeau d'images des projets (droite → gauche) : suit le doigt et fait onduler les textes data-wake */}
+      <ProjectMarquee />
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 800, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .7, ease: [.22,1,.36,1] }}>
-          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}>
-            {t('blogTitle')}
-          </h1>
-          <p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}><span data-wake style={{ display: 'block' }}><UnderlinedTitle text={t('blogTitle')} /></span></h1>
+          <div data-wake><p style={{ fontSize: '1.05rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 520, margin: '0 auto' }}>
             {t('blogHero')}
-          </p>
+          </p></div>
           <a
             href="https://www.linkedin.com/in/m-bollo-aka"
             target="_blank"
@@ -155,7 +156,7 @@ function BlogGrid({ posts }) {
         {/* Section header */}
         <motion.div initial={{ opacity: 0, y: 16 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ marginBottom: '2.5rem' }}>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '1rem' }}>
-            {t('blogTitle')}
+            <UnderlinedTitle text={t('blogTitle')} />
           </h2>
           <motion.p initial={{ opacity: 0, y: 10 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: .1 }}
             style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain }}>
@@ -276,7 +277,7 @@ function Newsletter() {
             <Zap size={24} style={{ color: T.green }} />
           </div>
           <h2 className="section-title-big" style={{ position: 'relative', textAlign: 'center', color: T.textMain, marginBottom: '.7rem' }}>
-              {t('blogTitle')}
+              <UnderlinedTitle text={t('blogTitle')} />
           </h2>
           <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: 'clamp(1rem,3.6vw,1.2rem)', fontWeight: 700, lineHeight: 1.5, color: T.textMain, marginBottom: '2rem' }}>
             {t('blogHero')}
