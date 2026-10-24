@@ -1,18 +1,18 @@
-AKATech — ZIP différentiel v5 (cumulatif, base : akatech-nextjs_v2.zip) — à dézipper à la racine de akatech-nextjs, en écrasant.
-Contient tout le v3 + v4 + le nouveau défilement parallaxe horizontal. Peut être dézippé par-dessus v3 ou v4.
+AKATech — ZIP différentiel v6 (cumulatif, base : akatech-nextjs_v2.zip) — à dézipper à la racine de akatech-nextjs, en écrasant.
+Contient tout le v3 → v5 + les réglages du défilement parallaxe (maquettes agrandies, flèches aux extrémités de la page).
 
 NOUVEAUX (3)
   + components/ui/AskAI.jsx
-  + components/ui/ProjectScrollShowcase.jsx   (NOUVEAU v5 : portable + téléphone en défilement parallaxe horizontal)
-  + components/ui/ProjectScrollShowcase.css   (NOUVEAU v5)
+  + components/ui/ProjectScrollShowcase.jsx   (v6 : flèches globales aux bords gauche/droit, maquettes plus grandes)
+  + components/ui/ProjectScrollShowcase.css   (v6 : idem)
 
 MODIFIÉS (10)
-  ~ app/projects/ProjectsClient.js         (PC : titre « Nos réalisations » + ProjectScrollShowcase à la place du carrousel)
-  ~ app/projects/ProjectsClientMobile.js   (mobile : « Nos réalisations », garde le carrousel ProjectShowcase au doigt)
+  ~ app/projects/ProjectsClient.js
+  ~ app/projects/ProjectsClientMobile.js
   ~ components/layout/CardNav.jsx / CardNav.css
   ~ components/layout/StaggeredMenu.jsx / StaggeredMenu.css
   ~ components/layout/Footer.js
-  ~ components/ui/ProjectShowcase.jsx / ProjectShowcase.css   (pastilles retirées ; reste utilisé par la home et le mobile)
+  ~ components/ui/ProjectShowcase.jsx / ProjectShowcase.css
   ~ lib/language.js
 
 À SUPPRIMER : rien.

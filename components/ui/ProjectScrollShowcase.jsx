@@ -7,7 +7,7 @@
 //   • parallaxe : l'appareil file un peu plus vite que le texte
 //   • le média (DeviceShowcase) n'est monté que pour le projet affiché et ses
 //     voisins → pas 20+ vidéos en même temps
-//   • flèches = défilent jusqu'au projet précédent / suivant
+//   • flèches aux deux extrémités de la page = défilent jusqu'au projet précédent / suivant
 // PC uniquement (≥ 1024 px) : le mobile garde ProjectShowcase (glisser au doigt).
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -127,25 +127,23 @@ export default function ProjectScrollShowcase({ items }) {
                       <HoverSlideText text={t('detail')} />
                       <ArrowUpRight size={16} />
                     </TransitionLink>
-
-                    <div className="ps-controls">
-                      <button type="button" className="ps-arrow" style={{ ...arrow, opacity: i === 0 ? 0.35 : 1 }}
-                        tabIndex={isActive ? 0 : -1} disabled={i === 0}
-                        onClick={() => goTo(i - 1)} aria-label={t('projectPrevAria')}>
-                        <ChevronLeft size={18} />
-                      </button>
-                      <button type="button" className="ps-arrow" style={{ ...arrow, opacity: i === total - 1 ? 0.35 : 1 }}
-                        tabIndex={isActive ? 0 : -1} disabled={i === total - 1}
-                        onClick={() => goTo(i + 1)} aria-label={t('projectNextAria')}>
-                        <ChevronRight size={18} />
-                      </button>
-                    </div>
                   </div>
                 </div>
               </li>
             )
           })}
         </ul>
+
+        <button type="button" className="ps-arrow pss-nav pss-nav--prev"
+          style={{ ...arrow, opacity: active === 0 ? 0.35 : 1 }}
+          disabled={active === 0} onClick={() => goTo(active - 1)} aria-label={t('projectPrevAria')}>
+          <ChevronLeft size={22} />
+        </button>
+        <button type="button" className="ps-arrow pss-nav pss-nav--next"
+          style={{ ...arrow, opacity: active === total - 1 ? 0.35 : 1 }}
+          disabled={active === total - 1} onClick={() => goTo(active + 1)} aria-label={t('projectNextAria')}>
+          <ChevronRight size={22} />
+        </button>
 
         <p className="pss-hint">// {t('projectsScrollHint')}</p>
         <div className="pss-progress" aria-hidden="true">
