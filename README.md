@@ -292,7 +292,7 @@ Intégration de cartes interactives Mapbox / Leaflet et de dashboards de visuali
 
 ### 03 · Optimisation SEO
 Audit technique, recherche de mots-clés, optimisation des pages et de la vitesse pour améliorer votre positionnement sur Google. Vous gagnez en visibilité, AKATech s'occupe du reste.
-**À partir de 20 000 FCFA/mois**
+**Sur devis**
 
 ### 04 · Fiche Google My Business
 Création ou optimisation de votre fiche Google (NAP, catégories, photos, description SEO local) et suivi mensuel : réponse aux avis, publications et statistiques.
