@@ -8,6 +8,37 @@ import { HoverSlideText } from '@/components/ui/index'
 
 const STORAGE_KEY = 'akatech_cookie_consent'
 
+function parseConsent(value) {
+  if (!value) return null
+  try {
+    const consent = JSON.parse(value)
+    return consent && ['accepted', 'rejected'].includes(consent.status) ? consent : null
+  } catch {
+    return null
+  }
+}
+
+function readCookieConsent() {
+  const prefix = `${STORAGE_KEY}=`
+  const cookie = document.cookie.split('; ').find(item => item.startsWith(prefix))
+  if (!cookie) return null
+
+  try {
+    return parseConsent(decodeURIComponent(cookie.slice(prefix.length)))
+  } catch {
+    return null
+  }
+}
+
+function saveConsent(consent) {
+  const value = encodeURIComponent(JSON.stringify(consent))
+  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
+  document.cookie = `${STORAGE_KEY}=${value}; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(consent))
+  } catch {}
+}
+
 // Signale le choix à /api/track (même endpoint que VisitorTracker) : le
 // serveur lit les cookies akatech_visitor / akatech_session déjà posés par
 // middleware.js pour rattacher la décision à la session en cours — pas
@@ -37,18 +68,22 @@ export default function CookieConsent() {
   const [analyticsOn, setAnalyticsOn] = useState(true)
 
   useEffect(() => {
+    const cookieConsent = readCookieConsent()
+    if (cookieConsent) return
+
     let stored = null
-    try { stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') } catch {}
-    if (stored?.status) return // déjà décidé lors d'une visite précédente
+    try { stored = parseConsent(localStorage.getItem(STORAGE_KEY)) } catch {}
+    if (stored) {
+      saveConsent(stored)
+      return
+    }
 
     const timer = setTimeout(() => setVisible(true), 900)
     return () => clearTimeout(timer)
   }, [])
 
   const decide = (status, analytics) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ status, analytics, ts: Date.now() }))
-    } catch {}
+    saveConsent({ status, analytics, ts: Date.now() })
     sendConsent(status)
     setVisible(false)
   }
@@ -71,11 +106,10 @@ export default function CookieConsent() {
           style={{
             position: 'fixed', zIndex: 8500,
             background: cardBg,
-            padding: '1.6rem 1.6rem 1.4rem',
           }}
-          className="cookie-consent-card"
+          className={`cookie-consent-card${expanded ? ' is-expanded' : ''}`}
         >
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '.7rem', marginBottom: '.7rem' }}>
+          <div className="cookie-consent-heading" style={{ display: 'flex', alignItems: 'flex-start', gap: '.7rem', marginBottom: '.7rem' }}>
             <div style={{ width: 34, height: 34, borderRadius: 10, background: 'rgba(198,255,61,.16)', border: '2px solid rgba(198,255,61,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <Cookie size={18} color="#c6ff3d" />
             </div>
@@ -85,11 +119,11 @@ export default function CookieConsent() {
           </div>
 
           {!expanded ? (
-            <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.8rem', lineHeight: 1.65, color: cardSub, marginBottom: '1.3rem' }}>
+            <p className="cookie-consent-intro" style={{ fontFamily: "'JetBrains Mono',monospace", color: cardSub }}>
               {t('cookieIntro')}
             </p>
           ) : (
-            <div style={{ marginBottom: '1.3rem', display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
+            <div className="cookie-consent-preferences" style={{ display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
               <PrefRow
                 title={t('cookieEssentialTitle')}
                 desc={t('cookieEssentialDesc')}
@@ -108,7 +142,7 @@ export default function CookieConsent() {
             </div>
           )}
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '.6rem' }}>
+          <div className="cookie-consent-actions">
             {!expanded ? (
               <>
                 <button onClick={() => decide('accepted', true)} className="cookie-btn cookie-btn-raised">
@@ -141,10 +175,6 @@ export default function CookieConsent() {
             </button>
           )}
 
-          <p style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.66rem', lineHeight: 1.6, color: 'rgba(255,255,255,.4)', marginTop: '1.1rem' }}>
-            {t('cookieFooterText')}{' '}
-            <a href="mailto:wthomasss06@gmail.com" style={{ color: 'rgba(255,255,255,.6)' }}>wthomasss06@gmail.com</a>.
-          </p>
         </motion.div>
       )}
     </AnimatePresence>
