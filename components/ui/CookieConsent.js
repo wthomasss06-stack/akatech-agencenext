@@ -5,39 +5,7 @@ import { Cookie } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { HoverSlideText } from '@/components/ui/index'
-
-const STORAGE_KEY = 'akatech_cookie_consent'
-
-function parseConsent(value) {
-  if (!value) return null
-  try {
-    const consent = JSON.parse(value)
-    return consent && ['accepted', 'rejected'].includes(consent.status) ? consent : null
-  } catch {
-    return null
-  }
-}
-
-function readCookieConsent() {
-  const prefix = `${STORAGE_KEY}=`
-  const cookie = document.cookie.split('; ').find(item => item.startsWith(prefix))
-  if (!cookie) return null
-
-  try {
-    return parseConsent(decodeURIComponent(cookie.slice(prefix.length)))
-  } catch {
-    return null
-  }
-}
-
-function saveConsent(consent) {
-  const value = encodeURIComponent(JSON.stringify(consent))
-  const secure = window.location.protocol === 'https:' ? '; Secure' : ''
-  document.cookie = `${STORAGE_KEY}=${value}; Max-Age=31536000; Path=/; SameSite=Lax${secure}`
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(consent))
-  } catch {}
-}
+import { readConsent, writeConsent, subscribeConsent } from '@/lib/cookie-consent'
 
 // Signale le choix à /api/track (même endpoint que VisitorTracker) : le
 // serveur lit les cookies akatech_visitor / akatech_session déjà posés par
@@ -68,22 +36,29 @@ export default function CookieConsent() {
   const [analyticsOn, setAnalyticsOn] = useState(true)
 
   useEffect(() => {
-    const cookieConsent = readCookieConsent()
-    if (cookieConsent) return
-
-    let stored = null
-    try { stored = parseConsent(localStorage.getItem(STORAGE_KEY)) } catch {}
+    // Un choix déjà enregistré (localStorage, sinon cookie de secours) : on ne
+    // montre rien, et on le ré-écrit pour restaurer le stockage manquant et
+    // renouveler la durée de vie du cookie.
+    const stored = readConsent()
     if (stored) {
-      saveConsent(stored)
+      writeConsent(stored)
       return
     }
 
     const timer = setTimeout(() => setVisible(true), 900)
-    return () => clearTimeout(timer)
+    // Choix pris dans un autre onglet : on masque la bannière ici aussi.
+    const unsubscribe = subscribeConsent(() => {
+      clearTimeout(timer)
+      setVisible(false)
+    })
+    return () => {
+      clearTimeout(timer)
+      unsubscribe()
+    }
   }, [])
 
   const decide = (status, analytics) => {
-    saveConsent({ status, analytics, ts: Date.now() })
+    writeConsent({ status, analytics, ts: Date.now() })
     sendConsent(status)
     setVisible(false)
   }

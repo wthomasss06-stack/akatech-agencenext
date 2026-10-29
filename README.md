@@ -78,7 +78,7 @@ akatech-nextjs/
 │   ├── services/               # 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes
 │   ├── projects/               # Galerie (19 réalisations) — un seul bouton « Détail » par carte
 │   │   └── [slug]/              # Page de détail d'une réalisation : /projects/<slug> (SSR, un seul composant PC + mobile)
-│   ├── pricing/                 # 4 grilles tarifaires (Vitrine, E-commerce, SaaS, GBP) + FAQ
+│   ├── pricing/                 # 5 grilles tarifaires (Vitrine, E-commerce, SaaS, GBP, Maintenance) + FAQ
 │   ├── devis/ · devis/[type]/   # Questionnaire de devis dynamique (portfolio, vitrine/e-commerce, SaaS)
 │   ├── blog/[slug]/            # Articles (modèle BlogPost) + recherche + newsletter
 │   ├── contact/                 # Formulaire + canaux directs
@@ -140,7 +140,7 @@ akatech-nextjs/
 | `/projects` | Projets | Galerie des 19 réalisations — chaque carte affiche sa **rubrique** et un seul bouton **Détail** |
 | `/projects/[slug]` | Détail d'un projet | Le problème, la solution, ce que ça apporte, où en est le projet, appel à l'action, autres réalisations. Le bouton **Voir le projet** est ici. 19 pages générées (`generateStaticParams`), `404` sur un slug inconnu |
 | `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 19 projets — desktop uniquement, repli vers `/projects` sur mobile |
-| `/pricing` | Tarifs | 4 grilles (Vitrine — incluant le portfolio —, E-commerce, SaaS, GBP), FAQ, témoignages |
+| `/pricing` | Tarifs | 5 grilles (Vitrine — incluant le portfolio —, E-commerce, SaaS, GBP, Maintenance), FAQ, témoignages |
 | `/devis` + `/devis/[type]` | Devis | Formulaire de questionnaire dynamique (portfolio, vitrine/e-commerce, SaaS), généré depuis `lib/questionnaires-schema.js` — accessible depuis l'assistant IA ou directement par lien |
 | `/blog` + `/blog/[slug]` | Blog | Articles stockés en base (modèle `BlogPost`), recherche, tags, newsletter |
 | `/contact` | Contact | Formulaire (Resend), canaux directs, FAQ |
@@ -299,7 +299,7 @@ Création ou optimisation de votre fiche Google (NAP, catégories, photos, descr
 **À partir de 59 000 FCFA · 2 à 7 jours**
 
 ### 05 · Intégration IA Chatbot
-Un chatbot conversationnel intégré à votre site pour interagir avec vos visiteurs et les guider — le même type d'assistant que celui d'akatech.vercel.app, pensé pour augmenter la productivité de votre business.
+Un assistant métier conversationnel — ce que nous appelons « chatbot » — intégré à votre site ou à votre application. Il connaît votre activité, répond à vos visiteurs et à vos clients, qualifie les demandes et peut préparer des actions (recherche, suivi, brouillon) que la personne confirme toujours. Même famille d'assistant que celui d'akatech.vercel.app, pensé pour augmenter la productivité de votre business.
 **Sur devis · 7 à 14 jours**
 
 ### 06 · Intégration de Paiement en Ligne
@@ -354,7 +354,7 @@ Nous échangeons sur votre projet, vos objectifs et vos besoins. Premier échang
 Nous définissons le périmètre, le prix et le délai, puis validons le projet ensemble.
 
 ### 03 · Acompte & contenus
-Vous versez 50 % d'acompte et transmettez les éléments nécessaires (logo, informations, visuels...). Le délai démarre lorsque l'acompte et les contenus sont reçus.
+Vous versez l'acompte (50 %, ou 40 % pour un projet supérieur à 2 000 000 FCFA) et transmettez les éléments nécessaires (logo, informations, visuels...). Le délai démarre lorsque l'acompte et les contenus sont reçus.
 
 ### 04 · Conception & développement
 Nous concevons et développons votre projet conformément au devis.
@@ -363,13 +363,13 @@ Nous concevons et développons votre projet conformément au devis.
 Vous recevez un lien de prévisualisation, testez le projet, et nous effectuons les corrections mineures incluses.
 
 ### 06 · Livraison & suivi
-Après paiement du solde, le projet est mis en ligne et les accès sont transmis. La période de garantie/support commence ensuite.
+Après recette et paiement du solde, le projet est mis en ligne et les accès sont transmis. La période de garantie/support commence ensuite.
 
 ---
 
 ## 💰 Tarifs AKATech
 
-> Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine + hébergement offerts la 1ère année sur toutes les formules
+> Prix en FCFA · Marché ivoirien · Devis gratuit sous 24h · Domaine offert la 1ère année sur toutes les formules · hébergement offert la 1ère année sur Site Vitrine et E-commerce (App Web / SaaS : infrastructure à la charge du client)
 >
 > **Grille révisée en octobre 2026** (prix relevés, délais en plages plus larges). Source unique : `PRICING` dans `lib/data.js` — les pages `/pricing`, l'assistant IA et le moteur de devis (`lib/quote-calc.js`) la lisent directement.
 >
@@ -395,8 +395,9 @@ Après paiement du solde, le projet est mis en ligne et les accès sont transmis
 | MVP / Outil métier | 1 000 000 – 1 800 000 FCFA | 4 à 7 semaines |
 | **Plateforme + abonnement** ⭐ | 2 000 000 – 3 800 000 FCFA | 8 à 12 semaines |
 | Marketplace multi-acteurs | 4 000 000 – 7 000 000 FCFA | 12 à 20 semaines |
+| **Projet complexe** | 7 000 000 – 12 000 000 FCFA | 16 à 28 semaines |
 
-> Le moteur de devis stocke un minimum **et** un maximum (base, PDF, dashboard) : le marketplace garde donc une fourchette bornée. Pour l'afficher « dès 4 000 000 FCFA, sur devis », il faudrait d'abord adapter ce moteur.
+> Le moteur de devis stocke un minimum **et** un maximum (base, PDF, dashboard) : le marketplace et le projet complexe gardent donc une fourchette bornée (au-delà de 12 000 000 FCFA : étude personnalisée). Pour afficher « dès X FCFA, sur devis », il faudrait d'abord adapter ce moteur.
 
 ### 📍 Fiche Google My Business
 | Formule | Prix | Délai |
@@ -405,9 +406,23 @@ Après paiement du solde, le projet est mis en ligne et les accès sont transmis
 | OPTIMISATION | 29 000 FCFA | 1 à 3 jours |
 | SUIVI MENSUEL | 9 000 FCFA/mois | Continu |
 
+### 🛠️ Maintenance & évolutions
+Règle : **15 à 20 % du prix du projet par an**, payée en mensualités (minimum 10 000 FCFA/mois). Le prix va de la formule *Essentielle* à la formule *Avancée*. L'hébergement et les services tiers sont facturés à part par leurs fournisseurs.
+
+| Projet | Maintenance (Essentielle – Avancée) |
+|---|---|
+| Site Vitrine | 10 000 – 15 000 FCFA/mois |
+| E-commerce | 15 000 – 35 000 FCFA/mois |
+| MVP / Outil métier | 15 000 – 30 000 FCFA/mois |
+| Plateforme + abonnement | 40 000 – 60 000 FCFA/mois |
+| Marketplace multi-acteurs | 75 000 – 115 000 FCFA/mois |
+| Projet complexe | Sur devis |
+
+> **Paiement** : projet ≤ 2 000 000 FCFA → 50 % à la commande, 50 % à la livraison ; projet > 2 000 000 FCFA → 40 % à la commande, 30 % à la validation de la pré-version, 30 % à la livraison (après recette).
+>
 > ⭐ = Formule recommandée. Détail complet des fonctionnalités par formule → page [`/pricing`](https://akatech.vercel.app/pricing).
 >
-> **Délais** : le compte à rebours démarre à la réception de l'acompte (50 %) **et** des contenus (textes, logo, photos). Les plages sont volontairement larges : on annonce la fourchette haute et on livre plus tôt si possible. Pour la fiche Google, la validation par Google ne dépend pas d'AKATech.
+> **Délais** : le compte à rebours démarre à la réception de l'acompte (50 %, ou 40 % au-delà de 2 000 000 FCFA) **et** des contenus (textes, logo, photos). Les plages sont volontairement larges : on annonce la fourchette haute et on livre plus tôt si possible. Pour la fiche Google, la validation par Google ne dépend pas d'AKATech.
 >
 > **Garantie de délai** : en cas de retard du fait d'AKATech, une pénalité s'applique et le client peut demander l'annulation avec remboursement partiel (même formulation sur `/pricing` et dans la FAQ de `lib/data.js`).
 

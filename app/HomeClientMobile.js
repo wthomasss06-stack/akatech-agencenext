@@ -345,7 +345,7 @@ const getServicesItems = (t) => [
       { h: t('service_seo_b4'), d: t('service_seo_b4_d') },
       { h: t('service_seo_b5'), d: t('service_seo_b5_d') },
     ],
-    price: t('pricing_from_20000_month'),
+    price: t('pricing_quote'),
   },
   {
     n: '04', Icon: MapPin, title: t('service_google_my_business'),

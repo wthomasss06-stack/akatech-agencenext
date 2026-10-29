@@ -1,0 +1,25 @@
+AKATech — alignement data.js + bannière cookies (cumulatif, remplace akatech-nextjs-5-updated-files.zip)
+ZIP différentiel — à dézipper à la racine du projet (racine de akatech-nextjs), en écrasant.
+
+MODIFIÉS (8)
+  ~ README.md
+  ~ app/HomeClientDesktop.js
+  ~ app/HomeClientMobile.js
+  ~ app/globals.css
+  ~ app/layout.js
+  ~ components/ui/CookieConsent.js
+  ~ lib/data.js
+  ~ lib/language.js
+
+NOUVEAUX (1)
+  + lib/cookie-consent.js
+
+À SUPPRIMER : rien.
+EXCLUS PAR SÉCURITÉ : .env, .env.local, app/.env (non inclus).
+
+BANNIÈRE COOKIES
+  • Même carte sur PC et mobile : largeur 440 px (ou largeur d'écran − 2 rem), mêmes polices (texte 12,8 px), mêmes marges ; hauteur = contenu, jamais rognée.
+  • Persistance : localStorage en source de vérité, cookie miroir de secours, repli sessionStorage/mémoire si le navigateur refuse d'écrire.
+  • Le choix est ré-écrit à chaque visite (restaure le stockage manquant) et expire 12 mois après la décision (CONSENT_TTL_MS dans lib/cookie-consent.js).
+  • Un choix pris dans un onglet masque la bannière dans les autres onglets ouverts.
+À VÉRIFIER APRÈS DÉZIPPAGE : npm run build ; ouvrir le site, accepter, recharger / fermer-rouvrir : la bannière ne doit pas revenir.
