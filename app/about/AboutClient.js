@@ -119,7 +119,7 @@ import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
-import { STATS, PROJECTS } from '@/lib/data'
+import { STATS, DELIVERED_COUNT } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
@@ -227,7 +227,7 @@ function HeroAbout() {
 
 // ── ABOUT STATS SLIDE AUTO (miroir exact de App.jsx) ─────────
 const ABOUT_STATS = [
-  { target: PROJECTS.length,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
+  { target: DELIVERED_COUNT,  suffix: '',  label: 'Projets',   sub: 'Livrés sur mesure, du concept au déploiement' },
   { target: 10,  suffix: '+', label: 'Clients',    sub: 'Particuliers, startups et PME accompagnés' },
   { target: 99, suffix: '%', label: 'Satisfaits', sub: 'Clients livrés dans les délais convenus' },
   { target: 12,  suffix: '',  label: 'En prod.',   sub: 'Applications actuellement en ligne' },
@@ -414,7 +414,7 @@ function TimelineSection() {
                   <div style={{ position: 'absolute', top: 0, right: 0, width: 60, height: 60, background: 'radial-gradient(circle at 100% 0%,rgba(136,202,83,.1),transparent 70%)', pointerEvents: 'none' }} />
                   <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.9rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.5rem' }}>{year}</div>
                   <h3 style={{ fontSize: '.95rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.4rem' }}>{tFr(titleKey)}</h3>
-                  <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{tFr(descKey).replace('{count}', String(PROJECTS.length))}</p>
+                  <p style={{ fontSize: '.8rem', color: T.textSub, lineHeight: 1.6 }}>{tFr(descKey).replace('{count}', String(DELIVERED_COUNT))}</p>
                 </motion.div>
               </div>
             </BlurReveal>

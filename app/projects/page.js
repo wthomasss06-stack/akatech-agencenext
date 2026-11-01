@@ -1,12 +1,12 @@
 import ProjectsResponsive from './ProjectsResponsive'
-import { PROJECTS } from '@/lib/data'
+import { DELIVERED_COUNT } from '@/lib/data'
 import { BreadcrumbJsonLd } from '../seo/StructuredData'
 
 export const metadata = {
   title: "Réalisations — AKATech | Projets Web Côte d'Ivoire",
-  description: `+${PROJECTS.length} réalisations livrées : sites vitrines, e-commerce, marketplaces, portfolios et applications métier pour des entrepreneurs en Côte d'Ivoire.`,
+  description: `+${DELIVERED_COUNT} réalisations livrées : sites vitrines, e-commerce, marketplaces, portfolios et applications métier pour des entrepreneurs en Côte d'Ivoire.`,
   alternates: { canonical: '/projects' },
-  openGraph: { title: "Réalisations — AKATech", description: `${PROJECTS.length}+ projets web livrés en Côte d'Ivoire : sites, e-commerce, marketplaces, portfolios.`, locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/projects' },
+  openGraph: { title: "Réalisations — AKATech", description: `${DELIVERED_COUNT}+ projets web livrés en Côte d'Ivoire : sites, e-commerce, marketplaces, portfolios.`, locale: 'fr_CI', type: 'website', siteName: 'AKATech', url: 'https://akatech.vercel.app/projects' },
 }
 
 export default function Page() {

@@ -17,7 +17,7 @@ import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTit
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
-import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING } from '@/lib/data'
+import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING, DELIVERED_COUNT } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
 
@@ -250,7 +250,7 @@ function Hero() {
               {t('heroTrust')}
             </div>
             <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.63rem', color: '#88ca53' }}>
-              {PROJECTS.length}+ {t('stats_projects_label')}
+              {DELIVERED_COUNT}+ {t('stats_projects_label')}
             </div>
           </div>
         </motion.div>
@@ -405,7 +405,7 @@ const getProcessItems = (t) => [
 
 // ── STATS — chiffres géants éditoriaux (miroir desktop), responsive 2-col mobile ──
 const getHomeStats = (t) => [
-  { target: PROJECTS.length,  suffix: '',  label: 'stats_projects_label',      sub: t('stats_sub_concept') },
+  { target: DELIVERED_COUNT,  suffix: '',  label: 'stats_projects_label',      sub: t('stats_sub_concept') },
   { target: 99,  suffix: '%', label: 'stats_clients_label',  sub: t('stats_sub_delivery') },
   { target: 10,  suffix: '+', label: 'stats_support_label', sub: t('stats_sub_market') },
   { target: 3,   suffix: '+', label: 'stats_experience_label', sub: t('stats_sub_web') },

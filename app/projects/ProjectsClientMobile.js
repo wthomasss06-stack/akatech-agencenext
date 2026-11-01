@@ -7,7 +7,7 @@ import ProjectShowcase from '@/components/ui/ProjectShowcase'
 import { LazyImg, GreenUnderline, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
-import { PROJECTS, getLocalizedData } from '@/lib/data'
+import { PROJECTS, getLocalizedData, DELIVERED_COUNT } from '@/lib/data'
 
 
 
@@ -54,7 +54,7 @@ function HeroRealisations() {
       {/* Layer MID */}
       <div ref={layerMidRef} style={{ position: 'relative', zIndex: 10, maxWidth: 900, padding: '72px 5% 0', textAlign: 'center', willChange: 'transform, opacity, filter', transition: 'transform .1s ease-out' }}>
         <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}>
-          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}>+{PROJECTS.length} {t('deliveredProjects')},<br /><GreenUnderline>99% {t('satisfied')}.</GreenUnderline></h1>
+          <h1 style={{ position: 'relative', fontSize: 'min(var(--title-size), 3.8rem)', fontWeight: 900, fontStyle: 'italic', fontFamily: "'Barlow Condensed',sans-serif", color: 'rgba(255,255,255,.88)', letterSpacing: 'var(--title-tracking)', lineHeight: 'var(--title-leading)', marginBottom: '1.2rem' }}>+{DELIVERED_COUNT} {t('deliveredProjects')},<br /><GreenUnderline>99% {t('satisfied')}.</GreenUnderline></h1>
           <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,.55)', lineHeight: 1.75, maxWidth: 560, margin: '0 auto 2.5rem' }}>
             {t('projectsHero')}
           </p>

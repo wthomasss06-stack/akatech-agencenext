@@ -8,7 +8,7 @@ import { useLanguage } from '@/lib/language'
 import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTitle } from '@/components/ui/index'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import AuroraHero from '@/components/ui/AuroraHero'
-import { STATS, PROJECTS } from '@/lib/data'
+import { STATS, DELIVERED_COUNT } from '@/lib/data'
 import { cld } from '@/lib/cloudinary'
 
 const SKILLS = ['React','Next.js','Django','Python','Node.js','PostgreSQL','MySQL','Tailwind CSS','Framer Motion','Vercel','AWS','Docker','REST API','GraphQL','Mobile Money API']
@@ -93,7 +93,7 @@ function HeroAbout() {
 
 // ── 2. STATS — chiffres géants éditoriaux (miroir HomeClientMobile) ──
 const ABOUT_STATS = [
-  { target: PROJECTS.length,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
+  { target: DELIVERED_COUNT,  suffix: '',  label: 'Projets livrés',      sub: 'Du concept au déploiement' },
   { target: 99,  suffix: '%', label: 'Clients satisfaits',  sub: 'Livrés dans les délais'    },
   { target: 10,  suffix: '+', label: 'Clients accompagnés', sub: 'Startups, PME, créatifs'   },
   { target: 3,   suffix: '+', label: "Années d'expérience", sub: 'En développement web'       },
@@ -262,7 +262,7 @@ function TimelineSection() {
               <div className="sku-card" style={{ padding: '1.2rem 1.4rem' }}>
                 <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.85rem', fontWeight: 800, color: T.green, letterSpacing: '.08em', marginBottom: '.35rem' }}>{year}</div>
                 <h3 style={{ fontSize: '.92rem', fontWeight: 700, color: T.textMain, fontFamily: "'JetBrains Mono',monospace", marginBottom: '.3rem' }}>{tFr(titleKey)}</h3>
-                <p style={{ fontSize: '.78rem', color: T.textSub, lineHeight: 1.6 }}>{tFr(descKey).replace('{count}', String(PROJECTS.length))}</p>
+                <p style={{ fontSize: '.78rem', color: T.textSub, lineHeight: 1.6 }}>{tFr(descKey).replace('{count}', String(DELIVERED_COUNT))}</p>
               </div>
             </motion.div>
           ))}

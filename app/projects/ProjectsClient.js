@@ -7,7 +7,7 @@ import ProjectScrollShowcase from '@/components/ui/ProjectScrollShowcase'
 import { LazyImg, GreenUnderline, UnderlinedTitle } from '@/components/ui/index'
 import AuroraHero from '@/components/ui/AuroraHero'
 import { cld } from '@/lib/cloudinary'
-import { PROJECTS, getLocalizedData } from '@/lib/data'
+import { PROJECTS, getLocalizedData, DELIVERED_COUNT } from '@/lib/data'
 
 
 /* ────────────────────────────────────────────────
@@ -56,7 +56,7 @@ function HeroRealisations() {
 
         <div className="hr-side">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6, delay: .2 }}>
-            <p className="hr-kicker">+{PROJECTS.length} {t('deliveredProjects')} · 99% {t('satisfied')}</p>
+            <p className="hr-kicker">+{DELIVERED_COUNT} {t('deliveredProjects')} · 99% {t('satisfied')}</p>
             <p className="hr-desc">{t('projectsHero')}</p>
           </motion.div>
         </div>

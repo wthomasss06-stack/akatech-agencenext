@@ -22,7 +22,7 @@ import { AnimatedCounter, LazyImg, GreenUnderline, HoverSlideText, UnderlinedTit
 import { trackAction } from '@/lib/track-action'
 import TrustStacksMarquee from '@/components/ui/TrustStacksMarquee'
 import ConversionMarquee from '@/components/ui/ConversionMarquee'
-import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData } from '@/lib/data'
+import { SERVICES, PROJECTS, TESTIMONIALS, FAQ_ITEMS, PRICING, getLocalizedData, DELIVERED_COUNT } from '@/lib/data'
 import { AvatarGroup, Avatar, AvatarImage, AvatarFallback, AvatarGroupTooltip, AvatarGroupTooltipArrow } from '@/components/ui/AvatarGroup'
 import ProjectShowcase from '@/components/ui/ProjectShowcase'
 import HoverRevealList from '@/components/ui/HoverRevealList'
@@ -217,7 +217,7 @@ function Hero() {
               {t('heroTrust')}
             </div>
             <div style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.68rem', color: '#88ca53' }}>
-              {PROJECTS.length}+ {t('stats_projects_label')}
+              {DELIVERED_COUNT}+ {t('stats_projects_label')}
             </div>
           </div>
         </motion.div>
@@ -739,7 +739,7 @@ function ArchiveTunnelSection() {
 
 // ── STATS — chiffres géants éditoriaux, quinconce (ref web_design_result) ──
 const HOME_STATS = [
-  { target: PROJECTS.length,  suffix: '',  label: 'stats_projects_label',                  sub: 'stats_sub_concept', col: 1, row: 1 },
+  { target: DELIVERED_COUNT,  suffix: '',  label: 'stats_projects_label',                  sub: 'stats_sub_concept', col: 1, row: 1 },
   { target: 99,  suffix: '%', label: 'stats_clients_label',              sub: 'stats_sub_delivery',    col: 3, row: 1 },
   { target: 10,  suffix: '+', label: 'stats_support_label',             sub: 'stats_sub_market',   col: 5, row: 1 },
   { target: 3,   suffix: '+', label: 'stats_experience_label',             sub: 'stats_sub_web',      col: 2, row: 2 },

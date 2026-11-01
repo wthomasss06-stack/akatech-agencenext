@@ -332,7 +332,7 @@ Chaque projet de `PROJECTS` reçoit une **rubrique** parmi les 7 ci-dessus (`pro
 |---|---|
 | Site vitrine | TechFlow, Tati, MK Studio, AKATech, Université les Anges, Jean Edy · Portfolio, MD Laverie Pressing |
 | E-commerce | ShopCI, ManoBeat 777, Chez Florence |
-| Plateforme | TerraSafe, Nexura, KokoEat, Anyama Proxy |
+| Plateforme | TerraSafe, Nexura, KokoEat, Anyama Proxy, Vazi Express |
 | Application web | ChapChap Bara, Karnet, REKOLLECTE |
 | Réservation | New Horizon Service |
 | POS & caisse | ProTech POS |
