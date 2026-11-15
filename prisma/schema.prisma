@@ -117,6 +117,28 @@ model VisitSession {
   userAgent      String?
   consent        String? // 'accepted' | 'rejected' | null = pas encore décidé (bannière cookies)
 
+  // Géolocalisation approximative (en-têtes Vercel) et appareil. `country`, `os`
+  // et `browser` sont anonymes. `ip`, `region` et `city` ne sont enregistrés que
+  // si le visiteur a ACCEPTÉ les cookies analytiques, et sont effacés au bout de
+  // ANALYTICS_IP_RETENTION_DAYS jours (90 par défaut) — voir lib/db.js.
+  country        String? // code ISO 3166-1 alpha-2 (CI, FR, CA…)
+  region         String? // sous-division (code), si fournie
+  city           String? // ville approximative (jamais une adresse)
+  ip             String?
+  os             String? // Android | iOS | Windows | macOS | Linux…
+  browser        String? // Chrome | Safari | Firefox | Facebook (in-app)…
+  // Position approximative du centre de la ville (en-têtes Vercel, arrondie à ~1 km) pour la carte
+  // du dashboard. Mêmes règles que `city` : enregistrée seulement si les cookies analytiques sont
+  // acceptés, effacée au refus et après ANALYTICS_IP_RETENTION_DAYS jours.
+  latitude       Float?
+  longitude      Float?
+
+  // Provenance balisée par un lien (?utm_source=whatsapp…) : les partages WhatsApp n'envoient aucun
+  // referrer. Valeurs normalisées (minuscules, a-z 0-9 _ . -), jamais une URL complète.
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+
   pageViews PageView[]
   actions   VisitorAction[]
 
@@ -309,4 +331,23 @@ model BlogPost {
   updatedAt   DateTime @updatedAt
 
   @@index([published, publishedAt])
+}
+
+// ═══════════════════════════════════════════
+// MÉDIAS — images envoyées depuis le dashboard (photo de couverture du blog)
+// ═══════════════════════════════════════════
+// Stockées en base (Neon) et servies par /api/media/[id] : pas de dossier public
+// modifiable, pas de nom de fichier fourni par l'utilisateur. Le type est déterminé
+// par les octets réels du fichier (voir lib/media.js), jamais par l'extension.
+// `sha256` évite les doublons : le même fichier envoyé deux fois garde le même id.
+model MediaAsset {
+  id        String   @id @default(cuid())
+  kind      String   @default("blog-cover")
+  mime      String
+  size      Int
+  sha256    String   @unique
+  data      Bytes
+  createdAt DateTime @default(now())
+
+  @@index([kind, createdAt])
 }

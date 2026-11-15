@@ -1,25 +1,12 @@
 'use client'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Cookie } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { useLanguage } from '@/lib/language'
 import { HoverSlideText } from '@/components/ui/index'
-import { readConsent, writeConsent, subscribeConsent } from '@/lib/cookie-consent'
-
-// Signale le choix à /api/track (même endpoint que VisitorTracker) : le
-// serveur lit les cookies akatech_visitor / akatech_session déjà posés par
-// middleware.js pour rattacher la décision à la session en cours — pas
-// besoin de transmettre un identifiant ici. Best-effort, comme le reste
-// du tracking : un échec réseau ne doit jamais bloquer le visiteur.
-function sendConsent(consent) {
-  fetch('/api/track', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ consent }),
-    keepalive: true,
-  }).catch(() => {})
-}
+import { readConsent, writeConsent, subscribeConsent, reportConsent } from '@/lib/cookie-consent'
 
 /* Bannière de consentement cookies. Que le choix soit "accepter" ou
    "refuser", la mesure d'audience anonyme déjà posée par middleware.js
@@ -59,7 +46,7 @@ export default function CookieConsent() {
 
   const decide = (status, analytics) => {
     writeConsent({ status, analytics, ts: Date.now() })
-    sendConsent(status)
+    reportConsent(status)
     setVisible(false)
   }
 
@@ -94,9 +81,21 @@ export default function CookieConsent() {
           </div>
 
           {!expanded ? (
-            <p className="cookie-consent-intro" style={{ fontFamily: "'JetBrains Mono',monospace", color: cardSub }}>
-              {t('cookieIntro')}
-            </p>
+            <>
+              <p className="cookie-consent-intro" style={{ fontFamily: "'JetBrains Mono',monospace", color: cardSub }}>
+                {t('cookieIntro')}
+              </p>
+              <Link
+                href="/cookies"
+                style={{
+                  display: 'inline-block', marginTop: '.6rem',
+                  fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: '#c6ff3d',
+                  textDecoration: 'underline', textUnderlineOffset: '3px',
+                }}
+              >
+                {t('cookieMoreLink')}
+              </Link>
+            </>
           ) : (
             <div className="cookie-consent-preferences" style={{ display: 'flex', flexDirection: 'column', gap: '.9rem' }}>
               <PrefRow

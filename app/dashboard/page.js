@@ -14,11 +14,14 @@ import {
   VISITOR_SORTS, VISITOR_PERIODS, VISITOR_MIN_VISITS, VISITOR_ENGAGEMENT, DEFAULT_VISITOR_VIEW, NO_DEVICE,
   filterAndSortVisitors, listVisitorDevices, countActiveVisitorFilters, summarizeActionCounts,
 } from '@/lib/dashboard-view'
+import { countryFlag, countryLabel } from '@/lib/geo'
 import { HoverSlideText } from '@/components/ui/index'
 import Logo from '@/components/ui/Logo'
 import PageBackground from '@/components/ui/PageBackground'
 import InvoicesTab from '@/components/dashboard/InvoicesTab'
 import BlogTab from '@/components/dashboard/BlogTab'
+import VisitorsMapCard from '@/components/dashboard/VisitorsMapCard'
+import ShareLinkCard from '@/components/dashboard/ShareLinkCard'
 
 /* ────────────────────────────────────────────────────────────
    Ce dashboard n'utilise ni Tailwind ni shadcn/ui : ce projet ne les
@@ -549,6 +552,108 @@ function ProspectDetailModal({ prospect, onClose, onStatus, onDelete, saving, T 
   )
 }
 
+// ── Géographie, appareils et provenance (lib/geo.js, db.js → getGeoStats) ──
+// Localisation APPROXIMATIVE (ville du fournisseur d'accès). Le pays vient de
+// tous les visiteurs ; la ville, de ceux qui ont accepté les cookies analytiques.
+function GeoBarsCard({ title, note, rows, color, T, CARD, empty = 'Pas encore de données' }) {
+  return (
+    <div style={{ ...CARD, padding: '1.2rem', minWidth: 0 }}>
+      <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: note ? 4 : 14 }}>{title}</div>
+      {note && <div style={{ fontSize: '.68rem', color: T.textMuted, marginBottom: 12 }}>{note}</div>}
+      {rows.length === 0 ? (
+        <div style={{ color: T.textMuted, fontSize: '.78rem' }}>{empty}</div>
+      ) : (
+        <ResponsiveContainer width="100%" height={Math.max(rows.length * 30, 60)}>
+          <BarChart data={rows} layout="vertical" margin={{ top: 0, right: 10, left: 0, bottom: 0 }}>
+            <XAxis type="number" hide allowDecimals={false} />
+            <YAxis type="category" dataKey="label" tick={{ fontSize: 11, fill: T.textSub }} axisLine={false} tickLine={false} width={150} />
+            <RTooltip content={<ChartTooltip T={T} />} cursor={{ fill: T.border, opacity: .3 }} />
+            <RBar dataKey="count" name="Visites" fill={color || T.green} radius={[0, 4, 4, 0]} barSize={14} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
+    </div>
+  )
+}
+
+const fmtMinutes = (seconds = 0) => `${Math.floor(seconds / 60)}m${String(seconds % 60).padStart(2, '0')}`
+
+// Dernières visites, une ligne chacune : quand, d'où, depuis quoi, sur quelle page.
+// IP, ville et région n'existent que pour les visiteurs ayant ACCEPTÉ les cookies
+// analytiques (vides sinon) et sont effacées après 90 jours.
+function RecentVisitsCard({ visits, onOpen, T, CARD }) {
+  const [country, setCountry] = useState('')
+  const [hideIp, setHideIp] = useState(false)
+  const countries = useMemo(() => [...new Set(visits.map((v) => v.country).filter(Boolean))].sort(), [visits])
+  const rows = country ? visits.filter((v) => v.country === country) : visits
+  const control = { background: T.card, border: `1px solid ${T.border}`, borderRadius: 10, padding: '.4rem .6rem', color: T.textMain, fontSize: '.74rem' }
+  const cols = 'minmax(105px,.8fr) minmax(170px,1.5fr) minmax(125px,1fr) minmax(135px,1.1fr) minmax(95px,.7fr) minmax(120px,1fr) 78px'
+  const head = { fontSize: '.6rem', fontWeight: 700, color: T.textMuted, textTransform: 'uppercase', letterSpacing: '.05em' }
+
+  return (
+    <div style={{ ...CARD, padding: '1.2rem', gridColumn: '1 / -1', minWidth: 0 }}>
+      <div style={{ fontSize: '.78rem', fontWeight: 700, color: T.textSub, marginBottom: 4 }}>Visites récentes · IP & ville</div>
+      <div style={{ fontSize: '.7rem', color: T.textMuted, marginBottom: 14, lineHeight: 1.5 }}>
+        La ville est approximative (celle du fournisseur d’accès, pas une adresse). IP, ville et région ne sont enregistrées
+        que pour les visiteurs qui ont accepté les cookies analytiques, et effacées après 90 jours. Clique une ligne pour voir le parcours.
+      </div>
+      {visits.length === 0 ? (
+        <div style={{ color: T.textMuted, fontSize: '.78rem' }}>Pas encore de visites localisées. (Si le site vient d’être mis à jour : lance <code>npx prisma db push</code> pour ajouter les colonnes.)</div>
+      ) : (
+        <>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', marginBottom: 12 }}>
+            <select value={country} onChange={(e) => setCountry(e.target.value)} style={control} aria-label="Filtrer par pays">
+              <option value="">Tous les pays</option>
+              {countries.map((code) => <option key={code} value={code}>{countryLabel(code)}</option>)}
+            </select>
+            <label style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '.74rem', color: T.textSub, cursor: 'pointer' }}>
+              <input type="checkbox" checked={hideIp} onChange={(e) => setHideIp(e.target.checked)} /> Masquer les IP
+            </label>
+            <span style={{ fontSize: '.7rem', color: T.textMuted }}>{rows.length} visite{rows.length > 1 ? 's' : ''}</span>
+          </div>
+          <div style={{ overflowX: 'auto' }}>
+            <div style={{ minWidth: 880 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: cols, gap: 10, padding: '0 .6rem .5rem', borderBottom: `1px solid ${T.border}` }}>
+                <span style={head}>Quand</span><span style={head}>Lieu</span><span style={head}>IP</span><span style={head}>Appareil</span>
+                <span style={head}>Source</span><span style={head}>Page d’entrée</span><span style={{ ...head, textAlign: 'right' }}>Durée</span>
+              </div>
+              {rows.map((v) => (
+                <div
+                  key={v.id}
+                  onClick={() => onOpen({ id: v.shortId, shortId: v.shortId })}
+                  style={{ display: 'grid', gridTemplateColumns: cols, gap: 10, alignItems: 'center', padding: '.55rem .6rem', borderBottom: `1px solid ${T.border}`, cursor: 'pointer', fontSize: '.74rem', color: T.textMain }}
+                >
+                  <span style={{ color: T.textSub }}>
+                    {new Date(v.at).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}
+                    {v.returning && <span title="Visiteur récurrent" style={{ marginLeft: 4 }}>↺</span>}
+                  </span>
+                  <span style={{ minWidth: 0 }}>
+                    {v.country ? (
+                      <>
+                        {countryFlag(v.country)} <strong>{v.city || '—'}</strong>
+                        <span style={{ color: T.textMuted }}>{v.city ? ', ' : ' '}{countryLabel(v.country).replace(/^\S+\s/, '')}</span>
+                      </>
+                    ) : <span style={{ color: T.textMuted }}>Lieu inconnu</span>}
+                  </span>
+                  <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '.7rem', color: v.ip ? T.textMain : T.textMuted, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    {v.ip ? (hideIp ? v.ip.replace(/[\d a-f]+(?=[.:][\da-f]*$)/i, '•••') : v.ip) : (v.consent === 'rejected' ? 'cookies refusés' : 'non partagée')}
+                  </span>
+                  <span style={{ color: T.textSub }}>{[DEVICE_LABELS[v.device] || v.device, v.os, v.browser].filter(Boolean).join(' · ') || '—'}</span>
+                  <span style={{ display: 'inline-flex' }}>
+                    <span style={{ padding: '2px 8px', borderRadius: 100, background: T.light ? '#eef1f3' : 'rgba(255,255,255,.06)', border: `1px solid ${T.border}`, fontSize: '.68rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '100%' }}>{v.source}</span>
+                  </span>
+                  <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{v.entryPath || '—'} <span style={{ color: T.textMuted }}>· {v.pages} p.</span></span>
+                  <span style={{ textAlign: 'right', color: T.textSub }}>{fmtMinutes(v.durationSeconds)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 // Parcours d'un visiteur récurrent : ses dernières sessions, pages vues
 // et clics fusionnés et triés chronologiquement. Chargé à la demande
 // (/api/stats/visitor/[id]), jamais en masse avec le reste des stats.
@@ -564,9 +669,11 @@ function VisitorJourneyModal({ visitor, journey, loading, onClose, T }) {
             <div style={{ fontFamily: "'Barlow Condensed',sans-serif", fontStyle: 'italic', fontSize: '.95rem', fontWeight: 900, color: T.textMain }}>
               Visiteur {visitor.shortId}…
             </div>
-            <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 3 }}>
-              {visitor.visits} visite{visitor.visits > 1 ? 's' : ''} · {visitor.pageViews} pages vues · {visitor.actions} clic{visitor.actions > 1 ? 's' : ''}
-            </div>
+            {visitor.visits != null && (
+              <div style={{ fontSize: '.72rem', color: T.textMuted, marginTop: 3 }}>
+                {visitor.visits} visite{visitor.visits > 1 ? 's' : ''} · {visitor.pageViews} pages vues · {visitor.actions} clic{visitor.actions > 1 ? 's' : ''}
+              </div>
+            )}
           </div>
           <button onClick={onClose} aria-label="Fermer le parcours" style={{ background: 'none', border: 'none', color: T.textSub, cursor: 'pointer', padding: 8 }}><X size={20} /></button>
         </div>
@@ -581,6 +688,16 @@ function VisitorJourneyModal({ visitor, journey, loading, onClose, T }) {
                 {new Date(s.startedAt).toLocaleString('fr-FR')} · {s.device || 'appareil inconnu'}
                 {s.consent && <span> · cookies {s.consent === 'accepted' ? 'acceptés' : 'refusés'}</span>}
               </div>
+              {(s.location?.country || s.location?.ip || s.source) && (
+                <div style={{ fontSize: '.72rem', color: T.textSub, marginBottom: 8, display: 'flex', flexWrap: 'wrap', gap: '4px 12px' }}>
+                  {s.location?.country && (
+                    <span>{countryFlag(s.location.country)} {[s.location.city, countryLabel(s.location.country).replace(/^\S+\s/, '')].filter(Boolean).join(', ')}</span>
+                  )}
+                  {s.location?.ip && <span style={{ fontFamily: "'JetBrains Mono',monospace" }}>IP {s.location.ip}</span>}
+                  {(s.location?.os || s.location?.browser) && <span>{[s.location.os, s.location.browser].filter(Boolean).join(' · ')}</span>}
+                  {s.source && <span>via {s.source}</span>}
+                </div>
+              )}
               <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 6 }}>
                 {s.events.map((ev, i) => (
                   <span key={i} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
@@ -677,6 +794,7 @@ const EMPTY_VISITORS = {
   devices: [], sources: [], topPages: [], activeHours: [],
   consent: { accepted: 0, rejected: 0, pending: 0 },
   visitorsByDay: [], actionsByType: [], topVisitors: [], topVisitorsTotal: 0,
+  geo: null, recentVisits: [],
 }
 
 function normalizeStats(d) {
@@ -1153,6 +1271,29 @@ export default function DashboardPage() {
                     </ResponsiveContainer>
                   )}
                 </div>
+                {(() => {
+                  const g = v.geo
+                  const located = g ? `${g.withCountry}/${g.totalSessions} sessions localisées` : null
+                  return (
+                    <>
+                      <GeoBarsCard T={T} CARD={CARD} title="Pays" note={located || 'Disponible après `npx prisma db push`'}
+                        rows={(g?.countries || []).map((c) => ({ label: countryLabel(c.code), count: c.count }))} />
+                      <GeoBarsCard T={T} CARD={CARD} title="Villes" color="#e0a83e"
+                        note={g ? `${g.withCity} session${g.withCity > 1 ? 's' : ''} avec ville (cookies acceptés)` : null}
+                        empty="Les villes n’apparaissent qu’après acceptation des cookies analytiques"
+                        rows={(g?.cities || []).map((c) => ({ label: `${countryFlag(c.country)} ${c.city}`.trim(), count: c.count }))} />
+                      <GeoBarsCard T={T} CARD={CARD} title="Provenance" color="#6aa3ff"
+                        rows={(g?.channels || []).map((c) => ({ label: c.name, count: c.count }))} />
+                      <GeoBarsCard T={T} CARD={CARD} title="Systèmes" color="#c47bff"
+                        rows={(g?.os || []).map((c) => ({ label: c.name, count: c.count }))} />
+                      <GeoBarsCard T={T} CARD={CARD} title="Navigateurs" color="#ff7b7b"
+                        rows={(g?.browsers || []).map((c) => ({ label: c.name, count: c.count }))} />
+                      <VisitorsMapCard points={g?.cityPoints || []} unlocated={g?.unlocatedSessions || 0} T={T} CARD={CARD} />
+                      <ShareLinkCard T={T} CARD={CARD} />
+                      <RecentVisitsCard visits={v.recentVisits} onOpen={openJourney} T={T} CARD={CARD} />
+                    </>
+                  )
+                })()}
                 <RecurringVisitorsCard visitors={v.topVisitors} total={v.topVisitorsTotal} onOpen={openJourney} T={T} CARD={CARD} />
               </div>
             )}

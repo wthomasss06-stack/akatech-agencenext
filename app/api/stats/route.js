@@ -1,6 +1,6 @@
 // app/api/stats/route.js
 // Protégée par middleware.js (Basic Auth).
-import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage, getActionStats, getVisitorList } from '@/lib/db'
+import { prisma, getConversationActivity, getVisitorStats, getTodayAiUsage, getActionStats, getVisitorList, getGeoStats, getRecentVisits } from '@/lib/db'
 import { getDashboardActions } from '@/lib/dashboard-actions'
 import { NextResponse } from 'next/server'
 
@@ -18,7 +18,7 @@ export async function GET() {
       todayConversations, weekConversations, monthConversations,
       totalLeads, qualifiedLeads, contactedLeads, convertedLeads,
       avgLeadScore, totalMessages, avgMessagesPerConversation,
-      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, visitorList, actions,
+      leadsByProjectType, activity, visitorStats, aiUsage, actionStats, visitorList, geoStats, recentVisits, actions,
     ] = await Promise.all([
       prisma.conversation.count(),
       prisma.conversation.count({ where: { status: 'ACTIVE' } }),
@@ -40,6 +40,8 @@ export async function GET() {
       getActionStats(30),
       getVisitorList(30, 500), // le dashboard trie/filtre cette liste côté navigateur ;
                                // `total` indique s'il y a plus de visiteurs que la liste.
+      getGeoStats(30),       // pays, villes, systèmes, navigateurs, provenance (null si colonnes absentes)
+      getRecentVisits(30, 60), // dernières visites avec IP/ville (acceptées seulement) — [] si colonnes absentes
       // « Actions à faire » ne doit jamais empêcher le reste du dashboard de charger
       // (ex. colonne Lead.followUpAt pas encore créée avant `prisma db push`).
       getDashboardActions().catch((error) => {
@@ -70,7 +72,7 @@ export async function GET() {
       },
       byProjectType: leadsByProjectType.map(p => ({ type: p.projectType || 'Non précisé', count: p._count.id })),
       activity,
-      visitors: { ...visitorStats, actionsByType: actionStats, topVisitors: visitorList.items, topVisitorsTotal: visitorList.total },
+      visitors: { ...visitorStats, actionsByType: actionStats, topVisitors: visitorList.items, topVisitorsTotal: visitorList.total, geo: geoStats, recentVisits },
       aiUsage,
       actions,
     })

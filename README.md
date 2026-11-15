@@ -66,7 +66,7 @@ Ce dépôt contient le **site officiel d'AKATech** — la vitrine du Studio., co
 akatech-nextjs/
 ├── middleware.js               # Basic Auth (/dashboard + API admin) + cookies de tracking visiteurs
 ├── prisma/
-│   └── schema.prisma            # Conversation, Message, Lead, Visitor, VisitSession, PageView, VisitorAction, Questionnaire, Quote, BlogPost, Invoice
+│   └── schema.prisma            # Conversation, Message, Lead, Visitor, VisitSession, PageView, VisitorAction, Questionnaire, Quote, BlogPost, Invoice, MediaAsset (images du dashboard)
 │
 ├── app/
 │   ├── page.js · HomeClientDesktop.js · HomeClientMobile.js · HomeResponsive.js
@@ -118,6 +118,12 @@ akatech-nextjs/
 │   ├── project-stories.js     # Textes « côté client » des 19 réalisations (problème, solution, fonctions, résultat) + helpers (lien, WhatsApp, captures)
 │   ├── questionnaire-pdf.js  # Génération du PDF de devis + envoi email
 │   ├── track-action.js  # Helper client — envoie un clic d'action (WhatsApp, tel, chat, formulaire) à /api/track
+│   ├── cookie-consent.js # Choix de cookies (localStorage + cookie miroir), évènement de changement, reportConsent()
+│   ├── share-links.js   # Liens de partage balisés (?utm_source=…) — carte « Lien de partage » du dashboard
+│   ├── city-coords.js   # Repli : position de villes connues pour les visites sans coordonnées
+│   ├── admin-auth.js    # Contrôle Basic Auth refait dans les routes d'écriture (ADMIN_USER / ADMIN_PASSWORD)
+│   ├── media.js         # Limites et type réel (octets) des images du dashboard
+│   ├── geo.js           # Pays/ville/position (en-têtes Vercel), système, navigateur, provenance, UTM
 │   │
 │
 ├── public/
@@ -235,7 +241,7 @@ Tous les e-mails envoyés à `ADMIN_EMAIL` (alertes visiteur/prospect, formulair
 
 | Événement | Déclencheur | Anti-doublon |
 |---|---|---|
-| `NEW_VISITOR` | Création d'une nouvelle identité visiteur dans `/api/track` (bots évités par le User-Agent) | 1 alerte par IP et par jour UTC, via une empreinte HMAC (`VISITOR_ALERT_HASH_SECRET`) — l'IP brute n'est ni stockée ni envoyée |
+| `NEW_VISITOR` | Première visite d'un navigateur **ayant accepté les cookies** (au moment où il accepte, ou à sa première requête si son choix est déjà mémorisé) — bots évités par le User-Agent. Objet : « Nouvelle visite depuis Abidjan » (ville, pays, source). Aucune alerte sans accord | 1 alerte par IP et par jour UTC, via une empreinte HMAC (`VISITOR_ALERT_HASH_SECRET`) — l'IP brute n'est ni stockée ni envoyée |
 | `CHAT_INTENT` | Le chatbot démarre un questionnaire de devis (`start_questionnaire`) | 1 alerte par conversation |
 
 Les e-mails déjà existants (lead capturé, étapes du devis) ne changent pas et ne sont pas doublés.
@@ -244,7 +250,11 @@ Les e-mails déjà existants (lead capturé, étapes du devis) ne changent pas e
 
 **Garde-fou quota** : `DAILY_LIMITS` plafonne le nombre d'alertes créées par jour UTC (40 visites, 25 intentions de devis) pour qu'un pic de trafic n'épuise jamais le quota Resend au détriment des e-mails de leads. Au-delà, l'événement reste visible dans le dashboard ; seul l'e-mail est ignoré.
 
-**Point important sur le consentement :** la bannière cookies (`components/ui/CookieConsent.js`) enregistre un choix ("Tout accepter" / "Refuser l'optionnel") côté session, pour que le dashboard affiche la vraie répartition accepté/refusé — mais que le choix soit accepter ou refuser, la mesure d'audience anonyme posée par `middleware.js` continue de tourner : elle n'attend pas la décision de la bannière pour démarrer. Autrement dit, le consentement ne sert pas aujourd'hui à activer ou couper ce tracking, seulement à l'enregistrer.
+**Point important sur le consentement :** la bannière cookies (`components/ui/CookieConsent.js`) et la page dédiée **`/cookies`** (lien « Gérer mes cookies » à placer dans le pied de page, voir `t('manageCookies')`) enregistrent un choix ("Tout accepter" / "Refuser l'optionnel"). Le choix pilote : l'enregistrement de l'IP, de la ville, de la région et de la position approximative de la ville ; la carte des visiteurs du dashboard ; l'alerte « Nouvelle visite depuis <ville> ». Un refus explicite **efface** IP, ville, région et position déjà enregistrées pour ce navigateur (toutes ses sessions). En revanche, la mesure d'audience anonyme posée par `middleware.js` (cookies `akatech_visitor` et `akatech_session`) démarre dès la première requête, avant tout choix — ce point n'a pas changé : la page `/cookies` le décrit tel quel.
+
+**Provenance balisée (UTM)** : un lien partagé sur WhatsApp n'envoie aucun referrer. `VisitorTracker` lit `?utm_source=`, `utm_medium` et `utm_campaign` à l'arrivée (valeurs normalisées : minuscules, `a-z 0-9 _ . -`), `/api/track` les revérifie et les range sur la session (`VisitSession.utmSource/utmMedium/utmCampaign`, première balise conservée). `classifySource` (`lib/geo.js`) donne la priorité à `utm_source` : la visite apparaît sous « WhatsApp » dans la carte Provenance au lieu de « Direct ». L'onglet Analytics contient un générateur de liens (« Lien de partage balisé »).
+
+**Carte des visiteurs** : `components/dashboard/VisitorsMapCard.js` (Leaflet + tuiles OpenStreetMap, dépendance `leaflet@1.9.4`) dessine une pastille par ville à partir de `getGeoStats().cityPoints`. Les coordonnées viennent des en-têtes Vercel `x-vercel-ip-latitude/longitude` (arrondies à 2 décimales, enregistrées seulement avec le consentement) ; à défaut, `lib/city-coords.js` retrouve la position des villes connues.
 
 Aucune purge automatique des événements (`PageView`, `VisitorAction`) n'existe dans le code actuel — à prévoir si le volume ou la durée de rétention le justifie.
 
@@ -522,6 +532,8 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 - **Bilingue FR/EN** — sélecteur navbar, persisté en `localStorage`, ~200 clés de traduction (`lib/language.js`)
 - **Devis en ligne** (`/devis/[type]`) — questionnaire dynamique, classification tarifaire et argumentaire générés par LLM, PDF envoyé par email, décision (accepter/décliner) trackée — voir section Assistant IA
 - **Analytics visiteurs interne** — visiteurs uniques/jour (courbe Recharts), clics d'action trackés (WhatsApp, téléphone, chat, formulaire), parcours détaillé par visiteur récurrent — voir section dédiée plus haut
+- **Analytics géographique** — pays, ville, IP, système, navigateur et provenance (Facebook, LinkedIn, Google, direct…) de chaque visite, tableau « Visites récentes » dans l'onglet Visiteurs. Localisation tirée des en-têtes Vercel (aucune IP envoyée à un tiers), approximative. **Pays, système et navigateur : tous les visiteurs. IP, région, ville : uniquement ceux qui ont accepté les cookies analytiques**, effacées après 90 jours (`ANALYTICS_IP_RETENTION_DAYS`). Colonnes à créer une fois : `npx prisma db push`.
+- **Photo de couverture du blog par glisser-déposer** — `components/dashboard/ImageDropField.js` (réduction en WebP dans le navigateur, 1600 px max) → `POST /api/admin/media` (accès administrateur revérifié, 2 Mo max, type contrôlé sur les octets, dédoublonnage sha256) → table `MediaAsset` en base ; lecture publique et cache d'un an via `GET /api/media/[id]`. Après `npx prisma db push`, brancher le champ dans l'onglet Blog à la place du lien d'image.
 - **SEO structuré JSON-LD** (`ProfessionalService`) pensé SEO + AEO + GEO — citable par Google AI Overviews et les LLM
 - **`public/llms.txt`** — résumé structuré du site (services, tarifs, pages, contact) au format markdown conventionnel, pour que les LLM (ChatGPT, Perplexity, Claude…) décrivent Studio. avec des informations à jour plutôt que des suppositions
 - **Footer "Demander à l'IA"** — liens pré-remplis vers ChatGPT, Claude, Perplexity, Gemini, Grok

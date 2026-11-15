@@ -1,0 +1,63 @@
+AKATech — lot du 15/11/2026
+===========================
+
+À FAIRE UNE FOIS, DANS CET ORDRE
+  1. npm install leaflet@1.9.4          (carte des visiteurs)
+  2. npx prisma db push                 (colonnes latitude/longitude/utm* + table MediaAsset)
+     Sans cette étape rien ne casse : le suivi, les stats et la purge retombent sur l'ancien
+     comportement, mais la carte reste vide et l'envoi d'images échoue.
+  3. Brancher les deux points ci-dessous (Footer.js et BlogTab.js n'étaient pas dans l'archive).
+
+À BRANCHER (2 fichiers non fournis)
+  A. components/layout/Footer.js — lien « Gérer mes cookies » :
+       <Link href="/cookies">{t('manageCookies')}</Link>
+     (la clé manageCookies est déjà dans lib/language.js ; à placer à côté des liens légaux)
+
+  B. components/dashboard/BlogTab.js — photo de couverture par glisser-déposer :
+       import ImageDropField from '@/components/dashboard/ImageDropField'
+     et remplacer le champ où l'on colle le lien de la photo par :
+       <ImageDropField T={T} value={form.image} onChange={(url) => setForm((f) => ({ ...f, image: url }))} />
+     (adapter `T`, `form`, `setForm` aux noms utilisés dans BlogTab). L'adresse enregistrée est
+     de la forme /api/media/<id> ; le champ « coller un lien » reste disponible en secours.
+     Si l'API du blog n'accepte que des adresses en https://…, dis-le : on renverra une adresse absolue.
+
+CE QUI CHANGE
+  Cookies
+   - NOUVEAU app/cookies/page.js + CookiesClient.js : page /cookies (choix modifiable, effet de chaque
+     choix, inventaire des cookies, droits).
+   - components/ui/CookieConsent.js : lien « En savoir plus sur les cookies » vers /cookies ;
+     la bannière se masque aussi quand le choix change depuis la page /cookies.
+   - lib/cookie-consent.js : reportConsent() partagé, évènement de changement de choix.
+   - lib/legal-content.js : politique de confidentialité alignée (position de la ville, alerte e-mail,
+     modification du choix depuis /cookies, effacement au refus).
+   - Refus explicite : IP, ville, région et position déjà enregistrées pour ce navigateur sont effacées
+     (toutes ses sessions), pas seulement celles de la visite en cours.
+  Alerte « Nouvelle visite depuis <ville> »
+   - app/api/track/route.js : envoyée uniquement si le visiteur a accepté les cookies, à sa première
+     visite (au moment où il accepte). Objet : « Nouvelle visite depuis Abidjan ». Aucune IP dans l'e-mail.
+   - lib/email-notifications.js : objet dynamique, ligne « Ville », note de bas de page.
+  Provenance (UTM)
+   - components/ui/VisitorTracker.js, lib/geo.js, lib/db.js : lecture de ?utm_source / utm_medium /
+     utm_campaign, normalisés ; la balise l'emporte sur le referrer (WhatsApp n'en envoie aucun).
+   - NOUVEAU lib/share-links.js + components/dashboard/ShareLinkCard.js : générateur de lien balisé
+     (page, canal, campagne) avec bouton « Ouvrir WhatsApp », dans l'onglet Analytics.
+  Carte des visiteurs
+   - NOUVEAU components/dashboard/VisitorsMapCard.js (Leaflet + OpenStreetMap), app/dashboard/page.js,
+     lib/db.js (cityPoints), lib/geo.js (latitude/longitude depuis les en-têtes Vercel),
+     NOUVEAU lib/city-coords.js (repli pour les visites enregistrées avant les coordonnées).
+  Photo de couverture du blog
+   - prisma/schema.prisma : table MediaAsset. NOUVEAU lib/media.js, lib/admin-auth.js,
+     app/api/admin/media/route.js (envoi), app/api/media/[id]/route.js (lecture publique),
+     components/dashboard/ImageDropField.js.
+  Documentation
+   - README.md ; public/llms.txt = llms-2 mis à jour (tarifs actuels, projets, rôle de CTO chez Redianice).
+
+NON MODIFIÉ (volontairement)
+  middleware.js pose toujours akatech_visitor et akatech_session avant tout choix (mesure d'audience
+  anonyme). La page /cookies le dit tel quel. Pour les retarder jusqu'au consentement, envoie middleware.js.
+
+À RELIRE
+  - Page /cookies : phrases « pas de cookie publicitaire » et « Vercel Analytics n'utilise pas de cookie »,
+    et adresse e-mail de contact.
+  - Les liens WhatsApp balisés (?utm_source=whatsapp) ne s'ouvrent pas depuis le tableau de bord :
+    ils servent à partager.
