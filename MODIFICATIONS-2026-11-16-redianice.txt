@@ -1,0 +1,20 @@
+AKATech — ajout de Redianice (16/11/2026)
+=========================================
+Redianice devient le projet n° 26, le plus récent : il apparaît en premier dans la galerie (tri par id décroissant).
+
+MODIFIÉS
+  lib/data.js              entrée id 26 (site vitrine, en ligne, https://redianice.vercel.app/)
+  lib/project-categories.js 26 → rubrique « Site vitrine »
+  lib/project-i18n.js      description EN et ES
+  lib/project-stories.js   texte « côté client » (badge, fonctions, résultat)
+  app/HomeClientDesktop.js  « Nos dernières réalisations » : les 7 derniers projets en ligne (Redianice entre, MD Laverie sort)
+  app/HomeClientMobile.js   idem sur mobile
+  README.md                20 réalisations ; Redianice dans la rubrique Site vitrine
+  public/llms.txt          llms-2 : 20+ projets, fiche Redianice
+NOUVEAUX
+  public/images/projects/redianice-preview.webp     (capture ordinateur, 1583 × 744)
+  public/images/projects/redianice-responsive.webp  (capture mobile, 720 × 1600)
+
+À SAVOIR
+  - « Projets livrés » passe de 19 à 20 : le compteur (DELIVERED_COUNT) compte les projets en ligne.
+  - Le tunnel 3D /explorer intègre aussi Redianice (il utilise la capture ordinateur).

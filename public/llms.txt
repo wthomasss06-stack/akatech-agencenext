@@ -5,7 +5,7 @@
 ## À propos
 
 - **Fondateur** : M'Bollo Aka Elvis — développeur full-stack (React, Next.js, Django, Python, PostgreSQL, GSAP, Three.js), basé à Abidjan, 3+ années d'expérience. Il est aussi Chief Technology Officer (CTO) de Redianice (voir plus bas).
-- **Projets livrés** : 19+ projets en ligne pour des clients en Côte d'Ivoire, Sénégal, Cameroun, Bénin, Burkina Faso et France.
+- **Projets livrés** : 20+ projets en ligne pour des clients en Côte d'Ivoire, Sénégal, Cameroun, Bénin, Burkina Faso et France.
 - **Stack technique** : Next.js, React, Django, Flask, NestJS, PostgreSQL, Tailwind CSS (design system maison), GSAP, Three.js, Framer Motion, Expo / React Native.
 - **Paiement accepté** : Mobile Money (MTN, Orange, Wave) et virement bancaire. Jusqu'à 2 000 000 FCFA : 50 % à la commande, 50 % à la livraison. Au-delà : 40 % à la commande, 30 % à la validation de la pré-version, 30 % à la livraison (après recette).
 - **Domaine et hébergement** : nom de domaine offert la première année sur tous les packs ; hébergement offert la première année sur les packs Site Vitrine et E-commerce. Pour une application web, un SaaS ou un projet complexe, l'infrastructure est mise en place au nom du client et facturée au coût réel par les fournisseurs.
@@ -85,6 +85,7 @@ Grilles complètes : https://akatech.vercel.app/pricing
 - **Jean Edy** — Portfolio trilingue FR/EN/RU. React + Vite + GSAP.
 - **MD Laverie Pressing** — Site vitrine pressing avec prise de RDV. React + Vite + GSAP.
 - **Université les Anges** — Site institutionnel. HTML + CSS + Bulma.
+- **Redianice** — Site vitrine de startup (équipe, méthode, premier produit). HTML/CSS/JS + GSAP + WebGL. https://redianice.vercel.app/
 - **AKATech** — Site officiel du Studio. Next.js 15 + Framer Motion + WebGL.
 - **TechFlow** — Site vitrine technologique. HTML + Tailwind CSS.
 
@@ -111,7 +112,7 @@ Portfolio complet : https://akatech.vercel.app/projects
 
 - [Accueil](https://akatech.vercel.app) — présentation du Studio, services, tarifs, réalisations.
 - [Services](https://akatech.vercel.app/services) — détail des services.
-- [Réalisations](https://akatech.vercel.app/projects) — 19+ projets en ligne, filtrables par catégorie.
+- [Réalisations](https://akatech.vercel.app/projects) — 20+ projets en ligne, filtrables par catégorie.
 - [Tarifs](https://akatech.vercel.app/pricing) — grilles de prix détaillées, délais, maintenance et FAQ.
 - [À propos](https://akatech.vercel.app/about) — équipe, valeurs, statistiques.
 - [Blog](https://akatech.vercel.app/blog) — articles sur le développement web et le numérique en Côte d'Ivoire.

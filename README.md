@@ -76,7 +76,7 @@ akatech-nextjs/
 │   │
 │   ├── about/                 # Équipe, stats animées, valeurs
 │   ├── services/               # 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes
-│   ├── projects/               # Galerie (19 réalisations) — un seul bouton « Détail » par carte
+│   ├── projects/               # Galerie (20 réalisations en ligne) — un seul bouton « Détail » par carte
 │   │   └── [slug]/              # Page de détail d'une réalisation : /projects/<slug> (SSR, un seul composant PC + mobile)
 │   ├── pricing/                 # 5 grilles tarifaires (Vitrine, E-commerce, SaaS, GBP, Maintenance) + FAQ
 │   ├── devis/ · devis/[type]/   # Questionnaire de devis dynamique (portfolio, vitrine/e-commerce, SaaS)
@@ -115,7 +115,7 @@ akatech-nextjs/
 │   ├── questionnaires-schema.js  # Source unique des 3 questionnaires (champs, types, conditions d'affichage)
 │   ├── quote-calc.js · market-positioning.js  # Classification tarifaire + argumentaire du devis, générés par LLM
 │   ├── project-categories.js  # Rubrique de chaque réalisation (id → slug de rubrique) + slugify() pour les URLs
-│   ├── project-stories.js     # Textes « côté client » des 19 réalisations (problème, solution, fonctions, résultat) + helpers (lien, WhatsApp, captures)
+│   ├── project-stories.js     # Textes « côté client » des 20 réalisations (problème, solution, fonctions, résultat) + helpers (lien, WhatsApp, captures)
 │   ├── questionnaire-pdf.js  # Génération du PDF de devis + envoi email
 │   ├── track-action.js  # Helper client — envoie un clic d'action (WhatsApp, tel, chat, formulaire) à /api/track
 │   ├── cookie-consent.js # Choix de cookies (localStorage + cookie miroir), évènement de changement, reportConsent()
@@ -143,9 +143,9 @@ akatech-nextjs/
 | `/` | Accueil | Hero animé, services, marquees de confiance, projets récents, témoignages |
 | `/about` | À propos | Équipe, stats animées, valeurs |
 | `/services` | Services | 6 domaines d'expertise, 7 types de solutions conçues, processus en 6 étapes |
-| `/projects` | Projets | Galerie des 19 réalisations — chaque carte affiche sa **rubrique** et un seul bouton **Détail** |
+| `/projects` | Projets | Galerie des 20 réalisations — chaque carte affiche sa **rubrique** et un seul bouton **Détail** |
 | `/projects/[slug]` | Détail d'un projet | Le problème, la solution, ce que ça apporte, où en est le projet, appel à l'action, autres réalisations. Le bouton **Voir le projet** est ici. 19 pages générées (`generateStaticParams`), `404` sur un slug inconnu |
-| `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 19 projets — desktop uniquement, repli vers `/projects` sur mobile |
+| `/explorer` | **Explorer** | Tunnel 3D **WebGL** (Three.js + GSAP ScrollTrigger) à travers les 20 projets — desktop uniquement, repli vers `/projects` sur mobile |
 | `/pricing` | Tarifs | 5 grilles (Vitrine — incluant le portfolio —, E-commerce, SaaS, GBP, Maintenance), FAQ, témoignages |
 | `/devis` + `/devis/[type]` | Devis | Formulaire de questionnaire dynamique (portfolio, vitrine/e-commerce, SaaS), généré depuis `lib/questionnaires-schema.js` — accessible depuis l'assistant IA ou directement par lien |
 | `/blog` + `/blog/[slug]` | Blog | Articles stockés en base (modèle `BlogPost`), recherche, tags, newsletter |
@@ -340,7 +340,7 @@ Chaque projet de `PROJECTS` reçoit une **rubrique** parmi les 7 ci-dessus (`pro
 
 | Rubrique | Réalisations |
 |---|---|
-| Site vitrine | TechFlow, Tati, MK Studio, AKATech, Université les Anges, Jean Edy · Portfolio, MD Laverie Pressing |
+| Site vitrine | TechFlow, Tati, MK Studio, AKATech, Université les Anges, Jean Edy · Portfolio, MD Laverie Pressing, Redianice |
 | E-commerce | ShopCI, ManoBeat 777, Chez Florence |
 | Plateforme | TerraSafe, Nexura, KokoEat, Anyama Proxy, Vazi Express |
 | Application web | ChapChap Bara, Karnet, REKOLLECTE |
@@ -527,7 +527,7 @@ Variables d'environnement à configurer sur Vercel (Project Settings → Environ
 
 - **Pages de détail des réalisations** (`/projects/[slug]`) — un seul bouton « Détail » par carte (PC, mobile, accueil), page rendue côté serveur, métadonnées + JSON-LD `CreativeWork`/`BreadcrumbList` par projet, 19 URLs dans le sitemap, même fond que l'accueil (`.grid-bg`)
 - **Fond commun** — les pages légales (`components/legal/LegalPage.js`) et le dashboard admin (`app/dashboard/page.js`) reprennent le fond de la landing via `components/ui/PageBackground.js` (fond uni + `.grid-bg` + halos verts). La palette du dashboard (`DASH_THEME_*`) utilise les mêmes fonds et cartes que l'accueil
-- **Tunnel 3D WebGL** (`/explorer`) — Three.js + GSAP ScrollTrigger, parcourt les 19 projets, textures = vraies captures d'écran
+- **Tunnel 3D WebGL** (`/explorer`) — Three.js + GSAP ScrollTrigger, parcourt les 20 projets, textures = vraies captures d'écran
 - **Thème clair/sombre** en transition circulaire via **View Transitions API** (repli instantané si non supporté)
 - **Bilingue FR/EN** — sélecteur navbar, persisté en `localStorage`, ~200 clés de traduction (`lib/language.js`)
 - **Devis en ligne** (`/devis/[type]`) — questionnaire dynamique, classification tarifaire et argumentaire générés par LLM, PDF envoyé par email, décision (accepter/décliner) trackée — voir section Assistant IA

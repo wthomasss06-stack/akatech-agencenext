@@ -717,7 +717,8 @@ function ArchiveTunnelSection() {
   const T = useTheme()
   const { t } = useLanguage()
   // 7 projets les plus récents (remplace l'ancienne sélection figée).
-  const items = useMemo(() => PROJECTS.filter(p => p.id >= 18 && p.id <= 24), [])
+  // Les 7 dernières réalisations en ligne (Redianice, id 26, incluse ; Vazi Express, en développement, non)
+  const items = useMemo(() => PROJECTS.filter(p => p.live).slice(-7), [])
 
   return (
     <section style={{ padding: '5rem 0 6rem', background: T.bg, overflow: 'hidden' }}>

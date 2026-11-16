@@ -697,7 +697,8 @@ function ProjectsSection() {
   const { t } = useLanguage()
   const ref     = useRef(null)
   const inView  = useInView(ref, { once: true, margin: '-60px' })
-  const items = useMemo(() => PROJECTS.filter(p => p.id >= 18 && p.id <= 24), [])
+  // Les 7 dernières réalisations en ligne (Redianice, id 26, incluse ; Vazi Express, en développement, non)
+  const items = useMemo(() => PROJECTS.filter(p => p.live).slice(-7), [])
 
   return (
     <section ref={ref} style={{ background: T.bg, position: 'relative', padding: '7rem 0 5rem', overflow: 'hidden' }}>
