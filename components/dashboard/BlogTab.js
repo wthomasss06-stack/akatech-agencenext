@@ -1,14 +1,16 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { Edit3, ExternalLink, Image as ImageIcon, Link as LinkIcon, Plus, Save, Trash2, X } from 'lucide-react'
+import { Edit3, ExternalLink, Link as LinkIcon, Plus, Save, Trash2, X } from 'lucide-react'
+import ImageDropField from './ImageDropField'
 
-const EMPTY = { id: '', title: '', excerpt: '', content: '', category: 'Développement Web', image: '/images/og-cover.webp', link: '', publishedAt: new Date().toISOString().slice(0, 10), published: true }
+const EMPTY = { id: '', title: '', excerpt: '', content: '', category: 'Développement Web', image: '', link: '', publishedAt: new Date().toISOString().slice(0, 10), published: true }
 
 export default function BlogTab({ T, CARD }) {
   const [posts, setPosts] = useState([])
   const [form, setForm] = useState(EMPTY)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [imgBusy, setImgBusy] = useState(false)
   const [message, setMessage] = useState('')
   const load = () => { setLoading(true); fetch('/api/blog?admin=1').then(r => r.json()).then(d => setPosts(d.posts || [])).catch(() => setMessage('Impossible de charger les articles.')).finally(() => setLoading(false)) }
   useEffect(() => { load() }, [])
@@ -36,10 +38,10 @@ export default function BlogTab({ T, CARD }) {
         <label style={{ color: T.textSub, fontSize: '.76rem' }}>Extrait<textarea required value={form.excerpt} onChange={e => change('excerpt', e.target.value)} style={{ ...input, minHeight: 70, resize: 'vertical' }} placeholder="Résumé visible sur la page blog" /></label>
         <label style={{ color: T.textSub, fontSize: '.76rem' }}>Texte de l’article<textarea required value={form.content} onChange={e => change('content', e.target.value)} style={{ ...input, minHeight: 280, resize: 'vertical', lineHeight: 1.55 }} placeholder="## Introduction\n\nVotre texte..." /></label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}><label style={{ color: T.textSub, fontSize: '.76rem' }}>Catégorie<input value={form.category} onChange={e => change('category', e.target.value)} style={input} /></label><label style={{ color: T.textSub, fontSize: '.76rem' }}>Date de publication<input type="date" value={String(form.publishedAt).slice(0, 10)} onChange={e => change('publishedAt', e.target.value)} style={input} /></label></div>
-        <label style={{ color: T.textSub, fontSize: '.76rem' }}><ImageIcon size={13} style={{ verticalAlign: 'middle', marginRight: 5 }} />URL de l’image<input value={form.image} onChange={e => change('image', e.target.value)} style={input} placeholder="https://... ou /images/..." /></label>
+        <ImageDropField T={T} label="Image de l’article" value={form.image} onChange={url => change('image', url)} onBusyChange={setImgBusy} />
         <label style={{ color: T.textSub, fontSize: '.76rem' }}><LinkIcon size={13} style={{ verticalAlign: 'middle', marginRight: 5 }} />Lien externe facultatif<input value={form.link} onChange={e => change('link', e.target.value)} style={input} placeholder="https://linkedin.com/..." /></label>
         <label style={{ display: 'flex', alignItems: 'center', gap: 8, color: T.textSub, fontSize: '.8rem' }}><input type="checkbox" checked={form.published} onChange={e => change('published', e.target.checked)} /> Publier immédiatement</label>
-        <button disabled={saving} type="submit" className="btn-raised" style={{ justifyContent: 'center', border: 0, padding: '.8rem 1rem', cursor: saving ? 'wait' : 'pointer' }}>{form.id ? <Save size={15} /> : <Plus size={15} />} {saving ? 'Enregistrement…' : form.id ? 'Mettre à jour' : 'Publier l’article'}</button>
+        <button disabled={saving || imgBusy} type="submit" className="btn-raised" style={{ justifyContent: 'center', border: 0, padding: '.8rem 1rem', cursor: saving ? 'wait' : imgBusy ? 'progress' : 'pointer', opacity: imgBusy ? .6 : 1 }}>{form.id ? <Save size={15} /> : <Plus size={15} />} {saving ? 'Enregistrement…' : imgBusy ? 'Envoi de l’image…' : form.id ? 'Mettre à jour' : 'Publier l’article'}</button>
         {message && <div style={{ color: message.includes('impossible') ? '#e05e5e' : T.green, fontSize: '.8rem' }}>{message}</div>}
       </div>
     </form>

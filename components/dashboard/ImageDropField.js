@@ -7,9 +7,11 @@ import { UploadCloud, RefreshCw, Trash2 } from 'lucide-react'
 
    • L'image est réduite et convertie en WebP dans le navigateur (1600 px max) avant l'envoi,
      pour rester légère (quelques centaines de Ko) quelle que soit la photo d'origine.
-   • Elle part vers /api/admin/media, qui la range dans la table MediaAsset (base de données).
+   • Elle part vers /api/admin/media, qui l'envoie sur Cloudinary (dossier akatech/blog).
    • `onChange` reçoit l'adresse à enregistrer dans le champ image de l'article
-     (ex. /api/media/<id>), ou '' quand on retire la photo.
+     (lien Cloudinary https://res.cloudinary.com/…), ou '' quand on retire la photo.
+   • `onBusyChange(true|false)` (facultatif) signale un envoi en cours : le formulaire peut
+     ainsi bloquer « Publier » tant que l'image n'est pas arrivée.
    • Le champ « coller un lien » reste disponible en secours (image hébergée ailleurs).
 
    Utilisation (remplace l'ancien <input> du lien) :
@@ -51,7 +53,7 @@ async function compress(file) {
   throw new Error('Cette image ne peut pas être traitée.')
 }
 
-export default function ImageDropField({ value = '', onChange, T, label = 'Photo de couverture' }) {
+export default function ImageDropField({ value = '', onChange, onBusyChange, T, label = 'Photo de couverture' }) {
   const inputRef = useRef(null)
   const [over, setOver] = useState(false)
   const [busy, setBusy] = useState(false)
@@ -64,6 +66,7 @@ export default function ImageDropField({ value = '', onChange, T, label = 'Photo
     if (!ACCEPTED.includes(file.type)) { setError('Format non pris en charge. Utilise une image JPG, PNG ou WebP.'); return }
     if (file.size > MAX_SOURCE_BYTES) { setError('Image trop lourde (20 Mo maximum).'); return }
     setBusy(true)
+    onBusyChange?.(true)
     try {
       const blob = await compress(file)
       const body = new FormData()
@@ -78,6 +81,7 @@ export default function ImageDropField({ value = '', onChange, T, label = 'Photo
       setError(err?.message || 'Envoi impossible pour le moment.')
     } finally {
       setBusy(false)
+      onBusyChange?.(false)
     }
   }
 
